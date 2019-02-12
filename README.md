@@ -1,6 +1,20 @@
 # bounswe2019group6
+Alt-bounswe2019group6
+========
 
-### Hello
+### Participants
+Alt-Participants
+================
+..* Barış Ege Sevgili
+..* Sadullah Gültekin
+..* Deniz Baran Korkmaz
+..* Eray Sezgin
+..* Burak Yüksel
+..* Burak İkan Yildiz
+..* Fatih Mustafa Kurt
+..* Furkan Nane
+..* Enes Tuğran Özcan
 
-Alt-Hello
-=========
+### Objectives
+Alt-Objectives
+========
