@@ -1,9 +1,7 @@
 # bounswe2019group6
-Alt-bounswe2019group6
 ========
 
 ### Participants
-Alt-Participants
 ================
 ..* Barış Ege Sevgili
 ..* Sadullah Gültekin
@@ -16,5 +14,6 @@ Alt-Participants
 ..* Enes Tuğran Özcan
 
 ### Objectives
-Alt-Objectives
-========
+==============
+
+
