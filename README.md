@@ -6,7 +6,7 @@ You can find our meeting notes, contributors' home pages and other stuff about o
 Stay tuned for inspiring ideas!
 
 ## Team Members
-   * Baran Deniz Korkmaz
+   * [Baran Deniz Korkmaz](https://github.com/bounswe/bounswe2019group6/wiki/Baran-Deniz-Korkmaz)
    * [Barış Ege Sevgili](https://github.com/bounswe/bounswe2019group6/wiki/Barış-Ege-Sevgili)
    * [Burak Yüksel](https://github.com/bounswe/bounswe2019group6/wiki/Burak-Y%C3%BCksel)
    * [Burak İkan Yıldız](https://github.com/bounswe/bounswe2019group6/wiki/Burak-%C4%B0kan-Y%C4%B1ld%C4%B1z)
