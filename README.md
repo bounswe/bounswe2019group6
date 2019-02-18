@@ -15,5 +15,5 @@ Stay tuned for inspiring ideas!
    * [Enes Turan Özcan](https://github.com/bounswe/bounswe2019group6/wiki/Enes-Ozcan)
    * [Eray Sezgin](https://github.com/bounswe/bounswe2019group6/wiki/Eray-Sezgin)
    * [Irmak Güzey](https://github.com/bounswe/bounswe2019group6/wiki/Irmak-G%C3%BCzey)
-   * [Sadullah Gültekin](https://github.com/bounswe/bounswe2019group6/wiki/Sadullah-G%C3%BCltekin)
+   * [Sadullah Gültekin](https://github.com/bounswe/bounswe2019group6/wiki/Sadullah-G%C3%BCltekin) _(Communicator)_
 
