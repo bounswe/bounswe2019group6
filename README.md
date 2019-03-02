@@ -20,3 +20,20 @@ This project aims to create a social platform for people who can be considered a
    * [Irmak Güzey](https://github.com/bounswe/bounswe2019group6/wiki/Irmak-G%C3%BCzey)
    * [Sadullah Gültekin](https://github.com/bounswe/bounswe2019group6/wiki/Sadullah-G%C3%BCltekin) _(Communicator)_
 
+## Team
+
+> Or Contributors/People
+
+| <a href="http://fvcproductions.com" target="_blank">**FVCproductions**</a> | <a href="http://fvcproductions.com" target="_blank">**FVCproductions**</a> | <a href="http://fvcproductions.com" target="_blank">**FVCproductions**</a> |
+| :---: |:---:| :---:|
+| [![FVCproductions](https://avatars1.githubusercontent.com/u/4284691?v=3&s=200)](http://fvcproductions.com)    | [![FVCproductions](https://avatars1.githubusercontent.com/u/4284691?v=3&s=200)](http://fvcproductions.com) | [![FVCproductions](https://avatars1.githubusercontent.com/u/4284691?v=3&s=200)](http://fvcproductions.com)  |
+| <a href="http://github.com/fvcproductions" target="_blank">`github.com/fvcproductions`</a> | <a href="http://github.com/fvcproductions" target="_blank">`github.com/fvcproductions`</a> | <a href="http://github.com/fvcproductions" target="_blank">`github.com/fvcproductions`</a> |
+
+- You can just grab their GitHub profile image URL
+- You should probably resize their picture using `?s=200` at the end of the image URL.
+
+---
+
+[![Baran Deniz Korkmaz](https://avatars1.githubusercontent.com/u/44136572?s=460&v=4)](https://github.com/bounswe/bounswe2019group6/wiki/Baran-Deniz-Korkmaz) | [![Semih Arı](https://avatars0.githubusercontent.com/u/36154366?s=400&v=4)](https://github.com/bounswe/bounswe2018group8/wiki/Semih-Ar%C4%B1) | [![Ozan Kınasakal](https://avatars3.githubusercontent.com/u/24544546?s=400&v=4)](https://github.com/bounswe/bounswe2018group8/wiki/Ozan-Kınasakal) | [![Berkay Kozan](https://avatars2.githubusercontent.com/u/25721646?s=400&v=4)](https://github.com/leblebi1) | [![Kübra Eryılmaz](https://avatars3.githubusercontent.com/u/34382537?s=400&v=4)](https://github.com/bounswe/bounswe2018group8/wiki/K%C3%BCbra-Ery%C4%B1lmaz) | [![Abdurrahim Eskin](https://avatars1.githubusercontent.com/u/35101427?s=400&v=4)](https://github.com/bounswe/bounswe2018group8/wiki/Abdurrahim-ESK%C4%B0N)  | [![Umut Barış Öztunç](https://avatars3.githubusercontent.com/u/32958854?s=400&v=4)](https://github.com/umutoztunc) | [![Burak Tepedelen](https://avatars2.githubusercontent.com/u/12123441?s=400&v=4)](https://github.com/burak-tepedelen)
+---|---|---|---|---|---|---|---
+[Mehmet Çalım](https://github.com/bounswe/bounswe2018group8/wiki/Mehmet-Çalım) | [Semih Arı](https://github.com/bounswe/bounswe2018group8/wiki/Semih-Ar%C4%B1) | [Ozan Kınasakal](https://github.com/bounswe/bounswe2018group8/wiki/Ozan-Kınasakal) | [Berkay Kozan](https://github.com/leblebi1) | [Kübra Eryılmaz](https://github.com/bounswe/bounswe2018group8/wiki/K%C3%BCbra-Ery%C4%B1lmaz) | [Abdurrahim Eskin](https://github.com/bounswe/bounswe2018group8/wiki/Abdurrahim-ESK%C4%B0N) | [Umut Barış Öztunç](https://github.com/bounswe/bounswe2018group8/wiki/Umut-Bar%C4%B1%C5%9F-%C3%96ztun%C3%A7) | [Burak Tepedelen](https://github.com/bounswe/bounswe2018group8/wiki/)
