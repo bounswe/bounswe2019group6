@@ -45,7 +45,7 @@ This project aims to create a social platform for people who can be considered a
 [![Irmak Güzey](https://avatars0.githubusercontent.com/u/32496519?s=200&v=4)](https://github.com/bounswe/bounswe2019group6/wiki/Irmak-G%C3%BCzey) | 
 [![Sadullah Gültekin](https://avatars2.githubusercontent.com/u/16756389?s=200&v=4)](https://github.com/bounswe/bounswe2019group6/wiki/Sadullah-G%C3%BCltekin)
 
----|---|---|---|---|---|---|---|
+---|---|---|---|---|---|---|---|---|---|
 [Baran Deniz Korkmaz](https://github.com/bounswe/bounswe2019group6/wiki/Baran-Deniz-Korkmaz) | 
 [Barış Ege Sevgili](https://github.com/bounswe/bounswe2019group6/wiki/Bar%C4%B1%C5%9F-Ege-Sevgili) | 
 [Burak Yüksel](https://github.com/bounswe/bounswe2019group6/wiki/Burak-Y%C3%BCksel) | 
@@ -57,9 +57,3 @@ This project aims to create a social platform for people who can be considered a
 [Irmak Güzey](https://github.com/bounswe/bounswe2019group6/wiki/Irmak-G%C3%BCzey) | 
 [Sadullah Gültekin](https://github.com/bounswe/bounswe2019group6/wiki/Sadullah-G%C3%BCltekin)
 
----
-[![Irmak Güzey](https://avatars0.githubusercontent.com/u/32496519?s=200&v=4)](https://github.com/bounswe/bounswe2019group6/wiki/Irmak-G%C3%BCzey) | 
-[![Sadullah Gültekin](https://avatars2.githubusercontent.com/u/16756389?s=200&v=4)](https://github.com/bounswe/bounswe2019group6/wiki/Sadullah-G%C3%BCltekin) |
-
-[Irmak Güzey](https://github.com/bounswe/bounswe2019group6/wiki/Irmak-G%C3%BCzey) | 
-[Sadullah Gültekin](https://github.com/bounswe/bounswe2019group6/wiki/Sadullah-G%C3%BCltekin) |
