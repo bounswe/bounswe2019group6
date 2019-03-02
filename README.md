@@ -41,7 +41,9 @@ This project aims to create a social platform for people who can be considered a
 [![Fatih Mustafa Kurt](https://avatars0.githubusercontent.com/u/16965054?s=200&v=4)](https://github.com/bounswe/bounswe2019group6/wiki/Fatih-Mustafa-Kurt) | 
 [![Furkan Nane](https://avatars1.githubusercontent.com/u/35101427?s=200&v=4)](https://github.com/bounswe/bounswe2019group6/wiki/Furkan-Nane) | 
 [![Enes Turan Özcan](https://avatars3.githubusercontent.com/u/44522401?s=200&v=4)](https://github.com/bounswe/bounswe2019group6/wiki/Enes-Ozcan) | 
-[![Eray Sezgin](https://avatars1.githubusercontent.com/u/15183812?s=200&v=4)](https://github.com/bounswe/bounswe2019group6/wiki/Eray-Sezgin) | 
+[![Eray Sezgin](https://avatars1.githubusercontent.com/u/15183812?s=200&v=4)](https://github.com/bounswe/bounswe2019group6/wiki/Eray-Sezgin) |
+[![Irmak Güzey](https://avatars0.githubusercontent.com/u/32496519?s=200&v=4)](https://github.com/bounswe/bounswe2019group6/wiki/Irmak-G%C3%BCzey) | 
+[![Sadullah Gültekin](https://avatars2.githubusercontent.com/u/16756389?s=200&v=4)](https://github.com/bounswe/bounswe2019group6/wiki/Sadullah-G%C3%BCltekin)
 
 ---|---|---|---|---|---|---|---|
 [Baran Deniz Korkmaz](https://github.com/bounswe/bounswe2019group6/wiki/Baran-Deniz-Korkmaz) | 
@@ -52,7 +54,8 @@ This project aims to create a social platform for people who can be considered a
 [Furkan Nane](https://github.com/bounswe/bounswe2019group6/wiki/Furkan-Nane) | 
 [Enes Turan Özcan](https://github.com/bounswe/bounswe2019group6/wiki/Enes-Ozcan) | 
 [Eray Sezgin](https://github.com/bounswe/bounswe2019group6/wiki/Eray-Sezgin) | 
-
+[Irmak Güzey](https://github.com/bounswe/bounswe2019group6/wiki/Irmak-G%C3%BCzey) | 
+[Sadullah Gültekin](https://github.com/bounswe/bounswe2019group6/wiki/Sadullah-G%C3%BCltekin)
 
 ---
 [![Irmak Güzey](https://avatars0.githubusercontent.com/u/32496519?s=200&v=4)](https://github.com/bounswe/bounswe2019group6/wiki/Irmak-G%C3%BCzey) | 
