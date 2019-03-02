@@ -34,6 +34,24 @@ This project aims to create a social platform for people who can be considered a
 
 ---
 
-[![Baran Deniz Korkmaz](https://avatars1.githubusercontent.com/u/44136572?s=460&v=4)](https://github.com/bounswe/bounswe2019group6/wiki/Baran-Deniz-Korkmaz) | [![Barış Ege Sevgili](https://avatars2.githubusercontent.com/u/32372733?s=460&v=4)](https://github.com/bounswe/bounswe2019group6/wiki/Bar%C4%B1%C5%9F-Ege-Sevgili) | [![Burak Yüksel](https://avatars1.githubusercontent.com/u/21309693?s=400&v=4)](https://github.com/bounswe/bounswe2019group6/wiki/Burak-Y%C3%BCksel) | [![Burak İkan Yıldız](https://avatars0.githubusercontent.com/u/26484140?s=400&v=4)](https://github.com/bounswe/bounswe2019group6/wiki/Burak-%C4%B0kan-Y%C4%B1ld%C4%B1z) | [![Fatih Mustafa Kurt](https://avatars3.githubusercontent.com/u/34382537?s=400&v=4)](https://github.com/bounswe/bounswe2019group6/wiki/Fatih-Mustafa-Kurt) | [![Furkan Nane](https://avatars1.githubusercontent.com/u/35101427?s=400&v=4)](https://github.com/bounswe/bounswe2019group6/wiki/Furkan-Nane)  | ![Enes Turan Özcan](https://avatars3.githubusercontent.com/u/32958854?s=400&v=4)](https://github.com/bounswe/bounswe2019group6/wiki/Enes-Ozcan) | [![Eray Sezgin](https://avatars2.githubusercontent.com/u/12123441?s=400&v=4)](https://github.com/bounswe/bounswe2019group6/wiki/Eray-Sezgin) | [![Irmak Güzey](https://avatars3.githubusercontent.com/u/32958854?s=400&v=4)](https://github.com/bounswe/bounswe2019group6/wiki/Irmak-G%C3%BCzey) | [![Sadullah Gültekin](https://avatars2.githubusercontent.com/u/12123441?s=400&v=4)](https://github.com/bounswe/bounswe2019group6/wiki/Sadullah-G%C3%BCltekin)
+[![Baran Deniz Korkmaz](https://avatars1.githubusercontent.com/u/44136572?s=460&v=4)](https://github.com/bounswe/bounswe2019group6/wiki/Baran-Deniz-Korkmaz) | 
+[![Barış Ege Sevgili](https://avatars2.githubusercontent.com/u/32372733?s=460&v=4)](https://github.com/bounswe/bounswe2019group6/wiki/Bar%C4%B1%C5%9F-Ege-Sevgili) | 
+[![Burak Yüksel](https://avatars1.githubusercontent.com/u/21309693?s=400&v=4)](https://github.com/bounswe/bounswe2019group6/wiki/Burak-Y%C3%BCksel) | 
+[![Burak İkan Yıldız](https://avatars0.githubusercontent.com/u/26484140?s=400&v=4)](https://github.com/bounswe/bounswe2019group6/wiki/Burak-%C4%B0kan-Y%C4%B1ld%C4%B1z) | 
+[![Fatih Mustafa Kurt](https://avatars3.githubusercontent.com/u/34382537?s=400&v=4)](https://github.com/bounswe/bounswe2019group6/wiki/Fatih-Mustafa-Kurt) | 
+[![Furkan Nane](https://avatars1.githubusercontent.com/u/35101427?s=400&v=4)](https://github.com/bounswe/bounswe2019group6/wiki/Furkan-Nane) | 
+[![Enes Turan Özcan](https://avatars3.githubusercontent.com/u/32958854?s=400&v=4)](https://github.com/bounswe/bounswe2019group6/wiki/Enes-Ozcan) | 
+[![Eray Sezgin](https://avatars2.githubusercontent.com/u/12123441?s=400&v=4)](https://github.com/bounswe/bounswe2019group6/wiki/Eray-Sezgin) | 
+[![Irmak Güzey](https://avatars3.githubusercontent.com/u/32958854?s=400&v=4)](https://github.com/bounswe/bounswe2019group6/wiki/Irmak-G%C3%BCzey) | 
+[![Sadullah Gültekin](https://avatars2.githubusercontent.com/u/12123441?s=400&v=4)](https://github.com/bounswe/bounswe2019group6/wiki/Sadullah-G%C3%BCltekin) |
 ---|---|---|---|---|---|---|---
-[Baran Deniz Korkmaz](https://github.com/bounswe/bounswe2019group6/wiki/Baran-Deniz-Korkmaz) | [Barış Ege Sevgili](https://github.com/bounswe/bounswe2019group6/wiki/Bar%C4%B1%C5%9F-Ege-Sevgili) | [Burak Yüksel](https://github.com/bounswe/bounswe2019group6/wiki/Burak-Y%C3%BCksel) | [Burak İkan Yıldız](https://github.com/bounswe/bounswe2019group6/wiki/Burak-%C4%B0kan-Y%C4%B1ld%C4%B1z) | [Fatih Mustafa Kurt](https://github.com/bounswe/bounswe2019group6/wiki/Fatih-Mustafa-Kurt) | [Furkan Nane](https://github.com/bounswe/bounswe2019group6/wiki/Furkan-Nane) | [Enes Turan Özcan](https://github.com/bounswe/bounswe2019group6/wiki/Enes-Ozcan) | [Eray Sezgin](https://github.com/bounswe/bounswe2019group6/wiki/Eray-Sezgin) | [Irmak Güzey](https://github.com/bounswe/bounswe2019group6/wiki/Irmak-G%C3%BCzey) | [Sadullah Gültekin](https://github.com/bounswe/bounswe2019group6/wiki/Sadullah-G%C3%BCltekin)
+[Baran Deniz Korkmaz](https://github.com/bounswe/bounswe2019group6/wiki/Baran-Deniz-Korkmaz) | 
+[Barış Ege Sevgili](https://github.com/bounswe/bounswe2019group6/wiki/Bar%C4%B1%C5%9F-Ege-Sevgili) | 
+[Burak Yüksel](https://github.com/bounswe/bounswe2019group6/wiki/Burak-Y%C3%BCksel) | 
+[Burak İkan Yıldız](https://github.com/bounswe/bounswe2019group6/wiki/Burak-%C4%B0kan-Y%C4%B1ld%C4%B1z) | 
+[Fatih Mustafa Kurt](https://github.com/bounswe/bounswe2019group6/wiki/Fatih-Mustafa-Kurt) | 
+[Furkan Nane](https://github.com/bounswe/bounswe2019group6/wiki/Furkan-Nane) | 
+[Enes Turan Özcan](https://github.com/bounswe/bounswe2019group6/wiki/Enes-Ozcan) | 
+[Eray Sezgin](https://github.com/bounswe/bounswe2019group6/wiki/Eray-Sezgin) | 
+[Irmak Güzey](https://github.com/bounswe/bounswe2019group6/wiki/Irmak-G%C3%BCzey) | 
+[Sadullah Gültekin](https://github.com/bounswe/bounswe2019group6/wiki/Sadullah-G%C3%BCltekin) |
