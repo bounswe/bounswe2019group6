@@ -1,0 +1,5 @@
+.vscode
+.pycharm
+twitter_credentials.json
+django-tut*
+db.sqlite3
