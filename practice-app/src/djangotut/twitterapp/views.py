@@ -2,19 +2,10 @@
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 
-from .models import Article
-
 import tweepy 
 import json
 
 # Create your views here.
-
-def article_detail_view(request):
-    query_set = Article.objects.all()
-    context = {
-        'object_set' : query_set
-    }
-    return render(request,'article_detail.html', context)
 
 def twitter_news_view(request):
 

@@ -16,12 +16,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-from twitterapp.views import *
-
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('article/', article_detail_view),
-    path('twitternews/', twitter_news_view),
+    path('twitternews/', include('twitterapp.urls')),
     path('google/', include('googleapi.urls'))
     # Create new endpoints here, and redirect them to a function.
     # To do the redirect operation, make the necessary import, and put 
