@@ -17,12 +17,13 @@ from django.contrib import admin
 from django.urls import path
 
 from sadullahapp.views import *
-
+from currencyrateapp.views import *
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('article/', article_detail_view),
     path('sadotwitter/', twitter_sado_view),
     path('events/', events_view),
+    path('rates/<str:target>', currency_rate_view),
     # Create new endpoints here, and redirect them to a function.
     # To do the redirect operation, make the necessary import, and put 
     # your code inside
