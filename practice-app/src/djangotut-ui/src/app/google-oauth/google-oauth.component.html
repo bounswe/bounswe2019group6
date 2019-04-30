@@ -1,0 +1,15 @@
+<section class="section centered-app">
+  <div>
+    <div class="title">
+        <h1 *ngIf="!name">
+            Hallo
+        </h1>
+        <h1 *ngIf="name">
+            Hallo, {{name}}
+        </h1>
+    </div>
+    <button mat-raised-button color="primary" (click)="login()">
+      Login with Google
+    </button>
+  </div>
+</section>

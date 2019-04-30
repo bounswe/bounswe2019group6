@@ -1,0 +1,58 @@
+/* You can add global styles to this file, and also import other style files */
+@import '~@angular/material/prebuilt-themes/indigo-pink';
+@import "styles/style";
+@import '~bulma';
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.is-12 {
+    width: 100%;
+}
+
+::-webkit-scrollbar {
+    background: transparent;
+    width: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.2);
+    background: rgb(204, 204, 204);
+}
+
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px hsla(0,0%,100%,.3);
+    border-radius: 2px;
+}
+
+.mat-expansion-panel {
+    background: transparent;
+    box-shadow: none;
+
+    .mat-expansion-panel-header-title, .mat-expansion-indicator::after, .mat-expansion-panel-header-description {
+        color: white !important;
+    }
+}
+
+.centered-app {
+    width: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  
+    table {
+      min-width: 100%;
+    }
+  
+    .title {
+      margin: 50px 0;
+    }
+  
+    .columns.action {
+      justify-content: center;
+    }
+  }
+  
