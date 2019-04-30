@@ -44,7 +44,7 @@ def events_view(request):
 
     #Using JSON format
     json_data = json.dumps(tabulate_data)
-    return JsonResponse(json_data)
+    return JsonResponse(json_data,safe = False)
 
     #Using RENDER format
     """context = {
