@@ -34,17 +34,16 @@ INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
-    'corsheaders',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # apps that are aboved are default, the rest is created by the developer
+    #'corsheaders',
     'twitterapp',
     'googleapi'
 ]
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -52,6 +51,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    #'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'djangotut.urls'
@@ -125,7 +125,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 
-CORS_ORIGIN_WHITELIST = (
-    'localhost:4200',
-    'http://ec2-54-89-235-179.compute-1.amazonaws.com'
-)
+#CORS_ORIGIN_WHITELIST = (
+#    'localhost:4200',
+#    'http://ec2-54-89-235-179.compute-1.amazonaws.com'
+#)
