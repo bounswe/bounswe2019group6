@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 
 from twitterapp.views import *
 
@@ -22,6 +22,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('article/', article_detail_view),
     path('twitternews/', twitter_news_view),
+    path('google/', include('googleapi.urls'))
     # Create new endpoints here, and redirect them to a function.
     # To do the redirect operation, make the necessary import, and put 
     # your code inside
