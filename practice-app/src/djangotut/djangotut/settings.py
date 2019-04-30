@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # apps that are aboved are default, the rest is created by the developer
     'twitterapp',
+    'googleapi'
 ]
 
 MIDDLEWARE = [
