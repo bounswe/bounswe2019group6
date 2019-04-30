@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # apps that are aboved are default, the rest is created by the developer
-    'sadullahapp'
+    'twitterapp',
 ]
 
 MIDDLEWARE = [
