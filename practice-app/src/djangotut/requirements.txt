@@ -1,6 +1,8 @@
 certifi==2019.3.9
 chardet==3.0.4
 Django==2.2
+django-cors-headers==2.5.0
+django-environ==0.4.5
 idna==2.8
 oauthlib==3.0.1
 PySocks==1.6.8
