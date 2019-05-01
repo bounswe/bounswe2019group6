@@ -4,18 +4,35 @@
     <div class="sidebar-top" style="height:64px">
 
     </div>
-    <mat-expansion-panel>
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          Google API
-        </mat-panel-title>
-      </mat-expansion-panel-header>
+    <mat-list role="list">
+      <mat-list-item>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              Google API
+            </mat-panel-title>
+          </mat-expansion-panel-header>
 
-      <mat-list role="list">
-        <mat-list-item role="listitem"><a routerLink="/google/map">Google Map</a></mat-list-item>
-        <mat-list-item role="listitem"><a routerLink="/google/oauth">Google OAuth</a></mat-list-item>
-      </mat-list>
-    </mat-expansion-panel>
+          <mat-list role="list">
+            <mat-list-item role="listitem"><a routerLink="/google/map">Google Map</a></mat-list-item>
+            <mat-list-item role="listitem"><a routerLink="/google/oauth">Google OAuth</a></mat-list-item>
+          </mat-list>
+        </mat-expansion-panel>
+      </mat-list-item>
+      <mat-list-item>
+          <mat-expansion-panel>
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  Events API
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+    
+              <mat-list role="list">
+                <mat-list-item role="listitem"><a routerLink="/events">Events</a></mat-list-item>
+              </mat-list>
+            </mat-expansion-panel>
+      </mat-list-item>
+    </mat-list>
 
   </mat-sidenav>
 

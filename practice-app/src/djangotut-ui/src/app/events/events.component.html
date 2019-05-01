@@ -1,0 +1,44 @@
+<section class="section" style="position:relative; min-height: 70vh;">
+  <mat-spinner *ngIf="!isPageReady" class="loading"></mat-spinner>
+  <div class="title has-text-centered">
+    <h1 class="is-size-2">Events</h1>
+    <hr>
+  </div>
+  <div class="columns is-multiline" *ngIf="isPageReady">
+    <div class="column is-one-third" *ngFor="let name of eventsNames">
+      <mat-card>
+        <div class="subtitle">
+          <h2 class="is-size-5 has-text-weight-bold">{{name}}</h2>
+        </div>
+        <hr>
+
+        <div class="">
+          <table class="table" style="width: 100%">
+            <tbody>
+              <tr>
+                <td>Country</td>
+                <td>{{events[name].country}}</td>
+              </tr>
+              <tr>
+                <td>Date</td>
+                <td>{{events[name].date}}</td>
+              </tr>
+              <tr>
+                <td>Forecast</td>
+                <td>{{events[name].forecast || '0'}}</td>
+              </tr>
+              <tr>
+                <td>Previous</td>
+                <td>{{events[name].prev}}</td>
+              </tr>
+              <tr>
+                <td>Reputation</td>
+                <td>{{events[name].rep}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+</section>

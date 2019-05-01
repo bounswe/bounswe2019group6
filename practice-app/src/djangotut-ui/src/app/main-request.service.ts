@@ -9,10 +9,7 @@ export class MainRequestService {
       'Content-Type': 'application/json',
       'X-Requested-With': 'XMLHttpRequest',
       // 'X-Socket-ID': ''
-    }),
-    params: {
-      token: null
-    }
+    })
   };
 
   constructor(

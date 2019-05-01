@@ -2,3 +2,7 @@
     background: transparent;
     width: 100%;
 }
+
+.mat-expansion-panel:not([class*=mat-elevation-z]) {
+    box-shadow: none;
+}

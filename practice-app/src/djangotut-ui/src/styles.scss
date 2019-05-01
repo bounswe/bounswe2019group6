@@ -54,5 +54,10 @@ html, body {
     .columns.action {
       justify-content: center;
     }
-  }
+}
   
+  .loading {
+    position: absolute !important;
+    top: 40%;
+    left: 45%;
+}

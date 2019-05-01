@@ -11,12 +11,14 @@ import { AppComponent } from './app.component';
 import { MaterialModule } from './material/material.module';
 import { GoogleMapComponent } from './google-map/google-map.component';
 import { GoogleOauthComponent } from './google-oauth/google-oauth.component';
+import { EventsComponent } from './events/events.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     GoogleMapComponent,
-    GoogleOauthComponent
+    GoogleOauthComponent,
+    EventsComponent
   ],
   imports: [
     BrowserAnimationsModule,

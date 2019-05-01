@@ -9,12 +9,6 @@ import { Observable, Subject } from 'rxjs';
   styleUrls: ['./google-map.component.scss']
 })
 export class GoogleMapComponent implements OnInit {
-  public get googleMapService(): GoogleService {
-    return this.googleService;
-  }
-  public set googleMapService(value: GoogleService) {
-    this.googleService = value;
-  }
 
   lat = 39.0905013;
   lng = 35.4270658;
@@ -37,7 +31,7 @@ export class GoogleMapComponent implements OnInit {
     this.searchTerms.pipe(
       debounceTime(500),
       distinctUntilChanged(),
-      switchMap((term: string) => this.googleMapService.placeAutocomplete(term))
+      switchMap((term: string) => this.googleService.placeAutocomplete(term))
     ).subscribe((response: any) => this.options = response.predictions);
   }
 
@@ -53,7 +47,7 @@ export class GoogleMapComponent implements OnInit {
 
     this.marker = false;
 
-    this.googleMapService.decodeGeocode(place.place_id)
+    this.googleService.decodeGeocode(place.place_id)
       .subscribe(response => {
         this.lat = response.results[0].geometry.location.lat;
         this.lng = response.results[0].geometry.location.lng;
