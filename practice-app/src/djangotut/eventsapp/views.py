@@ -43,6 +43,6 @@ def events_view(request):
 
     #Using RENDER format
     """context = {
-        'object_set' : tabulate_data
+        'object_set' : events_data
     }
     return render(request,'event_details.html',context)"""
