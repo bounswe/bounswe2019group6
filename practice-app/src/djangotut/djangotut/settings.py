@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     #'corsheaders',
     'twitterapp',
     'googleapi',
-    'eventsapp'
+    'eventsapp',
+    'currencyrateapp'
 ]
 
 MIDDLEWARE = [
