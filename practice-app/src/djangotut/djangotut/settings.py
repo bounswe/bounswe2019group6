@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     # apps that are aboved are default, the rest is created by the developer
     #'corsheaders',
     'twitterapp',
-    'googleapi'
+    'googleapi',
+    'eventsapp'
 ]
 
 MIDDLEWARE = [
