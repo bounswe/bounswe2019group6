@@ -9,7 +9,7 @@ import { EventsService } from '../events.service';
 export class EventsComponent implements OnInit {
 
   public get isPageReady(): boolean {
-    return this.eventsNames && this.events;
+    return this.eventsNames && this.events && true;
   }
 
   eventsNames: Array<string>;
