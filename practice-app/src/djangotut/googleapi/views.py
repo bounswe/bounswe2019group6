@@ -4,7 +4,9 @@ from urllib import request as urllibrequest
 from urllib.parse import urlencode
 from urllib.error import HTTPError
 
-#env = environ.Env(DEBUG=(bool, False))
+import environ
+
+env = environ.Env(DEBUG=(bool, False))
 
 # Create your views here.
 
@@ -12,7 +14,7 @@ def getGooglePlace(request):
     url = 'https://maps.googleapis.com/maps/api/place/autocomplete/json'
 
     params = {
-        #'key': env('API_KEY'), 
+        'key': env('API_KEY'), 
         'input': request.GET.get('input', ''), 
         'inputtype': 'textquery', 
         'types': 'geocode'
@@ -31,7 +33,7 @@ def getGoogleGecode(request):
     url = 'https://maps.googleapis.com/maps/api/geocode/json'
 
     params = {
-        #'key': env('API_KEY'), 
+        'key': env('API_KEY'), 
         'place_id': request.GET.get('input', '')
     }
 
