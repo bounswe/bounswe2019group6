@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'twitterapp',
     'googleapi',
     'eventsapp',
+	'newsapp',
     'currencyrateapp'
 ]
 
