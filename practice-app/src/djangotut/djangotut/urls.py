@@ -17,12 +17,14 @@ from django.contrib import admin
 from django.urls import path, include
 
 from eventsapp.views import *
+from newsapp.views import *
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('currencyrate/',include('currencyrateapp.urls')),
     path('twitternews/', include('twitterapp.urls')),
     path('google/', include('googleapi.urls')),
     path('events/', events_view),
+	path('news/',news_view),
     # Create new endpoints here, and redirect them to a function.
     # To do the redirect operation, make the necessary import, and put 
     # your code inside
