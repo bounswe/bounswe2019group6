@@ -19,7 +19,7 @@ class Event:
         self.importance = data['Importance']
         self.currency = data['Currency']
     def get_info(self):
-        lst =  {"country":self.country,"date":self.date,"rep":self.importance,"actual":self.actual,"prev":self.previous,"forecast":self.forecasat}
+        lst =  {"name":self.name,"country":self.country,"date":self.date,"rep":self.importance,"actual":self.actual,"prev":self.previous,"forecast":self.forecasat}
         return lst
 
 # Create your views here.
@@ -31,15 +31,15 @@ def events_view(request):
     data = response.text
     parsed = json.loads(data)
 
-    events_data = {}
+    events_data = []
     
     for i in parsed:
         temp = Event(data = i)
         info = temp.get_info()
-        events_data[temp.name] = info
+        events_data.append(info)
 
     #Using JSON format
-    return JsonResponse(events_data)
+    return JsonResponse(events_data, safe=False)
 
     #Using RENDER format
     """context = {
