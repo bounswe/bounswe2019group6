@@ -1,5 +1,5 @@
 .vscode
 .pycharm
-twitter_credentials.json
+.env
 django-tut*
 db.sqlite3
