@@ -20,9 +20,9 @@ from eventsapp.views import *
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('currencyrate/',include('currencyrateapp.urls')),
-    path('twitternews/', include('twitterapp.urls')),
     path('google/', include('googleapi.urls')),
     path('events/', events_view),
+    path('twitter/', include('twitterapp.urls')),
     # Create new endpoints here, and redirect them to a function.
     # To do the redirect operation, make the necessary import, and put 
     # your code inside
