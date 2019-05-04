@@ -2,6 +2,7 @@ from django.test import Client, TestCase
 from django.urls import reverse
 from django.http import JsonResponse
 from eventsapp.views import * 
+import json
 
 class EventsTest(TestCase):
 
@@ -20,3 +21,10 @@ class EventsTest(TestCase):
 	def test_empty(self):
 		resp = self.client.get(self.url)
 		self.assertTrue(resp.content)
+
+	# checks whether reponse's type is a list of dictionaries
+	def test_type(self):
+		resp = self.client.get(self.url)	
+		resp_list = json.loads(resp.content)
+		self.assertTrue(type(resp_list) is list)
+		self.assertTrue(type(resp_list[0]) is dict)
