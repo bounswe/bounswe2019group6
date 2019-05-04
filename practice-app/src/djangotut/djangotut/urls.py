@@ -18,7 +18,7 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('twitternews/', include('twitterapp.urls')),
+    path('twitter/', include('twitterapp.urls')),
     path('google/', include('googleapi.urls'))
     # Create new endpoints here, and redirect them to a function.
     # To do the redirect operation, make the necessary import, and put 
