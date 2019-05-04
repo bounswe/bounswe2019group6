@@ -46,7 +46,9 @@ INSTALLED_APPS = [
     # apps that are aboved are default, the rest is created by the developer
     'corsheaders',
     'twitterapp',
-    'googleapi'
+    'googleapi',
+    'eventsapp',
+    'currencyrateapp'
 ]
 
 MIDDLEWARE = [
@@ -129,6 +131,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
 
 # CorsHeaders allowed origins
 CORS_ORIGIN_WHITELIST = (
