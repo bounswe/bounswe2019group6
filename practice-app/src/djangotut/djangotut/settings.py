@@ -137,5 +137,5 @@ STATIC_URL = '/static/'
 # CorsHeaders allowed origins
 CORS_ORIGIN_WHITELIST = (
    'localhost:4200',
-   'http://ec2-54-89-235-179.compute-1.amazonaws.com'
+   'ec2-54-89-235-179.compute-1.amazonaws.com'
 )
