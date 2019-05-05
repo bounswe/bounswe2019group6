@@ -6,5 +6,6 @@ from .views import *
 
 urlpatterns = [
     path('', index_page),
-    path('<str:target>', currency_rate_view),
+    path('<str:source>to<str:target>', currency_rate_view),
+    path('eurto', all_currency_rates),
 ]
