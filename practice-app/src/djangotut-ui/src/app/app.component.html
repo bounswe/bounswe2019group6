@@ -1,0 +1,50 @@
+<mat-sidenav-container class="sidenav-container">
+
+  <mat-sidenav #snav id="snav" [mode]="mode" opened="true">
+    <div class="sidebar-top" style="height:64px">
+
+    </div>
+    <mat-list class="navigation" role="list">
+      <mat-list-item role="listitem"><a routerLink="/">Home</a></mat-list-item>
+      <mat-list-item role="listitem"><a routerLink="/google/map">Google Map</a></mat-list-item>
+      <mat-list-item role="listitem"><a routerLink="/google/oauth">Google OAuth</a></mat-list-item>
+      <mat-list-item role="listitem"><a routerLink="/events">Events</a></mat-list-item>
+      <mat-list-item role="listitem"><a routerLink="/news">News</a></mat-list-item>
+      <mat-list-item role="listitem"><a routerLink="/currency">Currency</a></mat-list-item>
+      <mat-list-item role="listitem"><a routerLink="/twitter">Twitter</a></mat-list-item>
+    </mat-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content class="page-wrapper">
+
+    <mat-toolbar class="topbar relative">
+
+      <nav class="navbar" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+          <div class="navbar-item">
+            <button mat-icon-button (click)="snav.toggle()" value="sidebarclosed">
+              <mat-icon>{{snav.opened ? 'chevron_left': 'chevron_right'}}</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <div class="navbar-menu">
+          <div class="navbar-start">
+          </div>
+
+          <div class="navbar-end">
+
+          </div>
+        </div>
+      </nav>
+    </mat-toolbar>
+
+    <div class="page-content">
+
+      <router-outlet></router-outlet>
+
+    </div>
+
+  </mat-sidenav-content>
+
+</mat-sidenav-container>
