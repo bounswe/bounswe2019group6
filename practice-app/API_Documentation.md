@@ -170,23 +170,25 @@ The return type is a list of dictionaries of which elements contain event inform
 
 ## Success Response
 
-{ TODO : ADD MORE RESPONSES IF NEEDED } 
-
 **Code** : `200 OK`
 
 **Content examples**
 
-{TODO: BRIEF RESPONSE DESCRIPTION}
-
 ```json
 {
-    "API_SAMPLE" : "GOES_HERE"
+    all_links: [
+        "https://go.shr.lc/2L9MKtJ",
+        "https://www.publish0x.com/earning-crypto/what-are-security-tokens-and-stos-xllynk?a=mWZdPqweKg",
+        "https://go.shr.lc/2VeKaGv",
+        "http://bit.ly/2U1f8gz",
+        "https://www.publish0x.com/consensus-report/along-with-bitcos-prices-lightg-network-numbers-explod-xepzw?a=mWZdPqweKg"
+    ]
 }
 ```
 
 ## Notes
 
-* { TODO: INSERT NECESSARY NOTES ABOUT YOUR API HERE }
+* Returns some links that leads to events and news
   
 
 </details>
