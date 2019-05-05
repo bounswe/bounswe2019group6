@@ -1,0 +1,7 @@
+<h2> This is index page for currency rates!</h2>
+<p> Please enter a currency to translate from EUR</p>
+
+<form acrion='./' method='POST'> {% csrf_token %}
+    {{ form.as_p }}
+    <input type='submit' value=Search />
+</form>

@@ -1,0 +1,57 @@
+<section class="section currency">
+  <div class="columns">
+    <div class="column is-one-third">
+      <mat-card>
+        <mat-card color="danger" *ngIf="errorMessage">
+          {{errorMessage}}
+        </mat-card>
+        <form #f="ngForm" (ngSubmit)="getCurrency(f)">
+          <mat-form-field class="is-12">
+            <input matInput placeholder="Currency for Base EUR" name="currency" ngModel required>
+          </mat-form-field>
+
+          <button mat-raised-button color="primary" type="submit" [disabled]="!f.valid">
+            Get Currency
+          </button>
+        </form>
+      </mat-card>
+      <mat-card class="">
+        <div class="subtitle">
+          <h3 class="is-size-5">Filter</h3>
+        </div>
+        <div class="columns is-multiline">
+          <div class="column is-one-third" *ngFor="let currency of allCurrencies">
+            <mat-checkbox [(ngModel)]="currency[1]">{{currency[0]}}</mat-checkbox>
+          </div>
+        </div>
+
+        <button mat-raised-button color="primary" type="button" (click)="getCurrencies()">
+          Get Currencies
+        </button>
+      </mat-card>
+    </div>
+    <div class="column is-two-third">
+      <mat-spinner *ngIf="loading" class="loading"></mat-spinner>
+
+      <!-- <mat-list *ngIf="currencies">
+        <mat-list-item *ngFor="let currency of currencies">
+          {{currency}} - {{rates[currency]}}
+        </mat-list-item>
+      </mat-list> -->
+      <mat-card>
+        <table class="table">
+          <thead>
+            <td>Currency</td>
+            <td>Last</td>
+          </thead>
+          <tbody>
+            <tr *ngFor="let currency of currencies">
+              <td>{{currency}}</td>
+              <td>{{rates[currency]}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </mat-card>
+    </div>
+  </div>
+</section>

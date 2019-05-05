@@ -1,0 +1,22 @@
+<section class="section ">
+  <div class="title has-text-centered">
+    <h1 class="is-size-4">
+      <em>(Due to some limitations, eg. domain restrictions, this page is not functional)</em>
+    </h1>
+  </div>
+  <div class="centered-app">
+    <div>
+      <div class="title">
+        <h1 *ngIf="!name">
+          Hallo
+        </h1>
+        <h1 *ngIf="name">
+          Hallo, {{name}}
+        </h1>
+      </div>
+      <button mat-raised-button color="primary" (click)="login()">
+        Login with Google
+      </button>
+    </div>
+  </div>
+</section>

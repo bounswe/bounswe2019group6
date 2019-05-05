@@ -1,0 +1,29 @@
+<section class="section">
+  <div class="columns">
+    <div class="column is-one-third">
+      <form class="">
+        <div class="level">
+          <mat-form-field class="is-12">
+            <input matInput placeholder="Location" name="location" value="" [matAutocomplete]="auto" #input
+              [(ngModel)]="address" (keyup)="search($event)">
+          </mat-form-field>
+          <mat-autocomplete #auto="matAutocomplete">
+            <mat-option *ngFor="let option of options" (click)="geoDecode(option)" [value]="option.place_id">
+              {{option.description}}</mat-option>
+          </mat-autocomplete>
+        </div>
+        <mat-list>
+          <mat-list-item> Latitude: {{lat}} </mat-list-item>
+          <mat-list-item> Longitude: {{lng}} </mat-list-item>
+          <mat-list-item> Zoom: {{zoom}} </mat-list-item>
+        </mat-list>
+      </form>
+    </div>
+    <div class="column is-two-third">
+      <agm-map [latitude]="lat" [longitude]="lng" [zoom]="zoom" (mapDblClick)="dblClick($event)"
+        (zoomChange)="zoom = $event">
+        <agm-marker [latitude]="lat" [longitude]="lng" *ngIf="marker"></agm-marker>
+      </agm-map>
+    </div>
+  </div>
+</section>
