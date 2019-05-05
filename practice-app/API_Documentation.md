@@ -156,7 +156,7 @@ The return type is a list of dictionaries of which elements contain event inform
 
 # Tweets
 
-{TODO: Brief description of the API}
+* Returns some links that leads to events and news
 
 **URL** : `/twitter`
 
@@ -176,7 +176,7 @@ The return type is a list of dictionaries of which elements contain event inform
 
 ```json
 {
-    all_links: [
+    "all_links": [
         "https://go.shr.lc/2L9MKtJ",
         "https://www.publish0x.com/earning-crypto/what-are-security-tokens-and-stos-xllynk?a=mWZdPqweKg",
         "https://go.shr.lc/2VeKaGv",
@@ -188,7 +188,7 @@ The return type is a list of dictionaries of which elements contain event inform
 
 ## Notes
 
-* Returns some links that leads to events and news
+* NO NOTE HERE
   
 
 </details>
