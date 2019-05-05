@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { EventsService } from '../events.service';
+import { MainRequestService } from '../main-request.service';
 
 @Component({
   selector: 'app-events',
@@ -9,23 +9,17 @@ import { EventsService } from '../events.service';
 export class EventsComponent implements OnInit {
 
   public get isPageReady(): boolean {
-    return this.eventsNames && this.events && true;
+    return this.events && true;
   }
-
-  eventsNames: Array<string>;
 
   events: Array<any>;
 
   constructor(
-    private eventsService: EventsService
+    private requestService: MainRequestService
   ) { }
 
   ngOnInit() {
-    this.eventsService.getEvents().subscribe( response => {
-      this.eventsNames = Object.keys(response);
-
-      this.events = response;
-    });
+    this.requestService.getEvents().subscribe( response => this.events = response);
   }
 
 }

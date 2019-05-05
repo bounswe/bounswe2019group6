@@ -1,0 +1,12 @@
+.table {
+    width: 100%;
+
+    thead td {
+        color: black;
+    }
+}
+
+mat-card[color="danger"] {
+    background: red;
+    color:white;
+}

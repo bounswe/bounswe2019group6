@@ -3,7 +3,7 @@ import { OAuthService } from 'angular-oauth2-oidc';
 import { ActivatedRoute, Params } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
-import { GoogleService } from '../google.service';
+import { MainRequestService } from '../main-request.service';
 
 @Component({
   selector: 'app-google-oauth',
@@ -14,14 +14,14 @@ export class GoogleOauthComponent implements OnInit {
 
   constructor(
     private oauthService: OAuthService,
-    private googleService: GoogleService,
+    private requestService: MainRequestService,
     private activatedRoute: ActivatedRoute
   ) { }
 
   ngOnInit() {
     this.activatedRoute.queryParams.pipe(switchMap((params: Params) => {
       if (typeof params.code !== 'undefined') {
-        return this.googleService.exchangeToken(params.code);
+        return this.requestService.exchangeToken(params.code);
       }
       return of();
     })).subscribe((params: Params) => console.log(params));

@@ -1,5 +1,5 @@
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
-import { GoogleService } from '../google.service';
+import { MainRequestService } from '../main-request.service';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { Observable, Subject } from 'rxjs';
 
@@ -24,14 +24,14 @@ export class GoogleMapComponent implements OnInit {
   options = [];
 
   constructor(
-    private googleService: GoogleService
+    private requestService: MainRequestService
   ) { }
 
   ngOnInit() {
     this.searchTerms.pipe(
       debounceTime(500),
       distinctUntilChanged(),
-      switchMap((term: string) => this.googleService.placeAutocomplete(term))
+      switchMap((term: string) => this.requestService.placeAutocomplete(term))
     ).subscribe((response: any) => this.options = response.predictions);
   }
 
@@ -47,7 +47,7 @@ export class GoogleMapComponent implements OnInit {
 
     this.marker = false;
 
-    this.googleService.decodeGeocode(place.place_id)
+    this.requestService.decodeGeocode(place.place_id)
       .subscribe(response => {
         this.lat = response.results[0].geometry.location.lat;
         this.lng = response.results[0].geometry.location.lng;

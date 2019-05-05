@@ -6,3 +6,9 @@
 .mat-expansion-panel:not([class*=mat-elevation-z]) {
     box-shadow: none;
 }
+
+.navigation {
+    a {
+        color: white;
+    }
+}

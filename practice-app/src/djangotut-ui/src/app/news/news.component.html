@@ -1,0 +1,30 @@
+<section class="section news">
+  <mat-spinner *ngIf="!isPageReady" class="loading"></mat-spinner>
+  <div class="title has-text-centered">
+    <h1 class="is-size-2">News</h1>
+    <hr>
+  </div>
+  <div class="columns is-multiline" *ngIf="isPageReady">
+    <div class="column is-12" *ngFor="let id of newsKeys">
+      <mat-card>
+        <div class="card-image">
+          <figure class="image">
+          </figure>
+        </div>
+        <div class="card-content">
+          <div class="media">
+            <div class="media-content">
+              <p class="title is-4 no-padding">{{news[id].title}}</p>
+              <p><span class="title is-6">{{news[id].date}} - {{news[id].country}}</span></p>
+            </div>
+          </div>
+          <hr>
+          <div class="content">
+            {{news[id].description}}
+            <div class="background-icon"><span class="icon-twitter"></span></div>
+          </div>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+</section>

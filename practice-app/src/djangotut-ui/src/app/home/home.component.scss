@@ -1,0 +1,11 @@
+.center-items {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+
+    .title h1 {
+        line-height: 1.4
+    }
+}

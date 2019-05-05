@@ -1,0 +1,17 @@
+<section class="section twitter">
+  <mat-spinner *ngIf="!isPageReady" class="loading"></mat-spinner>
+
+  <div class="title has-text-centered">
+    <h1 class="is-size-2">Twitter News Links</h1>
+    <hr>
+  </div>
+
+  <table class="table" *ngIf="isPageReady">
+    <tbody>
+      <tr *ngFor="let link of links">
+        <td><a href="{{link}}" target="_blank">{{link}}</a></td>
+      </tr>
+    </tbody>
+  </table>
+
+</section>
