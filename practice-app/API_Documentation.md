@@ -200,11 +200,11 @@ The return type is a list of dictionaries of which elements contain event inform
 <summary>Google API</summary>
 <br>
 
-# Google 
+# Google Place
 
-{TODO: Brief description of the API}
+Suggest autocomplete places for given input keyword
 
-**URL** : `/google`
+**URL** : `/google/map/place`
 
 **Method** : `GET`
 
@@ -212,27 +212,143 @@ The return type is a list of dictionaries of which elements contain event inform
 
 **Permissions required** : None
 
-**Parameters** : None
+**Parameters** : input
 
 ## Success Response
 
-{ TODO : ADD MORE RESPONSES IF NEEDED } 
+Place predictions about given input
 
 **Code** : `200 OK`
 
 **Content examples**
 
-{TODO: BRIEF RESPONSE DESCRIPTION}
-
 ```json
 {
-    "API_SAMPLE" : "GOES_HERE"
+    "predictions" : [ 
+        { 
+            "description" : "Ankara, Turkey", 
+            "id" : "908fdf0efc46fb81721d9b06ff54ee23e8703a4f", 
+            "matched_substrings" : [ 
+                { 
+                    "length" : 6, 
+                    "offset" : 0 
+                } 
+            ],
+            "place_id" : "ChIJsS1zINVH0xQRjSuEwLBX3As",
+            "reference" : "ChIJsS1zINVH0xQRjSuEwLBX3As", 
+            "structured_formatting" : { 
+                "main_text" : "Ankara", 
+                "main_text_matched_substrings" : [ 
+                    { 
+                        "length" : 6, 
+                        "offset" : 0 
+                    }
+                ], 
+                "secondary_text" : "Turkey" 
+            }, 
+            "terms" : [ 
+                { 
+                    "offset" : 0, 
+                    "value" : "Ankara" 
+                }, 
+                { 
+                    "offset" : 8, 
+                    "value" : "Turkey" 
+                } 
+            ], 
+            "types" : [ "locality", "political", "geocode" ] 
+        }
+    ],
+    "status" : "OK" 
 }
 ```
 
 ## Notes
 
-* { TODO: INSERT NECESSARY NOTES ABOUT YOUR API HERE }
+*NO NOTE HERE*
+
+# Google Geocode
+
+Returns Google Geocode Object from given place_id
+
+**URL** : `/google/map/geocode`
+
+**Method** : `GET`
+
+**Auth required** : NO
+
+**Permissions required** : None
+
+**Parameters** : input
+
+## Success Response
+
+Geocode Object
+
+**Code** : `200 OK`
+
+**Content examples**
+
+```json
+{ 
+    "results" : [ 
+        { 
+            "address_components" : [ 
+                { 
+                    "long_name" : "Ankara", 
+                    "short_name" : "Ankara", 
+                    "types" : [ "locality", "political" ] 
+                }, 
+                { 
+                    "long_name" : "Ankara", 
+                    "short_name" : "Ankara", 
+                    "types" : [ "administrative_area_level_1", "political" ] 
+                }, 
+                { 
+                    "long_name" : "Turkey", 
+                    "short_name" : "TR", 
+                    "types" : [ "country", "political" ] 
+                } 
+            ], 
+            "formatted_address" : "Ankara, Turkey", 
+            "geometry" : { 
+                "bounds" : { 
+                    "northeast" : { 
+                        "lat" : 40.076332, 
+                        "lng" : 33.007056 
+                    }, 
+                    "southwest" : { 
+                        "lat" : 39.7304211, 
+                        "lng" : 32.5184735 
+                    } 
+                }, 
+                "location" : { 
+                    "lat" : 39.9333635, 
+                    "lng" : 32.8597419 
+                }, 
+                "location_type" : "APPROXIMATE", 
+                "viewport" : { 
+                    "northeast" : { 
+                        "lat" : 40.076332, 
+                        "lng" : 33.007056 
+                    }, 
+                    "southwest" : { 
+                        "lat" : 39.7304211, 
+                        "lng" : 32.5184735 
+                    } 
+                }
+            }, 
+            "place_id" : "ChIJsS1zINVH0xQRjSuEwLBX3As", 
+            "types" : [ "locality", "political" ] 
+        } 
+    ], 
+    "status" : "OK" 
+}
+```
+
+## Notes
+
+*NO NOTE HERE*
     
 </details>
 
