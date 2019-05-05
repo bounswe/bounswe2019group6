@@ -20,7 +20,10 @@ def currency_rate_view(request,source='EUR',target='TRY'):
         dic['datetime']=datetime.datetime.fromtimestamp(int(parsed["timestamp"])).strftime('%Y-%m-%d %H:%M:%S')
         dic[str(source)+' to '+str(target)]=parsed["rates"][target]/parsed2["rates"][source]
     except:
-        return JsonResponse(parsed)
+        if parsed['success'] == False:
+            return JsonResponse(parsed)
+        else:
+            return JsonResponse(parsed2)
     
     return JsonResponse(dic)
 
@@ -44,4 +47,9 @@ def all_currency_rates(request):
 
     return JsonResponse(parsed)
 
+def all_symbols():
+    url = "http://data.fixer.io/api/symbols?access_key=46c682a11a810c7f4daec5cea86bda17"
+    response = requests.get(url)
 
+    parsed = response.json()
+    return JsonResponse(parsed)
