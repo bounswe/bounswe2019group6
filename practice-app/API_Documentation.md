@@ -10,7 +10,7 @@
 
 # Events
 
-Get the details of economic events perfoming today
+Get the details of economic events perfoming today.
 
 **URL** : `/events`
 
@@ -24,23 +24,37 @@ Get the details of economic events perfoming today
 
 ## Success Response
 
-{ TODO : ADD MORE RESPONSES IF NEEDED } 
-
 **Code** : `200 OK`
+
+The return type is a list of dictionaries of which elements contain event information.
 
 **Content examples**
 
-{TODO: BRIEF RESPONSE DESCRIPTION}
-
 ```json
-{
-    "API_SAMPLE" : "GOES_HERE"
-}
+    [{
+        "name": "General Elections",
+        "country": "Panama",
+        "date": "2019-05-05",
+        "rep": 2,
+        "actual": "",
+        "prev": "",
+        "forecast": ""
+    },
+    {
+        "name": "Emirates NBD PMI",
+        "country": "Egypt",
+        "date": "2019-05-05",
+        "rep": 1,
+        "actual": "50.8",
+        "prev": "49.9",
+        "forecast": "50.1"
+    }]
 ```
 
 ## Notes
 
-* { TODO: INSERT NECESSARY NOTES ABOUT YOUR API HERE }
+* "rep" key resresents the importance of an economic event ranging from 1 to 3.
+* "actual", "prev" and "forecast" keys might have empty values for some events.
   
 </details>
 <!--------               EVENTS API ENDS               --------->
