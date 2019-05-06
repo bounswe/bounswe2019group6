@@ -68,37 +68,35 @@ The return type is a list of dictionaries of which elements contain event inform
 
 # Currency Rate
 
-{TODO: Brief description of the API}
+After obtaining request from user, it respond the requested currency translation or all currency translations.
 
-**URL** : `/currencyrate`
+**URL** : `/currencyrate/<str:source>to<str:target>`
 
-**Method** : `GET`
+**Method** : `POST`
 
 **Auth required** : NO
 
 **Permissions required** : None
 
-**Parameters** : None
+**Parameters** : source, target
 
 ## Success Response
-
-{ TODO : ADD MORE RESPONSES IF NEEDED } 
 
 **Code** : `200 OK`
 
 **Content examples**
 
-{TODO: BRIEF RESPONSE DESCRIPTION}
-
 ```json
 {
-    "API_SAMPLE" : "GOES_HERE"
+    "response": success,
+    "datetime": "2019-05-06 11:49:05",
+    "Source to Target: "6.708424",
 }
 ```
 
 ## Notes
 
-* { TODO: INSERT NECESSARY NOTES ABOUT YOUR API HERE }
+No note here!
   
 
 </details>
