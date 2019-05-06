@@ -21,7 +21,7 @@ def twitter_news_view(request):
 
     API = tweepy.API(auth)
 #,'AswathDamodaran','mark_dow','Lavorgnanomics','Ralph_Acampora','jimcramer','TheStalwart','drdaronacemoglu','TruthGundlach']
-    resource_users_id = ['leimer','Austan_Goolsbee']
+    resource_users_id = ['Investingcom','newsinvesting','InvestingTR','cryptonewsday']
     all_links = []
     for source in resource_users_id:
         tweets = API.user_timeline(source)
