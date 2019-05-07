@@ -190,7 +190,7 @@ No note here!
   
 
 </details>
-<!--------               TWITTER API STARTS                   --------->
+<!--------               TWITTER API ENDS                   --------->
 
 
 <!--------               GOOGLE API STARTS                   --------->
