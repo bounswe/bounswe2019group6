@@ -23,7 +23,7 @@ class TwitterTest(TestCase):
 		resp = self.client.get(self.url)
 		self.assertTrue(resp.content)
 
-	# checks whether reponse's type is a list of dictionaries
+	# checks whether reponse's type is a dictionaries and contains a list
 	def test_type(self):
 		resp = self.client.get(self.url)	
 		resp_json = json.loads(resp.content)
