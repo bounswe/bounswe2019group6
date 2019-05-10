@@ -65,7 +65,7 @@ def getAccessToken(request):
 
     body = ""
 
-     with urllibrequest.urlopen(req) as r:
+    with urllibrequest.urlopen(req) as r:
         body = r.read()
 
     return HttpResponse(body)
