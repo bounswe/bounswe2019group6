@@ -110,7 +110,7 @@ No note here!
 
 # News
 
-{TODO: Brief description of the API}
+Having information about the newly emerged financial news 
 
 **URL** : `/news`
 
@@ -124,7 +124,6 @@ No note here!
 
 ## Success Response
 
-{ TODO : ADD MORE RESPONSES IF NEEDED } 
 
 **Code** : `200 OK`
 
