@@ -7,7 +7,7 @@ import json
 
 #Author: Baran Deniz Korkmaz
 
-class GoogleApiTest(TestCase):
+class CurrencyRateTest(TestCase):
 
 	def __init__(self, *args, **kwargs):
 		TestCase.__init__(self, *args, **kwargs)
