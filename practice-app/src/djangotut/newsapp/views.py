@@ -27,7 +27,7 @@ class News:
 #Creating the views
 def news_view(request):
 
-	url="https://api.tradingeconomics.com/news/indicator/inflation%20rate?c=guest:guest"
+	url="https://api.tradingeconomics.com/news?c=guest:guest"
 
 
 	response = requests.get(url)
