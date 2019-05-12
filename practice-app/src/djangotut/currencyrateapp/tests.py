@@ -25,7 +25,7 @@ class CurrencyRateTest(TestCase):
 		resp = self.client.get(self.url)
 		self.assertTrue(resp.content)
 
-	# checks whether reponse's type is a list of dictionaries
+	# checks whether the type of the response is a dictionary
 	def test_type(self):
 		resp = self.client.get(self.url)
 		data = json.loads(resp.content)
