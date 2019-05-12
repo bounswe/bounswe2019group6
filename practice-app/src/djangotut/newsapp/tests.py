@@ -22,8 +22,9 @@ class NewsTest(TestCase):
 		resp = self.client.get(self.url)
 		self.assertTrue(resp.content)
 
-	# checks whether reponse's type is a dict
+	# checks whether reponse's type is a list and each member of it is a dictionary
 	def test_type(self):
 		resp = self.client.get(self.url)
 		data = json.loads(resp.content)
-		self.assertTrue(type(data) is dict)
+		self.assertTrue(type(data[0]) is dict) 
+		self.assertTrue(type(data) is list)
