@@ -2,7 +2,7 @@
 from django.test import Client, TestCase
 from django.urls import reverse
 from django.http import JsonResponse
-from googleapi.views import * 
+from currencyrateapp.views import * 
 import json
 
 #Author: Baran Deniz Korkmaz
