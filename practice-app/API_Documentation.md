@@ -129,17 +129,44 @@ Having information about the newly emerged financial news
 
 **Content examples**
 
-{TODO: BRIEF RESPONSE DESCRIPTION}
+List of dictionaries is returned, each are itemized by their id's. Information about the news are categorized accordingly.
+
+
 
 ```json
-{
-    "API_SAMPLE" : "GOES_HERE"
+
+{"77111":
+    {"id": "77111",
+     "title": "Rwanda Inflation Rate Lowest in 3 Months in April",
+     "description": "The annual inflation rate in Rwanda eased to 0.2 percent in April 2019 from 1.1 percent in the prior month. It is 
+                     the lowest inflation since January, as prices fell further for food & non-alcoholic beverages (-3.1% vs 2.4% in 
+                     March) and slowed for transport (3% vs 6.7%). Also, cost was flat for housing & utilities (vs 1.1% in March). On a 
+                     monthly basis, consumer prices went up 0.3 percent, following a 1.1 percent rise in the previous month.",
+     "date": "2019-05-10",
+     "country": "Rwanda",
+     "symbol": "RwandaIR",
+     "url": "/rwanda/inflation-cpi"},
+ "77107": 
+    {"id": "77107",
+    "title": "Kosovo Inflation Rate Highest in Over 6 Years", 
+    "description": "Annual inflation rate in Kosovo edged up to 3.4 percent in April of 2019 from 3.3 percent in the previous month. It was 
+                    the highest inflation rate since January of 2013, as cost rose faster for food & non-alcoholic beverages (7.1 percent 
+                    from 6.7 percent in March) and for furniture & household equipment (0.9 percent vs 0.3 percent). On the other hand, 
+                    prices went up at a softer pace for transport (2.2 percent vs 2.7 percent); alcoholic beverages & tobacco (2.7 percent 
+                    vs 2.8 percent) and miscellaneous goods & services (1.0 percent vs 1.3 percent) while cost fell for housing & utilities 
+                    (-1.4 percent vs -1.3 percent); recreation & culture (-0.3 percent vs -0.4 percent) and communication (-0.3 percent vs 
+                    -0.5 percent). On a monthly basis, consumer prices went up 0.1 percent, the same as in March.",
+    "date": "2019-05-10", 
+    "country": "Kosovo",
+    "symbol": "KOSSOVOINFNRATE", 
+    "url": "/kosovo/inflation-cpi"}
 }
+
 ```
 
 ## Notes
 
-* { TODO: INSERT NECESSARY NOTES ABOUT YOUR API HERE }
+* There is no note for the api
  
 </details>
 
