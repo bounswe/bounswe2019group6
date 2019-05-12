@@ -27,7 +27,6 @@ class GoogleApiTest(TestCase):
 
 	# checks whether reponse's type is a list of dictionaries
 	def test_type(self):
-		resp = self.client.get(self.url)	
-		resp_list = json.loads(resp.content)
-		self.assertTrue(type(resp_list) is list)
-		self.assertTrue(type(resp_list[0]) is dict)
+		resp = self.client.get(self.url)
+		data = json.loads(resp.content)
+		self.assertTrue(type(data) is dict)
