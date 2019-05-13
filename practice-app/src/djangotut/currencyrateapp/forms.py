@@ -1,4 +1,5 @@
 from django import forms
 
 class SearchForm(forms.Form):
-    target     = forms.CharField(label='From EUR to',widget=forms.TextInput(attrs={"placeholder": "Currency"}))
+    source     = forms.CharField(label='From ',widget=forms.TextInput(attrs={"placeholder": "From Currency"}))
+    target     = forms.CharField(label='To',widget=forms.TextInput(attrs={"placeholder": "To Currency"}))
