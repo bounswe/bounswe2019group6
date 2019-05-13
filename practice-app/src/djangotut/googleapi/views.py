@@ -52,25 +52,20 @@ def getAccessToken(request):
 
     params = {
         'code': request.GET.get('code', ''),
-        'redirect_uri': 'https://pinoynanny.com',
-        'client_id': '399765628337-9vk6citn3kvbf2jiebn4n620k63um5ib.apps.googleusercontent.com',
-        'client_secret': 'LQt2bwkHmjmZQKDoVAVPhCsx',
+        'redirect_uri': 'OUR_NEXT_DOMAIN',
+        'client_id': env('CLIENT_ID'),
+        'client_secret': env('CLIENT_SECRET'),
         'scope': '',
         'grant_type': 'authorization_code'
     }
 
     data = urlencode(params).encode('ascii')
-    print(data)
 
     req = urllibrequest.Request(url, data=data)
 
     body = ""
 
-    try:
-        with urllibrequest.urlopen(req) as r:
-            body = r.read()
-    except HTTPError as e:
-        print(e)
-        return HttpResponse(e)
+    with urllibrequest.urlopen(req) as r:
+        body = r.read()
 
     return HttpResponse(body)
