@@ -12,12 +12,18 @@ This project aims to create a social platform for people who can be considered a
 To see current website, visit: http://ec2-54-89-235-179.compute-1.amazonaws.com/
 
 ## Team Members
-[![Baran Deniz Korkmaz](https://avatars1.githubusercontent.com/u/44136572?s=400&v=4)](https://github.com/bounswe/bounswe2019group6/wiki/Baran-Deniz-Korkmaz) | [![Barış Ege Sevgili](https://avatars2.githubusercontent.com/u/32372733?s=400&v=4)](https://github.com/bounswe/bounswe2019group6/wiki/Barış-Ege-Sevgili) | [![Burak İkan Yıldız](https://avatars0.githubusercontent.com/u/26484140?s=400&v=4)](https://github.com/bounswe/bounswe2019group6/wiki/Burak-%C4%B0kan-Y%C4%B1ld%C4%B1z) | [![Burak Yüksel](https://avatars1.githubusercontent.com/u/21309693?s=400&v=4)](https://github.com/bounswe/bounswe2019group6/wiki/Burak-Y%C3%BCksel) | [![Enes Turan Özcan](https://avatars3.githubusercontent.com/u/44522401?s=400&v=4)](https://github.com/bounswe/bounswe2019group6/wiki/Enes-Ozcan)
----|---|---|---|---
-[Baran Deniz Korkmaz](https://github.com/bounswe/bounswe2019group6/wiki/Baran-Deniz-Korkmaz) | [Barış Ege Sevgili](https://github.com/bounswe/bounswe2019group6/wiki/Barış-Ege-Sevgili) | [Burak İkan Yıldız](https://github.com/bounswe/bounswe2019group6/wiki/Burak-%C4%B0kan-Y%C4%B1ld%C4%B1z) | [Burak Yüksel](https://github.com/bounswe/bounswe2019group6/wiki/Burak-Y%C3%BCksel) | [Enes Turan Özcan](https://github.com/bounswe/bounswe2019group6/wiki/Enes-Ozcan)
+[![Baran Deniz Korkmaz](https://avatars1.githubusercontent.com/u/44136572?s=400&v=4)](https://github.com/bounswe/bounswe2019group6/wiki/Baran-Deniz-Korkmaz) | [![Barış Ege Sevgili](https://avatars2.githubusercontent.com/u/32372733?s=400&v=4)](https://github.com/bounswe/bounswe2019group6/wiki/Barış-Ege-Sevgili) | [![Burak İkan Yıldız](https://avatars0.githubusercontent.com/u/26484140?s=400&v=4)](https://github.com/bounswe/bounswe2019group6/wiki/Burak-%C4%B0kan-Y%C4%B1ld%C4%B1z)
+---|---|---
+[Baran Deniz Korkmaz](https://github.com/bounswe/bounswe2019group6/wiki/Baran-Deniz-Korkmaz) | [Barış Ege Sevgili](https://github.com/bounswe/bounswe2019group6/wiki/Barış-Ege-Sevgili) | [Burak İkan Yıldız](https://github.com/bounswe/bounswe2019group6/wiki/Burak-%C4%B0kan-Y%C4%B1ld%C4%B1z)
 
 ---
 
-[![Fatih Mustafa Kurt](https://avatars0.githubusercontent.com/u/16965054?s=400&v=4)](https://github.com/bounswe/bounswe2019group6/wiki/Fatih-Mustafa-Kurt) | [![Irmak Güzey](https://avatars0.githubusercontent.com/u/32496519?s=400&v=4)](https://github.com/bounswe/bounswe2019group6/wiki/Irmak-G%C3%BCzey) | [![Mustafa Alparslan](https://avatars1.githubusercontent.com/u/43815119?s=400&v=4)](https://github.com/bounswe/bounswe2019group6/wiki/Mustafa-Alparslan) | [![Sadullah Gültekin (Communicator)](https://avatars2.githubusercontent.com/u/16756389?s=400&v=4)](https://github.com/bounswe/bounswe2019group6/wiki/Sadullah-G%C3%BCltekin)
-----|----|----|----
-[Fatih Mustafa Kurt](https://github.com/bounswe/bounswe2019group6/wiki/Fatih-Mustafa-Kurt) | [Irmak Güzey](https://github.com/bounswe/bounswe2019group6/wiki/Irmak-G%C3%BCzey) |  [Mustafa Alparslan](https://github.com/bounswe/bounswe2019group6/wiki/Mustafa-Alparslan) | [Sadullah Gültekin (Communicator)](https://github.com/bounswe/bounswe2019group6/wiki/Sadullah-G%C3%BCltekin)
+[![Burak Yüksel](https://avatars1.githubusercontent.com/u/21309693?s=400&v=4)](https://github.com/bounswe/bounswe2019group6/wiki/Burak-Y%C3%BCksel) | [![Enes Turan Özcan](https://avatars3.githubusercontent.com/u/44522401?s=400&v=4)](https://github.com/bounswe/bounswe2019group6/wiki/Enes-Ozcan) | [![Fatih Mustafa Kurt](https://avatars0.githubusercontent.com/u/16965054?s=400&v=4)](https://github.com/bounswe/bounswe2019group6/wiki/Fatih-Mustafa-Kurt)
+----|----|----
+[Burak Yüksel](https://github.com/bounswe/bounswe2019group6/wiki/Burak-Y%C3%BCksel) | [Enes Turan Özcan](https://github.com/bounswe/bounswe2019group6/wiki/Enes-Ozcan) | [Fatih Mustafa Kurt](https://github.com/bounswe/bounswe2019group6/wiki/Fatih-Mustafa-Kurt)
+
+---
+
+ [![Irmak Güzey](https://avatars0.githubusercontent.com/u/32496519?s=400&v=4)](https://github.com/bounswe/bounswe2019group6/wiki/Irmak-G%C3%BCzey) | [![Mustafa Alparslan](https://avatars1.githubusercontent.com/u/43815119?s=400&v=4)](https://github.com/bounswe/bounswe2019group6/wiki/Mustafa-Alparslan) | [![Sadullah Gültekin (Communicator)](https://avatars2.githubusercontent.com/u/16756389?s=400&v=4)](https://github.com/bounswe/bounswe2019group6/wiki/Sadullah-G%C3%BCltekin)
+---|---|---
+[Irmak Güzey](https://github.com/bounswe/bounswe2019group6/wiki/Irmak-G%C3%BCzey) |  [Mustafa Alparslan](https://github.com/bounswe/bounswe2019group6/wiki/Mustafa-Alparslan) | [Sadullah Gültekin (Communicator)](https://github.com/bounswe/bounswe2019group6/wiki/Sadullah-G%C3%BCltekin)
