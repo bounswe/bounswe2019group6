@@ -1,6 +1,6 @@
 # Group #6
 
-Welcome to our project repository for CMPE 352 course.
+Welcome to our project repository for CMPE 352&451 course.
 
 You can find our meeting notes, contributors' home pages and other stuff about our work on the [Wiki](https://github.com/bounswe/bounswe2019group6/wiki) page of the repository.
 Stay tuned for inspiring ideas!
@@ -18,6 +18,6 @@ To see current website, visit: http://ec2-54-89-235-179.compute-1.amazonaws.com/
 
 ---
 
-[![Eray Sezgin](https://avatars1.githubusercontent.com/u/15183812?s=400&v=4)](https://github.com/bounswe/bounswe2019group6/wiki/Eray-Sezgin)  | [![Fatih Mustafa Kurt](https://avatars0.githubusercontent.com/u/16965054?s=400&v=4)](https://github.com/bounswe/bounswe2019group6/wiki/Fatih-Mustafa-Kurt) | [![Furkan Nane](https://avatars3.githubusercontent.com/u/32761817?s=400&v=4)](https://github.com/bounswe/bounswe2019group6/wiki/Furkan-Nane) | [![Irmak Güzey](https://avatars0.githubusercontent.com/u/32496519?s=400&v=4)](https://github.com/bounswe/bounswe2019group6/wiki/Irmak-G%C3%BCzey) | [![Sadullah Gültekin (Communicator)](https://avatars2.githubusercontent.com/u/16756389?s=400&v=4)](https://github.com/bounswe/bounswe2019group6/wiki/Sadullah-G%C3%BCltekin)
-----|----|----|----|----
-[Eray Sezgin](https://github.com/bounswe/bounswe2019group6/wiki/Eray-Sezgin) | [Fatih Mustafa Kurt](https://github.com/bounswe/bounswe2019group6/wiki/Fatih-Mustafa-Kurt) | [Furkan Nane](https://github.com/bounswe/bounswe2019group6/wiki/Furkan-Nane) | [Irmak Güzey](https://github.com/bounswe/bounswe2019group6/wiki/Irmak-G%C3%BCzey) | [Sadullah Gültekin (Communicator)](https://github.com/bounswe/bounswe2019group6/wiki/Sadullah-G%C3%BCltekin)
+[![Fatih Mustafa Kurt](https://avatars0.githubusercontent.com/u/16965054?s=400&v=4)](https://github.com/bounswe/bounswe2019group6/wiki/Fatih-Mustafa-Kurt) | [![Irmak Güzey](https://avatars0.githubusercontent.com/u/32496519?s=400&v=4)](https://github.com/bounswe/bounswe2019group6/wiki/Irmak-G%C3%BCzey) | [![![Mustafa Alparslan](https://avatars1.githubusercontent.com/u/43815119?s=400&v=4)](https://github.com/bounswe/bounswe2019group6/wiki/Mustafa-Alparslan) | [![Sadullah Gültekin (Communicator)](https://avatars2.githubusercontent.com/u/16756389?s=400&v=4)](https://github.com/bounswe/bounswe2019group6/wiki/Sadullah-G%C3%BCltekin)
+----|----|----|----
+[Fatih Mustafa Kurt](https://github.com/bounswe/bounswe2019group6/wiki/Fatih-Mustafa-Kurt) | [Irmak Güzey](https://github.com/bounswe/bounswe2019group6/wiki/Irmak-G%C3%BCzey) |  [Furkan Nane](https://github.com/bounswe/bounswe2019group6/wiki/Furkan-Nane) | [Sadullah Gültekin (Communicator)](https://github.com/bounswe/bounswe2019group6/wiki/Sadullah-G%C3%BCltekin)
