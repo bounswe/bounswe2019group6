@@ -1,0 +1,47 @@
+<resources>
+    <string name="app_name">TraderX</string>
+
+    <string name="not_available">Not Available</string>
+    <string name="connecting">Connecting</string>
+    <string name="loading">Loading</string>
+    <string name="your_name">Name</string>
+    <string name="your_mail">Mail</string>
+    <string name="password">Password</string>
+    <string name="password_again">Repeat Password</string>
+    <string name="your_phone">Mail</string>
+    <string name="accept_terms">Accept Conditions</string>
+    <string name="register">Register</string>
+    <string name="login">Login</string>
+    <string name="forgot_pass">Forgot Password</string>
+
+
+    <string name="email_not_valid">Use a valid email</string>
+    <string name="pass_match_fail">Passwords doesn\'t match</string>
+
+    <string name="select_county">Select Country</string>
+    <string name="select_town">Select City</string>
+    <string name="select_neighbourhood">Select County</string>
+    <string name="select_district">Select District</string>
+
+
+
+
+
+
+    <string name="fill_empty_areas">Fill empty areas</string>
+
+    <string name="location_not_accessible">Location is not accessible</string>
+    <string name="ask_location_activation">Would you like to enable Location Access?</string>
+    <string name="restaurant_list_by_location">Accessing to location</string>
+
+
+
+    <string name="press_back_quit">Press back again to exit</string>
+
+
+    <string name="navigation_drawer_open" translatable="false"/>
+    <string name="navigation_drawer_close" translatable="false"/>
+    <string name="main_page_logo_desc">Main page logo</string>
+
+
+</resources>
