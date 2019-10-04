@@ -2,6 +2,7 @@ package cmpe451.group6.authorization.service;
 
 import javax.servlet.http.HttpServletRequest;
 
+import cmpe451.group6.authorization.dto.TokenWrapperDTO;
 import cmpe451.group6.authorization.model.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -34,33 +35,33 @@ public class UserService {
   @Autowired
   private AuthenticationManager authenticationManager;
 
-  public String signin(String username, String password) {
+  public TokenWrapperDTO signin(String username, String password) {
     try {
       authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-      return jwtTokenProvider.createToken(username, userRepository.findByUsername(username).getRoles());
+      return new TokenWrapperDTO(jwtTokenProvider.createToken(username, userRepository.findByUsername(username).getRoles()));
     } catch (AuthenticationException e) {
       throw new CustomException("Invalid username/password supplied", HttpStatus.UNPROCESSABLE_ENTITY);
     }
   }
 
 
-  public String admin_signup(User user){
+  public TokenWrapperDTO admin_signup(User user){
     if (!userRepository.existsByUsername(user.getUsername())) {
       user.setPassword(passwordEncoder.encode(user.getPassword()));
       userRepository.save(user);
-      return jwtTokenProvider.createToken(user.getUsername(), user.getRoles());
+      return new TokenWrapperDTO(jwtTokenProvider.createToken(user.getUsername(), user.getRoles()));
     } else {
       throw new CustomException("Username is already in use", HttpStatus.UNPROCESSABLE_ENTITY);
     }
   }
 
-  public String signup(User user) {
+  public TokenWrapperDTO signup(User user) {
     if (!userRepository.existsByUsername(user.getUsername()) && !userRepository.existsByEmail(user.getEmail())) {
       user.setPassword(passwordEncoder.encode(user.getPassword()));
       Role role = validateIBAN(user.getIBAN());
       user.setRoles(new ArrayList<>(Arrays.asList(role)));
       userRepository.save(user);
-      return jwtTokenProvider.createToken(user.getUsername(), user.getRoles());
+      return new TokenWrapperDTO(jwtTokenProvider.createToken(user.getUsername(), user.getRoles()));
     } else {
       throw new CustomException("Username or email is already in use", HttpStatus.UNPROCESSABLE_ENTITY);
     }
@@ -82,8 +83,8 @@ public class UserService {
     return userRepository.findByUsername(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)));
   }
 
-  public String refresh(String username) {
-    return jwtTokenProvider.createToken(username, userRepository.findByUsername(username).getRoles());
+  public TokenWrapperDTO refresh(String username) {
+    return new TokenWrapperDTO(jwtTokenProvider.createToken(username, userRepository.findByUsername(username).getRoles()));
   }
 
   /**

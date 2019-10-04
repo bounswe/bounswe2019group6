@@ -2,6 +2,7 @@ package cmpe451.group6.authorization.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
+import cmpe451.group6.authorization.dto.TokenWrapperDTO;
 import cmpe451.group6.authorization.dto.UserDataDTO;
 import cmpe451.group6.authorization.dto.UserResponseDTO;
 import cmpe451.group6.authorization.model.User;
@@ -40,9 +41,9 @@ public class UserController {
   @ApiResponses(value = {//
   @ApiResponse(code = 400, message = "Something went wrong"), //
   @ApiResponse(code = 422, message = "Invalid username/password supplied")})
-  public String login(//
-      @ApiParam("Username") @RequestParam String username, //
-      @ApiParam("Password") @RequestParam String password) {
+  public TokenWrapperDTO login(//
+                               @ApiParam("Username") @RequestParam String username, //
+                               @ApiParam("Password") @RequestParam String password) {
     return userService.signin(username, password);
   }
 
@@ -53,7 +54,7 @@ public class UserController {
       @ApiResponse(code = 403, message = "Access denied"), //
       @ApiResponse(code = 422, message = "Username is already in use"), //
       @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
-  public String signup(@ApiParam("Signup User") @RequestBody UserDataDTO user) {
+  public TokenWrapperDTO signup(@ApiParam("Signup User") @RequestBody UserDataDTO user) {
       return userService.signup(modelMapper.map(user, User.class));
   }
 
@@ -95,7 +96,7 @@ public class UserController {
 
   @GetMapping("/refresh")
   @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_BASIC') or hasRole('ROLE_TRADER')")
-  public String refresh(HttpServletRequest req) {
+  public TokenWrapperDTO refresh(HttpServletRequest req) {
     return userService.refresh(req.getRemoteUser());
   }
 
