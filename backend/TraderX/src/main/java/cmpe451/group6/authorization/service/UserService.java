@@ -3,6 +3,7 @@ package cmpe451.group6.authorization.service;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 
+import cmpe451.group6.authorization.dto.TokenWrapperDTO;
 import cmpe451.group6.authorization.email.EmailService;
 import cmpe451.group6.authorization.model.RegistrationStatus;
 import cmpe451.group6.authorization.model.Role;
@@ -52,8 +53,8 @@ public class UserService {
     return userRepository.findByUsername(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)));
   }
 
-  public String refreshToken(String username) {
-    return jwtTokenProvider.createToken(username, userRepository.findByUsername(username).getRoles());
+  public TokenWrapperDTO refreshToken(String username) {
+    return new TokenWrapperDTO(jwtTokenProvider.createToken(username, userRepository.findByUsername(username).getRoles()));
   }
 
 }

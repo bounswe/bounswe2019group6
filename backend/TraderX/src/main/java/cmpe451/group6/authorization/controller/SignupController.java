@@ -1,24 +1,12 @@
 package cmpe451.group6.authorization.controller;
 
 import cmpe451.group6.authorization.dto.UserDataDTO;
-import cmpe451.group6.authorization.exception.CustomException;
 import cmpe451.group6.authorization.model.User;
 import cmpe451.group6.authorization.service.SignupService;
-import cmpe451.group6.authorization.service.UserService;
 import io.swagger.annotations.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpRequest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.client.support.HttpRequestWrapper;
-import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.support.MissingServletRequestPartException;
-
-import javax.validation.ConstraintViolationException;
-import java.net.URI;
 
 @RestController
 @RequestMapping("/signup")

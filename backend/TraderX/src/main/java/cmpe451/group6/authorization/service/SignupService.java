@@ -1,5 +1,6 @@
 package cmpe451.group6.authorization.service;
 
+import cmpe451.group6.authorization.dto.TokenWrapperDTO;
 import cmpe451.group6.authorization.email.EmailService;
 import cmpe451.group6.authorization.exception.CustomException;
 import cmpe451.group6.authorization.model.RegistrationStatus;
@@ -71,11 +72,11 @@ public class SignupService {
         }
     }
 
-    public String admin_signup(User user){
+    public TokenWrapperDTO admin_signup(User user){
         if (!userRepository.existsByUsername(user.getUsername())) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             userRepository.save(user);
-            return jwtTokenProvider.createToken(user.getUsername(), user.getRoles());
+            return new TokenWrapperDTO(jwtTokenProvider.createToken(user.getUsername(), user.getRoles()));
         } else {
             throw new CustomException("Username is already in use", HttpStatus.UNPROCESSABLE_ENTITY);
         }

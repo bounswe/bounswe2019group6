@@ -2,24 +2,18 @@ package cmpe451.group6.authorization.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
-import cmpe451.group6.authorization.dto.UserDataDTO;
+import cmpe451.group6.authorization.dto.TokenWrapperDTO;
 import cmpe451.group6.authorization.dto.UserResponseDTO;
-import cmpe451.group6.authorization.exception.CustomException;
-import cmpe451.group6.authorization.model.User;
 import cmpe451.group6.authorization.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.*;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
 @RestController
 @RequestMapping("/users")
@@ -68,7 +62,7 @@ public class UserController {
   @GetMapping("/refresh")
   @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_BASIC') or hasRole('ROLE_TRADER')")
   @ApiOperation(value = "Returns a new token for the user.", response = String.class)
-  public String refresh(HttpServletRequest req) {
+  public TokenWrapperDTO refresh(HttpServletRequest req) {
     return userService.refreshToken(req.getRemoteUser());
   }
 
