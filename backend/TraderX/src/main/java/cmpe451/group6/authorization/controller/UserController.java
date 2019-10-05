@@ -46,6 +46,38 @@ public class UserController {
     return userService.signin(username, password);
   }
 
+  @PostMapping("/forgotpassword")
+  @ApiOperation(value = "${UserController.signin}")
+  @ApiResponses(value = {//
+          @ApiResponse(code = 400, message = "Something went wrong"), //
+          @ApiResponse(code = 422, message = "Invalid username/password supplied")})
+  public String forgotPassword(//
+                      @ApiParam("Email") @RequestParam String email) {
+    return userService.sendPasswordRenewalMail(email);
+  }
+
+  @PostMapping("/renewpassword")
+  @ApiOperation(value = "${UserController.signin}")
+  @ApiResponses(value = {//
+          @ApiResponse(code = 400, message = "Something went wrong"), //
+          @ApiResponse(code = 422, message = "Invalid username/password supplied")})
+  public String renewPassword(//
+                      @ApiParam("Token") @RequestParam String token,
+                      @ApiParam("Password") @RequestParam String newPassword) {
+    return userService.renewPassword(token,newPassword);
+  }
+
+  @PostMapping("/confirmation")
+  @ApiOperation(value = "${UserController.confirmation}")
+  @ApiResponses(value = {//
+          @ApiResponse(code = 400, message = "Something went wrong"), //
+          //@ApiResponse(code = 422, message = "Invalid username/password supplied")})
+  })
+  public String confirm(//
+                      @ApiParam("ConfirmationToken") @RequestParam String token) {
+    return userService.confirmUser(token);
+  }
+
   @PostMapping("/signup")
   @ApiOperation(value = "${UserController.signup}")
   @ApiResponses(value = {//

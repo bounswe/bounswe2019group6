@@ -44,6 +44,18 @@ public class User {
   @ElementCollection(fetch = FetchType.EAGER)
   List<Role> roles;
 
+  @Column(nullable = false)
+  private RegistrationStatus status;
+
+  // TODO : Public / Private field
+
+  public RegistrationStatus getStatus() {
+    return status;
+  }
+
+  public void setStatus(RegistrationStatus status) {
+    this.status = status;
+  }
 
   public String getLatitude() {
     return latitude;

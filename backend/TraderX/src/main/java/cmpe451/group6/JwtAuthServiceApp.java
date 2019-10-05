@@ -3,6 +3,7 @@ package cmpe451.group6;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import cmpe451.group6.authorization.model.RegistrationStatus;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -39,6 +40,7 @@ public class JwtAuthServiceApp implements CommandLineRunner {
     admin.setEmail("admin@email.com");
     admin.setLatitude("46.123");
     admin.setLongitude("46.123");
+    admin.setStatus(RegistrationStatus.ENABLED);
     admin.setRoles(new ArrayList<Role>(Arrays.asList(Role.ROLE_ADMIN)));
 
     userService.admin_signup(admin);

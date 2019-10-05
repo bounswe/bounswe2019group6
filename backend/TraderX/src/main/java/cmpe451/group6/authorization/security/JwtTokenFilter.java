@@ -8,6 +8,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import cmpe451.group6.authorization.exception.CustomException;
+import cmpe451.group6.authorization.model.RegistrationStatus;
+import cmpe451.group6.authorization.model.User;
+import cmpe451.group6.authorization.repository.UserRepository;
+import cmpe451.group6.authorization.service.UserService;
+import org.hibernate.cache.spi.RegionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -28,6 +34,10 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     try {
       if (token != null && jwtTokenProvider.validateToken(token)) {
         Authentication auth = jwtTokenProvider.getAuthentication(token);
+
+        // Check if user has been activated the account via Email or Google Signin
+        // TODO: User repository is null here
+
         SecurityContextHolder.getContext().setAuthentication(auth);
       }
     } catch (CustomException ex) {
