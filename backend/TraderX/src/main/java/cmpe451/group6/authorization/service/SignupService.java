@@ -97,6 +97,6 @@ public class SignupService {
     }
 
     private String buildVerificationURL(String token){
-        return "http://localhost:8080/users/confirmation?token=" + token;
+        return "http://localhost:8080/signup/confirm?token=" + token;
     }
 }

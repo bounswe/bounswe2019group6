@@ -70,7 +70,8 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     } catch (CustomException ex) {
       // It guarantees the user is not authenticated
       SecurityContextHolder.clearContext();
-      httpServletResponse.sendError(ex.getHttpStatus().value(), ex.getMessage());
+      httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, ex.getMessage() + ". Are you trying to reach a" +
+              " public endpoint with token?");
       return;
     }
 

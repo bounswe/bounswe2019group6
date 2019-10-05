@@ -47,7 +47,6 @@ public class PasswordService {
     }
 
 
-    // TODO : Invalidate the token after the password has been changed.
     public String setNewPassword(String token, String newPassword){
         try {
             String username = jwtTokenProvider.getUsername(token);
@@ -61,7 +60,7 @@ public class PasswordService {
     }
 
     private String buildPasswordRenewalURL(String token){
-        return "http://localhost:8080/users/renewpassword?token=" + token;
+        return "http://localhost:8080/users/renew?token=" + token;
     }
 
 }

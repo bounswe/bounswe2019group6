@@ -35,7 +35,6 @@ public class PasswordController {
                                 @ApiParam("Token") @RequestParam String token,
                                 @ApiParam("Password") @RequestParam String newPassword) {
 
-        // TODO: Check password regex here
         return passwordService.setNewPassword(token,newPassword);
     }
 

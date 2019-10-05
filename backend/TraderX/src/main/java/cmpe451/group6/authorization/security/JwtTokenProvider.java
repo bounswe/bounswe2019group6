@@ -30,7 +30,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 public class JwtTokenProvider {
 
   /**
-   * TODO:
+   * NOTE:
    * THIS IS NOT A SECURE PRACTICE! For simplicity, we are storing a static key here. Ideally, in a
    * microservices environment, this key would be kept on a config-server.
    */
@@ -50,7 +50,6 @@ public class JwtTokenProvider {
 
   public String createToken(String username, List<Role> roles) {
 
-    // TODO : Do not create a new token if already exists
     Claims claims = Jwts.claims().setSubject(username);
     claims.put("auth", roles.stream().map(s -> new SimpleGrantedAuthority(s.getAuthority())).filter(Objects::nonNull).collect(Collectors.toList()));
 

@@ -14,16 +14,20 @@ import org.springframework.context.annotation.Bean;
 
 import cmpe451.group6.authorization.model.Role;
 import cmpe451.group6.authorization.model.User;
-import cmpe451.group6.authorization.service.UserService;
+
+// TODO: Garbage collection for multiple tokens for the same user
+// TODO: Interface for user to supply new password when resent link is sent. (Frontend related.)
+// TODO: Custom success responses, not raw types.
+// TODO: Store hardcoded values in application.properties or some config class.
 
 @SpringBootApplication
-public class JwtAuthServiceApp implements CommandLineRunner {
+public class Group6BackendService implements CommandLineRunner {
 
   @Autowired
   SignupService signupService;
 
   public static void main(String[] args) {
-    SpringApplication.run(JwtAuthServiceApp.class, args);
+    SpringApplication.run(Group6BackendService.class, args);
   }
 
   @Bean
