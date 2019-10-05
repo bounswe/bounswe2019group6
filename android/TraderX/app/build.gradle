@@ -10,7 +10,7 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.traderx"
-        minSdkVersion 15
+        minSdkVersion 21
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -33,6 +33,7 @@ dependencies {
     // Support libraries
     implementation deps.support.app_compat
     implementation deps.support.constraint_layout
+    implementation deps.support.gms
 
     //Lifecycle
     implementation deps.lifecycle.viewmodel_ktx

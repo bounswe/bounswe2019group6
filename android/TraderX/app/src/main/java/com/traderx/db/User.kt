@@ -12,6 +12,10 @@ import androidx.room.PrimaryKey
 data class User(
     @PrimaryKey
     @ColumnInfo(name = "id") val id: Int,
-    @ColumnInfo(name = "name") val name: String,
+    @ColumnInfo(name = "username") val username: String,
+    @ColumnInfo(name = "email") val email: String,
+    @ColumnInfo(name = "latitude") val latitude: Float,
+    @ColumnInfo(name = "longitude") val longitude: Float,
+    @ColumnInfo(name = "role") val role: String,
     @ColumnInfo(name = "token") val token: String?
 )

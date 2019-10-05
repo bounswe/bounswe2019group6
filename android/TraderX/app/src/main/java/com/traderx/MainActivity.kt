@@ -1,17 +1,14 @@
 package com.traderx
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import com.traderx.api.RequestServiceFactory
 import com.traderx.api.ResponseHandler
-import com.traderx.db.User
 import com.traderx.util.Injection
 import com.traderx.viewmodel.UserViewModel
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 
 class MainActivity : AppCompatActivity() {
 
@@ -38,21 +35,21 @@ class MainActivity : AppCompatActivity() {
         super.onStart()
         disposable.add(
             userViewModel.user()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    userNameTextView.text = it.name
+                .subscribe ({
+                    userNameTextView.text = it.username
                     userIdTextView.text = it.id.toString()
-                }
+                },
+                    {
+                        ResponseHandler.handleError(it, this)
+                    }
+                )
         )
 
         disposable.add(
             userViewModel
                 .fetchAndUpdateUser()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({}, {
-                    ResponseHandler<Throwable>().handleError(it, this)
+                    ResponseHandler.handleError(it, this)
                 })
         )
     }

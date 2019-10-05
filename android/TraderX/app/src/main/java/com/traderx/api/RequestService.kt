@@ -1,18 +1,21 @@
 package com.traderx.api
 
-import com.traderx.api.response.LoginResponse
+import com.traderx.api.request.RegisterRequest
+import com.traderx.api.response.TokenResponse
 import com.traderx.api.response.UserResponse
-import com.traderx.db.User
 import io.reactivex.Flowable
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.GET
-import retrofit2.http.POST
+import retrofit2.http.*
 
 
 interface RequestService {
-    @GET("user/info")
+    @GET(ApiUri.USER_INFO)
     fun user(): Flowable<UserResponse>
+
     @FormUrlEncoded
-    @POST("auth/login")
-    fun login(email: String, password: String): Flowable<LoginResponse>
+    @POST(ApiUri.USER_SIGNIN)
+    fun login(@Field("username") username: String, @Field("password") password: String): Flowable<TokenResponse>
+
+    @POST(ApiUri.USER_SINGUP)
+    fun register(@Body registerRequest: RegisterRequest): Flowable<TokenResponse>
+
 }
