@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import cmpe451.group6.authorization.model.RegistrationStatus;
+import cmpe451.group6.authorization.service.SignupService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -19,7 +20,7 @@ import cmpe451.group6.authorization.service.UserService;
 public class JwtAuthServiceApp implements CommandLineRunner {
 
   @Autowired
-  UserService userService;
+  SignupService signupService;
 
   public static void main(String[] args) {
     SpringApplication.run(JwtAuthServiceApp.class, args);
@@ -43,7 +44,7 @@ public class JwtAuthServiceApp implements CommandLineRunner {
     admin.setStatus(RegistrationStatus.ENABLED);
     admin.setRoles(new ArrayList<Role>(Arrays.asList(Role.ROLE_ADMIN)));
 
-    userService.admin_signup(admin);
+    signupService.admin_signup(admin);
 
   }
 

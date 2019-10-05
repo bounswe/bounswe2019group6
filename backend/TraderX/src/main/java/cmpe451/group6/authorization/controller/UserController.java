@@ -4,25 +4,22 @@ import javax.servlet.http.HttpServletRequest;
 
 import cmpe451.group6.authorization.dto.UserDataDTO;
 import cmpe451.group6.authorization.dto.UserResponseDTO;
+import cmpe451.group6.authorization.exception.CustomException;
 import cmpe451.group6.authorization.model.User;
 import cmpe451.group6.authorization.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.MissingServletRequestParameterException;
+import org.springframework.web.bind.annotation.*;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
 @RestController
 @RequestMapping("/users")
@@ -35,100 +32,45 @@ public class UserController {
   @Autowired
   private ModelMapper modelMapper;
 
-  @PostMapping("/signin")
-  @ApiOperation(value = "${UserController.signin}")
-  @ApiResponses(value = {//
-  @ApiResponse(code = 400, message = "Something went wrong"), //
-  @ApiResponse(code = 422, message = "Invalid username/password supplied")})
-  public String login(//
-      @ApiParam("Username") @RequestParam String username, //
-      @ApiParam("Password") @RequestParam String password) {
-    return userService.signin(username, password);
-  }
-
-  @PostMapping("/forgotpassword")
-  @ApiOperation(value = "${UserController.signin}")
-  @ApiResponses(value = {//
-          @ApiResponse(code = 400, message = "Something went wrong"), //
-          @ApiResponse(code = 422, message = "Invalid username/password supplied")})
-  public String forgotPassword(//
-                      @ApiParam("Email") @RequestParam String email) {
-    return userService.sendPasswordRenewalMail(email);
-  }
-
-  @PostMapping("/renewpassword")
-  @ApiOperation(value = "${UserController.signin}")
-  @ApiResponses(value = {//
-          @ApiResponse(code = 400, message = "Something went wrong"), //
-          @ApiResponse(code = 422, message = "Invalid username/password supplied")})
-  public String renewPassword(//
-                      @ApiParam("Token") @RequestParam String token,
-                      @ApiParam("Password") @RequestParam String newPassword) {
-    return userService.renewPassword(token,newPassword);
-  }
-
-  @PostMapping("/confirmation")
-  @ApiOperation(value = "${UserController.confirmation}")
-  @ApiResponses(value = {//
-          @ApiResponse(code = 400, message = "Something went wrong"), //
-          //@ApiResponse(code = 422, message = "Invalid username/password supplied")})
-  })
-  public String confirm(//
-                      @ApiParam("ConfirmationToken") @RequestParam String token) {
-    return userService.confirmUser(token);
-  }
-
-  @PostMapping("/signup")
-  @ApiOperation(value = "${UserController.signup}")
-  @ApiResponses(value = {//
-      @ApiResponse(code = 400, message = "Something went wrong"), //
-      @ApiResponse(code = 403, message = "Access denied"), //
-      @ApiResponse(code = 422, message = "Username is already in use"), //
-      @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
-  public String signup(@ApiParam("Signup User") @RequestBody UserDataDTO user) {
-      return userService.signup(modelMapper.map(user, User.class));
-  }
 
   @DeleteMapping(value = "/{username}")
   @PreAuthorize("hasRole('ROLE_ADMIN')")
-  @ApiOperation(value = "${UserController.delete}")
+  @ApiOperation(value = "Deletes specified user from the system permanently (for admin user only)")
   @ApiResponses(value = {//
-      @ApiResponse(code = 400, message = "Something went wrong"), //
-      @ApiResponse(code = 403, message = "Access denied"), //
-      @ApiResponse(code = 404, message = "The user doesn't exist"), //
+      @ApiResponse(code = 400, message = "Something went wrong on the server side"), //
+      @ApiResponse(code = 422, message = "The user doesn't exist"), //
       @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
   public String delete(@ApiParam("Username") @PathVariable String username) {
-    userService.delete(username);
+    userService.deleteUser(username);
     return username;
   }
 
   @GetMapping(value = "/{username}")
   @PreAuthorize("hasRole('ROLE_ADMIN')")
-  @ApiOperation(value = "${UserController.search}", response = UserResponseDTO.class)
-  @ApiResponses(value = {//
-      @ApiResponse(code = 400, message = "Something went wrong"), //
-      @ApiResponse(code = 403, message = "Access denied"), //
-      @ApiResponse(code = 404, message = "The user doesn't exist"), //
-      @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
+  @ApiOperation(value = "Gets profile of the given user (for admin user only).", response = UserResponseDTO.class)
+  @ApiResponses(value = {
+      @ApiResponse(code = 400, message = "Something went wrong on the serverside"),
+      @ApiResponse(code = 422, message = "The user doesn't exist")})
   public UserResponseDTO search(@ApiParam("Username") @PathVariable String username) {
-    return modelMapper.map(userService.search(username), UserResponseDTO.class);
+    return modelMapper.map(userService.searchUser(username), UserResponseDTO.class);
   }
 
   @GetMapping(value = "/me")
   @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_BASIC') or hasRole('ROLE_TRADER')")
-  @ApiOperation(value = "${UserController.me}", response = UserResponseDTO.class)
-  @ApiResponses(value = {//
-      @ApiResponse(code = 400, message = "Something went wrong"), //
-      @ApiResponse(code = 403, message = "Access denied"), //
-      @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
+  @ApiOperation(value = "Gets the profile information of the client.", response = UserResponseDTO.class)
+  @ApiResponses(value = {
+      @ApiResponse(code = 400, message = "Something went wrong"),
+      @ApiResponse(code = 403, message = "Access denied")})
   public UserResponseDTO whoami(HttpServletRequest req) {
     return modelMapper.map(userService.whoami(req), UserResponseDTO.class);
   }
 
   @GetMapping("/refresh")
   @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_BASIC') or hasRole('ROLE_TRADER')")
+  @ApiOperation(value = "Returns a new token for the user.", response = String.class)
   public String refresh(HttpServletRequest req) {
-    return userService.refresh(req.getRemoteUser());
+    return userService.refreshToken(req.getRemoteUser());
   }
+
 
 }

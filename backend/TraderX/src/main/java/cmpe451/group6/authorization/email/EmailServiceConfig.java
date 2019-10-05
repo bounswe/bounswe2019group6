@@ -5,8 +5,8 @@ import java.util.Properties;
 // TODO:  Store those values in application.properties
 public class EmailServiceConfig {
 
-    static private final String senderAdress = "bounswegroup6@gmail.com";
-    static private final String senderPassword = "bestgroupis6";
+    static private final String senderAdress = "";
+    static private final String senderPassword = "";
     static private final Properties props = new Properties();
 
     static {
