@@ -47,8 +47,6 @@ public class User {
   @Column(nullable = false)
   private RegistrationStatus status;
 
-  // TODO : Public / Private field
-
   public RegistrationStatus getStatus() {
     return status;
   }

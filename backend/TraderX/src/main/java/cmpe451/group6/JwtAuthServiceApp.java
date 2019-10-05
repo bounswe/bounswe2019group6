@@ -45,7 +45,6 @@ public class JwtAuthServiceApp implements CommandLineRunner {
     admin.setRoles(new ArrayList<Role>(Arrays.asList(Role.ROLE_ADMIN)));
 
     signupService.admin_signup(admin);
-
   }
 
 }

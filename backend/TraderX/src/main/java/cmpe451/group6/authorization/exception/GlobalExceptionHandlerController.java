@@ -45,7 +45,11 @@ public class GlobalExceptionHandlerController {
   // Generic handler for all exceptions.
   @ExceptionHandler(Exception.class)
   public void handleException(HttpServletResponse res) throws IOException {
-    res.sendError(HttpStatus.BAD_REQUEST.value(), "Something went wrong");
+    res.sendError(HttpStatus.BAD_REQUEST.value(), "This is a generic error response. " +
+            "That means this type of exception is not handled explicitly." +
+            "Please see the exception on " +
+            "application log and report this to the backend team " +
+            "(e.g. open an issue) with the producer request. ");
   }
 
   @ExceptionHandler(MissingServletRequestPartException.class)

@@ -42,7 +42,7 @@ public class SignupService {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             Role role = validateIBAN(user.getIBAN());
             user.setRoles(new ArrayList<>(Arrays.asList(role)));
-            user.setStatus(RegistrationStatus.VERIFICATION_SENT);
+            user.setStatus(RegistrationStatus.PENDING);
             String token = jwtTokenProvider.createToken(user.getUsername(), user.getRoles());
 
             try {
