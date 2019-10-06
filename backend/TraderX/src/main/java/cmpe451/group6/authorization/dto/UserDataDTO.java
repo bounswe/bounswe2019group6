@@ -7,21 +7,18 @@ import io.swagger.annotations.ApiModelProperty;
 
 public class UserDataDTO {
   
-  @ApiModelProperty(position = 0)
+  @ApiModelProperty(position = 0,required = true)
   private String username;
-  @ApiModelProperty(position = 1)
+  @ApiModelProperty(position = 1,required = true)
   private String email;
-  @ApiModelProperty(position = 2)
+  @ApiModelProperty(position = 2,required = true)
   private String password;
   @ApiModelProperty(position = 3)
   private String IBAN;
-  @ApiModelProperty(position = 4)
+  @ApiModelProperty(position = 4,required = true)
   private String latitude;
-  @ApiModelProperty(position = 5)
+  @ApiModelProperty(position = 5,required = true)
   private String longitude;
-  @ApiModelProperty(position = 6)
-  List<Role> roles;
-
 
   public String getLongitude() { return longitude; }
 
@@ -66,12 +63,5 @@ public class UserDataDTO {
     this.password = password;
   }
 
-  public List<Role> getRoles() {
-    return roles;
-  }
-
-  public void setRoles(List<Role> roles) {
-    this.roles = roles;
-  }
 
 }

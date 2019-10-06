@@ -10,12 +10,20 @@ import org.springframework.boot.autoconfigure.web.ErrorAttributes;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandlerController {
+
+  public static final String GENERIC_ERROR_RESPONSE = "This is a generic error response. " +
+          "That means this type of exception is not handled explicitly." +
+          "Please see the exception on " +
+          "application log and report this to the backend team " +
+          "(e.g. open an issue) with the producer request. ";
 
   @Bean
   public ErrorAttributes errorAttributes() {
@@ -40,9 +48,21 @@ public class GlobalExceptionHandlerController {
     res.sendError(HttpStatus.FORBIDDEN.value(), "Access denied");
   }
 
+  // Generic handler for all exceptions.
   @ExceptionHandler(Exception.class)
   public void handleException(HttpServletResponse res) throws IOException {
-    res.sendError(HttpStatus.BAD_REQUEST.value(), "Something went wrong");
+    res.sendError(HttpStatus.BAD_REQUEST.value(), GENERIC_ERROR_RESPONSE);
   }
 
+  @ExceptionHandler(MissingServletRequestPartException.class)
+  public void handleMissingParts(MissingServletRequestPartException ex) {
+    String message = ex.getRequestPartName() + " is not valid.";
+    throw new CustomException(message, HttpStatus.BAD_REQUEST);
+  }
+
+  @ExceptionHandler(MissingServletRequestParameterException.class)
+  public void handleMissingParams(MissingServletRequestParameterException ex) {
+    String message = ex.getParameterName() + " is not valid.";
+    throw new CustomException(message, HttpStatus.BAD_REQUEST);
+  }
 }

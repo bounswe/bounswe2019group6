@@ -33,8 +33,11 @@ public class SwaggerConfig {
         .apiInfo(metadata())//
         .useDefaultResponseMessages(false)//
         .securitySchemes(new ArrayList<>(Arrays.asList(new ApiKey("Bearer %token", "Authorization", "Header"))))//
-        .tags(new Tag("users", "Operations about users"))//
-          .tags(new Tag("trial", "Auth test operations for developers"))//
+        .tags(new Tag("Users", "Operations about users"))//
+            .tags(new Tag("Password", "Password related operations"))
+            .tags(new Tag("Login", "Sign in raleted operations"))
+            .tags(new Tag("Signup", "Sign up related operations"))
+            .tags(new Tag("trial", "Auth test operations for developers"))
         .genericModelSubstitutes(Optional.class);
 
   }
