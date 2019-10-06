@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletRequest;
 import cmpe451.group6.authorization.dto.StringResponseWrapper;
 import cmpe451.group6.authorization.dto.TokenWrapperDTO;
 import cmpe451.group6.authorization.dto.UserResponseDTO;
+import cmpe451.group6.authorization.exception.GlobalExceptionHandlerController;
 import cmpe451.group6.authorization.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,7 @@ import io.swagger.annotations.ApiResponses;
 
 @RestController
 @RequestMapping("/users")
-@Api(tags = "users")
+@Api(tags = "Users")
 public class UserController {
 
   @Autowired
@@ -34,7 +35,7 @@ public class UserController {
   @ApiOperation(value = "Deletes specified user from the system permanently (for admin user only)")
   @ResponseStatus(HttpStatus.OK)
   @ApiResponses(value = {//
-      @ApiResponse(code = 400, message = "Something went wrong on the server side"), //
+      @ApiResponse(code = 400, message = GlobalExceptionHandlerController.GENERIC_ERROR_RESPONSE), //
       @ApiResponse(code = 422, message = "The user doesn't exist"), //
       @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
   public StringResponseWrapper delete(@ApiParam("Username") @PathVariable String username) {

@@ -2,6 +2,7 @@ package cmpe451.group6.authorization.controller;
 
 import cmpe451.group6.authorization.dto.StringResponseWrapper;
 import cmpe451.group6.authorization.exception.CustomException;
+import cmpe451.group6.authorization.exception.GlobalExceptionHandlerController;
 import cmpe451.group6.authorization.service.PasswordService;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,7 @@ import org.springframework.web.multipart.support.MissingServletRequestPartExcept
 
 @RestController
 @RequestMapping("/password")
-@Api(tags = "users")
+@Api(tags = "Password")
 public class PasswordController {
 
     @Autowired
@@ -22,7 +23,7 @@ public class PasswordController {
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Sends reset link to the user email.")
     @ApiResponses(value = {
-            @ApiResponse(code = 400, message = "No user found with this email."),
+            @ApiResponse(code = 400, message = GlobalExceptionHandlerController.GENERIC_ERROR_RESPONSE),
             @ApiResponse(code = 422, message = "Invalid username/password supplied")})
     public StringResponseWrapper forgotPassword(@ApiParam("Email") @RequestParam String email) {
         return new StringResponseWrapper(passwordService.sendRenewalMail(email));
@@ -32,7 +33,7 @@ public class PasswordController {
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Resets the password via the link sent to the user.")
     @ApiResponses(value = {
-            @ApiResponse(code = 400, message = "Something went wrong on the server side."),
+            @ApiResponse(code = 400, message = GlobalExceptionHandlerController.GENERIC_ERROR_RESPONSE),
             @ApiResponse(code = 403, message = "Invalid or expired Token")})
     public StringResponseWrapper renewPassword(
                                 @ApiParam("Token") @RequestParam String token,

@@ -19,6 +19,12 @@ import org.springframework.web.multipart.support.MissingServletRequestPartExcept
 @RestControllerAdvice
 public class GlobalExceptionHandlerController {
 
+  public static final String GENERIC_ERROR_RESPONSE = "This is a generic error response. " +
+          "That means this type of exception is not handled explicitly." +
+          "Please see the exception on " +
+          "application log and report this to the backend team " +
+          "(e.g. open an issue) with the producer request. ";
+
   @Bean
   public ErrorAttributes errorAttributes() {
     // Hide exception field in the return object
@@ -45,11 +51,7 @@ public class GlobalExceptionHandlerController {
   // Generic handler for all exceptions.
   @ExceptionHandler(Exception.class)
   public void handleException(HttpServletResponse res) throws IOException {
-    res.sendError(HttpStatus.BAD_REQUEST.value(), "This is a generic error response. " +
-            "That means this type of exception is not handled explicitly." +
-            "Please see the exception on " +
-            "application log and report this to the backend team " +
-            "(e.g. open an issue) with the producer request. ");
+    res.sendError(HttpStatus.BAD_REQUEST.value(), GENERIC_ERROR_RESPONSE);
   }
 
   @ExceptionHandler(MissingServletRequestPartException.class)

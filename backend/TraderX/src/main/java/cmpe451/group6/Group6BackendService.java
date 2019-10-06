@@ -17,7 +17,6 @@ import cmpe451.group6.authorization.model.User;
 
 // TODO: Garbage collection for multiple tokens for the same user
 // TODO: Interface for user to supply new password when resent link is sent. (Frontend related.)
-// TODO: Custom success responses, not raw types.
 // TODO: Store hardcoded values in application.properties or some config class.
 
 @SpringBootApplication
