@@ -1,5 +1,6 @@
 package cmpe451.group6.authorization.controller;
 
+import cmpe451.group6.authorization.dto.StringResponseWrapper;
 import cmpe451.group6.authorization.exception.CustomException;
 import cmpe451.group6.authorization.service.PasswordService;
 import io.swagger.annotations.*;
@@ -18,24 +19,26 @@ public class PasswordController {
     private PasswordService passwordService;
 
     @PostMapping("/forgot")
+    @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Sends reset link to the user email.")
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = "No user found with this email."),
             @ApiResponse(code = 422, message = "Invalid username/password supplied")})
-    public String forgotPassword(@ApiParam("Email") @RequestParam String email) {
-        return passwordService.sendRenewalMail(email);
+    public StringResponseWrapper forgotPassword(@ApiParam("Email") @RequestParam String email) {
+        return new StringResponseWrapper(passwordService.sendRenewalMail(email));
     }
 
     @PostMapping("/renew")
+    @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Resets the password via the link sent to the user.")
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = "Something went wrong on the server side."),
             @ApiResponse(code = 403, message = "Invalid or expired Token")})
-    public String renewPassword(
+    public StringResponseWrapper renewPassword(
                                 @ApiParam("Token") @RequestParam String token,
                                 @ApiParam("Password") @RequestParam String newPassword) {
 
-        return passwordService.setNewPassword(token,newPassword);
+        return new StringResponseWrapper(passwordService.setNewPassword(token,newPassword));
     }
 
 

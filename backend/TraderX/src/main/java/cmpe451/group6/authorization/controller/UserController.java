@@ -2,11 +2,13 @@ package cmpe451.group6.authorization.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
+import cmpe451.group6.authorization.dto.StringResponseWrapper;
 import cmpe451.group6.authorization.dto.TokenWrapperDTO;
 import cmpe451.group6.authorization.dto.UserResponseDTO;
 import cmpe451.group6.authorization.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.annotations.Api;
@@ -30,17 +32,19 @@ public class UserController {
   @DeleteMapping(value = "/{username}")
   @PreAuthorize("hasRole('ROLE_ADMIN')")
   @ApiOperation(value = "Deletes specified user from the system permanently (for admin user only)")
+  @ResponseStatus(HttpStatus.OK)
   @ApiResponses(value = {//
       @ApiResponse(code = 400, message = "Something went wrong on the server side"), //
       @ApiResponse(code = 422, message = "The user doesn't exist"), //
       @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
-  public String delete(@ApiParam("Username") @PathVariable String username) {
+  public StringResponseWrapper delete(@ApiParam("Username") @PathVariable String username) {
     userService.deleteUser(username);
-    return username;
+    return new StringResponseWrapper(username);
   }
 
   @GetMapping(value = "/{username}")
   @PreAuthorize("hasRole('ROLE_ADMIN')")
+  @ResponseStatus(HttpStatus.OK)
   @ApiOperation(value = "Gets profile of the given user (for admin user only).", response = UserResponseDTO.class)
   @ApiResponses(value = {
       @ApiResponse(code = 400, message = "Something went wrong on the serverside"),
@@ -51,6 +55,7 @@ public class UserController {
 
   @GetMapping(value = "/me")
   @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_BASIC') or hasRole('ROLE_TRADER')")
+  @ResponseStatus(HttpStatus.OK)
   @ApiOperation(value = "Gets the profile information of the client.", response = UserResponseDTO.class)
   @ApiResponses(value = {
       @ApiResponse(code = 400, message = "Something went wrong"),
@@ -60,6 +65,7 @@ public class UserController {
   }
 
   @GetMapping("/refresh")
+  @ResponseStatus(HttpStatus.OK)
   @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_BASIC') or hasRole('ROLE_TRADER')")
   @ApiOperation(value = "Returns a new token for the user.", response = String.class)
   public TokenWrapperDTO refresh(HttpServletRequest req) {

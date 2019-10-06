@@ -4,6 +4,7 @@ import cmpe451.group6.authorization.dto.TokenWrapperDTO;
 import cmpe451.group6.authorization.service.LoginService;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -16,6 +17,7 @@ public class LoginController {
     private LoginService loginService;
 
     @PostMapping("")
+    @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Login Operations")
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = "Something went wrong on the server side."),
