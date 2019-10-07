@@ -46,7 +46,7 @@ public class User {
   // (?=\S+$)          # no whitespace allowed in the entire string
   // .{8,}             # anything, at least eight places though
   // $                 # end-of-string
-  @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\S+$).{6,}$", message ="Password must -include at least a digit, a lower case letter, an uppercase letter, a special char. and not include any whitespaces. Minimum password length: 8 characters ")
+  @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{6,}$", message ="Password must -include at least a digit, a lower case letter, an uppercase letter, a special char. and not include any whitespaces. Minimum password length: 8 characters ")
   // @Size(min = 8, message = "Minimum password length: 8 characters")
   private String password;
 
