@@ -41,8 +41,6 @@ public class PasswordService {
                 e.printStackTrace();
                 throw new CustomException(String.format("Failed to send verification email to the address: %s", mail) , HttpStatus.INTERNAL_SERVER_ERROR);
             }
-            // Invalidate token;
-            HazelcastService.putBlacklist(token, user.getUsername());
 
             return "Link to reset password has been sent to your email.";
         } else {
