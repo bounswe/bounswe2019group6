@@ -73,7 +73,7 @@ class RegisterActivity : AppCompatActivity(), OnMapReadyCallback {
                 registerWarning.text = "Email is not valid"
             !checkPassword(password.text.toString()) ->
                 registerWarning.text = "Password is not valid"
-            !checkPasswordConfirmity(password.text.toString(), passwordConfirm.text.toString()) ->
+            !checkPasswordConformity(password.text.toString(), passwordConfirm.text.toString()) ->
                 registerWarning.text = "Passwords does not match up"
             !checkMarker(mMarker) ->
                 registerWarning.text = "You did not select your location from map"
@@ -121,7 +121,7 @@ class RegisterActivity : AppCompatActivity(), OnMapReadyCallback {
         return password.length in 8..32
     }
 
-    private fun checkPasswordConfirmity(password: String, passwordConfirm: String): Boolean {
+    private fun checkPasswordConformity(password: String, passwordConfirm: String): Boolean {
         return password == passwordConfirm
     }
 
