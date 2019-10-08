@@ -3,6 +3,7 @@ package cmpe451.group6.authorization.service;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 
+import cmpe451.group6.Group6BackendService;
 import cmpe451.group6.authorization.dto.TokenWrapperDTO;
 import cmpe451.group6.authorization.email.EmailService;
 import cmpe451.group6.authorization.model.RegistrationStatus;
@@ -53,7 +54,9 @@ public class UserService {
     return userRepository.findByUsername(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)));
   }
 
-  public TokenWrapperDTO refreshToken(String username) {
+  public TokenWrapperDTO refreshToken(String username, HttpServletRequest req) {
+    String currentToken = jwtTokenProvider.resolveToken(req);
+    HazelcastService.putBlacklist(currentToken, username);
     return new TokenWrapperDTO(jwtTokenProvider.createToken(username, userRepository.findByUsername(username).getRoles()));
   }
 

@@ -12,6 +12,7 @@ import cmpe451.group6.authorization.exception.CustomException;
 import cmpe451.group6.authorization.model.RegistrationStatus;
 import cmpe451.group6.authorization.model.User;
 import cmpe451.group6.authorization.repository.UserRepository;
+import cmpe451.group6.authorization.service.HazelcastService;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -52,6 +53,12 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     try {
 
       if (token != null && jwtTokenProvider.validateToken(token)) {
+
+        // If token is in blacklist, return error response
+        if(HazelcastService.isInBlacklist(token)){
+          httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token is in blacklist.");
+          return;
+        }
 
         Authentication auth = jwtTokenProvider.getAuthentication(token);
 
