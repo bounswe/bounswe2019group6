@@ -1,4 +1,4 @@
-package cmpe451.group6.rest;
+package cmpe451.group6.rest.trial.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

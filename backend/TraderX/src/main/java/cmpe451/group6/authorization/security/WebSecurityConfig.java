@@ -31,11 +31,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     // Entry points
     http.authorizeRequests()//
-        .antMatchers("/users/signin").permitAll()//
-        .antMatchers("/users/signup").permitAll()//
+        .antMatchers("/login").permitAll()//
+        .antMatchers("/signup").permitAll()//
+        .antMatchers("/password/forgot").permitAll()
+        .antMatchers("/password/renew").permitAll()
+        .antMatchers("/signup/confirm").permitAll()
+
         .antMatchers("/h2-console/**/**").permitAll()
         .antMatchers("/trial/public").permitAll()
-
         // Disallow everything else..
         .anyRequest().authenticated();
 
