@@ -1,6 +1,5 @@
 package cmpe451.group6.authorization.service;
 
-import cmpe451.group6.authorization.dto.TokenWrapperDTO;
 import cmpe451.group6.authorization.email.EmailService;
 import cmpe451.group6.authorization.exception.CustomException;
 import cmpe451.group6.authorization.model.RegistrationStatus;
@@ -40,6 +39,9 @@ public class SignupService {
 
     public String signup(User user) {
         if (!userRepository.existsByUsername(user.getUsername()) && !userRepository.existsByEmail(user.getEmail())) {
+
+            // TODO: check info validity.
+
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             Role role = validateIBAN(user.getIBAN());
             user.setRoles(new ArrayList<>(Arrays.asList(role)));
@@ -66,17 +68,18 @@ public class SignupService {
             User user = userRepository.findByUsername(username);
             user.setStatus(RegistrationStatus.ENABLED);
             userRepository.save(user);
+            HazelcastService.invalidateToken(token, username);
             return "Confirmation completed";
         } catch (AuthenticationException e) {
             throw new CustomException("Invalid TOKEN", HttpStatus.UNPROCESSABLE_ENTITY);
         }
     }
 
-    public TokenWrapperDTO admin_signup(User user){
+    public String admin_signup(User user){
         if (!userRepository.existsByUsername(user.getUsername())) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             userRepository.save(user);
-            return new TokenWrapperDTO(jwtTokenProvider.createToken(user.getUsername(), user.getRoles()));
+            return jwtTokenProvider.createToken(user.getUsername(), user.getRoles());
         } else {
             throw new CustomException("Username is already in use", HttpStatus.UNPROCESSABLE_ENTITY);
         }

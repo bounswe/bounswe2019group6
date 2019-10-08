@@ -1,6 +1,5 @@
 package cmpe451.group6.authorization.service;
 
-import cmpe451.group6.Group6BackendService;
 import cmpe451.group6.authorization.email.EmailService;
 import cmpe451.group6.authorization.exception.CustomException;
 import cmpe451.group6.authorization.model.User;
@@ -8,7 +7,6 @@ import cmpe451.group6.authorization.repository.UserRepository;
 import cmpe451.group6.authorization.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -56,7 +54,7 @@ public class PasswordService {
             user.setPassword(passwordEncoder.encode(newPassword));
             userRepository.save(user);
             // Invalidate token;
-            HazelcastService.putBlacklist(token, user.getUsername());
+            HazelcastService.invalidateToken(token, user.getUsername());
             return "Password has been changed.";
         } catch (AuthenticationException e) {
             throw new CustomException("Invalid TOKEN", HttpStatus.UNAUTHORIZED);

@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import cmpe451.group6.authorization.exception.CustomException;
 import cmpe451.group6.authorization.model.Role;
-import cmpe451.group6.authorization.repository.UserRepository;
+import cmpe451.group6.authorization.service.HazelcastService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -50,18 +50,25 @@ public class JwtTokenProvider {
 
   public String createToken(String username, List<Role> roles) {
 
+    if(HazelcastService.isWhiteToken(username)){
+      throw new CustomException("Already have an active token.", HttpStatus.CONFLICT);
+    }
+
     Claims claims = Jwts.claims().setSubject(username);
     claims.put("auth", roles.stream().map(s -> new SimpleGrantedAuthority(s.getAuthority())).filter(Objects::nonNull).collect(Collectors.toList()));
 
     Date now = new Date();
     Date validity = new Date(now.getTime() + validityInMilliseconds);
 
-    return Jwts.builder()//
+    String token =  Jwts.builder()//
         .setClaims(claims)//
         .setIssuedAt(now)//
         .setExpiration(validity)//
         .signWith(SignatureAlgorithm.HS256, secretKey)//
         .compact();
+
+    HazelcastService.putWhiteToken(token, username);
+    return token;
   }
 
   public Authentication getAuthentication(String token) {
