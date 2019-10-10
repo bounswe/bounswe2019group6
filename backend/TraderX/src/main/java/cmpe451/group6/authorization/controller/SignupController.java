@@ -38,6 +38,7 @@ public class SignupController {
         @ApiResponses(value = {
                 @ApiResponse(code = 400, message = GlobalExceptionHandlerController.GENERIC_ERROR_RESPONSE),
                 @ApiResponse(code = 422, message = "Username or email is already in use"),
+                @ApiResponse(code = 412, message = "Value does not match regex."),
                 @ApiResponse(code = 500, message = "Failed to send verification email.")})
         public StringResponseWrapper signup(@ApiParam("Signup User") @RequestBody UserDataDTO user) {
             return new StringResponseWrapper(signupService.signup(modelMapper.map(user, User.class)));
