@@ -1,6 +1,6 @@
 package com.traderx.api
 
-import android.util.Log
+import com.traderx.AppConfig
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response
@@ -29,24 +29,13 @@ class ApiService {
             clientBuilder.addInterceptor(RetrofitInterceptor())
 
             return Retrofit.Builder()
-                .baseUrl(ApiUri.API_URI)
+                .baseUrl(AppConfig.API_HOST)
                 .client(clientBuilder.build())
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.createAsync())
                 .build()
                 .create(RequestService::class.java)
         }
-    }
-}
-
-
-class ApiUri {
-    companion object {
-        const val API_URI = "http://192.168.1.5:8080"
-        const val USER_URI = API_URI + "/users"
-        const val USER_SIGNIN = USER_URI + "/signin"
-        const val USER_SINGUP = USER_URI + "/signup"
-        const val USER_INFO = USER_URI + "/me"
     }
 }
 
