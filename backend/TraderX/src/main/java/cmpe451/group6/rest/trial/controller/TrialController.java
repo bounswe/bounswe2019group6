@@ -1,5 +1,6 @@
 package cmpe451.group6.rest.trial.controller;
 
+import cmpe451.group6.authorization.security.JwtTokenProvider;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -17,7 +18,7 @@ public class TrialController {
 
     @GetMapping(value = "/admin")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @ApiOperation(value = "${TrialController.admin}")
+    @ApiOperation(value = " Auth test for admin role only")
     @ApiResponses(value = {//
             @ApiResponse(code = 403, message = "Access denied")
     })
@@ -27,7 +28,7 @@ public class TrialController {
 
     @GetMapping(value = "/trader")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_TRADER')")
-    @ApiOperation(value = "${TrialController.trader}")
+    @ApiOperation(value = "Auth test for trader and admin roles only")
     @ApiResponses(value = {//
             @ApiResponse(code = 403, message = "Access denied")
     })
@@ -37,7 +38,7 @@ public class TrialController {
 
     @GetMapping(value = "/basic")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_TRADER') or hasRole('ROLE_BASIC')")
-    @ApiOperation(value = "${TrialController.basic}")
+    @ApiOperation(value = "Auth test for all registered users")
     @ApiResponses(value = {//
             @ApiResponse(code = 403, message = "Access denied")
     })
@@ -46,7 +47,7 @@ public class TrialController {
     }
 
     @GetMapping(value = "/public")
-    @ApiOperation(value = "${TrialController.public}")
+    @ApiOperation(value = "Public test message")
     public String publicMessage() {
         return "This message is public to all universe.";
     }

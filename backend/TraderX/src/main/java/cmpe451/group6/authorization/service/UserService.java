@@ -20,10 +20,6 @@ import cmpe451.group6.authorization.model.User;
 import cmpe451.group6.authorization.repository.UserRepository;
 import cmpe451.group6.authorization.security.JwtTokenProvider;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-
 @Service
 public class UserService {
 

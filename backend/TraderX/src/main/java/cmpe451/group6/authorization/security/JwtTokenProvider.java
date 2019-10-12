@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import cmpe451.group6.authorization.exception.CustomException;
 import cmpe451.group6.authorization.model.Role;
-import cmpe451.group6.authorization.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -91,4 +90,7 @@ public class JwtTokenProvider {
     }
   }
 
+  public long getValidityInMilliseconds() {
+    return validityInMilliseconds;
+  }
 }

@@ -24,8 +24,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 public class JwtTokenFilter extends OncePerRequestFilter {
 
-  private boolean verificationEnabled;
-
   UserRepository userRepository;
 
   private JwtTokenProvider jwtTokenProvider;
@@ -61,7 +59,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         if(user.getStatus() == RegistrationStatus.PENDING){
           // account is not validated yet. Return error response.
 
-          // Comment out the next line if you disable verification. (FOR THE EASE OF DEVELOPMENT)
+          // Comment out the next line if you want to disable verification via mail. (FOR THE EASE OF DEVELOPMENT ONLY)
           throw new CustomException("Account is not verified. Check email address.", HttpStatus.UNAUTHORIZED);
         }
 

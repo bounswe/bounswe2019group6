@@ -6,6 +6,7 @@ import cmpe451.group6.authorization.model.User;
 import cmpe451.group6.authorization.repository.UserRepository;
 import cmpe451.group6.authorization.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -29,6 +30,12 @@ public class PasswordService {
 
     @Autowired
     private EmailService emailService;
+
+    @Value("${server.url}")
+    private String baseURL;
+
+    @Value("${server.port}")
+    private String port;
 
     public String sendRenewalMail(String mail){
         User user = userRepository.findByEmail(mail);
@@ -68,7 +75,7 @@ public class PasswordService {
     }
 
     private String buildPasswordRenewalURL(String token){
-        return "http://localhost:8080/users/renew?token=" + token;
+        return baseURL+":"+port+"/users/renew?token=" + token;
     }
 
 }
