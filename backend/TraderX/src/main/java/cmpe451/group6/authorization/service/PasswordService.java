@@ -7,12 +7,12 @@ import cmpe451.group6.authorization.repository.UserRepository;
 import cmpe451.group6.authorization.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 @Service
@@ -57,6 +57,14 @@ public class PasswordService {
         } catch (AuthenticationException e) {
             throw new CustomException("Invalid TOKEN", HttpStatus.UNAUTHORIZED);
         }
+    }
+
+    public String changePassword(HttpServletRequest req, String newPassword){
+        User user = userRepository.findByUsername(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)));
+        if(!newPassword.matches(User.passwordRegex)) throw  new CustomException("Password does not conform to restrictions.",HttpStatus.EXPECTATION_FAILED);
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+        return "Password has been changed.";
     }
 
     private String buildPasswordRenewalURL(String token){
