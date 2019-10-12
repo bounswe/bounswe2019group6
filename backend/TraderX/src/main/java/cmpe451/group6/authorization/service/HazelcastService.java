@@ -4,6 +4,7 @@ import com.hazelcast.config.Config;
 import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.IMap;
+import com.hazelcast.query.Predicate;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -54,6 +55,10 @@ public class HazelcastService {
 
     public static boolean isBlackToken(String token){
         return getBlacklistMap().get(token) != null;
+    }
+
+    public static int whiteTokensCount(String username){
+         return getWhitelistMap().values((Predicate) entry -> entry.getValue().equals(username)).size();
     }
 
 }
