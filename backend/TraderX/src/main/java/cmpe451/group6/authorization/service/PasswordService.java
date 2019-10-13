@@ -47,6 +47,7 @@ public class PasswordService {
                 e.printStackTrace();
                 throw new CustomException(String.format("Failed to send verification email to the address: %s", mail) , HttpStatus.INTERNAL_SERVER_ERROR);
             }
+
             return "Link to reset password has been sent to your email.";
         } else {
             throw new CustomException("No user found for the email", HttpStatus.BAD_REQUEST);
@@ -60,6 +61,8 @@ public class PasswordService {
             User user = userRepository.findByUsername(username);
             user.setPassword(passwordEncoder.encode(newPassword));
             userRepository.save(user);
+            // Invalidate token;
+            HazelcastService.invalidateToken(token, user.getUsername());
             return "Password has been changed.";
         } catch (AuthenticationException e) {
             throw new CustomException("Invalid TOKEN", HttpStatus.UNAUTHORIZED);

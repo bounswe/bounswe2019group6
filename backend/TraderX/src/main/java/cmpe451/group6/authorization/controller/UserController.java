@@ -70,7 +70,7 @@ public class UserController {
   @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_BASIC') or hasRole('ROLE_TRADER')")
   @ApiOperation(value = "Returns a new token for the user.", response = String.class)
   public TokenWrapperDTO refresh(HttpServletRequest req) {
-    return userService.refreshToken(req.getRemoteUser());
+    return userService.refreshToken(req.getRemoteUser(),req);
   }
 
 
