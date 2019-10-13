@@ -24,6 +24,9 @@ public class Group6BackendService implements CommandLineRunner {
   @Autowired
   SignupService signupService;
 
+  @Autowired
+  HazelcastService hazelcastService;
+
   public static void main(String[] args) {
     SpringApplication.run(Group6BackendService.class, args);
   }
@@ -47,7 +50,7 @@ public class Group6BackendService implements CommandLineRunner {
 
     String token = signupService.admin_signup(admin);
 
-    HazelcastService.invalidateToken(token,"admin");
+    hazelcastService.invalidateToken(token,"admin");
 
   }
 

@@ -1,6 +1,9 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/cmpe451?useSSL=false
+    url: jdbc:mysql://localhost:3306/cmpe451?allowPublicKeyRetrieval=true
+    # use this if the above raises error:
+    # jdbc:mysql://localhost:3306/cmpe451?useSSH=false
+
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver

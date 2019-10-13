@@ -21,6 +21,9 @@ public class UserService {
   @Autowired
   private JwtTokenProvider jwtTokenProvider;
 
+  @Autowired
+  private HazelcastService hazelcastService;
+
   public void deleteUser(String username) {
     User user = userRepository.findByUsername(username);
     if (user == null) {
@@ -43,7 +46,7 @@ public class UserService {
 
   public TokenWrapperDTO refreshToken(String username, HttpServletRequest req) {
     String currentToken = jwtTokenProvider.resolveToken(req);
-    HazelcastService.invalidateToken(currentToken, username);
+    hazelcastService.invalidateToken(currentToken, username);
     return new TokenWrapperDTO(jwtTokenProvider.createToken(username, userRepository.findByUsername(username).getRoles()));
   }
 
