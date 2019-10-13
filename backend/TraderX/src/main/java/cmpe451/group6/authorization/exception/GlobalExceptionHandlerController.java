@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -69,5 +70,10 @@ public class GlobalExceptionHandlerController {
   @ExceptionHandler(HttpMessageNotReadableException.class)
   public void handleBadJSON(HttpServletResponse res) throws IOException {
     res.sendError(HttpStatus.EXPECTATION_FAILED.value(),"Invalid JSON data");
+  }
+
+  @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+  public void handleNotSupportedMethod(HttpServletResponse res) throws IOException {
+    res.sendError(HttpStatus.METHOD_NOT_ALLOWED.value(),"Not supported HTTP Request method." );
   }
 }
