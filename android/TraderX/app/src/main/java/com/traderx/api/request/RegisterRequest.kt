@@ -7,5 +7,6 @@ data class RegisterRequest(
     @SerializedName("email") val email: String,
     @SerializedName("password") val password: String,
     @SerializedName("latitude") val latitude: String,
-    @SerializedName("longitude") val longitude: String
+    @SerializedName("longitude") val longitude: String,
+    @SerializedName("iban") val iban: String?
 )

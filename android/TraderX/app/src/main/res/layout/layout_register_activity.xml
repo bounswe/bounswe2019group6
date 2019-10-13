@@ -20,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_gravity="center_vertical"
-            android:layout_weight="1.0"
+            android:layout_weight=".5"
             android:gravity="center"
             android:orientation="vertical">
 
@@ -129,6 +129,38 @@
                 android:hint="@string/password_confirm"
                 android:inputType="textPassword"
                 android:paddingLeft="13dp"
+                android:singleLine="true"
+                android:textColor="@android:color/white"
+                android:textColorHint="@color/white"
+                android:textSize="14sp" />
+
+            <CheckBox
+                android:id="@+id/register_iban_checkbox"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight=".18"
+                android:background="@drawable/draw_bottom_line"
+                android:buttonTint="@android:color/white"
+                android:fontFamily="sans-serif"
+                android:gravity="center|start"
+                android:text="@string/trader_account"
+                android:textColor="@android:color/white"
+                android:textColorHint="@color/white"
+                android:textSize="14sp"/>
+
+            <EditText
+                android:id="@+id/register_iban"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.18"
+                android:background="@drawable/draw_bottom_line"
+                android:drawableLeft="@drawable/login_user_white_icon"
+                android:drawablePadding="13dp"
+                android:fontFamily="sans-serif"
+                android:gravity="center|start"
+                android:hint="@string/register_iban"
+                android:inputType="textEmailAddress"
+                android:paddingLeft="10dp"
                 android:singleLine="true"
                 android:textColor="@android:color/white"
                 android:textColorHint="@color/white"

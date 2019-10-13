@@ -11,7 +11,9 @@
     <string name="password_again">Repeat Password</string>
     <string name="your_phone">Mail</string>
     <string name="accept_terms">Accept Conditions</string>
-    <string name="register">Register</string>
+    <string name="register">Sign Up</string>
+    <string name="trader_account">Trader Account</string>
+    <string name="register_iban">IBAN (for trader user)</string>
     <string name="login">Login</string>
     <string name="forgot_pass">Forgot Password</string>
 

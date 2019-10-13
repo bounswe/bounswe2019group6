@@ -3,13 +3,12 @@ package com.traderx.activity
 
 import android.content.DialogInterface
 import android.content.Intent
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
+import android.widget.CheckBox
 import android.widget.EditText
-import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -38,7 +37,8 @@ class RegisterActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var warning: TextView
     private lateinit var warningLayout: ConstraintLayout
     private lateinit var registerButton: Button
-
+    private lateinit var ibanCheckbox: CheckBox
+    private lateinit var iban: EditText
     private lateinit var mMap: GoogleMap
     private var mMarker: Marker? = null
 
@@ -62,6 +62,8 @@ class RegisterActivity : AppCompatActivity(), OnMapReadyCallback {
         warning = findViewById(R.id.register_warning)
         registerButton = findViewById(R.id.register_button)
         warningLayout = findViewById(R.id.register_warning_layout)
+        ibanCheckbox = findViewById(R.id.register_iban_checkbox)
+        iban = findViewById(R.id.register_iban)
 
         registerButton.setOnClickListener {
             registerUser()
@@ -72,6 +74,10 @@ class RegisterActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onStop()
 
         disposable.clear()
+    }
+
+    private fun changeIbanEnable(enabled: Boolean) {
+
     }
 
     private fun registerUser() {
@@ -88,6 +94,8 @@ class RegisterActivity : AppCompatActivity(), OnMapReadyCallback {
                 setWarning("Passwords does not match up")
             !checkLocation(mMarker) ->
                 setWarning("You did not select your location from map")
+            ibanCheckbox.isChecked && !checkIban(iban.text.toString()) ->
+                setWarning("You have selected Trader account, however IBAN is not valid")
         }
 
         if (warningLayout.visibility != View.GONE) {
@@ -101,7 +109,8 @@ class RegisterActivity : AppCompatActivity(), OnMapReadyCallback {
                     email = email.text.toString(),
                     password = password.text.toString(),
                     latitude = mMarker?.position?.latitude?.toFloat().toString(),
-                    longitude = mMarker?.position?.longitude?.toFloat().toString()
+                    longitude = mMarker?.position?.longitude?.toFloat().toString(),
+                    iban = if (ibanCheckbox.isChecked) iban.text.toString() else null
                 )
             )
                 .subscribe({
@@ -141,6 +150,12 @@ class RegisterActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun clearWarning() {
         warning.text = ""
         warningLayout.visibility = View.GONE
+    }
+
+    private fun checkIban(iban: String): Boolean {
+        val patt = Regex("^[A-Z]{2}[0-9]{24}\$")
+
+        return iban.matches(patt)
     }
 
     private fun checkUsername(userName: String): Boolean {
