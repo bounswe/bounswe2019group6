@@ -95,4 +95,8 @@ lifecycle.viewmodel_ktx = "androidx.lifecycle:lifecycle-viewmodel-ktx:$versions.
 lifecycle.livedata_ktx = "androidx.lifecycle:lifecycle-livedata-ktx:$versions.lifecycle"
 deps.lifecycle = lifecycle
 
+def test = [:]
+test.hamcrest = "org.hamcrest:hamcrest-all:$versions.hamcrest"
+deps.test = test
+
 ext.deps = deps
