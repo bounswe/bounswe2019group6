@@ -31,7 +31,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.RegisterActivity"
+            android:name=".auth.signup.SignUpActivity"
             android:label="Register"
             android:screenOrientation="portrait" />
         <activity

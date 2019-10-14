@@ -13,20 +13,24 @@
     <string name="accept_terms">Accept Conditions</string>
     <string name="register">Sign Up</string>
     <string name="trader_account">Trader Account</string>
-    <string name="register_iban">IBAN (for trader user)</string>
+    <string name="signup_iban">IBAN (for trader user)</string>
     <string name="login">Login</string>
     <string name="forgot_pass">Forgot Password</string>
 
 
-    <string name="email_not_valid">Use a valid email</string>
+    <string name="username_not_valid">Username should be between 5 and 20 characters long</string>
+    <string name="email_not_valid">Email is not valid</string>
+    <string name="pass_not_valid">Password should be between 8 and 32 characters long</string>
+    <string name="trader_iban_not_valid">You have selected Trader account, however IBAN is not valid</string>
     <string name="pass_match_fail">Passwords doesn\'t match</string>
 
     <string name="select_county">Select Country</string>
+    <string name="select_location">Select your location from map</string>
     <string name="select_town">Select City</string>
     <string name="select_neighbourhood">Select County</string>
     <string name="select_district">Select District</string>
 
-
+    <string name="signup_success">You have successfully signed up. Please verify your email then sign in</string>
 
 
 

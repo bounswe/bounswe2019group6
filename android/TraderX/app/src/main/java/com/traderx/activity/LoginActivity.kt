@@ -3,17 +3,11 @@ package com.traderx.activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import com.traderx.MainActivity
 import com.traderx.R
-import com.traderx.api.ApiService
-import com.traderx.api.RequestService
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
+import com.traderx.auth.signup.SignUpActivity
 
 class LoginActivity : AppCompatActivity() {
 
@@ -33,7 +27,7 @@ class LoginActivity : AppCompatActivity() {
         }
 
         registerButton.setOnClickListener {
-            val intent = Intent(this, RegisterActivity::class.java)
+            val intent = Intent(this, SignUpActivity::class.java)
             startActivity(intent)
         }
 

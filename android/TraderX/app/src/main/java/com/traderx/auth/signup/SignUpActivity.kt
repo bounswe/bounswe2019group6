@@ -1,4 +1,4 @@
-package com.traderx.activity
+package com.traderx.auth.signup
 
 
 import android.content.DialogInterface
@@ -21,15 +21,15 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.traderx.R
+import com.traderx.activity.LoginActivity
 import com.traderx.api.ApiService
 import com.traderx.api.RequestService
 import com.traderx.api.ResponseHandler
-import com.traderx.api.request.RegisterRequest
-import com.traderx.util.RegisterValidator
+import com.traderx.api.request.SignUpRequest
 import io.reactivex.disposables.CompositeDisposable
 import retrofit2.HttpException
 
-class RegisterActivity : AppCompatActivity(), OnMapReadyCallback {
+class SignUpActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var userName: EditText
     private lateinit var email: EditText
@@ -37,7 +37,7 @@ class RegisterActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var passwordConfirm: EditText
     private lateinit var warning: TextView
     private lateinit var warningLayout: ConstraintLayout
-    private lateinit var registerButton: Button
+    private lateinit var signUpButton: Button
     private lateinit var ibanCheckbox: CheckBox
     private lateinit var iban: EditText
     private lateinit var mMap: GoogleMap
@@ -48,26 +48,26 @@ class RegisterActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.layout_register_activity)
+        setContentView(R.layout.layout_signup_activity)
 
         requestService = ApiService.getInstance()
 
         val mapFragment = supportFragmentManager
-            .findFragmentById(R.id.register_map) as SupportMapFragment
+            .findFragmentById(R.id.signup_map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
-        userName = findViewById(R.id.register_username_val)
-        email = findViewById(R.id.register_mail_val)
-        password = findViewById(R.id.register_pass_val)
-        passwordConfirm = findViewById(R.id.register_pass_confirm_val)
-        warning = findViewById(R.id.register_warning)
-        registerButton = findViewById(R.id.register_button)
-        warningLayout = findViewById(R.id.register_warning_layout)
-        ibanCheckbox = findViewById(R.id.register_iban_checkbox)
-        iban = findViewById(R.id.register_iban)
+        userName = findViewById(R.id.signup_username_val)
+        email = findViewById(R.id.signup_mail_val)
+        password = findViewById(R.id.signup_pass_val)
+        passwordConfirm = findViewById(R.id.signup_pass_confirm_val)
+        warning = findViewById(R.id.signup_warning)
+        signUpButton = findViewById(R.id.signup_button)
+        warningLayout = findViewById(R.id.signup_warning_layout)
+        ibanCheckbox = findViewById(R.id.signup_iban_checkbox)
+        iban = findViewById(R.id.signup_iban)
 
-        registerButton.setOnClickListener {
-            registerUser()
+        signUpButton.setOnClickListener {
+            signUpUser()
         }
     }
 
@@ -77,21 +77,21 @@ class RegisterActivity : AppCompatActivity(), OnMapReadyCallback {
         disposable.clear()
     }
 
-    private fun registerUser() {
+    private fun signUpUser() {
         clearWarning()
 
         when {
-            !RegisterValidator.validateUsername(userName.text.toString()) ->
+            !SignUpValidator.validateUsername(userName.text.toString()) ->
                 setWarning(getString(R.string.username_not_valid))
-            !RegisterValidator.validateEmail(email.text.toString()) ->
+            !SignUpValidator.validateEmail(email.text.toString()) ->
                 setWarning(getString(R.string.email_not_valid))
-            !RegisterValidator.validatePassword(password.text.toString()) ->
+            !SignUpValidator.validatePassword(password.text.toString()) ->
                 setWarning(getString(R.string.pass_not_valid))
-            !RegisterValidator.validatePasswordConformity(password.text.toString(), passwordConfirm.text.toString()) ->
+            !SignUpValidator.validatePasswordConformity(password.text.toString(), passwordConfirm.text.toString()) ->
                 setWarning(getString(R.string.pass_match_fail))
-            !RegisterValidator.validateLocation(mMarker) ->
+            !SignUpValidator.validateLocation(mMarker) ->
                 setWarning(getString(R.string.select_location))
-            ibanCheckbox.isChecked && !RegisterValidator.validateIban(iban.text.toString()) ->
+            ibanCheckbox.isChecked && !SignUpValidator.validateIban(iban.text.toString()) ->
                 setWarning(getString(R.string.trader_iban_not_valid))
         }
 
@@ -101,7 +101,7 @@ class RegisterActivity : AppCompatActivity(), OnMapReadyCallback {
 
         disposable.add(
             requestService.register(
-                RegisterRequest(
+                SignUpRequest(
                     username = userName.text.toString(),
                     email = email.text.toString(),
                     password = password.text.toString(),
@@ -127,7 +127,7 @@ class RegisterActivity : AppCompatActivity(), OnMapReadyCallback {
                     if (!ResponseHandler.handleError(it, this)) {
                         if (it is HttpException) {
                             val serializedError = it.response().errorBody()?.string() ?: ""
-                            Log.e("RegisterActivity", serializedError)
+                            Log.e("SignUpActivity", serializedError)
                             val errorResponse = ResponseHandler.parseErrorMessage(serializedError)
 
                             if (errorResponse.status == 422) {

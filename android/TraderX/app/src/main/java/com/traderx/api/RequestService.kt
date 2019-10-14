@@ -1,7 +1,7 @@
 package com.traderx.api
 
 import com.traderx.AppConfig
-import com.traderx.api.request.RegisterRequest
+import com.traderx.api.request.SignUpRequest
 import com.traderx.api.response.SuccessResponse
 import com.traderx.api.response.TokenResponse
 import com.traderx.api.response.UserResponse
@@ -27,6 +27,6 @@ interface RequestService {
     fun login(@Field("username") username: String, @Field("password") password: String): Flowable<TokenResponse>
 
     @POST(ApiUri.USER_SINGUP)
-    fun register(@Body registerRequest: RegisterRequest): Flowable<SuccessResponse>
+    fun register(@Body signUpRequest: SignUpRequest): Flowable<SuccessResponse>
 
 }

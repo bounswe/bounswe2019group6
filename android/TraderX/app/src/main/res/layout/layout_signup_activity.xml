@@ -33,7 +33,7 @@
         </LinearLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/register_warning_layout"
+            android:id="@+id/signup_warning_layout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="0.2"
@@ -41,7 +41,7 @@
             android:visibility="gone">
 
             <TextView
-                android:id="@+id/register_warning"
+                android:id="@+id/signup_warning"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
@@ -63,7 +63,7 @@
 
 
             <EditText
-                android:id="@+id/register_username_val"
+                android:id="@+id/signup_username_val"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="0.18"
@@ -81,7 +81,7 @@
                 android:textSize="14sp" />
 
             <EditText
-                android:id="@+id/register_mail_val"
+                android:id="@+id/signup_mail_val"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="0.18"
@@ -99,7 +99,7 @@
                 android:textSize="14sp" />
 
             <EditText
-                android:id="@+id/register_pass_val"
+                android:id="@+id/signup_pass_val"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="0.18"
@@ -117,7 +117,7 @@
                 android:textSize="14sp" />
 
             <EditText
-                android:id="@+id/register_pass_confirm_val"
+                android:id="@+id/signup_pass_confirm_val"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="0.18"
@@ -135,7 +135,7 @@
                 android:textSize="14sp" />
 
             <CheckBox
-                android:id="@+id/register_iban_checkbox"
+                android:id="@+id/signup_iban_checkbox"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight=".18"
@@ -149,7 +149,7 @@
                 android:textSize="14sp"/>
 
             <EditText
-                android:id="@+id/register_iban"
+                android:id="@+id/signup_iban"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="0.18"
@@ -158,7 +158,7 @@
                 android:drawablePadding="13dp"
                 android:fontFamily="sans-serif"
                 android:gravity="center|start"
-                android:hint="@string/register_iban"
+                android:hint="@string/signup_iban"
                 android:inputType="textEmailAddress"
                 android:paddingLeft="10dp"
                 android:singleLine="true"
@@ -167,7 +167,7 @@
                 android:textSize="14sp" />
 
             <fragment
-                android:id="@+id/register_map"
+                android:id="@+id/signup_map"
                 android:name="com.google.android.gms.maps.SupportMapFragment"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -177,13 +177,13 @@
         </LinearLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/register_action"
+            android:id="@+id/signup_action"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight=".2">
 
             <Button
-                android:id="@+id/register_button"
+                android:id="@+id/signup_button"
                 android:layout_width="match_parent"
                 android:layout_height="44dp"
                 android:elevation="0dp"
