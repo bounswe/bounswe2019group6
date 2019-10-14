@@ -28,7 +28,7 @@ public class HazelcastService {
         config.getGroupConfig().setName("TOKEN-MAP-CLUSTER");
 
         config.getMapConfig(HAZELCAST_BLACKLIST_MAP_NAME).setTimeToLiveSeconds(TOKEN_EXPIRATION_TIME_MS / 1000);
-        config.getMapConfig(HAZELCAST_BLACKLIST_MAP_NAME).setTimeToLiveSeconds(TOKEN_EXPIRATION_TIME_MS / 1000);
+        config.getMapConfig(HAZELCAST_WHITELIST_MAP_NAME).setTimeToLiveSeconds(TOKEN_EXPIRATION_TIME_MS / 1000);
 
         hazelcastInstance = Hazelcast.newHazelcastInstance(config);
 
