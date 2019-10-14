@@ -25,6 +25,7 @@ import com.traderx.api.ApiService
 import com.traderx.api.RequestService
 import com.traderx.api.ResponseHandler
 import com.traderx.api.request.RegisterRequest
+import com.traderx.util.RegisterValidator
 import io.reactivex.disposables.CompositeDisposable
 import retrofit2.HttpException
 
@@ -76,26 +77,22 @@ class RegisterActivity : AppCompatActivity(), OnMapReadyCallback {
         disposable.clear()
     }
 
-    private fun changeIbanEnable(enabled: Boolean) {
-
-    }
-
     private fun registerUser() {
         clearWarning()
 
         when {
-            !checkUsername(userName.text.toString()) ->
-                setWarning("Username is not valid")
-            !checkEmail(email.text.toString()) ->
-                setWarning("Email is not valid")
-            !checkPassword(password.text.toString()) ->
-                setWarning("Password is not valid")
-            !checkPasswordConformity(password.text.toString(), passwordConfirm.text.toString()) ->
-                setWarning("Passwords does not match up")
-            !checkLocation(mMarker) ->
-                setWarning("You did not select your location from map")
-            ibanCheckbox.isChecked && !checkIban(iban.text.toString()) ->
-                setWarning("You have selected Trader account, however IBAN is not valid")
+            !RegisterValidator.validateUsername(userName.text.toString()) ->
+                setWarning(getString(R.string.username_not_valid))
+            !RegisterValidator.validateEmail(email.text.toString()) ->
+                setWarning(getString(R.string.email_not_valid))
+            !RegisterValidator.validatePassword(password.text.toString()) ->
+                setWarning(getString(R.string.pass_not_valid))
+            !RegisterValidator.validatePasswordConformity(password.text.toString(), passwordConfirm.text.toString()) ->
+                setWarning(getString(R.string.pass_match_fail))
+            !RegisterValidator.validateLocation(mMarker) ->
+                setWarning(getString(R.string.select_location))
+            ibanCheckbox.isChecked && !RegisterValidator.validateIban(iban.text.toString()) ->
+                setWarning(getString(R.string.trader_iban_not_valid))
         }
 
         if (warningLayout.visibility != View.GONE) {
@@ -119,7 +116,7 @@ class RegisterActivity : AppCompatActivity(), OnMapReadyCallback {
                         clearWarning()
 
                         AlertDialog.Builder(this)
-                            .setMessage("You have successfully signed up. Please verify your email then sign in.")
+                            .setMessage(getString(R.string.signup_success))
                             .setPositiveButton("Ok", DialogInterface.OnClickListener { dialog, id ->
                                 val intent = Intent(this, LoginActivity::class.java)
                                 startActivity(intent)
@@ -150,37 +147,6 @@ class RegisterActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun clearWarning() {
         warning.text = ""
         warningLayout.visibility = View.GONE
-    }
-
-    private fun checkIban(iban: String): Boolean {
-        val patt = Regex("^[A-Z]{2}[0-9]{24}\$")
-
-        return iban.matches(patt)
-    }
-
-    private fun checkUsername(userName: String): Boolean {
-        return userName.length in 5..20
-    }
-
-    private fun checkEmail(email: String): Boolean {
-        // Credits to https://www.tutorialspoint.com/validate-email-address-in-java
-        val patt = Regex(
-            "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]\$"
-        )
-
-        return email.matches(patt)
-    }
-
-    private fun checkPassword(password: String): Boolean {
-        return password.length in 8..32
-    }
-
-    private fun checkPasswordConformity(password: String, passwordConfirm: String): Boolean {
-        return password == passwordConfirm
-    }
-
-    private fun checkLocation(marker: Marker?): Boolean {
-        return marker != null
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
