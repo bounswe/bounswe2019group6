@@ -50,7 +50,9 @@ public class Group6BackendService implements CommandLineRunner {
 
     String token = signupService.admin_signup(admin);
 
+
     hazelcastService.invalidateToken(token,"admin");
+
 
   }
 

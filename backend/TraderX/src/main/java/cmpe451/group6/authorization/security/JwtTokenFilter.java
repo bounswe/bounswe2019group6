@@ -61,7 +61,9 @@ public class JwtTokenFilter extends OncePerRequestFilter {
       if (token != null && jwtTokenProvider.validateToken(token)) {
 
         // If token is in blacklist, return error response
+
         if(hazelcastService.isBlackToken(token)){
+
           httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token has been invalidated.");
           return;
         }
