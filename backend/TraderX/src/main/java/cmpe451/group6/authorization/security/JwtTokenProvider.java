@@ -43,6 +43,9 @@ public class JwtTokenProvider {
   @Autowired
   private CustomizedUserDetails customizedUserDetails;
 
+  @Autowired
+  private HazelcastService hazelcastService;
+
   @PostConstruct
   protected void init() {
     secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
@@ -50,7 +53,8 @@ public class JwtTokenProvider {
 
   public String createToken(String username, List<Role> roles) {
 
-    if(HazelcastService.whiteTokensCount(username) > 10){
+
+    if(hazelcastService.whiteTokensCount(username) > 10){
       throw new CustomException("More than 10 active tokens exist for that user. The account is banned from" +
               "the system for 30 minutes.", HttpStatus.TOO_MANY_REQUESTS);
     }
@@ -68,7 +72,8 @@ public class JwtTokenProvider {
         .signWith(SignatureAlgorithm.HS256, secretKey)//
         .compact();
 
-    HazelcastService.putWhiteToken(token, username);
+    hazelcastService.putWhiteToken(token, username);
+
     return token;
   }
 
@@ -99,7 +104,4 @@ public class JwtTokenProvider {
     }
   }
 
-  public long getValidityInMilliseconds() {
-    return validityInMilliseconds;
-  }
 }

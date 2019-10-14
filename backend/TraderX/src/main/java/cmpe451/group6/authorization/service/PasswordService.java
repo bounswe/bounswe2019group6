@@ -31,6 +31,9 @@ public class PasswordService {
     @Autowired
     private EmailService emailService;
 
+    @Autowired
+    private HazelcastService hazelcastService;
+
     @Value("${server.url}")
     private String baseURL;
 
@@ -62,7 +65,7 @@ public class PasswordService {
             user.setPassword(passwordEncoder.encode(newPassword));
             userRepository.save(user);
             // Invalidate token;
-            HazelcastService.invalidateToken(token, user.getUsername());
+            hazelcastService.invalidateToken(token, user.getUsername());
             return "Password has been changed.";
         } catch (AuthenticationException e) {
             throw new CustomException("Invalid TOKEN", HttpStatus.UNAUTHORIZED);

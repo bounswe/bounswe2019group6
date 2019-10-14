@@ -36,10 +36,15 @@ public class SignupService {
     @Autowired
     private EmailService emailService;
 
+    @Autowired
+    private HazelcastService hazelcastService;
+
 
     public String signup(User user) {
         if (!userRepository.existsByUsername(user.getUsername()) && !userRepository.existsByEmail(user.getEmail())) {
-            validateUserData(user); 
+
+            // Check field validity. Throw exception and return error if at least one of them is wrong
+            validateUserData(user);
 
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             Role role = validateIBAN(user.getIBAN());
@@ -67,7 +72,7 @@ public class SignupService {
             User user = userRepository.findByUsername(username);
             user.setStatus(RegistrationStatus.ENABLED);
             userRepository.save(user);
-            HazelcastService.invalidateToken(token, username);
+            hazelcastService.invalidateToken(token, username);
             return "Confirmation completed";
         } catch (AuthenticationException e) {
             throw new CustomException("Invalid TOKEN", HttpStatus.UNPROCESSABLE_ENTITY);
