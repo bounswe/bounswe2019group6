@@ -15,30 +15,37 @@ import javax.validation.constraints.Size;
 @Entity
 public class User {
 
+  public static final transient String usernameRegex = "^\\w{3,20}$";
+  public static final transient String IBANRegex = "^[A-Z]{2}[0-9]{18}$";
+  public static final transient String locationRegex = "^(-?\\d{1,5}(\\.\\d{1,10})?)$";
+  public static final transient String passwordRegex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{6,}$";
+  public static final transient String emailRegex = "^\\w+([-+.']\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$";
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer id;
 
-  @Size(min = 5, max = 20, message = "Minimum username length: 5 characters")
+  @Pattern(regexp = usernameRegex)
   @Column(unique = true, nullable = false)
   private String username;
 
+  @Pattern(regexp = emailRegex)
   @Column(unique = true, nullable = false)
   private String email;
 
-  @Pattern(regexp = "^[A-Z]{2}[0-9]{18}$")
+  @Pattern(regexp = IBANRegex)
   @Column
   private String IBAN;
 
   @Column(nullable = false)
-  @Pattern(regexp = "^(-?\\d{1,5}(\\.\\d{1,10})?)$")
+  @Pattern(regexp = locationRegex)
   private String latitude;
 
   @Column(nullable = false)
-  @Pattern(regexp = "^(-?\\d{1,5}(\\.\\d{1,10})?)$")  
+  @Pattern(regexp = locationRegex)
   private String longitude;
 
-  //   ^                 # start-of-string
+  //   ^               # start-of-string
   // (?=.*[0-9])       # a digit must occur at least once
   // (?=.*[a-z])       # a lower case letter must occur at least once
   // (?=.*[A-Z])       # an upper case letter must occur at least once
@@ -46,8 +53,7 @@ public class User {
   // (?=\S+$)          # no whitespace allowed in the entire string
   // .{8,}             # anything, at least eight places though
   // $                 # end-of-string
-  @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{6,}$", message ="Password must -include at least a digit, a lower case letter, an uppercase letter, a special char. and not include any whitespaces. Minimum password length: 8 characters ")
-  // @Size(min = 8, message = "Minimum password length: 8 characters")
+  @Pattern(regexp = passwordRegex, message ="Password must -include at least a digit, a lower case letter, an uppercase letter, a special char. and not include any whitespaces. Minimum password length: 8 characters ")
   private String password;
 
   @ElementCollection(fetch = FetchType.EAGER)

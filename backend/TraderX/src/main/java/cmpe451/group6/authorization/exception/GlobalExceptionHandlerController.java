@@ -5,10 +5,12 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.hibernate.annotations.Entity;
 import org.springframework.boot.autoconfigure.web.DefaultErrorAttributes;
 import org.springframework.boot.autoconfigure.web.ErrorAttributes;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -55,14 +57,17 @@ public class GlobalExceptionHandlerController {
   }
 
   @ExceptionHandler(MissingServletRequestPartException.class)
-  public void handleMissingParts(MissingServletRequestPartException ex) {
-    String message = ex.getRequestPartName() + " is not valid.";
-    throw new CustomException(message, HttpStatus.BAD_REQUEST);
+  public void handleMissingParts(HttpServletResponse res) throws IOException {
+    res.sendError(HttpStatus.BAD_REQUEST.value(),"Missing parts on request part");
   }
 
   @ExceptionHandler(MissingServletRequestParameterException.class)
-  public void handleMissingParams(MissingServletRequestParameterException ex) {
-    String message = ex.getParameterName() + " is not valid.";
-    throw new CustomException(message, HttpStatus.BAD_REQUEST);
+  public void handleMissingParams(HttpServletResponse res) throws IOException {
+    res.sendError(HttpStatus.BAD_REQUEST.value(),"Missing parameter on request");
+  }
+
+  @ExceptionHandler(HttpMessageNotReadableException.class)
+  public void handleBadJSON(HttpServletResponse res) throws IOException {
+    res.sendError(HttpStatus.EXPECTATION_FAILED.value(),"Invalid JSON data");
   }
 }

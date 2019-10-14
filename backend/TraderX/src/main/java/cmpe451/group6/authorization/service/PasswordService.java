@@ -6,12 +6,14 @@ import cmpe451.group6.authorization.model.User;
 import cmpe451.group6.authorization.repository.UserRepository;
 import cmpe451.group6.authorization.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 @Service
@@ -28,6 +30,12 @@ public class PasswordService {
 
     @Autowired
     private EmailService emailService;
+
+    @Value("${server.url}")
+    private String baseURL;
+
+    @Value("${server.port}")
+    private String port;
 
     public String sendRenewalMail(String mail){
         User user = userRepository.findByEmail(mail);
@@ -61,8 +69,16 @@ public class PasswordService {
         }
     }
 
+    public String changePassword(HttpServletRequest req, String newPassword){
+        User user = userRepository.findByUsername(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)));
+        if(!newPassword.matches(User.passwordRegex)) throw  new CustomException("Password does not conform to restrictions.",HttpStatus.EXPECTATION_FAILED);
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+        return "Password has been changed.";
+    }
+
     private String buildPasswordRenewalURL(String token){
-        return "http://localhost:8080/users/renew?token=" + token;
+        return baseURL+":"+port+"/users/renew?token=" + token;
     }
 
 }

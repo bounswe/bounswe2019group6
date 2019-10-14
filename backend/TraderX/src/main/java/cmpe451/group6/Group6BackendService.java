@@ -17,7 +17,6 @@ import cmpe451.group6.authorization.model.Role;
 import cmpe451.group6.authorization.model.User;
 
 // TODO: Interface for user to supply new password when resent link is sent. (Frontend related.)
-// TODO: Store hardcoded values in application.properties or some config class.
 
 @SpringBootApplication
 public class Group6BackendService implements CommandLineRunner {

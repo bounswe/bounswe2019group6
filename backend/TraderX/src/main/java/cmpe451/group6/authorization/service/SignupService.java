@@ -39,8 +39,7 @@ public class SignupService {
 
     public String signup(User user) {
         if (!userRepository.existsByUsername(user.getUsername()) && !userRepository.existsByEmail(user.getEmail())) {
-
-            // TODO: check info validity.
+            validateUserData(user); 
 
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             Role role = validateIBAN(user.getIBAN());
@@ -93,7 +92,7 @@ public class SignupService {
      */
     private Role validateIBAN(String IBAN) throws  CustomException{
         if(IBAN == null){ return Role.ROLE_BASIC; }
-        if(IBAN.matches("^[A-Z]{2}[0-9]{18}$")){ return Role.ROLE_TRADER; }
+        if(IBAN.matches(User.IBANRegex)){ return Role.ROLE_TRADER; }
 
         // IBAN is provided but not valid
         throw new CustomException("Invalid IBAN number. Must match: ^[A-Z]{2}[0-9]{18}$", HttpStatus.UNPROCESSABLE_ENTITY);
@@ -101,5 +100,28 @@ public class SignupService {
 
     private String buildVerificationURL(String token){
         return "http://localhost:8080/signup/confirm?token=" + token;
+    }
+
+    private void validateUserData(User user){
+        if (user.getUsername() == null || !user.getUsername().matches(User.usernameRegex)) {
+            throw new CustomException("Invalid username", HttpStatus.PRECONDITION_FAILED);
+        }
+        if (user.getPassword() == null || !user.getPassword().matches(User.passwordRegex)) {
+            throw new CustomException("Invalid password", HttpStatus.PRECONDITION_FAILED);
+        }
+        if (user.getEmail() == null || !user.getEmail().matches(User.emailRegex)) {
+            throw new CustomException("Invalid email", HttpStatus.PRECONDITION_FAILED);
+        }
+        if (user.getLatitude() == null || !user.getLatitude().matches(User.locationRegex)) {
+            throw new CustomException("Invalid latitude", HttpStatus.PRECONDITION_FAILED);
+        }
+        if (user.getLongitude() == null || !user.getLongitude().matches(User.locationRegex)) {
+            throw new CustomException("Invalid longitude", HttpStatus.PRECONDITION_FAILED);
+        }
+        if (user.getIBAN() != null)  {
+            if(!user.getIBAN().matches(User.IBANRegex))
+            throw new CustomException("Invalid IBAN", HttpStatus.PRECONDITION_FAILED);
+        }
+
     }
 }
