@@ -34,10 +34,6 @@ public class HazelcastService {
 
     }
 
-    public int getTOKEN_EXPIRATION_TIME_MS() {
-        return TOKEN_EXPIRATION_TIME_MS;
-    }
-
     private IMap<String,String> getBlacklistMap() {
         return hazelcastInstance.getMap(HAZELCAST_BLACKLIST_MAP_NAME);
     }

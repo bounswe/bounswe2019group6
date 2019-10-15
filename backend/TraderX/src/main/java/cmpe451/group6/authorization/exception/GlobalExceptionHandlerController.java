@@ -63,7 +63,8 @@ public class GlobalExceptionHandlerController {
   }
 
   @ExceptionHandler(MissingServletRequestParameterException.class)
-  public void handleMissingParams(HttpServletResponse res) throws IOException {
+  public void handleMissingParams(HttpServletResponse res, MissingServletRequestParameterException ex) throws IOException {
+    ex.printStackTrace();
     res.sendError(HttpStatus.BAD_REQUEST.value(),"Missing parameter on request");
   }
 
