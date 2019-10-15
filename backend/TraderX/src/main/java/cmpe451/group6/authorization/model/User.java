@@ -16,6 +16,7 @@ import javax.validation.constraints.Size;
 public class User {
 
   public static final transient String usernameRegex = "^\\w{3,20}$";
+  // TODO: reformat iban regex (limit only a few country ibans)
   public static final transient String IBANRegex = "^[A-Z]{2}[0-9]{18}$";
   public static final transient String locationRegex = "^(-?\\d{1,5}(\\.\\d{1,10})?)$";
   public static final transient String passwordRegex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{6,}$";
@@ -27,6 +28,7 @@ public class User {
 
   @Pattern(regexp = usernameRegex)
   @Column(unique = true, nullable = false)
+  // TODO determine size on both database and here
   private String username;
 
   @Pattern(regexp = emailRegex)

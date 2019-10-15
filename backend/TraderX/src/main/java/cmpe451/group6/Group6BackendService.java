@@ -2,6 +2,7 @@ package cmpe451.group6;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 import cmpe451.group6.authorization.model.RegistrationStatus;
 import cmpe451.group6.authorization.service.HazelcastService;
@@ -15,6 +16,9 @@ import org.springframework.context.annotation.Bean;
 
 import cmpe451.group6.authorization.model.Role;
 import cmpe451.group6.authorization.model.User;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 // TODO: Interface for user to supply new password when resent link is sent. (Frontend related.)
 
@@ -34,6 +38,18 @@ public class Group6BackendService implements CommandLineRunner {
   @Bean
   public ModelMapper modelMapper() {
     return new ModelMapper();
+  }
+
+  @Bean
+  public CorsFilter corsFilter() {
+    final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    final CorsConfiguration config = new CorsConfiguration();
+    config.setAllowCredentials(true);
+    config.setAllowedOrigins(Collections.singletonList("*"));
+    config.setAllowedHeaders(Arrays.asList("Origin", "Content-Type", "Accept"));
+    config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "OPTIONS", "DELETE", "PATCH"));
+    source.registerCorsConfiguration("/**", config);
+    return new CorsFilter(source);
   }
 
   // Predefined admin user with full privileges

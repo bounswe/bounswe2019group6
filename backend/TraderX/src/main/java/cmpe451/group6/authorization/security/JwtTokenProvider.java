@@ -53,7 +53,6 @@ public class JwtTokenProvider {
 
   public String createToken(String username, List<Role> roles) {
 
-
     if(hazelcastService.whiteTokensCount(username) > 10){
       throw new CustomException("More than 10 active tokens exist for that user. The account is banned from" +
               "the system for 30 minutes.", HttpStatus.TOO_MANY_REQUESTS);
