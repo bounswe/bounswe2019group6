@@ -29,6 +29,7 @@ public class LoginService {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
             return new TokenWrapperDTO(jwtTokenProvider.createToken(username, userRepository.findByUsername(username).getRoles()));
         } catch (AuthenticationException e) {
+            e.printStackTrace();
             throw new CustomException("Invalid username/password supplied", HttpStatus.UNAUTHORIZED);
         }
     }

@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import cmpe451.group6.authorization.model.RegistrationStatus;
+import cmpe451.group6.authorization.repository.UserRepository;
 import cmpe451.group6.authorization.service.HazelcastService;
 import cmpe451.group6.authorization.service.SignupService;
 import org.modelmapper.ModelMapper;
@@ -31,6 +32,9 @@ public class Group6BackendService implements CommandLineRunner {
   @Autowired
   HazelcastService hazelcastService;
 
+  @Autowired
+  UserRepository userRepository;
+
   public static void main(String[] args) {
     SpringApplication.run(Group6BackendService.class, args);
   }
@@ -55,20 +59,21 @@ public class Group6BackendService implements CommandLineRunner {
   // Predefined admin user with full privileges
   @Override
   public void run(String... params) throws Exception {
-    User admin = new User();
-    admin.setUsername("admin");
-    admin.setPassword("admin");
-    admin.setEmail("admin@email.com");
-    admin.setLatitude("46.123");
-    admin.setLongitude("46.123");
-    admin.setStatus(RegistrationStatus.ENABLED);
-    admin.setRoles(new ArrayList<Role>(Arrays.asList(Role.ROLE_ADMIN)));
+    if(!userRepository.existsByUsername("admin")) {
+      User admin = new User();
+      admin.setUsername("admin");
+      admin.setPassword("admin");
+      admin.setEmail("admin@email.com");
+      admin.setLatitude("46.123");
+      admin.setLongitude("46.123");
+      admin.setStatus(RegistrationStatus.ENABLED);
+      admin.setRoles(new ArrayList<Role>(Arrays.asList(Role.ROLE_ADMIN)));
 
-    String token = signupService.admin_signup(admin);
+      String token = signupService.admin_signup(admin);
 
 
-    hazelcastService.invalidateToken(token,"admin");
-
+      hazelcastService.invalidateToken(token, "admin");
+    }
 
   }
 

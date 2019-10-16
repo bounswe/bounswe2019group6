@@ -1,19 +1,17 @@
 package cmpe451.group6.authorization.model;
 
-import java.util.List;
+import cmpe451.group6.rest.follow.model.FollowDAO;
 
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import java.io.Serializable;
+import java.util.List;
+import java.util.Set;
+
+import javax.persistence.*;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 @Entity
-public class User {
+public class User implements Serializable {
 
   public static final transient String usernameRegex = "^\\w{3,20}$";
   // TODO: reformat iban regex (limit only a few country ibans)
@@ -46,6 +44,13 @@ public class User {
   @Column(nullable = false)
   @Pattern(regexp = locationRegex)
   private String longitude;
+
+  @OneToMany(mappedBy = "follower",cascade = CascadeType.ALL)
+  private Set<FollowDAO> followerDAOs;
+
+
+  @OneToMany(mappedBy = "followee",cascade = CascadeType.ALL)
+  private Set<FollowDAO> followeeDAOs;
 
   //   ^               # start-of-string
   // (?=.*[0-9])       # a digit must occur at least once

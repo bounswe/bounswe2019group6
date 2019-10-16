@@ -1,11 +1,11 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/cmpe451?allowPublicKeyRetrieval=true
+    url: "jdbc:mysql://localhost:3306/cmpe451?allowPublicKeyRetrieval=true"
     # use this if the above raises error:
     # jdbc:mysql://localhost:3306/cmpe451?useSSH=false
 
     username: root
-    password: root
+    password: 9876543210g___B
     driver-class-name: com.mysql.cj.jdbc.Driver
   tomcat:
     max-wait: 20000
@@ -14,7 +14,7 @@ spring:
     min-idle: 15
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
@@ -34,4 +34,4 @@ security:
 
 email:
   sender_address: "bounswegroup6@gmail.com"
-  sender_password: "*********"
+  sender_password: "bestgroupis6"
