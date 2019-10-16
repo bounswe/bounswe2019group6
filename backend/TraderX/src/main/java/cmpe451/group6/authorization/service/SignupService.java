@@ -1,6 +1,5 @@
 package cmpe451.group6.authorization.service;
 
-import cmpe451.group6.authorization.dto.TokenWrapperDTO;
 import cmpe451.group6.authorization.email.EmailService;
 import cmpe451.group6.authorization.exception.CustomException;
 import cmpe451.group6.authorization.model.RegistrationStatus;
@@ -37,9 +36,16 @@ public class SignupService {
     @Autowired
     private EmailService emailService;
 
+    @Autowired
+    private HazelcastService hazelcastService;
+
 
     public String signup(User user) {
         if (!userRepository.existsByUsername(user.getUsername()) && !userRepository.existsByEmail(user.getEmail())) {
+
+            // Check field validity. Throw exception and return error if at least one of them is wrong
+            validateUserData(user);
+
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             Role role = validateIBAN(user.getIBAN());
             user.setRoles(new ArrayList<>(Arrays.asList(role)));
@@ -66,17 +72,18 @@ public class SignupService {
             User user = userRepository.findByUsername(username);
             user.setStatus(RegistrationStatus.ENABLED);
             userRepository.save(user);
+            hazelcastService.invalidateToken(token, username);
             return "Confirmation completed";
         } catch (AuthenticationException e) {
             throw new CustomException("Invalid TOKEN", HttpStatus.UNPROCESSABLE_ENTITY);
         }
     }
 
-    public TokenWrapperDTO admin_signup(User user){
+    public String admin_signup(User user){
         if (!userRepository.existsByUsername(user.getUsername())) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             userRepository.save(user);
-            return new TokenWrapperDTO(jwtTokenProvider.createToken(user.getUsername(), user.getRoles()));
+            return jwtTokenProvider.createToken(user.getUsername(), user.getRoles());
         } else {
             throw new CustomException("Username is already in use", HttpStatus.UNPROCESSABLE_ENTITY);
         }
@@ -90,7 +97,7 @@ public class SignupService {
      */
     private Role validateIBAN(String IBAN) throws  CustomException{
         if(IBAN == null){ return Role.ROLE_BASIC; }
-        if(IBAN.matches("^[A-Z]{2}[0-9]{18}$")){ return Role.ROLE_TRADER; }
+        if(IBAN.matches(User.IBANRegex)){ return Role.ROLE_TRADER; }
 
         // IBAN is provided but not valid
         throw new CustomException("Invalid IBAN number. Must match: ^[A-Z]{2}[0-9]{18}$", HttpStatus.UNPROCESSABLE_ENTITY);
@@ -98,5 +105,28 @@ public class SignupService {
 
     private String buildVerificationURL(String token){
         return "http://localhost:8080/signup/confirm?token=" + token;
+    }
+
+    private void validateUserData(User user){
+        if (user.getUsername() == null || !user.getUsername().matches(User.usernameRegex)) {
+            throw new CustomException("Invalid username", HttpStatus.PRECONDITION_FAILED);
+        }
+        if (user.getPassword() == null || !user.getPassword().matches(User.passwordRegex)) {
+            throw new CustomException("Invalid password", HttpStatus.PRECONDITION_FAILED);
+        }
+        if (user.getEmail() == null || !user.getEmail().matches(User.emailRegex)) {
+            throw new CustomException("Invalid email", HttpStatus.PRECONDITION_FAILED);
+        }
+        if (user.getLatitude() == null || !user.getLatitude().matches(User.locationRegex)) {
+            throw new CustomException("Invalid latitude", HttpStatus.PRECONDITION_FAILED);
+        }
+        if (user.getLongitude() == null || !user.getLongitude().matches(User.locationRegex)) {
+            throw new CustomException("Invalid longitude", HttpStatus.PRECONDITION_FAILED);
+        }
+        if (user.getIBAN() != null)  {
+            if(!user.getIBAN().matches(User.IBANRegex))
+            throw new CustomException("Invalid IBAN", HttpStatus.PRECONDITION_FAILED);
+        }
+
     }
 }
