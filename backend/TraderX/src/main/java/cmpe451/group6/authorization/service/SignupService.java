@@ -49,7 +49,7 @@ public class SignupService {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             Role role = validateIBAN(user.getIBAN());
             user.setRoles(new ArrayList<>(Arrays.asList(role)));
-            user.setStatus(RegistrationStatus.PENDING);
+            user.setRegistrationStatus(RegistrationStatus.PENDING);
             String token = jwtTokenProvider.createToken(user.getUsername(), user.getRoles());
 
             try {
@@ -70,7 +70,7 @@ public class SignupService {
         try {
             String username = jwtTokenProvider.getUsername(token);
             User user = userRepository.findByUsername(username);
-            user.setStatus(RegistrationStatus.ENABLED);
+            user.setRegistrationStatus(RegistrationStatus.ENABLED);
             userRepository.save(user);
             hazelcastService.invalidateToken(token, username);
             return "Confirmation completed";
@@ -79,7 +79,7 @@ public class SignupService {
         }
     }
 
-    public String admin_signup(User user){
+    public String internal_signup(User user){
         if (!userRepository.existsByUsername(user.getUsername())) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             userRepository.save(user);
