@@ -93,7 +93,7 @@ public class UserController {
     return new StringResponseWrapper(userService.setPublic(req));
   }
 
-  @PostMapping("/getAll")
+  @GetMapping("/getAll")
   @ResponseStatus(HttpStatus.OK)
   @ApiOperation(value = "Returns all user profiles (Limited by 20 for now, No token required).", response = String.class)
   public List<Object> getAll(HttpServletRequest req) {

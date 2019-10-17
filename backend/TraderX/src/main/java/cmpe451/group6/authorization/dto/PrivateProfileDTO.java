@@ -7,20 +7,20 @@ import java.util.List;
 
 public class PrivateProfileDTO {
 
-    @ApiModelProperty(position = 0,required = true)
+    @ApiModelProperty(position = 0)
     private String username;
 
     @ApiModelProperty(position = 1)
-    List<Role> roles;
+    private List<Role> roles;
 
     @ApiModelProperty(position = 2)
-    boolean isPrivate;
+    private boolean isPrivate;
 
-    public boolean isPrivate() {
+    public boolean getIsPrivate() {
         return isPrivate;
     }
 
-    public void setPrivate(boolean aPrivate) {
+    public void setIsPrivate(boolean aPrivate) {
         isPrivate = aPrivate;
     }
 
