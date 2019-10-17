@@ -5,7 +5,7 @@ spring:
     # jdbc:mysql://localhost:3306/cmpe451?useSSH=false
 
     username: root
-    password: 9876543210g___B
+    password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
   tomcat:
     max-wait: 20000
@@ -34,4 +34,4 @@ security:
 
 email:
   sender_address: "bounswegroup6@gmail.com"
-  sender_password: "bestgroupis6"
+  sender_password: "***"
