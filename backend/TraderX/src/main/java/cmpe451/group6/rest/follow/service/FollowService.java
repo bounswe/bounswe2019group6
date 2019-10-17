@@ -53,12 +53,41 @@ public class FollowService {
         return String.format("%s want to follow %s",currentUser.getUsername(),userToFollow.getUsername() );
     }
 
+    // public String unfollowUser(String username, HttpServletRequest request){
+    //     User userToUnfollow = userRepository.findByUsername(username);
+    //     User currentUser = userRepository.findByUsername(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(request)));
+
+    //     if(userToUnfollow==null){
+    //         throw new CustomException("There is no user named " +username+
+    //                 ". Please report this issue backend team to handle this exception", HttpStatus.INTERNAL_SERVER_ERROR);
+    //     }else if(userToFollow.getStatus()== RegistrationStatus.PENDING){ //TODO: current user is not following the stated username
+    //         //followService.following(request)
+    //         throw new CustomException("The user is not activate his/her account. Therefore s/he cannot be followed ", HttpStatus.INTERNAL_SERVER_ERROR);
+    //     }
+    //     FollowDAO temp=new FollowDAO();
+    //     temp.setFollower(currentUser);
+    //     temp.setFollowee(userToFollow);
+    //     temp.setFollowStatus(FollowStatus.PENDING);
+    //     temp.setId(3); //TODO: this has to be checked. If I don't give id it does not generate automatically. However, nevertheless it does not assign handwritten id(3), it generates.
+    //     followRepository.save(temp);
+    //     System.out.println("actual usernameToUnfollow: " + username);
+    //     return String.format("%s want to unfollow %s",currentUser.getUsername(),userToFollow.getUsername() );
+    // }
+
     public List<FolloweeDTO> following(HttpServletRequest request) {
         User currentUser = userRepository.findByUsername(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(request)));
 
         List<FolloweeDTO> followeeList=new ArrayList<FolloweeDTO>();
         followRepository.findByAndFollower_username(currentUser.getUsername()).forEach(item -> followeeList.add(modelMapper.map(item.getFollowee(),FolloweeDTO.class )) );
         return followeeList;
+    }
+
+    public List<FolloweeDTO> followers(HttpServletRequest request) {
+        User currentUser = userRepository.findByUsername(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(request)));
+
+        List<FolloweeDTO> followerList=new ArrayList<FolloweeDTO>();
+        followRepository.findByAndFollower_username(currentUser.getUsername()).forEach(item -> followerList.add(modelMapper.map(item.getFollower(),FolloweeDTO.class )) );
+        return followerList;
     }
 }
 
