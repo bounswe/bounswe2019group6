@@ -35,3 +35,11 @@ security:
 email:
   sender_address: "bounswegroup6@gmail.com"
   sender_password: "*********"
+
+  # Reset link is active on the backend side and waiting for a frontend page
+  # to make user able to enter new pw and send that pw with token to
+  # /renew endpoint on backend side.
+  frontend_url: http://localhost # To which reset password link will redirect clients
+  frontend_port: 9999 # TBD
+  frontend_reset_path: renew_password # TBD, up to frontend team
+
