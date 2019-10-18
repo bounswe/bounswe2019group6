@@ -34,11 +34,14 @@ public class PasswordService {
     @Autowired
     private HazelcastService hazelcastService;
 
-    @Value("${server.url}")
+    @Value("${email.frontend_url}")
     private String baseURL;
 
-    @Value("${server.port}")
+    @Value("${email.frontend_port}")
     private String port;
+
+    @Value("${email.frontend_reset_path}")
+    private String path;
 
     public String sendRenewalMail(String mail){
         User user = userRepository.findByEmail(mail);
@@ -51,7 +54,7 @@ public class PasswordService {
                 throw new CustomException(String.format("Failed to send verification email to the address: %s", mail) , HttpStatus.INTERNAL_SERVER_ERROR);
             }
 
-            return "Link to reset password has been sent to your email.";
+            return "Link to reset password has been sent to "+ mail;
         } else {
             throw new CustomException("No user found for the email", HttpStatus.BAD_REQUEST);
         }
@@ -81,7 +84,8 @@ public class PasswordService {
     }
 
     private String buildPasswordRenewalURL(String token){
-        return baseURL+":"+port+"/users/renew?token=" + token;
+        System.out.println(baseURL+":"+port+"/"+path+"?token="+token);
+        return baseURL+":"+port+"/"+path+"?token="+token;
     }
 
 }
