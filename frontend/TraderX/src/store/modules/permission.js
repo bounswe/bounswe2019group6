@@ -49,8 +49,9 @@ const mutations = {
 const actions = {
   generateRoutes({ commit }, roles) {
     return new Promise(resolve => {
+      // TODO this will be changed so that different routes will be added according to user role (basic or trader)
       let accessedRoutes
-      if (roles.includes('admin')) {
+      if (roles.includes('ROLE_ADMIN')) {
         accessedRoutes = asyncRoutes || []
       } else {
         accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)

@@ -32,8 +32,9 @@ router.beforeEach(async(to, from, next) => {
         next()
       } else {
         try {
+          // TODO this behavior will be changed so that different routes will be added to router according to user role
           // get user info
-          // note: roles must be a object array! such as: ['admin'] or ,['developer','editor']
+          // note: roles must be a object array! such as: ['basic'] or ,['trader']
           const { roles } = await store.dispatch('user/getInfo')
 
           // generate accessible routes map based on roles
@@ -55,7 +56,7 @@ router.beforeEach(async(to, from, next) => {
       }
     }
   } else {
-    /* has no token*/
+    /* has no token */
 
     if (whiteList.indexOf(to.path) !== -1) {
       // in the free login whitelist, go directly
