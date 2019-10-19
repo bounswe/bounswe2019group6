@@ -61,33 +61,19 @@ public class FollowService {
         return String.format("%s want to follow %s", currentUser.getUsername(), userToFollow.getUsername());
     }
 
-    // public String unfollowUser(String username, HttpServletRequest request){
-    // User userToUnfollow = userRepository.findByUsername(username);
-    // User currentUser =
-    // userRepository.findByUsername(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(request)));
 
-    // if(userToUnfollow==null){
-    // throw new CustomException("There is no user named " +username+
-    // ". Please report this issue backend team to handle this exception",
-    // HttpStatus.INTERNAL_SERVER_ERROR);
-    // }else if(userToFollow.getStatus()== RegistrationStatus.PENDING){ //TODO:
-    // current user is not following the stated username
-    // //followService.following(request)
-    // throw new CustomException("The user is not activate his/her account.
-    // Therefore s/he cannot be followed ", HttpStatus.INTERNAL_SERVER_ERROR);
-    // }
-    // FollowDAO temp=new FollowDAO();
-    // temp.setFollower(currentUser);
-    // temp.setFollowee(userToFollow);
-    // temp.setFollowStatus(FollowStatus.PENDING);
-    // temp.setId(3); //TODO: this has to be checked. If I don't give id it does not
-    // generate automatically. However, nevertheless it does not assign handwritten
-    // id(3), it generates.
-    // followRepository.save(temp);
-    // System.out.println("actual usernameToUnfollow: " + username);
-    // return String.format("%s want to unfollow
-    // %s",currentUser.getUsername(),userToFollow.getUsername() );
-    // }
+    /**
+     * TODO
+     * @param username
+     * @param request
+     * @return
+     */
+    public String unfollowUser(String username, HttpServletRequest request){
+    
+        String currentUsername=jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(request));
+        followRepository.deleteByAndFolloweeUsernameAndFollowerUsername(username, currentUsername);
+        return String.format("%s want to unfollow %s", currentUsername, username);
+    }
 
     public List<FolloweeDTO> following(HttpServletRequest request) {
         User currentUser = userRepository

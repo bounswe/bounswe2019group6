@@ -33,19 +33,16 @@ public class FollowController {
                 return followService.followUser(usernameToFollow, request);
         }
 
-        // @PostMapping("/unfollow_user")
-        // @ResponseStatus(HttpStatus.OK)
-        // @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_BASIC') or
-        // hasRole('ROLE_TRADER')")
-        // @ApiOperation(value = "Unfollow a user that is being followed")
-        // @ApiResponses(value = {
-        // @ApiResponse(code = 400, message =
-        // GlobalExceptionHandlerController.GENERIC_ERROR_RESPONSE)})
-        // public String unfollowUser(
-        // @ApiParam("Username") @RequestParam String usernameToUnfollow,
-        // HttpServletRequest request) {
-        // return followService.unfollowUser(usernameToUnfollow, request);
-        // }
+        @DeleteMapping("/follow_user")
+        @ResponseStatus(HttpStatus.OK)
+        @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_BASIC') or hasRole('ROLE_TRADER')")
+        @ApiOperation(value = "unfollow another user")
+        @ApiResponses(value = {
+                        @ApiResponse(code = 400, message = GlobalExceptionHandlerController.GENERIC_ERROR_RESPONSE) })
+        public String unfollowUser(@ApiParam("Username") @RequestParam String usernameToUnfollow,
+                        HttpServletRequest request) {
+                return followService.unfollowUser(usernameToUnfollow, request);
+        }
 
         @GetMapping("/following")
         @ResponseStatus(HttpStatus.OK)

@@ -16,6 +16,8 @@ public interface FollowRepository extends JpaRepository<FollowDAO, Integer> {
     List<FollowDAO> findByAndFollower_Id(int id);
     List<FollowDAO> findByAndFollowee_Id(int id);
     FollowDAO findById(int id);
+    
+    void deleteByAndFolloweeUsernameAndFollowerUsername(String followee,String follower);   //TODO
     boolean existsByAndFolloweeUsernameAndFollowerUsername(String followee,String follower);
 }
 
