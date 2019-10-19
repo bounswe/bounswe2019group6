@@ -20,16 +20,21 @@ const mutations = {
   SET_USERINFO: (state, userInfo) => {
     state.userInfo = userInfo
   },
-
+  SET_NAME: (state, name) => {
+    state.name = name
+  },
+  SET_PRIVACY: (state, userInfo) => {
+    state.userInfo = userInfo
+  },
+  SET_IBAN: (state, name) => {
+    state.name = name
+  },
   // TODO these are deprecated but keep useful ones
   SET_ROLES: (state, roles) => {
     state.roles = roles
   },
   SET_INTRODUCTION: (state, introduction) => {
     state.introduction = introduction
-  },
-  SET_NAME: (state, name) => {
-    state.name = name
   },
   SET_AVATAR: (state, avatar) => {
     state.avatar = avatar
@@ -63,7 +68,11 @@ const actions = {
         }
 
         const { roles } = data
+        const { username } = data
+        const { isPrivate } = data
+        const { iban } = data
 
+        console.log(data)
         // roles must be a non-empty array
         if (!roles || roles.length <= 0) {
           reject('getInfo: roles must be a non-null array!')
@@ -72,10 +81,11 @@ const actions = {
         commit('SET_USERINFO', data)
         // TODO this is deprecated but will be kept until reorganized
         commit('SET_ROLES', roles)
-
+        commit('SET_NAME', username)
+        commit('SET_PRIVACY', isPrivate)
+        commit('SET_IBAN', iban)
         // TODO set the ones that we decide to keep
         /*
-        commit('SET_NAME', name)
         commit('SET_AVATAR', avatar)
         commit('SET_INTRODUCTION', introduction)
         */
