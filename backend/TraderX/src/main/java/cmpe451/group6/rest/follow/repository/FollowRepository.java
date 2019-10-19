@@ -12,7 +12,10 @@ public interface FollowRepository extends JpaRepository<FollowDAO, Integer> {
     //List<FollowDAO> findByFollower(User follower); //it doesn't work, I don't know why.
     //List<FollowDAO> findByFollowee(User followee); //it doesn't work, I don't know why.
     List<FollowDAO> findByAndFollower_username(String username); //it works, I don't know why.
+    List<FollowDAO> findByAndFollowee_username(String username); //it works, I don't know why.
     List<FollowDAO> findByAndFollower_Id(int id);
+    List<FollowDAO> findByAndFollowee_Id(int id);
     FollowDAO findById(int id);
+    boolean existsByAndFolloweeUsernameAndFollowerUsername(String followee,String follower);
 }
 

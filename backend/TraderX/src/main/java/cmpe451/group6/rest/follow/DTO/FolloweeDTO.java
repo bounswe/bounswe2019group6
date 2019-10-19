@@ -7,18 +7,22 @@ import io.swagger.annotations.ApiModelProperty;
 
 public class FolloweeDTO {
 
-    @ApiModelProperty(position = 0,required = true)
+    @ApiModelProperty(position = 0, required = true)
     private String username;
-    @ApiModelProperty(position = 1,required = true)
+    @ApiModelProperty(position = 1, required = true)
     private String email;
-    @ApiModelProperty(position = 2,required = true)
+    @ApiModelProperty(position = 2, required = true)
     private String latitude;
-    @ApiModelProperty(position = 3,required = true)
+    @ApiModelProperty(position = 3, required = true)
     private String longitude;
 
-    public String getLongitude() { return longitude; }
+    public String getLongitude() {
+        return longitude;
+    }
 
-    public void setLongitude(String longitude) { this.longitude = longitude; }
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
 
     public String getLatitude() {
         return latitude;
