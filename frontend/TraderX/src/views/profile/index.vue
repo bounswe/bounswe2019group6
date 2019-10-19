@@ -10,14 +10,23 @@
         <el-col :span="18" :xs="24">
           <el-card>
             <el-tabs v-model="activeTab">
-              <el-tab-pane label="Activity" name="activity">
-                <activity />
+              <el-tab-pane label="Portfolio" name="portfolio">
+                <portfolio />
               </el-tab-pane>
-              <el-tab-pane label="Timeline" name="timeline">
-                <timeline />
+              <el-tab-pane label="Explore" name="explore">
+                <explore />
               </el-tab-pane>
-              <el-tab-pane label="Account" name="account">
-                <account :user="user" />
+              <el-tab-pane label="Event" name="events">
+                <events />
+              </el-tab-pane>
+              <el-tab-pane label="New" name="news">
+                <news />
+              </el-tab-pane>
+              <el-tab-pane label="Article" name="articles">
+                <articles />
+              </el-tab-pane>
+              <el-tab-pane label="EditProfile" name="editprofile">
+                <editprofile />
               </el-tab-pane>
             </el-tabs>
           </el-card>
@@ -31,17 +40,20 @@
 <script>
 import { mapGetters } from 'vuex'
 import UserCard from './components/UserCard'
-import Activity from './components/Activity'
-import Timeline from './components/Timeline'
-import Account from './components/Account'
+import Portfolio from './components/Portfolio'
+import Explore from './components/Explore'
+import Events from './components/Events'
+import News from './components/News'
+import Articles from './components/Articles'
+import Editprofile from './components/Editprofile'
 
 export default {
   name: 'Profile',
-  components: { UserCard, Activity, Timeline, Account },
+  components: { UserCard, Portfolio, Explore, Events, News, Articles, Editprofile },
   data() {
     return {
       user: {},
-      activeTab: 'activity'
+      activeTab: 'portfolio'
     }
   },
   computed: {
