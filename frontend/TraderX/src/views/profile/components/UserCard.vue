@@ -5,7 +5,7 @@
     </div>
     <div class="user-profile">
       <div class="box-center">
-        <pan-thumb :image="'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'" :height="'100px'" :width="'100px'" :hoverable="false" />
+        <pan-thumb :image="randomImage" :height="'100px'" :width="'100px'" :hoverable="false" />
       </div>
       <div class="box-center">
         <div class="user-name text-center">{{ user.name }}</div>
@@ -61,6 +61,19 @@ export default {
   data() {
     return {
       value1: true
+    }
+  },
+  computed: {
+    randomImage() {
+      const options = [
+        'https://media.giphy.com/media/TU20nKsJ1h4NG/giphy.gif',
+        'https://media.giphy.com/media/GbUrFXadBryQ8/giphy.gif',
+        'https://media0.giphy.com/media/w461tXo03sQP6/200.webp',
+        'https://media.giphy.com/media/inyqrgp9o3NUA/200.gif',
+        'https://media0.giphy.com/media/l0MYDGA3Du1hBR4xG/200.webp',
+        'https://media2.giphy.com/media/57ZvMMkuBIVMlU88Yh/giphy.webp'
+      ]
+      return options[Math.floor(Math.random() * options.length)]
     }
   }
 }
