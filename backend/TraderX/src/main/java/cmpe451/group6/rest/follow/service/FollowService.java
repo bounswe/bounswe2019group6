@@ -56,9 +56,7 @@ public class FollowService {
         temp.setFollower(currentUser);
         temp.setFollowee(userToFollow);
         temp.setFollowStatus(FollowStatus.PENDING);
-        temp.setId(3); // TODO: this has to be checked. If I don't give id it does not generate
-                       // automatically. However, nevertheless it does not assign handwritten id(3), it
-                       // generates.
+
         followRepository.save(temp);
         return String.format("%s want to follow %s", currentUser.getUsername(), userToFollow.getUsername());
     }
