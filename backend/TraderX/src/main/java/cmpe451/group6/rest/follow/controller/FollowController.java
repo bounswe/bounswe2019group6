@@ -34,7 +34,6 @@ public class FollowController {
                 return followService.followUser(usernameToFollow, request);
         }
 
-
         @PostMapping("/unfollow_user")
         @Transactional
         @ResponseStatus(HttpStatus.OK)
@@ -42,7 +41,7 @@ public class FollowController {
         @ApiOperation(value = "unfollow another user")
         @ApiResponses(value = {
                         @ApiResponse(code = 400, message = GlobalExceptionHandlerController.GENERIC_ERROR_RESPONSE) })
-        public String unfollowUser( @ApiParam("Username") @RequestParam String usernameToUnfollow,
+        public String unfollowUser(@ApiParam("Username") @RequestParam String usernameToUnfollow,
                         HttpServletRequest request) {
                 return followService.unfollowUser(usernameToUnfollow, request);
         }

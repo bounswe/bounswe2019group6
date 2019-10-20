@@ -32,10 +32,16 @@ public class FollowService {
     @Autowired
     private ModelMapper modelMapper;
 
+    /**
+     * 
+     * @param username
+     * @param request
+     * @return info about state
+     */
     public String followUser(String username, HttpServletRequest request) {
         User userToFollow = userRepository.findByUsername(username);
-        User currentUser = userRepository
-                .findByUsername(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(request)));
+        String currentUsername = jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(request));
+        User currentUser = userRepository.findByUsername(currentUsername);
 
         if (userToFollow == null) {
             throw new CustomException(
@@ -45,8 +51,7 @@ public class FollowService {
         } else if (userToFollow.getStatus() == RegistrationStatus.PENDING) {
             throw new CustomException("The user is not activate his/her account. Therefore s/he cannot be followed ",
                     HttpStatus.INTERNAL_SERVER_ERROR);
-        } else if (followRepository.existsByAndFolloweeUsernameAndFollowerUsername(username,
-                jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(request)))) {
+        } else if (followRepository.existsByAndFolloweeUsernameAndFollowerUsername(username, currentUsername)) {
             throw new CustomException("The user has already been followed", HttpStatus.INTERNAL_SERVER_ERROR);
         }
         FollowDAO temp = new FollowDAO();
@@ -57,22 +62,33 @@ public class FollowService {
                        // automatically. However, nevertheless it does not assign handwritten id(3), it
                        // generates.
         followRepository.save(temp);
-        System.out.println("actual usernameToFollow: " + username);
+        // System.out.println("actual usernameToFollow: " + username);
         return String.format("%s want to follow %s", currentUser.getUsername(), userToFollow.getUsername());
     }
 
-
     /**
-     * TODO
+     * 
      * @param username
      * @param request
-     * @return
+     * @return info about state
      */
-    public String unfollowUser(String username, HttpServletRequest request){
-    
-        String currentUsername=jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(request));
+    public String unfollowUser(String username, HttpServletRequest request) {
+
+        User userToUnfollow = userRepository.findByUsername(username);
+        String currentUsername = jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(request));
+
+        User currentUser = userRepository.findByUsername(currentUsername);
+
+        if (userToUnfollow == null) {
+            throw new CustomException("There is no user named " + username + ". Thus, can not be unfollowed",
+                    HttpStatus.INTERNAL_SERVER_ERROR);
+        } else if (!followRepository.existsByAndFolloweeUsernameAndFollowerUsername(username,
+                jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(request)))) {
+            return String.format("%s is not following %s already", currentUsername, username);
+        }
+
         followRepository.deleteByAndFolloweeUsernameAndFollowerUsername(username, currentUsername);
-        return String.format("%s want to unfollow %s", currentUsername, username);
+        return String.format("%s succesfully unfollowed %s", currentUsername, username);
     }
 
     public List<FolloweeDTO> following(HttpServletRequest request) {
