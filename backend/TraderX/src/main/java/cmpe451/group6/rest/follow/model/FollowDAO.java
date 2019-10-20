@@ -35,7 +35,7 @@ public class FollowDAO implements Serializable {
         return followee;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
