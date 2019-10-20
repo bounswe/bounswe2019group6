@@ -19,6 +19,20 @@ public class UserDataDTO {
   private String latitude;
   @ApiModelProperty(position = 5,required = true)
   private String longitude;
+  @ApiModelProperty(position = 6)
+  private boolean isPrivate;
+
+
+  // NOTE : DO NOT CHANGE GETTER and SETTER SIGNATURES FOR THIS FIELD !!
+  // Because the mapper seeks the getter & setter fields by these names,
+  // not with "isPrivate()" or "setPrivate(boolean _)"
+  public boolean getIsPrivate() {
+    return isPrivate;
+  }
+
+  public void setIsPrivate(boolean aPrivate) {
+    isPrivate = aPrivate;
+  }
 
   public String getLongitude() { return longitude; }
 

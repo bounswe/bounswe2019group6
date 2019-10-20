@@ -8,7 +8,6 @@ import java.util.Set;
 
 import javax.persistence.*;
 import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 
 @Entity
 public class User implements Serializable {
@@ -48,7 +47,6 @@ public class User implements Serializable {
   @OneToMany(mappedBy = "follower",cascade = CascadeType.ALL)
   private Set<FollowDAO> followerDAOs;
 
-
   @OneToMany(mappedBy = "followee",cascade = CascadeType.ALL)
   private Set<FollowDAO> followeeDAOs;
 
@@ -67,14 +65,29 @@ public class User implements Serializable {
   List<Role> roles;
 
   @Column(nullable = false)
-  private RegistrationStatus status;
+  private RegistrationStatus registrationStatus;
 
-  public RegistrationStatus getStatus() {
-    return status;
+  @Column(nullable = false)
+  private boolean isPrivate;
+
+  // NOTE : DO NOT CHANGE GETTER and SETTER SIGNATURES FOR THIS FIELD !!
+  // Because the mapper seeks the getter & setter fields by these names,
+  // not with "isPrivate()" or "setPrivate(boolean _)"
+  public boolean getIsPrivate() {
+    return isPrivate;
   }
 
-  public void setStatus(RegistrationStatus status) {
-    this.status = status;
+  public void setIsPrivate(boolean aPrivate) {
+    isPrivate = aPrivate;
+  }
+
+
+  public RegistrationStatus getRegistrationStatus() {
+    return registrationStatus;
+  }
+
+  public void setRegistrationStatus(RegistrationStatus registrationStatus) {
+    this.registrationStatus = registrationStatus;
   }
 
   public String getLatitude() {

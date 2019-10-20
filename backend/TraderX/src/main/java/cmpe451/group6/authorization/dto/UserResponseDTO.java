@@ -8,19 +8,30 @@ import io.swagger.annotations.ApiModelProperty;
 public class UserResponseDTO {
 
   @ApiModelProperty(position = 0)
-  private Integer id;
-  @ApiModelProperty(position = 1)
   private String username;
-  @ApiModelProperty(position = 2)
+  @ApiModelProperty(position = 1)
   private String email;
-  @ApiModelProperty(position = 3)
+  @ApiModelProperty(position = 2)
   private String IBAN;
-  @ApiModelProperty(position = 4)
+  @ApiModelProperty(position = 3)
   private String latitude;
-  @ApiModelProperty(position = 5)
+  @ApiModelProperty(position = 4)
   private String longitude;
-  @ApiModelProperty(position = 6)
+  @ApiModelProperty(position = 5)
   List<Role> roles;
+  @ApiModelProperty(position = 6)
+  private boolean isPrivate;
+
+  // NOTE : DO NOT CHANGE GETTER and SETTER SIGNATURES FOR THIS FIELD !!
+  // Because the mapper seeks the getter & setter fields by these names,
+  // not with "isPrivate()" or "setPrivate(boolean _)"
+  public boolean getIsPrivate() {
+    return isPrivate;
+  }
+
+  public void setIsPrivate(boolean aPrivate) {
+    isPrivate = aPrivate;
+  }
 
   public String getLatitude() { return latitude; }
 
@@ -33,10 +44,6 @@ public class UserResponseDTO {
   public String getIBAN() { return IBAN; }
 
   public void setIBAN(String IBAN) { this.IBAN = IBAN; }
-
-  public Integer getId() { return id; }
-
-  public void setId(Integer id) { this.id = id; }
 
   public String getUsername() { return username; }
 

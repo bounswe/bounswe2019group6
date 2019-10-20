@@ -1,6 +1,7 @@
 package cmpe451.group6.authorization.service;
 
 
+import cmpe451.group6.authorization.dto.LoginInfoDTO;
 import cmpe451.group6.authorization.dto.TokenWrapperDTO;
 import cmpe451.group6.authorization.exception.CustomException;
 import cmpe451.group6.authorization.repository.UserRepository;
@@ -24,8 +25,10 @@ public class LoginService {
     @Autowired
     private AuthenticationManager authenticationManager;
 
-    public TokenWrapperDTO login(String username, String password) {
+    public TokenWrapperDTO login(LoginInfoDTO loginInfoDTO) {
         try {
+            String username = loginInfoDTO.getUsername();
+            String password = loginInfoDTO.getPassword();
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
             return new TokenWrapperDTO(jwtTokenProvider.createToken(username, userRepository.findByUsername(username).getRoles()));
         } catch (AuthenticationException e) {
