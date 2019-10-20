@@ -45,7 +45,7 @@ public class FollowService {
 
         if (userToFollow == null) {
             throw new CustomException("There is no user named " + username + ".", HttpStatus.NOT_ACCEPTABLE);
-        } else if (userToFollow.getStatus() == RegistrationStatus.PENDING) {
+        } else if (userToFollow.getRegistrationStatus() == RegistrationStatus.PENDING) {
             throw new CustomException("The user is not activate his/her account. Therefore s/he cannot be followed ",
                     HttpStatus.PRECONDITION_FAILED);
         } else if (amIFollowing(username, request)) {
