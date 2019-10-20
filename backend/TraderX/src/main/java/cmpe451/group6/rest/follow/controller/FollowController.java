@@ -12,6 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 import java.util.List;
 
 @RestController
@@ -33,13 +34,15 @@ public class FollowController {
                 return followService.followUser(usernameToFollow, request);
         }
 
-        @DeleteMapping("/follow_user")
+
+        @PostMapping("/unfollow_user")
+        @Transactional
         @ResponseStatus(HttpStatus.OK)
         @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_BASIC') or hasRole('ROLE_TRADER')")
         @ApiOperation(value = "unfollow another user")
         @ApiResponses(value = {
                         @ApiResponse(code = 400, message = GlobalExceptionHandlerController.GENERIC_ERROR_RESPONSE) })
-        public String unfollowUser(@ApiParam("Username") @RequestParam String usernameToUnfollow,
+        public String unfollowUser( @ApiParam("Username") @RequestParam String usernameToUnfollow,
                         HttpServletRequest request) {
                 return followService.unfollowUser(usernameToUnfollow, request);
         }
