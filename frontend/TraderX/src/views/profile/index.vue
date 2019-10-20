@@ -2,36 +2,58 @@
   <div class="app-container">
     <div v-if="user">
       <el-row :gutter="20">
-
-        <el-col :span="6" :xs="24">
+        <el-col
+          :span="6"
+          :xs="24"
+        >
           <user-card :user="user" />
         </el-col>
 
-        <el-col :span="18" :xs="24">
+        <el-col
+          :span="18"
+          :xs="24"
+        >
           <el-card>
             <el-tabs v-model="activeTab">
-              <el-tab-pane label="Portfolio" name="portfolio">
+              <el-tab-pane
+                label="Portfolio"
+                name="portfolio"
+              >
                 <portfolio />
               </el-tab-pane>
-              <el-tab-pane label="Explore" name="explore">
+              <el-tab-pane
+                label="Explore"
+                name="explore"
+              >
                 <explore />
               </el-tab-pane>
-              <el-tab-pane label="Event" name="events">
+              <el-tab-pane
+                label="Event"
+                name="events"
+              >
                 <events />
               </el-tab-pane>
-              <el-tab-pane label="New" name="news">
+              <el-tab-pane
+                label="New"
+                name="news"
+              >
                 <news />
               </el-tab-pane>
-              <el-tab-pane label="Article" name="articles">
+              <el-tab-pane
+                label="Article"
+                name="articles"
+              >
                 <articles />
               </el-tab-pane>
-              <el-tab-pane label="EditProfile" name="editprofile">
+              <el-tab-pane
+                label="EditProfile"
+                name="editprofile"
+              >
                 <editprofile />
               </el-tab-pane>
             </el-tabs>
           </el-card>
         </el-col>
-
       </el-row>
     </div>
   </div>
@@ -70,7 +92,7 @@ export default {
     getUser() {
       this.user = {
         name: this.name,
-        role: this.roles.join(' | '),
+        roles: this.roles.join(' | '),
         email: 'admin@test.com',
         avatar: this.avatar
       }

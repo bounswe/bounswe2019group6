@@ -1,19 +1,31 @@
 <template>
   <el-card style="margin-bottom:20px;">
-    <div slot="header" class="clearfix">
+    <div
+      slot="header"
+      class="clearfix"
+    >
       <span>About me</span>
     </div>
     <div class="user-profile">
       <div class="box-center">
-        <pan-thumb :image="randomImage" :height="'100px'" :width="'100px'" :hoverable="false" />
+        <pan-thumb
+          :image="randomImage"
+          :height="'100px'"
+          :width="'100px'"
+          :hoverable="false"
+        />
       </div>
       <div class="box-center">
-        <div class="user-name text-center">{{ user.name }}</div>
+        <div class="user-name text-center">
+          {{ user.name }}
+        </div>
       </div>
     </div>
     <div class="user-bio">
       <div class="user-personal-info user-bio-section">
-        <div class="user-bio-section-header"><svg-icon icon-class="user" /><span>Personal Info</span></div>
+        <div class="user-bio-section-header">
+          <svg-icon icon-class="user" /><span>Personal Info</span>
+        </div>
         <div class="user-bio-section-body">
           <div class="user-stats">
             <p><b>Follower:</b> 0</p>
@@ -22,7 +34,7 @@
             <p><b>Comments:</b> 0</p>
           </div>
           <div class="user-type">
-            <p><b>User Type:</b> {{ user.role }}</p>
+            <p><b>User Type:</b> {{ user.roles }}</p>
           </div>
           <p><b>IBAN:</b> {{ user.iban }}</p>
           <p><b>Location:</b> Tokyo</p>
@@ -42,6 +54,7 @@
 
 <script>
 import PanThumb from '@/components/PanThumb'
+import { randomImage } from '@/utils'
 
 export default {
   components: { PanThumb },
@@ -64,17 +77,7 @@ export default {
     }
   },
   computed: {
-    randomImage() {
-      const options = [
-        'https://media.giphy.com/media/TU20nKsJ1h4NG/giphy.gif',
-        'https://media.giphy.com/media/GbUrFXadBryQ8/giphy.gif',
-        'https://media0.giphy.com/media/w461tXo03sQP6/200.webp',
-        'https://media.giphy.com/media/inyqrgp9o3NUA/200.gif',
-        'https://media0.giphy.com/media/l0MYDGA3Du1hBR4xG/200.webp',
-        'https://media2.giphy.com/media/57ZvMMkuBIVMlU88Yh/giphy.webp'
-      ]
-      return options[Math.floor(Math.random() * options.length)]
-    }
+    randomImage
   }
 }
 </script>
