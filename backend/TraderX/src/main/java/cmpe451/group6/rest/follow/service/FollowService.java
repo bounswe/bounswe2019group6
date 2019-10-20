@@ -101,7 +101,7 @@ public class FollowService {
             throw new CustomException("There is no user named " + currentUsername + ". ", HttpStatus.NOT_ACCEPTABLE);
         } else {
             List<FolloweeDTO> followeeList = new ArrayList<FolloweeDTO>();
-            followRepository.findByAndFollower_username(currentUser.getUsername())
+            followRepository.findByFollower_username(currentUser.getUsername())
                     .forEach(item -> followeeList.add(modelMapper.map(item.getFollowee(), FolloweeDTO.class)));
             return followeeList;
         }
@@ -120,7 +120,7 @@ public class FollowService {
             throw new CustomException("There is no user named " + currentUsername + ". ", HttpStatus.NOT_ACCEPTABLE);
         } else {
             List<FolloweeDTO> followerList = new ArrayList<FolloweeDTO>();
-            followRepository.findByAndFollowee_username(currentUser.getUsername())
+            followRepository.findByFollowee_username(currentUser.getUsername())
                     .forEach(item -> followerList.add(modelMapper.map(item.getFollowee(), FolloweeDTO.class)));
             return followerList;
         }
