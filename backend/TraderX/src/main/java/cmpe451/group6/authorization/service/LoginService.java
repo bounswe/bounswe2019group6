@@ -26,14 +26,38 @@ public class LoginService {
     private AuthenticationManager authenticationManager;
 
     public TokenWrapperDTO login(LoginInfoDTO loginInfoDTO) {
-        try {
-            String username = loginInfoDTO.getUsername();
-            String password = loginInfoDTO.getPassword();
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-            return new TokenWrapperDTO(jwtTokenProvider.createToken(username, userRepository.findByUsername(username).getRoles()));
-        } catch (AuthenticationException e) {
-            throw new CustomException("Invalid username/password supplied", HttpStatus.UNAUTHORIZED);
+        String username = loginInfoDTO.getUsername();
+        String password = loginInfoDTO.getPassword();
+        String googleToken = loginInfoDTO.getGoogleToken();
+
+        if (password == null && googleToken == null) {
+            throw new CustomException("Supply either google token or password", HttpStatus.NOT_ACCEPTABLE);
+        }
+        if (password != null && googleToken != null) {
+            throw new CustomException("Supply only one of these: google token or password", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        User user = userRepository.findByUsername(username);
+
+        if (user == null){
+            throw new CustomException("No such a user", HttpStatus.GONE);
+        }
+
+        boolean isGoogleLogin = loginInfoDTO.getGoogleToken() != null;
+
+        if (!isGoogleLogin) {
+            try {
+                authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+                return new TokenWrapperDTO(jwtTokenProvider.createToken(username, user.getRoles()));
+            } catch (AuthenticationException e) {
+                throw new CustomException("Invalid username/password supplied", HttpStatus.UNAUTHORIZED);
+            }
+        } else { // Check if google tokes are matched
+            if (user.getGoogleToken() == googleToken)
+                return new TokenWrapperDTO(jwtTokenProvider.createToken(username, user.getRoles()));
+
+            throw new CustomException("Invalid Google Token supplied", HttpStatus.UNAUTHORIZED);
         }
     }
-
 }
+

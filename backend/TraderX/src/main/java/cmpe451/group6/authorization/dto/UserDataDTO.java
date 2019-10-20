@@ -11,7 +11,7 @@ public class UserDataDTO {
   private String username;
   @ApiModelProperty(position = 1,required = true)
   private String email;
-  @ApiModelProperty(position = 2,required = true)
+  @ApiModelProperty(position = 2)
   private String password;
   @ApiModelProperty(position = 3)
   private String IBAN;
@@ -21,6 +21,8 @@ public class UserDataDTO {
   private String longitude;
   @ApiModelProperty(position = 6)
   private boolean isPrivate;
+  @ApiModelProperty(position = 7)
+  private String googleToken;
 
 
   // NOTE : DO NOT CHANGE GETTER and SETTER SIGNATURES FOR THIS FIELD !!

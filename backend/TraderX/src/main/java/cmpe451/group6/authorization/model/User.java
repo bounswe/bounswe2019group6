@@ -68,6 +68,17 @@ public class User {
   @Column(nullable = false)
   private boolean isPrivate;
 
+  @Column
+  private String googleToken;
+
+  public String getGoogleToken() {
+    return googleToken;
+  }
+
+  public void setGoogleToken(String googleToken) {
+    this.googleToken = googleToken;
+  }
+
   // NOTE : DO NOT CHANGE GETTER and SETTER SIGNATURES FOR THIS FIELD !!
   // Because the mapper seeks the getter & setter fields by these names,
   // not with "isPrivate()" or "setPrivate(boolean _)"
