@@ -8,6 +8,7 @@ import cmpe451.group6.authorization.model.User;
 import cmpe451.group6.authorization.repository.UserRepository;
 import cmpe451.group6.authorization.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.AuthenticationException;
@@ -39,28 +40,59 @@ public class SignupService {
     @Autowired
     private HazelcastService hazelcastService;
 
+    @Value("${email.frontend_url}")
+    private String baseURL;
 
-    public String signup(User user) {
+    @Value("${email.frontend_port}")
+    private String port;
+
+    @Value("${email.frontend_verification_path}")
+    private String verificationPath;
+
+    @Value("${security.jwt.token.secret-key}")
+    private String appSecret;
+
+
+    public String signup(User user, String appSecret) {
         if (!userRepository.existsByUsername(user.getUsername()) && !userRepository.existsByEmail(user.getEmail())) {
 
             // Check field validity. Throw exception and return error if at least one of them is wrong
             validateUserData(user);
 
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            boolean isGoogleUser = user.getPassword() == null;
+
+            if(isGoogleUser){
+                if(appSecret == null)
+                    throw new CustomException("Null app secret.", HttpStatus.UNAUTHORIZED);
+
+                if(!appSecret.equals(this.appSecret))
+                    throw new CustomException("Wrong App Secret", HttpStatus.UNAUTHORIZED);
+            }
+
             Role role = validateIBAN(user.getIBAN());
             user.setRoles(new ArrayList<>(Arrays.asList(role)));
-            user.setRegistrationStatus(RegistrationStatus.PENDING);
-            String token = jwtTokenProvider.createToken(user.getUsername(), user.getRoles());
 
-            try {
-                emailService.sendmail(user.getEmail(), "verification", "xxx", buildVerificationURL(token), null);
-            } catch (MessagingException | IOException e) {
-                e.printStackTrace();
-                throw new CustomException("Failed to send verification email", HttpStatus.INTERNAL_SERVER_ERROR);
+            // Only one of password or token is supplied guarenteed here
+
+            if(!isGoogleUser){ // email sign up
+                user.setPassword(passwordEncoder.encode(user.getPassword()));
+                user.setRegistrationStatus(RegistrationStatus.PENDING);
+                String token = jwtTokenProvider.createToken(user.getUsername(), user.getRoles());
+                try {
+                    emailService.sendmail(user.getEmail(), "verification", "xxx", buildVerificationURL(token), null);
+                } catch (MessagingException | IOException e) {
+                    e.printStackTrace();
+                    throw new CustomException("Failed to send verification email", HttpStatus.INTERNAL_SERVER_ERROR);
+                }
+            } else { // google sign up
+                // google token is already set. no explicit operation is needed.
+
+                user.setRegistrationStatus(RegistrationStatus.GOOGLE_SIGN);
             }
 
             userRepository.save(user);
-            return "Confirmation Email is sent. Success";
+
+            return isGoogleUser ? "Google token is saved for this user." : "Confirmation Email is sent. Success";
         } else {
             throw new CustomException("Username or email is already in use", HttpStatus.UNPROCESSABLE_ENTITY);
         }
@@ -104,14 +136,22 @@ public class SignupService {
     }
 
     private String buildVerificationURL(String token){
-        return "http://localhost:8080/signup/confirm?token=" + token;
+        return baseURL+":"+port+"/"+verificationPath+"?token="+token;
     }
 
     private void validateUserData(User user){
         if (user.getUsername() == null || !user.getUsername().matches(User.usernameRegex)) {
             throw new CustomException("Invalid username", HttpStatus.PRECONDITION_FAILED);
         }
-        if (user.getPassword() == null || !user.getPassword().matches(User.passwordRegex)) {
+        if (user.getPassword() == null && user.getGoogleToken() == null) {
+            // Supply only one authentication credential
+            throw new CustomException("Supply password or google token", HttpStatus.PRECONDITION_FAILED);
+        }
+        if (user.getPassword() != null && user.getGoogleToken() != null) {
+            // Supply only one authentication credential
+            throw new CustomException("Supply only one of those: password or google token", HttpStatus.PRECONDITION_FAILED);
+        }
+        if (user.getPassword() != null && !user.getPassword().matches(User.passwordRegex)) {
             throw new CustomException("Invalid password", HttpStatus.PRECONDITION_FAILED);
         }
         if (user.getEmail() == null || !user.getEmail().matches(User.emailRegex)) {

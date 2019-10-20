@@ -84,7 +84,6 @@ public class PasswordService {
     }
 
     private String buildPasswordRenewalURL(String token){
-        System.out.println(baseURL+":"+port+"/"+path+"?token="+token);
         return baseURL+":"+port+"/"+path+"?token="+token;
     }
 
