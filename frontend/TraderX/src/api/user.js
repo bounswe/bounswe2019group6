@@ -21,3 +21,11 @@ export function logout() {
     method: 'post'
   })
 }
+
+export function register(data) {
+  return request({
+    url: '/signup',
+    method: 'post',
+    data
+  })
+}

@@ -1,4 +1,4 @@
-import { login, getInfo, logout } from '@/api/user'
+import { login, getInfo, logout, register } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
 
@@ -113,6 +113,16 @@ const actions = {
       commit('SET_ROLES', [])
       removeToken()
       resolve()
+    })
+  },
+
+  register({ commit }, userInfo) {
+    return new Promise((resolve, reject) => {
+      register(userInfo).then(() => {
+        resolve('Registered successfully, ')
+      }).catch(error => {
+        reject(error)
+      })
     })
   },
 
