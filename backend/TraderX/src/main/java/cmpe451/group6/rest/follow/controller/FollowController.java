@@ -1,6 +1,7 @@
 package cmpe451.group6.rest.follow.controller;
 
 import cmpe451.group6.authorization.exception.GlobalExceptionHandlerController;
+import cmpe451.group6.authorization.dto.StringResponseWrapper;
 import cmpe451.group6.authorization.model.User;
 import cmpe451.group6.rest.follow.DTO.FolloweeDTO;
 import cmpe451.group6.rest.follow.model.FollowDAO;
@@ -31,9 +32,9 @@ public class FollowController {
                         @ApiResponse(code = 400, message = GlobalExceptionHandlerController.GENERIC_ERROR_RESPONSE),
                         @ApiResponse(code = 406, message = "Stated user is not registered to the system!"),
                         @ApiResponse(code = 412, message = "The user has already been followed") })
-        public String followUser(@ApiParam("Username") @RequestParam String usernameToFollow,
+        public StringResponseWrapper followUser(@ApiParam("Username") @RequestParam String usernameToFollow,
                         HttpServletRequest request) {
-                return followService.followUser(usernameToFollow, request);
+                return new StringResponseWrapper(followService.followUser(usernameToFollow, request));
         }
 
         @PostMapping("/unfollow_user")
@@ -45,9 +46,9 @@ public class FollowController {
                         @ApiResponse(code = 400, message = GlobalExceptionHandlerController.GENERIC_ERROR_RESPONSE),
                         @ApiResponse(code = 406, message = "Stated user is not registered to the system!"),
                         @ApiResponse(code = 412, message = "Current user is not following stated user already!") })
-        public String unfollowUser(@ApiParam("Username") @RequestParam String usernameToUnfollow,
+        public StringResponseWrapper unfollowUser(@ApiParam("Username") @RequestParam String usernameToUnfollow,
                         HttpServletRequest request) {
-                return followService.unfollowUser(usernameToUnfollow, request);
+                return new StringResponseWrapper(followService.unfollowUser(usernameToUnfollow, request));
         }
 
         @GetMapping("/following")
@@ -78,8 +79,8 @@ public class FollowController {
         @ApiOperation(value = "Number of followings")
         @ApiResponses(value = {
                         @ApiResponse(code = 400, message = GlobalExceptionHandlerController.GENERIC_ERROR_RESPONSE) })
-        public String following_number(HttpServletRequest request) {
-                return followService.following_number(request);
+        public StringResponseWrapper following_number(HttpServletRequest request) {
+                return new StringResponseWrapper(followService.following_number(request));
         }
 
         @GetMapping("/followee_number")
@@ -88,8 +89,8 @@ public class FollowController {
         @ApiOperation(value = "Number of followings")
         @ApiResponses(value = {
                         @ApiResponse(code = 400, message = GlobalExceptionHandlerController.GENERIC_ERROR_RESPONSE) })
-        public String followee_number(HttpServletRequest request) {
-                return followService.followee_number(request);
+        public StringResponseWrapper followee_number(HttpServletRequest request) {
+                return new StringResponseWrapper(followService.followee_number(request));
         }
 
         @GetMapping("/am_i_following")
@@ -99,9 +100,9 @@ public class FollowController {
         @ApiResponses(value = {
                         @ApiResponse(code = 400, message = GlobalExceptionHandlerController.GENERIC_ERROR_RESPONSE),
                         @ApiResponse(code = 406, message = "Stated user is not registered to the system!") })
-        public boolean am_i_following(@ApiParam("Username") @RequestParam String followee_username,
+        public StringResponseWrapper am_i_following(@ApiParam("Username") @RequestParam String followee_username,
                         HttpServletRequest request) {
-                return followService.amIFollowing(followee_username, request);
+                return new StringResponseWrapper(Boolean.toString(followService.amIFollowing(followee_username, request)));
         }
 
 }
