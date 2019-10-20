@@ -54,7 +54,8 @@ export default {
       if (this.active) {
         return
       }
-      this.position = 'fixed'
+      // this.position = 'fixed' fixes the article nav bar
+      this.position = ''
       this.active = true
       this.width = this.width + 'px'
       this.isSticky = true
