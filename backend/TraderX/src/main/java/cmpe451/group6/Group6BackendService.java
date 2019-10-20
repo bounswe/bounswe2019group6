@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import cmpe451.group6.authorization.model.RegistrationStatus;
+import cmpe451.group6.authorization.repository.UserRepository;
 import cmpe451.group6.authorization.service.HazelcastService;
 import cmpe451.group6.authorization.service.SignupService;
 import org.modelmapper.ModelMapper;
@@ -31,6 +32,9 @@ public class Group6BackendService implements CommandLineRunner {
   @Autowired
   HazelcastService hazelcastService;
 
+  @Autowired
+  UserRepository userRepository;
+
   public static void main(String[] args) {
     SpringApplication.run(Group6BackendService.class, args);
   }
@@ -55,6 +59,7 @@ public class Group6BackendService implements CommandLineRunner {
   // Predefined admin, trader and basic users
   @Override
   public void run(String... params) throws Exception {
+
     User admin = new User();
     admin.setUsername("admin");
     admin.setPassword("admin");

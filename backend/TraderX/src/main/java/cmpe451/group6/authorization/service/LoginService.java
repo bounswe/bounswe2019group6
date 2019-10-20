@@ -27,6 +27,7 @@ public class LoginService {
     private AuthenticationManager authenticationManager;
 
     public TokenWrapperDTO login(LoginInfoDTO loginInfoDTO) {
+
         String username = loginInfoDTO.getUsername();
         String password = loginInfoDTO.getPassword();
         String googleToken = loginInfoDTO.getGoogleToken();

@@ -52,11 +52,12 @@ public class SignupService {
     @Value("${security.jwt.token.secret-key}")
     private String appSecret;
 
-
     public String signup(User user, String appSecret) {
+
         if (!userRepository.existsByUsername(user.getUsername()) && !userRepository.existsByEmail(user.getEmail())) {
 
-            // Check field validity. Throw exception and return error if at least one of them is wrong
+            // Check field validity. Throw exception and return error if at least one of
+            // them is wrong
             validateUserData(user);
 
             boolean isGoogleUser = user.getPassword() == null;
@@ -98,7 +99,7 @@ public class SignupService {
         }
     }
 
-    public String confirmUser(String token){
+    public String confirmUser(String token) {
         try {
             String username = jwtTokenProvider.getUsername(token);
             User user = userRepository.findByUsername(username);
@@ -122,24 +123,31 @@ public class SignupService {
     }
 
     /**
-     * If an IBAN number is provided by client, then check if it's valid. If so, set it's role as TRADER.
-     * else, throw exception. If it's not provided, than the user wants to be a BASIC_USER.
+     * If an IBAN number is provided by client, then check if it's valid. If so, set
+     * it's role as TRADER. else, throw exception. If it's not provided, than the
+     * user wants to be a BASIC_USER.
+     * 
      * @param IBAN IBAN provided
      * @return Desired and validted Role for the user
      */
-    private Role validateIBAN(String IBAN) throws  CustomException{
-        if(IBAN == null){ return Role.ROLE_BASIC; }
-        if(IBAN.matches(User.IBANRegex)){ return Role.ROLE_TRADER; }
+    private Role validateIBAN(String IBAN) throws CustomException {
+        if (IBAN == null) {
+            return Role.ROLE_BASIC;
+        }
+        if (IBAN.matches(User.IBANRegex)) {
+            return Role.ROLE_TRADER;
+        }
 
         // IBAN is provided but not valid
-        throw new CustomException("Invalid IBAN number. Must match: ^[A-Z]{2}[0-9]{18}$", HttpStatus.UNPROCESSABLE_ENTITY);
+        throw new CustomException("Invalid IBAN number. Must match: ^[A-Z]{2}[0-9]{18}$",
+                HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
     private String buildVerificationURL(String token){
         return baseURL+":"+port+"/"+verificationPath+"?token="+token;
     }
 
-    private void validateUserData(User user){
+    private void validateUserData(User user) {
         if (user.getUsername() == null || !user.getUsername().matches(User.usernameRegex)) {
             throw new CustomException("Invalid username", HttpStatus.PRECONDITION_FAILED);
         }
@@ -163,9 +171,9 @@ public class SignupService {
         if (user.getLongitude() == null || !user.getLongitude().matches(User.locationRegex)) {
             throw new CustomException("Invalid longitude", HttpStatus.PRECONDITION_FAILED);
         }
-        if (user.getIBAN() != null)  {
-            if(!user.getIBAN().matches(User.IBANRegex))
-            throw new CustomException("Invalid IBAN", HttpStatus.PRECONDITION_FAILED);
+        if (user.getIBAN() != null) {
+            if (!user.getIBAN().matches(User.IBANRegex))
+                throw new CustomException("Invalid IBAN", HttpStatus.PRECONDITION_FAILED);
         }
 
     }
