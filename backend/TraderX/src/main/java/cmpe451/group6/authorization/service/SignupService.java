@@ -61,8 +61,12 @@ public class SignupService {
 
             boolean isGoogleUser = user.getPassword() == null;
 
-            if(isGoogleUser && !appSecret.equals(this.appSecret)){
-                throw new CustomException("Wrong App Secret", HttpStatus.UNAUTHORIZED);
+            if(isGoogleUser){
+                if(appSecret == null)
+                    throw new CustomException("Null app secret.", HttpStatus.UNAUTHORIZED);
+
+                if(!appSecret.equals(this.appSecret))
+                    throw new CustomException("Wrong App Secret", HttpStatus.UNAUTHORIZED);
             }
 
             Role role = validateIBAN(user.getIBAN());
@@ -139,18 +143,16 @@ public class SignupService {
         if (user.getUsername() == null || !user.getUsername().matches(User.usernameRegex)) {
             throw new CustomException("Invalid username", HttpStatus.PRECONDITION_FAILED);
         }
-        /*
-        if (user.getPassword() == null || !user.getPassword().matches(User.passwordRegex)) {
-            throw new CustomException("Invalid password", HttpStatus.PRECONDITION_FAILED);
-        }*/
         if (user.getPassword() == null && user.getGoogleToken() == null) {
+            // Supply only one authentication credential
             throw new CustomException("Supply password or google token", HttpStatus.PRECONDITION_FAILED);
         }
         if (user.getPassword() != null && user.getGoogleToken() != null) {
+            // Supply only one authentication credential
             throw new CustomException("Supply only one of those: password or google token", HttpStatus.PRECONDITION_FAILED);
         }
         if (user.getPassword() != null && !user.getPassword().matches(User.passwordRegex)) {
-            throw new CustomException("Supply password or google token", HttpStatus.PRECONDITION_FAILED);
+            throw new CustomException("Invalid password", HttpStatus.PRECONDITION_FAILED);
         }
         if (user.getEmail() == null || !user.getEmail().matches(User.emailRegex)) {
             throw new CustomException("Invalid email", HttpStatus.PRECONDITION_FAILED);

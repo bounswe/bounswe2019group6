@@ -4,6 +4,7 @@ package cmpe451.group6.authorization.service;
 import cmpe451.group6.authorization.dto.LoginInfoDTO;
 import cmpe451.group6.authorization.dto.TokenWrapperDTO;
 import cmpe451.group6.authorization.exception.CustomException;
+import cmpe451.group6.authorization.model.User;
 import cmpe451.group6.authorization.repository.UserRepository;
 import cmpe451.group6.authorization.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,9 +54,8 @@ public class LoginService {
                 throw new CustomException("Invalid username/password supplied", HttpStatus.UNAUTHORIZED);
             }
         } else { // Check if google tokes are matched
-            if (user.getGoogleToken() == googleToken)
+            if (user.getGoogleToken().equals(googleToken))
                 return new TokenWrapperDTO(jwtTokenProvider.createToken(username, user.getRoles()));
-
             throw new CustomException("Invalid Google Token supplied", HttpStatus.UNAUTHORIZED);
         }
     }
