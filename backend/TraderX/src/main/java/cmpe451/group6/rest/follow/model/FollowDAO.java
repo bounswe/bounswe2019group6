@@ -12,18 +12,16 @@ public class FollowDAO implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-
     @ManyToOne
-    @JoinColumn(name = "follower",referencedColumnName = "username",nullable = false)
+    @JoinColumn(name = "follower", referencedColumnName = "username", nullable = false)
     private User follower;
 
     @ManyToOne
-    @JoinColumn(name = "followee",referencedColumnName = "username",nullable = false)
+    @JoinColumn(name = "followee", referencedColumnName = "username", nullable = false)
     private User followee;
 
     @Column(nullable = false)
     private FollowStatus followStatus;
-
 
     public User getFollower() {
         return follower;
