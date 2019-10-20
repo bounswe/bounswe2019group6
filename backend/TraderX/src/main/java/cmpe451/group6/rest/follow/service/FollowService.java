@@ -40,20 +40,18 @@ public class FollowService {
      */
     public String followUser(String username, HttpServletRequest request) {
         User userToFollow = userRepository.findByUsername(username);
-        String currentUsername = jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(request));
-        User currentUser = userRepository.findByUsername(currentUsername);
+        User currentUser = userRepository
+                .findByUsername(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(request)));
 
         if (userToFollow == null) {
-            throw new CustomException(
-                    "There is no user named " + username
-                            + ". Please report this issue backend team to handle this exception",
-                    HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new CustomException("There is no user named " + username + ".", HttpStatus.NOT_ACCEPTABLE);
         } else if (userToFollow.getStatus() == RegistrationStatus.PENDING) {
             throw new CustomException("The user is not activate his/her account. Therefore s/he cannot be followed ",
-                    HttpStatus.INTERNAL_SERVER_ERROR);
-        } else if (followRepository.existsByAndFolloweeUsernameAndFollowerUsername(username, currentUsername)) {
-            throw new CustomException("The user has already been followed", HttpStatus.INTERNAL_SERVER_ERROR);
+                    HttpStatus.PRECONDITION_FAILED);
+        } else if (amIFollowing(username, request)) {
+            throw new CustomException("The user has already been followed", HttpStatus.PRECONDITION_FAILED);
         }
+
         FollowDAO temp = new FollowDAO();
         temp.setFollower(currentUser);
         temp.setFollowee(userToFollow);
@@ -62,7 +60,6 @@ public class FollowService {
                        // automatically. However, nevertheless it does not assign handwritten id(3), it
                        // generates.
         followRepository.save(temp);
-        // System.out.println("actual usernameToFollow: " + username);
         return String.format("%s want to follow %s", currentUser.getUsername(), userToFollow.getUsername());
     }
 
@@ -72,55 +69,100 @@ public class FollowService {
      * @param request
      * @return info about state
      */
-    public String unfollowUser(String username, HttpServletRequest request) {
+    public String unfollowUser(String followee_username, HttpServletRequest request) {
 
-        User userToUnfollow = userRepository.findByUsername(username);
+        User userToUnfollow = userRepository.findByUsername(followee_username);
         String currentUsername = jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(request));
 
         User currentUser = userRepository.findByUsername(currentUsername);
 
         if (userToUnfollow == null) {
-            throw new CustomException("There is no user named " + username + ". Thus, can not be unfollowed",
-                    HttpStatus.INTERNAL_SERVER_ERROR);
-        } else if (!followRepository.existsByAndFolloweeUsernameAndFollowerUsername(username,
-                jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(request)))) {
-            return String.format("%s is not following %s already", currentUsername, username);
+            throw new CustomException("There is no user named " + followee_username + ". Thus, can not be unfollowed",
+                    HttpStatus.NOT_ACCEPTABLE);
+        } else if (!amIFollowing(followee_username, request)) {
+            throw new CustomException(
+                    String.format("%s is not following %s already", currentUsername, followee_username),
+                    HttpStatus.PRECONDITION_FAILED);
+        } else {
+            followRepository.deleteByAndFolloweeUsernameAndFollowerUsername(followee_username, currentUsername);
+            return String.format("%s succesfully unfollowed %s", currentUsername, followee_username);
+        }
+    }
+
+    /**
+     * 
+     * @param request
+     * @return followeeList of the currentuser
+     */
+    public List<FolloweeDTO> following(HttpServletRequest request) {
+        String currentUsername = jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(request));
+        User currentUser = userRepository.findByUsername(currentUsername);
+        if (currentUser == null) {
+            throw new CustomException("There is no user named " + currentUsername + ". ", HttpStatus.NOT_ACCEPTABLE);
+        } else {
+            List<FolloweeDTO> followeeList = new ArrayList<FolloweeDTO>();
+            followRepository.findByAndFollower_username(currentUser.getUsername())
+                    .forEach(item -> followeeList.add(modelMapper.map(item.getFollowee(), FolloweeDTO.class)));
+            return followeeList;
         }
 
-        followRepository.deleteByAndFolloweeUsernameAndFollowerUsername(username, currentUsername);
-        return String.format("%s succesfully unfollowed %s", currentUsername, username);
     }
 
-    public List<FolloweeDTO> following(HttpServletRequest request) {
-        User currentUser = userRepository
-                .findByUsername(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(request)));
-
-        List<FolloweeDTO> followeeList = new ArrayList<FolloweeDTO>();
-        followRepository.findByAndFollower_username(currentUser.getUsername())
-                .forEach(item -> followeeList.add(modelMapper.map(item.getFollowee(), FolloweeDTO.class)));
-        return followeeList;
-    }
-
+    /**
+     * 
+     * @param request
+     * @return followerList of the currentuser
+     */
     public List<FolloweeDTO> followers(HttpServletRequest request) {
-        User currentUser = userRepository
-                .findByUsername(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(request)));
-        List<FolloweeDTO> followerList = new ArrayList<FolloweeDTO>();
-        followRepository.findByAndFollowee_username(currentUser.getUsername())
-                .forEach(item -> followerList.add(modelMapper.map(item.getFollowee(), FolloweeDTO.class)));
-        return followerList;
+        String currentUsername = jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(request));
+        User currentUser = userRepository.findByUsername(currentUsername);
+        if (currentUser == null) {
+            throw new CustomException("There is no user named " + currentUsername + ". ", HttpStatus.NOT_ACCEPTABLE);
+        } else {
+            List<FolloweeDTO> followerList = new ArrayList<FolloweeDTO>();
+            followRepository.findByAndFollowee_username(currentUser.getUsername())
+                    .forEach(item -> followerList.add(modelMapper.map(item.getFollowee(), FolloweeDTO.class)));
+            return followerList;
+        }
+
     }
 
+    /**
+     * 
+     * @param request
+     * @return number of users that current user follows
+     */
     public String following_number(HttpServletRequest request) {
         return (following(request).size() + "");
     }
 
-    public String followers_number(HttpServletRequest request) {
+    /**
+     * 
+     * @param request
+     * @return number of users that follows current user
+     */
+    public String followee_number(HttpServletRequest request) {
         return (followers(request).size() + "");
     }
 
+    /**
+     * 
+     * @param followee_username
+     * @param request
+     * @return boolean, true if current user follows the given user
+     */
     public boolean amIFollowing(String followee_username, HttpServletRequest request) {
-        return followRepository.existsByAndFolloweeUsernameAndFollowerUsername(followee_username,
-                jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(request)));
+
+        User userToUnfollow = userRepository.findByUsername(followee_username);
+
+        if (userToUnfollow == null) {
+            throw new CustomException("There is no user named " + followee_username + ". Thus, can not be unfollowed",
+                    HttpStatus.NOT_ACCEPTABLE);
+        } else {
+            return followRepository.existsByAndFolloweeUsernameAndFollowerUsername(followee_username,
+                    jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(request)));
+        }
+
     }
 
 }

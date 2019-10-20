@@ -28,7 +28,9 @@ public class FollowController {
         @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_BASIC') or hasRole('ROLE_TRADER')")
         @ApiOperation(value = "Follow another user")
         @ApiResponses(value = {
-                        @ApiResponse(code = 400, message = GlobalExceptionHandlerController.GENERIC_ERROR_RESPONSE) })
+                        @ApiResponse(code = 400, message = GlobalExceptionHandlerController.GENERIC_ERROR_RESPONSE),
+                        @ApiResponse(code = 406, message = "Stated user is not registered to the system!"),
+                        @ApiResponse(code = 412, message = "The user has already been followed") })
         public String followUser(@ApiParam("Username") @RequestParam String usernameToFollow,
                         HttpServletRequest request) {
                 return followService.followUser(usernameToFollow, request);
@@ -40,7 +42,9 @@ public class FollowController {
         @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_BASIC') or hasRole('ROLE_TRADER')")
         @ApiOperation(value = "unfollow another user")
         @ApiResponses(value = {
-                        @ApiResponse(code = 400, message = GlobalExceptionHandlerController.GENERIC_ERROR_RESPONSE) })
+                        @ApiResponse(code = 400, message = GlobalExceptionHandlerController.GENERIC_ERROR_RESPONSE),
+                        @ApiResponse(code = 406, message = "Stated user is not registered to the system!"),
+                        @ApiResponse(code = 412, message = "Current user is not following stated user already!") })
         public String unfollowUser(@ApiParam("Username") @RequestParam String usernameToUnfollow,
                         HttpServletRequest request) {
                 return followService.unfollowUser(usernameToUnfollow, request);
@@ -51,9 +55,21 @@ public class FollowController {
         @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_BASIC') or hasRole('ROLE_TRADER')")
         @ApiOperation(value = "List followings")
         @ApiResponses(value = {
-                        @ApiResponse(code = 400, message = GlobalExceptionHandlerController.GENERIC_ERROR_RESPONSE) })
+                        @ApiResponse(code = 400, message = GlobalExceptionHandlerController.GENERIC_ERROR_RESPONSE),
+                        @ApiResponse(code = 406, message = "Stated user is not registered to the system!") })
         public List<FolloweeDTO> following(HttpServletRequest request) {
                 return followService.following(request);
+        }
+
+        @GetMapping("/followers")
+        @ResponseStatus(HttpStatus.OK)
+        @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_BASIC') or hasRole('ROLE_TRADER')")
+        @ApiOperation(value = "List followers")
+        @ApiResponses(value = {
+                        @ApiResponse(code = 400, message = GlobalExceptionHandlerController.GENERIC_ERROR_RESPONSE),
+                        @ApiResponse(code = 406, message = "Stated user is not registered to the system!") })
+        public List<FolloweeDTO> followers(HttpServletRequest request) {
+                return followService.followers(request);
         }
 
         @GetMapping("/following_number")
@@ -66,24 +82,14 @@ public class FollowController {
                 return followService.following_number(request);
         }
 
-        @GetMapping("/followers")
-        @ResponseStatus(HttpStatus.OK)
-        @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_BASIC') or hasRole('ROLE_TRADER')")
-        @ApiOperation(value = "List followers")
-        @ApiResponses(value = {
-                        @ApiResponse(code = 400, message = GlobalExceptionHandlerController.GENERIC_ERROR_RESPONSE) })
-        public List<FolloweeDTO> followers(HttpServletRequest request) {
-                return followService.followers(request);
-        }
-
-        @GetMapping("/followers_number")
+        @GetMapping("/followee_number")
         @ResponseStatus(HttpStatus.OK)
         @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_BASIC') or hasRole('ROLE_TRADER')")
         @ApiOperation(value = "Number of followings")
         @ApiResponses(value = {
                         @ApiResponse(code = 400, message = GlobalExceptionHandlerController.GENERIC_ERROR_RESPONSE) })
-        public String followers_number(HttpServletRequest request) {
-                return followService.followers_number(request);
+        public String followee_number(HttpServletRequest request) {
+                return followService.followee_number(request);
         }
 
         @GetMapping("/am_i_following")
@@ -91,7 +97,8 @@ public class FollowController {
         @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_BASIC') or hasRole('ROLE_TRADER')")
         @ApiOperation(value = "check whether following a specific user")
         @ApiResponses(value = {
-                        @ApiResponse(code = 400, message = GlobalExceptionHandlerController.GENERIC_ERROR_RESPONSE) })
+                        @ApiResponse(code = 400, message = GlobalExceptionHandlerController.GENERIC_ERROR_RESPONSE),
+                        @ApiResponse(code = 406, message = "Stated user is not registered to the system!") })
         public boolean am_i_following(@ApiParam("Username") @RequestParam String followee_username,
                         HttpServletRequest request) {
                 return followService.amIFollowing(followee_username, request);
