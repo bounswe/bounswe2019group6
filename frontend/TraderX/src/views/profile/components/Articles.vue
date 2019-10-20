@@ -40,7 +40,7 @@
                   </el-form-item>
                 </el-col> -->
 
-                <el-col :span="6">
+                <el-col :span="12">
                   <el-form-item label-width="90px" label="Importance:" class="postInfo-container-item">
                     <el-rate
                       v-model="postForm.importance"
