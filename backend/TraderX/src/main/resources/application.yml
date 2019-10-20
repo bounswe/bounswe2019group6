@@ -42,3 +42,4 @@ email:
   frontend_url: http://localhost # To which reset password link will redirect clients
   frontend_port: 9999 # TBD
   frontend_reset_path: renew_password # TBD, up to frontend team
+  frontend_verification_path : verification_path
