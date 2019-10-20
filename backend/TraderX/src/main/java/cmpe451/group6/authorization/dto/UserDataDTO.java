@@ -23,7 +23,25 @@ public class UserDataDTO {
   private boolean isPrivate;
   @ApiModelProperty(position = 7)
   private String googleToken;
+  @ApiModelProperty(position = 8)
+  private String appSecret;
 
+
+  public String getAppSecret() {
+    return appSecret;
+  }
+
+  public void setAppSecret(String appSecret) {
+    this.appSecret = appSecret;
+  }
+
+  public String getGoogleToken() {
+    return googleToken;
+  }
+
+  public void setGoogleToken(String googleToken) {
+    this.googleToken = googleToken;
+  }
 
   // NOTE : DO NOT CHANGE GETTER and SETTER SIGNATURES FOR THIS FIELD !!
   // Because the mapper seeks the getter & setter fields by these names,

@@ -49,15 +49,21 @@ public class SignupService {
     @Value("${email.frontend_verification_path}")
     private String verificationPath;
 
+    @Value("${security.jwt.token.secret-key}")
+    private String appSecret;
 
 
-    public String signup(User user) {
+    public String signup(User user, String appSecret) {
         if (!userRepository.existsByUsername(user.getUsername()) && !userRepository.existsByEmail(user.getEmail())) {
 
             // Check field validity. Throw exception and return error if at least one of them is wrong
             validateUserData(user);
 
-            boolean isGoogleUser = user.getPassword == null;
+            boolean isGoogleUser = user.getPassword() == null;
+
+            if(isGoogleUser && !appSecret.equals(this.appSecret)){
+                throw new CustomException("Wrong App Secret", HttpStatus.UNAUTHORIZED);
+            }
 
             Role role = validateIBAN(user.getIBAN());
             user.setRoles(new ArrayList<>(Arrays.asList(role)));
