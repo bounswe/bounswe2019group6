@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:map="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/primary_dark"
+    android:orientation="vertical">
+    <!-- Header aligned to top -->
+
+
+    <LinearLayout
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_gravity="center_vertical"
+            android:layout_weight=".5"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/main_page_logo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:src="@drawable/trader_logo" />
+        </LinearLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/signup_warning_layout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.2"
+            android:background="#970000"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/signup_warning"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:textColor="#FFFFFF"
+                map:layout_constraintBottom_toBottomOf="parent"
+                map:layout_constraintEnd_toEndOf="parent"
+                map:layout_constraintStart_toStartOf="parent"
+                map:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="2"
+            android:gravity="center"
+            android:orientation="vertical">
+
+
+            <EditText
+                android:id="@+id/signup_username_val"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.18"
+                android:background="@drawable/draw_bottom_line"
+                android:drawableLeft="@drawable/login_user_white_icon"
+                android:drawablePadding="13dp"
+                android:fontFamily="sans-serif"
+                android:gravity="center|start"
+                android:hint="@string/your_username"
+                android:inputType="textEmailAddress"
+                android:paddingLeft="10dp"
+                android:singleLine="true"
+                android:textColor="@android:color/white"
+                android:textColorHint="@color/white"
+                android:textSize="14sp" />
+
+            <EditText
+                android:id="@+id/signup_mail_val"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.18"
+                android:background="@drawable/draw_bottom_line"
+                android:drawableLeft="@drawable/login_mail_icon"
+                android:drawablePadding="13dp"
+                android:fontFamily="sans-serif"
+                android:gravity="center|start"
+                android:hint="@string/your_mail"
+                android:inputType="textEmailAddress"
+                android:paddingLeft="10dp"
+                android:singleLine="true"
+                android:textColor="@android:color/white"
+                android:textColorHint="@color/white"
+                android:textSize="14sp" />
+
+            <EditText
+                android:id="@+id/signup_pass_val"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.18"
+                android:background="@drawable/draw_bottom_line"
+                android:drawableLeft="@drawable/login_pass_icon"
+                android:drawablePadding="18dp"
+                android:fontFamily="sans-serif"
+                android:gravity="center|start"
+                android:hint="@string/password"
+                android:inputType="textPassword"
+                android:paddingLeft="13dp"
+                android:singleLine="true"
+                android:textColor="@android:color/white"
+                android:textColorHint="@color/white"
+                android:textSize="14sp" />
+
+            <EditText
+                android:id="@+id/signup_pass_confirm_val"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.18"
+                android:background="@drawable/draw_bottom_line"
+                android:drawableLeft="@drawable/login_pass_icon"
+                android:drawablePadding="18dp"
+                android:fontFamily="sans-serif"
+                android:gravity="center|start"
+                android:hint="@string/password_confirm"
+                android:inputType="textPassword"
+                android:paddingLeft="13dp"
+                android:singleLine="true"
+                android:textColor="@android:color/white"
+                android:textColorHint="@color/white"
+                android:textSize="14sp" />
+
+            <CheckBox
+                android:id="@+id/signup_iban_checkbox"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight=".18"
+                android:background="@drawable/draw_bottom_line"
+                android:buttonTint="@android:color/white"
+                android:fontFamily="sans-serif"
+                android:gravity="center|start"
+                android:text="@string/trader_account"
+                android:textColor="@android:color/white"
+                android:textColorHint="@color/white"
+                android:textSize="14sp"/>
+
+            <EditText
+                android:id="@+id/signup_iban"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.18"
+                android:background="@drawable/draw_bottom_line"
+                android:drawableLeft="@drawable/login_user_white_icon"
+                android:drawablePadding="13dp"
+                android:fontFamily="sans-serif"
+                android:gravity="center|start"
+                android:hint="@string/signup_iban"
+                android:inputType="textEmailAddress"
+                android:paddingLeft="10dp"
+                android:singleLine="true"
+                android:textColor="@android:color/white"
+                android:textColorHint="@color/white"
+                android:textSize="14sp" />
+
+            <fragment
+                android:id="@+id/signup_map"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.8"
+                tools:context=".auth.signup.SignUpActivity" />
+
+        </LinearLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/signup_action"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight=".2">
+
+            <Button
+                android:id="@+id/signup_button"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:elevation="0dp"
+                android:text="@string/register"
+                map:layout_constraintBottom_toBottomOf="parent"
+                map:layout_constraintEnd_toEndOf="parent"
+                map:layout_constraintStart_toStartOf="parent"
+                map:layout_constraintTop_toTopOf="parent"
+                tools:layout_conversion_absoluteHeight="48dp"
+                tools:layout_conversion_absoluteWidth="402dp" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </LinearLayout>
+
+
+</RelativeLayout>

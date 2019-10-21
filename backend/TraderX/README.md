@@ -50,10 +50,10 @@ password: root
 ```
 
 #### Step3: Configure email properties 
-in application.yml, use group email adress & password
+on `EmailServiceConfig.java`, use group email adress & password
 ```
-  sender_address: "bounswegroup6@gmail.com"
-  sender_password: "*********"
+static private final String senderAdress = "??";
+static private final String senderPassword = "??";
 ```
 
 #### Step4: Run the application in the project directory (where pom.xml exists)

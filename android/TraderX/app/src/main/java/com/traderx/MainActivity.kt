@@ -1,32 +1,61 @@
 package com.traderx
 
-import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
-import android.widget.EditText
+import android.util.Log
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import com.traderx.activity.ForgotPassActivity
-import com.traderx.activity.RegisterActivity
+import androidx.lifecycle.ViewModelProvider
+import com.traderx.api.ResponseHandler
+import com.traderx.util.Injection
+import com.traderx.viewmodel.UserViewModel
+import io.reactivex.disposables.CompositeDisposable
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var userViewModel: UserViewModel
+
+    private lateinit var userNameTextView: TextView
+    private lateinit var userIdTextView: TextView
+
+    private val disposable = CompositeDisposable()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.layout_login_activity)
-        val registerButton = findViewById<Button>(R.id.login_register_button)
-        val forgetButton = findViewById<Button>(R.id.login_forgot_pass)
-        val password = findViewById<EditText>(R.id.login_pass_val)
-        val mail = findViewById<EditText>(R.id.login_mail_val)
-        val loginButton = findViewById<Button>(R.id.login_button)
+        setContentView(R.layout.activity_main)
 
-        forgetButton.setOnClickListener {
-            val intent = Intent(this, ForgotPassActivity::class.java)
-            startActivity(intent)
-        }
+        userIdTextView = findViewById(R.id.userId)
+        userNameTextView = findViewById(R.id.userName)
 
-        registerButton.setOnClickListener {
-            val intent = Intent(this, RegisterActivity::class.java)
-            startActivity(intent)
-        }
+        val userViewModelFactory = Injection.provideUserViewModelFactory(this)
+
+        userViewModel = ViewModelProvider(this, userViewModelFactory).get(UserViewModel::class.java)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        disposable.add(
+            userViewModel.user()
+                .subscribe ({
+                    userNameTextView.text = it.username
+                    userIdTextView.text = it.id.toString()
+                },
+                    {
+                        ResponseHandler.handleError(it, this)
+                    }
+                )
+        )
+
+        disposable.add(
+            userViewModel
+                .fetchAndUpdateUser()
+                .subscribe({}, {
+                    ResponseHandler.handleError(it, this)
+                })
+        )
+    }
+
+    override fun onStop() {
+        super.onStop()
+        disposable.clear()
     }
 }
