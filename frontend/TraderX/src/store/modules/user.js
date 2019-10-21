@@ -10,7 +10,9 @@ const state = {
   roles: [],
   avatar: '',
   name: '',
-  introduction: ''
+  introduction: '',
+  isPrivate: false,
+  iban: ''
 }
 
 const mutations = {
@@ -20,16 +22,21 @@ const mutations = {
   SET_USERINFO: (state, userInfo) => {
     state.userInfo = userInfo
   },
-
-  // TODO these are deprecated but keep useful ones
+  SET_NAME: (state, name) => {
+    state.name = name
+  },
+  SET_PRIVACY: (state, isPrivate) => {
+    state.isPrivate = isPrivate
+  },
+  SET_IBAN: (state, iban) => {
+    state.iban = iban
+  },
   SET_ROLES: (state, roles) => {
     state.roles = roles
   },
+  // TODO these are deprecated but keep useful ones
   SET_INTRODUCTION: (state, introduction) => {
     state.introduction = introduction
-  },
-  SET_NAME: (state, name) => {
-    state.name = name
   },
   SET_AVATAR: (state, avatar) => {
     state.avatar = avatar
@@ -62,20 +69,22 @@ const actions = {
           reject('Verification failed, please Login again.')
         }
 
-        const { roles } = data
+        const { username, isPrivate, iban, roles } = data
 
+        console.log(data)
         // roles must be a non-empty array
         if (!roles || roles.length <= 0) {
           reject('getInfo: roles must be a non-null array!')
         }
 
-        commit('SET_USERINFO', data)
         // TODO this is deprecated but will be kept until reorganized
+        commit('SET_USERINFO', data)
+        commit('SET_NAME', username)
+        commit('SET_PRIVACY', isPrivate)
+        commit('SET_IBAN', iban)
         commit('SET_ROLES', roles)
-
         // TODO set the ones that we decide to keep
         /*
-        commit('SET_NAME', name)
         commit('SET_AVATAR', avatar)
         commit('SET_INTRODUCTION', introduction)
         */
@@ -140,6 +149,7 @@ const actions = {
   // TODO this is deprecated, will be removed
   // dynamically modify permissions
   changeRoles({ commit, dispatch }, role) {
+    // eslint-disable-next-line no-async-promise-executor
     return new Promise(async resolve => {
       const token = role + '-token'
 
