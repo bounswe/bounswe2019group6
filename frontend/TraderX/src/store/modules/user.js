@@ -124,6 +124,7 @@ const actions = {
     })
   },
   // user registration
+  // eslint-disable-next-line no-use-before-define
   register({ commit }, data) {
     return new Promise((resolve, reject) => {
       register(data).then(() => {
@@ -133,7 +134,7 @@ const actions = {
       })
     })
   },
-
+// eslint-disable-next-line no-use-before-define
   confirm({ dispatch }, query) {
     return new Promise((resolve, reject) => {
       confirm(query).then(() => {

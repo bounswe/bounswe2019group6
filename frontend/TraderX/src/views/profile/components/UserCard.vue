@@ -17,7 +17,7 @@
       </div>
       <div class="box-center">
         <div class="user-name text-center">
-          {{ user.name }}
+          {{ user.username }}
         </div>
       </div>
     </div>
@@ -39,7 +39,7 @@
           <p><b>IBAN:</b> {{ user.iban }}</p>
           <p><b>Location:</b> Tokyo</p>
           <el-switch
-            v-model=user.isPrivate
+            v-model="user.isPrivate"
             active-color="#13ce66"
             inactive-color="#ff4949"
             style="float: left"

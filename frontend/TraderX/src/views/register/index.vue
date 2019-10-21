@@ -132,9 +132,9 @@
           <span>Password : At least 6 characters</span>
         </div>
 
-        <el-button class="thirdparty-button" type="primary" @click="showDialog=true">
+        <!-- <el-button class="thirdparty-button" type="primary" @click="showDialog=true">
           Or connect with
-        </el-button>
+        </el-button> -->
       </div>
     </el-form>
 

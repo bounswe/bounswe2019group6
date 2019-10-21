@@ -71,11 +71,20 @@
       </el-button>
 
       <div>
-        <el-button class="thirdparty-button" type="primary" @click="redirectHome">
+        <el-button
+          class="thirdparty-button"
+          type="primary"
+          @click="redirectHome"
+        >
           Home
         </el-button>
 
-        <el-button style='float: right' class="thirdparty-button" type="primary" @click="redirectRegister">
+        <el-button
+          style="float: right"
+          class="thirdparty-button"
+          type="primary"
+          @click="redirectRegister"
+        >
           Register
         </el-button>
 
