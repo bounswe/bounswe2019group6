@@ -12,7 +12,7 @@ import java.io.ObjectInputStream
 )
 data class User(
     @PrimaryKey
-    @ColumnInfo(name = "id") private val id: Int,
+    @ColumnInfo(name = "id") val id: Int,
     @ColumnInfo(name = "username") val username: String,
     @ColumnInfo(name = "email") val email: String,
     @ColumnInfo(name = "latitude") val latitude: Float,
