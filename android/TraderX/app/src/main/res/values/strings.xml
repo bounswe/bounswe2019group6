@@ -16,7 +16,8 @@
     <string name="signup_iban">IBAN (for trader user)</string>
     <string name="login">Login</string>
     <string name="forgot_pass">Forgot Password</string>
-
+    <string name="back">Back</string>
+    <string name="reset_password">Reset Password</string>
 
     <string name="username_not_valid">Username should be between 5 and 20 characters long</string>
     <string name="email_not_valid">Email is not valid</string>
