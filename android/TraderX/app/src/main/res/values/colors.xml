@@ -36,6 +36,11 @@
     <color name="green_500">#4CAF50</color>
     <color name="light_green_500">#8BC34A</color>
 
+    <color name="txt_color">#141a22</color>
+    <color name="blue">#006dff</color>
+    <color name="light_gray">#6e7f8d</color>
+    <color name="yellow">#f5b300</color>
+
     <integer-array name="custom_tab_colors">
         <item>@color/light_blue_500</item>
         <item>@color/cyan_500</item>

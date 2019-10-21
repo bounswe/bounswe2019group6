@@ -4,6 +4,7 @@
     <string name="not_available">Not Available</string>
     <string name="connecting">Connecting</string>
     <string name="loading">Loading</string>
+    <string name="signup_activity_title">Create a New Account</string>
     <string name="your_username">Username</string>
     <string name="your_mail">Mail</string>
     <string name="password">Password</string>
@@ -11,7 +12,7 @@
     <string name="password_again">Repeat Password</string>
     <string name="your_phone">Mail</string>
     <string name="accept_terms">Accept Conditions</string>
-    <string name="register">Sign Up</string>
+    <string name="signup">Sign Up</string>
     <string name="trader_account">Trader Account</string>
     <string name="signup_iban">IBAN (for trader user)</string>
     <string name="login">Login</string>
@@ -19,9 +20,18 @@
     <string name="back">Back</string>
     <string name="reset_password">Reset Password</string>
 
+    <string name="general_false">No</string>
+    <string name="general_true">Yes</string>
+
+    <string name="role">Role</string>
+    <string name="role_basic">Basic</string>
+    <string name="role_trader">Trader</string>
+    <string name="role_admin">Admin</string>
+    <string name="profile_private">Private</string>
+
     <string name="username_not_valid">Username should be between 5 and 20 characters long</string>
     <string name="email_not_valid">Email is not valid</string>
-    <string name="pass_not_valid">Password should be between 8 and 32 characters long</string>
+    <string name="pass_not_valid">Password must -include at least a digit, a lower case letter, an uppercase letter, a special char. and not include any whitespaces. Min password length: 8 characters</string>
     <string name="trader_iban_not_valid">You have selected Trader account, however IBAN is not valid</string>
     <string name="pass_match_fail">Passwords doesn\'t match</string>
 
@@ -34,8 +44,6 @@
     <string name="signup_success">You have successfully signed up. Please verify your email then sign in</string>
 
 
-
-
     <string name="fill_empty_areas">Fill empty areas</string>
 
     <string name="location_not_accessible">Location is not accessible</string>
@@ -43,13 +51,14 @@
     <string name="restaurant_list_by_location">Accessing to location</string>
 
 
-
     <string name="press_back_quit">Press back again to exit</string>
 
 
-    <string name="navigation_drawer_open" translatable="false"/>
-    <string name="navigation_drawer_close" translatable="false"/>
+    <string name="navigation_drawer_open" translatable="false" />
+    <string name="navigation_drawer_close" translatable="false" />
     <string name="main_page_logo_desc">Main page logo</string>
 
+
+    <string name="connection_error">Connection error, check your internet access</string>
 
 </resources>

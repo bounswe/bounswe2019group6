@@ -18,5 +18,6 @@ data class User(
     @ColumnInfo(name = "latitude") val latitude: Float,
     @ColumnInfo(name = "longitude") val longitude: Float,
     @ColumnInfo(name = "role") val role: String,
+    @ColumnInfo(name = "isPrivate") val isPrivate: Boolean,
     @ColumnInfo(name = "token") val token: String?
 )

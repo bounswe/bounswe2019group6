@@ -45,7 +45,7 @@ support.app_compat = "androidx.appcompat:appcompat:$versions.appcompat"
 support.core_ktx = "androidx.core:core-ktx:$versions.core_ktx"
 support.constraint_layout = "androidx.constraintlayout:constraintlayout:$versions.constraint_layout"
 support.fragment_runtime_ktx = "androidx.fragment:fragment-ktx:$versions.fragment"
-support.design = "com.google.android.material:material:$versions.support"
+support.material_design = "com.google.android.material:material:$versions.support"
 support.gms = "com.google.android.gms:play-services-maps:$versions.gms"
 deps.support = support
 

@@ -16,24 +16,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/userId"
+        <Button
+            android:id="@+id/main_profile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp" />
+            android:text="Profile" />
 
-        <TextView
-            android:id="@+id/userName"
+        <Button
+            android:id="@+id/main_follow"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp" />
-
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp" />
-
+            android:text="Follow Users" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,4 +1,4 @@
-package com.traderx.auth.signup
+package com.traderx.ui.signup
 
 import com.google.android.gms.maps.model.Marker
 
@@ -11,20 +11,21 @@ class SignUpValidator {
         }
 
         fun validateUsername(userName: String): Boolean {
-            return userName.length in 5..20
+            val patt = Regex("^\\w{3,20}$")
+
+            return userName.matches(patt)
         }
 
         fun validateEmail(email: String): Boolean {
-            // Credits to https://www.tutorialspoint.com/validate-email-address-in-java
-            val patt = Regex(
-                "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]\$"
-            )
+            val patt = Regex("^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]\$")
 
             return email.matches(patt)
         }
 
         fun validatePassword(password: String): Boolean {
-            return password.length in 8..32
+            val patt = Regex("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#\$%^&+=])(?=\\S+\$).{6,}\$")
+
+            return password.matches(patt)
         }
 
         fun validatePasswordConformity(password: String, passwordConfirm: String): Boolean {
