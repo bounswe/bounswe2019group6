@@ -345,3 +345,15 @@ export function removeClass(ele, cls) {
     ele.className = ele.className.replace(reg, ' ')
   }
 }
+
+export function randomImage() {
+  const options = [
+    'https://media.giphy.com/media/TU20nKsJ1h4NG/giphy.gif',
+    'https://media.giphy.com/media/GbUrFXadBryQ8/giphy.gif',
+    'https://media0.giphy.com/media/w461tXo03sQP6/200.webp',
+    'https://media.giphy.com/media/inyqrgp9o3NUA/200.gif',
+    'https://media0.giphy.com/media/l0MYDGA3Du1hBR4xG/200.webp',
+    'https://media2.giphy.com/media/57ZvMMkuBIVMlU88Yh/giphy.webp'
+  ]
+  return options[Math.floor(Math.random() * options.length)]
+}
