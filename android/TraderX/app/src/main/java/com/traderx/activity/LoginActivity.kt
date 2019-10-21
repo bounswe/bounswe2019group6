@@ -7,7 +7,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import com.traderx.R
-import com.traderx.auth.signup.SignUpActivity
+import com.traderx.ui.signup.SignUpActivity
 
 class LoginActivity : AppCompatActivity() {
 

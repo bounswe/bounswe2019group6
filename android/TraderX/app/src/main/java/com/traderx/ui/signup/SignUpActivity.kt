@@ -1,15 +1,13 @@
-package com.traderx.auth.signup
+package com.traderx.ui.signup
 
 
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
+import android.text.InputType
 import android.util.Log
 import android.view.View
-import android.widget.Button
-import android.widget.CheckBox
-import android.widget.EditText
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -56,15 +54,21 @@ class SignUpActivity : AppCompatActivity(), OnMapReadyCallback {
             .findFragmentById(R.id.signup_map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
-        userName = findViewById(R.id.signup_username_val)
-        email = findViewById(R.id.signup_mail_val)
-        password = findViewById(R.id.signup_pass_val)
-        passwordConfirm = findViewById(R.id.signup_pass_confirm_val)
+        userName = findViewById(R.id.signup_username)
+        email = findViewById(R.id.signup_mail)
+        password = findViewById(R.id.signup_pass)
+        passwordConfirm = findViewById(R.id.signup_pass_confirm)
         warning = findViewById(R.id.signup_warning)
         signUpButton = findViewById(R.id.signup_button)
         warningLayout = findViewById(R.id.signup_warning_layout)
         ibanCheckbox = findViewById(R.id.signup_iban_checkbox)
         iban = findViewById(R.id.signup_iban)
+        //Disable iban editable
+        changeIbanEdit(iban, false)
+
+        ibanCheckbox.setOnCheckedChangeListener { compound: CompoundButton, checked: Boolean ->
+            changeIbanEdit(iban, checked)
+        }
 
         signUpButton.setOnClickListener {
             signUpUser()
@@ -87,7 +91,10 @@ class SignUpActivity : AppCompatActivity(), OnMapReadyCallback {
                 setWarning(getString(R.string.email_not_valid))
             !SignUpValidator.validatePassword(password.text.toString()) ->
                 setWarning(getString(R.string.pass_not_valid))
-            !SignUpValidator.validatePasswordConformity(password.text.toString(), passwordConfirm.text.toString()) ->
+            !SignUpValidator.validatePasswordConformity(
+                password.text.toString(),
+                passwordConfirm.text.toString()
+            ) ->
                 setWarning(getString(R.string.pass_match_fail))
             !SignUpValidator.validateLocation(mMarker) ->
                 setWarning(getString(R.string.select_location))
@@ -118,8 +125,7 @@ class SignUpActivity : AppCompatActivity(), OnMapReadyCallback {
                         AlertDialog.Builder(this)
                             .setMessage(getString(R.string.signup_success))
                             .setPositiveButton("Ok", DialogInterface.OnClickListener { dialog, id ->
-                                val intent = Intent(this, LoginActivity::class.java)
-                                startActivity(intent)
+                                startActivity(Intent(this, LoginActivity::class.java))
                             }).create().show()
                     }
 
@@ -130,13 +136,19 @@ class SignUpActivity : AppCompatActivity(), OnMapReadyCallback {
                             Log.e("SignUpActivity", serializedError)
                             val errorResponse = ResponseHandler.parseErrorMessage(serializedError)
 
-                            if (errorResponse.status == 422) {
+                            if (errorResponse.status == 422 || errorResponse.status == 412 || errorResponse.status == 500) {
                                 runOnUiThread { setWarning(errorResponse.message) }
                             }
                         }
                     }
                 })
         )
+    }
+
+    private fun changeIbanEdit(iban: EditText, checked: Boolean) {
+        iban.inputType = if (checked) InputType.TYPE_CLASS_TEXT else InputType.TYPE_NULL
+        iban.isFocusable = checked
+        iban.isFocusableInTouchMode = checked
     }
 
     private fun setWarning(warning: String) {

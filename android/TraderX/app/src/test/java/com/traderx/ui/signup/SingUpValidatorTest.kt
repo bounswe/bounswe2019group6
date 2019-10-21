@@ -1,7 +1,5 @@
-package com.traderx.auth.signup
+package com.traderx.ui.signup
 
-import com.google.android.gms.internal.maps.zzt
-import com.google.android.gms.maps.model.Marker
 import org.hamcrest.core.Is.`is`
 import org.junit.Assert.assertThat
 import org.junit.Test

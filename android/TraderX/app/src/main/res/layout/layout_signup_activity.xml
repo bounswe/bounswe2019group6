@@ -4,39 +4,46 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/primary_dark"
-    android:orientation="vertical">
-    <!-- Header aligned to top -->
-
+    android:background="@color/white">
 
     <LinearLayout
-        android:id="@+id/content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_gravity="center_vertical"
-            android:layout_weight=".5"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-            <ImageView
-                android:id="@+id/main_page_logo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:src="@drawable/trader_logo" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="40dp"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/signup_activity_title"
+                        android:textColor="#141a22"
+                        android:textSize="19.2sp" />
+                </LinearLayout>
+            </FrameLayout>
+
         </LinearLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/signup_warning_layout"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.2"
+            android:layout_height="wrap_content"
+            android:layout_weight=".1"
             android:background="#970000"
             android:visibility="gone">
 
@@ -52,151 +59,154 @@
                 map:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <LinearLayout
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/StyledTilEditText"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_weight="2"
-            android:gravity="center"
-            android:orientation="vertical">
-
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="28.7dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="28.7dp"
+            android:textColor="@color/black">
 
             <EditText
-                android:id="@+id/signup_username_val"
+                android:id="@+id/signup_username"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.18"
-                android:background="@drawable/draw_bottom_line"
-                android:drawableLeft="@drawable/login_user_white_icon"
-                android:drawablePadding="13dp"
-                android:fontFamily="sans-serif"
-                android:gravity="center|start"
+                android:layout_height="wrap_content"
                 android:hint="@string/your_username"
-                android:inputType="textEmailAddress"
-                android:paddingLeft="10dp"
-                android:singleLine="true"
-                android:textColor="@android:color/white"
-                android:textColorHint="@color/white"
+                android:inputType="text"
+                android:maxLines="1"
+                android:textAllCaps="false"
+                android:textColor="@color/black"
+                android:textCursorDrawable="@drawable/color_cursor"
                 android:textSize="14sp" />
 
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/StyledTilEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="28.7dp"
+            android:layout_marginRight="28.7dp"
+            android:textColor="@color/black">
+
             <EditText
-                android:id="@+id/signup_mail_val"
+                android:id="@+id/signup_mail"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.18"
-                android:background="@drawable/draw_bottom_line"
-                android:drawableLeft="@drawable/login_mail_icon"
-                android:drawablePadding="13dp"
-                android:fontFamily="sans-serif"
-                android:gravity="center|start"
+                android:layout_height="wrap_content"
                 android:hint="@string/your_mail"
-                android:inputType="textEmailAddress"
-                android:paddingLeft="10dp"
-                android:singleLine="true"
-                android:textColor="@android:color/white"
-                android:textColorHint="@color/white"
+                android:inputType="text"
+                android:maxLines="1"
+                android:textAllCaps="false"
+                android:textColor="@color/black"
+                android:textCursorDrawable="@drawable/color_cursor"
                 android:textSize="14sp" />
 
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/StyledTilEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="28.7dp"
+            android:layout_marginRight="28.7dp"
+            android:textColor="@color/black">
+
             <EditText
-                android:id="@+id/signup_pass_val"
+                android:id="@+id/signup_pass"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.18"
-                android:background="@drawable/draw_bottom_line"
-                android:drawableLeft="@drawable/login_pass_icon"
-                android:drawablePadding="18dp"
-                android:fontFamily="sans-serif"
-                android:gravity="center|start"
+                android:layout_height="wrap_content"
                 android:hint="@string/password"
                 android:inputType="textPassword"
-                android:paddingLeft="13dp"
-                android:singleLine="true"
-                android:textColor="@android:color/white"
-                android:textColorHint="@color/white"
+                android:maxLines="1"
+                android:textAllCaps="false"
+                android:textColor="@color/black"
+                android:textCursorDrawable="@drawable/color_cursor"
                 android:textSize="14sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/StyledTilEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="28.7dp"
+            android:layout_marginRight="28.7dp"
+            android:textColor="@color/black">
 
             <EditText
-                android:id="@+id/signup_pass_confirm_val"
+                android:id="@+id/signup_pass_confirm"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.18"
-                android:background="@drawable/draw_bottom_line"
-                android:drawableLeft="@drawable/login_pass_icon"
-                android:drawablePadding="18dp"
-                android:fontFamily="sans-serif"
-                android:gravity="center|start"
+                android:layout_height="wrap_content"
                 android:hint="@string/password_confirm"
                 android:inputType="textPassword"
-                android:paddingLeft="13dp"
-                android:singleLine="true"
-                android:textColor="@android:color/white"
-                android:textColorHint="@color/white"
+                android:maxLines="1"
+                android:textAllCaps="false"
+                android:textColor="@color/black"
+                android:textCursorDrawable="@drawable/color_cursor"
                 android:textSize="14sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/StyledTilEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="28.7dp"
+            android:layout_marginRight="28.7dp"
+            android:textColor="@color/black">
 
             <CheckBox
                 android:id="@+id/signup_iban_checkbox"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight=".18"
-                android:background="@drawable/draw_bottom_line"
-                android:buttonTint="@android:color/white"
-                android:fontFamily="sans-serif"
-                android:gravity="center|start"
+                android:hint="@string/password_confirm"
+                android:maxLines="1"
+                android:paddingTop="10dp"
                 android:text="@string/trader_account"
-                android:textColor="@android:color/white"
-                android:textColorHint="@color/white"
-                android:textSize="14sp"/>
+                android:textAllCaps="false"
+                android:textColor="@color/black"
+                android:textCursorDrawable="@drawable/color_cursor"
+                android:textSize="14sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/StyledTilEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="28.7dp"
+            android:layout_marginRight="28.7dp"
+            android:layout_marginBottom="5dp"
+            android:textColor="@color/black">
 
             <EditText
                 android:id="@+id/signup_iban"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.18"
-                android:background="@drawable/draw_bottom_line"
-                android:drawableLeft="@drawable/login_user_white_icon"
-                android:drawablePadding="13dp"
-                android:fontFamily="sans-serif"
-                android:gravity="center|start"
+                android:layout_height="wrap_content"
                 android:hint="@string/signup_iban"
-                android:inputType="textEmailAddress"
-                android:paddingLeft="10dp"
-                android:singleLine="true"
-                android:textColor="@android:color/white"
-                android:textColorHint="@color/white"
+                android:inputType="none"
+                android:maxLines="1"
+                android:paddingTop="10dp"
+                android:textAllCaps="false"
+                android:textColor="@color/black"
+                android:textCursorDrawable="@drawable/color_cursor"
                 android:textSize="14sp" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-            <fragment
-                android:id="@+id/signup_map"
-                android:name="com.google.android.gms.maps.SupportMapFragment"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.8"
-                tools:context=".auth.signup.SignUpActivity" />
-
-        </LinearLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/signup_action"
+        <fragment
+            android:id="@+id/signup_map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight=".2">
+            android:layout_weight=".8"
+            tools:context="com.traderx.ui.signup.SignUpActivity"/>
 
-            <Button
-                android:id="@+id/signup_button"
-                android:layout_width="match_parent"
-                android:layout_height="44dp"
-                android:elevation="0dp"
-                android:text="@string/register"
-                map:layout_constraintBottom_toBottomOf="parent"
-                map:layout_constraintEnd_toEndOf="parent"
-                map:layout_constraintStart_toStartOf="parent"
-                map:layout_constraintTop_toTopOf="parent"
-                tools:layout_conversion_absoluteHeight="48dp"
-                tools:layout_conversion_absoluteWidth="402dp" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
+        <Button
+            android:id="@+id/signup_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:text="@string/signup"/>
     </LinearLayout>
-
 
 </RelativeLayout>

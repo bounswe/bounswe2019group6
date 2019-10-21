@@ -44,7 +44,7 @@
             android:minHeight="20dp"
             android:paddingTop="8dp"
             android:paddingBottom="8dp"
-            android:text="@string/register"
+            android:text="@string/signup"
             android:textAllCaps="false"
             android:textColor="#FFFF"
             android:textSize="17sp" />

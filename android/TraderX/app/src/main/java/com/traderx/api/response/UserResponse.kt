@@ -14,5 +14,7 @@ data class UserResponse(
     @SerializedName("latitude")
     val latitude: Float,
     @SerializedName("longitude")
-    val longitude: Float
+    val longitude: Float,
+    @SerializedName("isPrivate")
+    val isPrivate: Boolean
 )
