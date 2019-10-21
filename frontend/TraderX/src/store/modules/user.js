@@ -1,4 +1,4 @@
-import { login, getInfo, logout } from '@/api/user'
+import { login, getInfo, logout, register, confirm } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
 
@@ -124,7 +124,26 @@ const actions = {
       resolve()
     })
   },
-  
+  // user registration
+  register({ commit }, data) {
+    return new Promise((resolve, reject) => {
+      register(data).then(() => {
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+
+  confirm({ dispatch }, query) {
+    return new Promise((resolve, reject) => {
+      confirm(query).then(() => {
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
   // TODO this is deprecated, will be removed
   // dynamically modify permissions
   changeRoles({ commit, dispatch }, role) {

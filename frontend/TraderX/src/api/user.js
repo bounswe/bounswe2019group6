@@ -21,3 +21,19 @@ export function logout() {
     method: 'post'
   })
 }
+
+export function register(data) {
+  return request({
+    url: '/signup',
+    method: 'post',
+    data
+  })
+}
+
+export function confirm(query) {
+  return request({
+    url: '/signup/confirm',
+    method: 'post',
+    params: query
+  })
+}
