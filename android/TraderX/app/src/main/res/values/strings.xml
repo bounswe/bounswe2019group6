@@ -17,6 +17,8 @@
     <string name="signup_iban">IBAN (for trader user)</string>
     <string name="login">Login</string>
     <string name="forgot_pass">Forgot Password</string>
+    <string name="back">Back</string>
+    <string name="reset_password">Reset Password</string>
 
     <string name="general_false">No</string>
     <string name="general_true">Yes</string>

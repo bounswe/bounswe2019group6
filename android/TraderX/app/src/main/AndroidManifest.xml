@@ -41,6 +41,10 @@
             android:name=".activity.ForgotPassActivity"
             android:label="ForgotPass"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".auth.forgotpassword.ForgotPasswordActivity"
+            android:label="ForgotPasswordActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>
