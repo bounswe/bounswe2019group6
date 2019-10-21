@@ -49,6 +49,9 @@ service.interceptors.response.use(
         type: 'error',
         duration: 5 * 1000
       })
+      // if (response.status == 410) {
+      //   console.log("yüksel")
+      // }
 
       return Promise.reject(new Error('Error'))
     } else {

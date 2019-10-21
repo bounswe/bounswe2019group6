@@ -34,12 +34,12 @@
             <p><b>Comments:</b> 0</p>
           </div>
           <div class="user-type">
-            <p><b>User Type:</b> {{ user.roles }}</p>
+            <p><b>User Type:</b> {{ user.roles[0] }}</p>
           </div>
           <p><b>IBAN:</b> {{ user.iban }}</p>
           <p><b>Location:</b> Tokyo</p>
           <el-switch
-            v-model="value1"
+            v-model=user.isPrivate
             active-color="#13ce66"
             inactive-color="#ff4949"
             style="float: left"
@@ -58,27 +58,14 @@ import { randomImage } from '@/utils'
 
 export default {
   components: { PanThumb },
-  props: {
-    user: {
-      type: Object,
-      default: () => {
-        return {
-          name: '',
-          email: '',
-          avatar: '',
-          roles: ''
-        }
-      }
-    }
-  },
   data() {
     return {
-      value1: true
+      user: this.$store.getters.userInfo
     }
   },
   computed: {
     randomImage
-  }
+  },
 }
 </script>
 

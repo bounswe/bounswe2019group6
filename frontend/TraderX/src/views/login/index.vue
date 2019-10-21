@@ -70,23 +70,18 @@
         Login
       </el-button>
 
-      <div style="position:relative">
-        <div class="tips">
-          <span>Username : admin</span>
-          <span>Password : any</span>
-        </div>
-        <div class="tips">
-          <span style="margin-right:18px;">Username : editor</span>
-          <span>Password : any</span>
-        </div>
-
-        <el-button
-          class="thirdparty-button"
-          type="primary"
-          @click="showDialog=true"
-        >
-          Or connect with
+      <div>
+        <el-button class="thirdparty-button" type="primary" @click="redirectHome">
+          Home
         </el-button>
+
+        <el-button style='float: right' class="thirdparty-button" type="primary" @click="redirectRegister">
+          Register
+        </el-button>
+
+        <!-- <el-button style='float: right' class="thirdparty-button" type="primary" @click="showDialog=true">
+          Or connect with
+        </el-button> -->
       </div>
     </el-form>
 
@@ -215,6 +210,12 @@ export default {
         }
         return acc
       }, {})
+    },
+    redirectRegister() {
+      this.$router.push({ path: '/register'})
+    },
+    redirectHome() {
+      this.$router.push({ path: '/home'})
     }
   }
 }
@@ -327,12 +328,6 @@ $light_gray:#eee;
     color: $dark_gray;
     cursor: pointer;
     user-select: none;
-  }
-
-  .thirdparty-button {
-    position: absolute;
-    right: 0;
-    bottom: 6px;
   }
 
   @media only screen and (max-width: 470px) {
