@@ -29,3 +29,11 @@ export function register(data) {
     data
   })
 }
+
+export function confirm(query) {
+  return request({
+    url: '/signup/confirm',
+    method: 'post',
+    params: query
+  })
+}

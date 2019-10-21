@@ -151,6 +151,7 @@
 <script>
 import { validUsername, validPassword, validIBAN, validLocation, validEmail } from '@/utils/validate'
 import SocialSign from './components/SocialSignin'
+import { Message } from 'element-ui'
 
 export default {
   name: 'Register',
@@ -205,7 +206,7 @@ export default {
       signupRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
         password: [{ required: true, trigger: 'blur', validator: validatePassword }],
-        iban: [{ required: false, trigger: 'blur', validator: validateIBAN }],
+        iban: [{ required: true, trigger: 'blur', validator: validateIBAN }],
         latitude: [{ required: true, trigger: 'blur', validator: validateLocation }],
         longitude: [{ required: true, trigger: 'blur', validator: validateLocation }],
         email: [{ required: true, trigger: 'blur', validator: validateEmail }]
@@ -284,6 +285,7 @@ export default {
           this.loading = true
           this.$store.dispatch('user/register', this.signupForm)
             .then(() => {
+              Message.success('Registered successfully, check your inbox for confirmation link')
               this.$router.push({ path: '/login', query: this.otherQuery })
               this.loading = false
             })

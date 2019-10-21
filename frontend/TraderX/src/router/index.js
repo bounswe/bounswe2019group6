@@ -61,6 +61,11 @@ export const constantRoutes = [
     hidden: true
   },
   {
+    path: '/register/confirm',
+    hidden: true,
+    component: () => import('@/views/register/confirm')
+  },
+  {
     path: '/auth-redirect',
     component: () => import('@/views/login/auth-redirect'),
     hidden: true
@@ -77,11 +82,16 @@ export const constantRoutes = [
   },
   {
     path: '/',
+    hidden: true,
+    redirect: '/profile'
+  },
+  {
+    path: '/dashboard',
     component: Layout,
-    redirect: '/profile',
+    redirect: '/dashboard/index',
     children: [
       {
-        path: 'dashboard',
+        path: 'index',
         component: () => import('@/views/dashboard/index'),
         name: 'Dashboard',
         meta: { title: 'Dashboard', icon: 'dashboard', affix: true }
@@ -96,6 +106,7 @@ export const constantRoutes = [
   {
     path: '/documentation',
     component: Layout,
+    redirect: '/documentation/index',
     children: [
       {
         path: 'index',
@@ -122,7 +133,6 @@ export const constantRoutes = [
     path: '/profile',
     component: Layout,
     redirect: '/profile/index',
-    hidden: true,
     children: [
       {
         path: 'index',

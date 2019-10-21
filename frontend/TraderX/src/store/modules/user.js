@@ -1,4 +1,4 @@
-import { login, getInfo, logout, register } from '@/api/user'
+import { login, getInfo, logout, register, confirm } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
 
@@ -116,10 +116,21 @@ const actions = {
     })
   },
 
-  register({ commit }, userInfo) {
+  // user registration
+  register({ commit }, data) {
     return new Promise((resolve, reject) => {
-      register(userInfo).then(() => {
-        resolve('Registered successfully, ')
+      register(data).then(() => {
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+
+  confirm({ dispatch }, query) {
+    return new Promise((resolve, reject) => {
+      confirm(query).then(() => {
+        resolve()
       }).catch(error => {
         reject(error)
       })
