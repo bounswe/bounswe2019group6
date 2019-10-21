@@ -124,7 +124,6 @@ const actions = {
       resolve()
     })
   },
-
   // user registration
   register({ commit }, data) {
     return new Promise((resolve, reject) => {
@@ -145,7 +144,6 @@ const actions = {
       })
     })
   },
-
   // TODO this is deprecated, will be removed
   // dynamically modify permissions
   changeRoles({ commit, dispatch }, role) {
