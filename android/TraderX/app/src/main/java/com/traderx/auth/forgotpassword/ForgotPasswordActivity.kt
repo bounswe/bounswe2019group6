@@ -1,4 +1,4 @@
-package com.traderx.activity
+package com.traderx.auth.forgotpassword
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.traderx.MainActivity
 import com.traderx.R
 
-class ForgotPassActivity: AppCompatActivity() {
+class ForgotPasswordActivity: AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
