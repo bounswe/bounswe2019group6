@@ -1,74 +1,66 @@
 <template>
-  <div class="login-container">
-    <el-form
-      ref="loginForm"
-      :model="loginForm"
-      :rules="loginRules"
-      class="login-form"
-      autocomplete="on"
-      label-position="left"
-    >
-      <div class="title-container">
-        <h3 class="title">
-          Login Form
-        </h3>
-      </div>
-
-      <el-form-item prop="username">
-        <span class="svg-container">
-          <svg-icon icon-class="user" />
-        </span>
-        <el-input
-          ref="username"
-          v-model="loginForm.username"
-          placeholder="Username"
-          name="username"
-          type="text"
-          tabindex="1"
-          autocomplete="on"
-        />
-      </el-form-item>
-
-      <el-tooltip
-        v-model="capsTooltip"
-        content="Caps lock is On"
-        placement="right"
-        manual
+  <body>
+    <div class="login-container">
+      <el-form
+        ref="loginForm"
+        :model="loginForm"
+        :rules="loginRules"
+        class="login-form"
+        autocomplete="on"
+        label-position="left"
       >
-        <el-form-item prop="password">
+        <div class="title-container">
+          <h3 class="title">
+            Login Form
+          </h3>
+        </div>
+
+        <el-form-item prop="username">
           <span class="svg-container">
-            <svg-icon icon-class="password" />
+            <svg-icon icon-class="user" />
           </span>
           <el-input
-            :key="passwordType"
-            ref="password"
-            v-model="loginForm.password"
-            :type="passwordType"
-            placeholder="Password"
-            name="password"
-            tabindex="2"
+            ref="username"
+            v-model="loginForm.username"
+            placeholder="Username"
+            name="username"
+            type="text"
+            tabindex="1"
             autocomplete="on"
-            @keyup.native="checkCapslock"
-            @blur="capsTooltip = false"
-            @keyup.enter.native="handleLogin"
           />
-          <span
-            class="show-pwd"
-            @click="showPwd"
-          >
-            <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
-          </span>
         </el-form-item>
-      </el-tooltip>
 
-      <el-button
-        :loading="loading"
-        type="primary"
-        style="width:100%;margin-bottom:30px;"
-        @click.native.prevent="handleLogin"
-      >
-        Login
-      </el-button>
+        <el-tooltip
+          v-model="capsTooltip"
+          content="Caps lock is On"
+          placement="right"
+          manual
+        >
+          <el-form-item prop="password">
+            <span class="svg-container">
+              <svg-icon icon-class="password" />
+            </span>
+            <el-input
+              :key="passwordType"
+              ref="password"
+              v-model="loginForm.password"
+              :type="passwordType"
+              placeholder="Password"
+              name="password"
+              tabindex="2"
+              autocomplete="on"
+              @keyup.native="checkCapslock"
+              @blur="capsTooltip = false"
+              @keyup.enter.native="handleLogin"
+            />
+            <span
+              class="show-pwd"
+              @click="showPwd"
+            >
+              <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
+            </span>
+          </el-form-item>
+        </el-tooltip>
 
       <div>
         <el-button
@@ -88,23 +80,33 @@
           Register
         </el-button>
 
-        <!-- <el-button style='float: right' class="thirdparty-button" type="primary" @click="showDialog=true">
-          Or connect with
-        </el-button> -->
-      </div>
-    </el-form>
+          <el-button
+            style="float: right"
+            class="thirdparty-button"
+            type="primary"
+            @click="redirectRegister"
+          >
+            Register
+          </el-button>
 
-    <el-dialog
-      title="Or connect with"
-      :visible.sync="showDialog"
-    >
-      Can not be simulated on local, so please combine you own business simulation! ! !
-      <br>
-      <br>
-      <br>
-      <social-sign />
-    </el-dialog>
-  </div>
+          <!-- <el-button style='float: right' class="thirdparty-button" type="primary" @click="showDialog=true">
+            Or connect with
+          </el-button> -->
+        </div>
+      </el-form>
+
+      <el-dialog
+        title="Or connect with"
+        :visible.sync="showDialog"
+      >
+        Can not be simulated on local, so please combine you own business simulation! ! !
+        <br>
+        <br>
+        <br>
+        <social-sign />
+      </el-dialog>
+    </div>
+  </body>
 </template>
 
 <script>
@@ -207,7 +209,6 @@ export default {
               this.loading = false
             })
         } else {
-          console.log('error submit!!')
           return false
         }
       })
@@ -234,14 +235,25 @@ export default {
 /* 修复input 背景不协调 和光标变色 */
 /* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
 
-$bg:#283443;
-$light_gray:#fff;
-$cursor: #fff;
+/*$bg:#283443;
+$light_gray:#fff;*/
+$cursor: #424646;
+$bg:#2d3a4b;
+$dark_gray: #424646;
+$light_gray:#eee;
 
 @supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
   .login-container .el-input input {
     color: $cursor;
   }
+}
+
+body {
+  background: url("https://thewallpaper.co//wp-content/uploads/2016/03/black-and-white-city-houses-skyline-landscape-amazing-city-view-beautiful-place-wallpaper-free-city-photos-best-town-city-images-for-windows-large-places-background-1600x1024.jpg") no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
 }
 
 /* reset element-ui css */
@@ -257,7 +269,7 @@ $cursor: #fff;
       -webkit-appearance: none;
       border-radius: 0px;
       padding: 12px 5px 12px 15px;
-      color: $light_gray;
+      color: $dark_gray;
       height: 47px;
       caret-color: $cursor;
 
@@ -266,6 +278,26 @@ $cursor: #fff;
         -webkit-text-fill-color: $cursor !important;
       }
     }
+  }
+
+  .el-button {
+    /*padding: 15px 32px;
+    text-align: center;*/
+    transition-duration: 0.4s;
+    /*margin: 16px;*/
+    text-decoration: none;
+    font-size: 15px;
+    cursor: pointer;
+    color: $light_gray;
+    border: 2px solid $dark_gray;
+    border-radius: 4px;
+    background-color: $dark_gray;
+  }
+
+  .el-button:hover {
+    background-color: #f6f7f7; /*very light gray*/
+    color: $dark_gray;
+    border-color: #e7e7e7;
   }
 
   .el-form-item {
@@ -279,13 +311,13 @@ $cursor: #fff;
 
 <style lang="scss" scoped>
 $bg:#2d3a4b;
-$dark_gray:#889aa4;
+$dark_gray: #424646;
 $light_gray:#eee;
 
 .login-container {
   min-height: 100%;
   width: 100%;
-  background-color: $bg;
+  /*background-color: $bg;*/
   overflow: hidden;
 
   .login-form {
@@ -322,12 +354,14 @@ $light_gray:#eee;
 
     .title {
       font-size: 26px;
-      color: $light_gray;
+      color: $dark_gray;
       margin: 0px auto 40px auto;
       text-align: center;
       font-weight: bold;
     }
   }
+
+  
 
   .show-pwd {
     position: absolute;

@@ -1,151 +1,188 @@
 <template>
-  <div class="sign-up-container">
-    <el-form ref="signupForm" :model="signupForm" :rules="signupRules" class="sign-up-form" autocomplete="on" label-position="left">
+  <body>
+    <div class="sign-up-container">
+      <el-form
+        ref="signupForm"
+        :model="signupForm"
+        :rules="signupRules"
+        class="sign-up-form"
+        autocomplete="on"
+        label-position="left"
+      >
+        <div class="title-container">
+          <h3 class="title">
+            Sign Up
+          </h3>
+        </div>
 
-      <div class="title-container">
-        <h3 class="title">Sign Up</h3>
-      </div>
-
-      <el-form-item prop="email">
-        <span class="svg-container">
-          <svg-icon icon-class="email" />
-        </span>
-        <el-input
-          ref="email"
-          v-model="signupForm.email"
-          placeholder="Email"
-          name="email"
-          type="text"
-          tabindex="1"
-          autocomplete="on"
-        />
-      </el-form-item>
-
-      <el-form-item prop="username">
-        <span class="svg-container">
-          <svg-icon icon-class="user" />
-        </span>
-        <el-input
-          ref="username"
-          v-model="signupForm.username"
-          placeholder="Username"
-          name="username"
-          type="text"
-          tabindex="2"
-          autocomplete="on"
-        />
-      </el-form-item>
-
-      <el-tooltip v-model="capsTooltip" content="Caps lock is ON" placement="right" manual>
-        <el-form-item prop="password">
+        <el-form-item prop="email">
           <span class="svg-container">
-            <svg-icon icon-class="password" />
+            <svg-icon icon-class="email" />
           </span>
           <el-input
-            :key="passwordType"
-            ref="password"
-            v-model="signupForm.password"
-            :type="passwordType"
-            placeholder="Password"
-            name="password"
-            tabindex="3"
-            autocomplete="on"
-            @keyup.native="checkCapslock"
-            @blur="capsTooltip = false"
-            @keyup.enter.native="handleSignup"
-          />
-          <span class="show-pwd" @click="showPwd">
-            <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
-          </span>
-        </el-form-item>
-      </el-tooltip>
-
-      <el-form-item prop="latitude">
-        <span class="svg-container">
-          <svg-icon icon-class="international" />
-        </span>
-        <el-input
-          ref="latitude"
-          v-model="signupForm.latitude"
-          placeholder="Latitude"
-          name="latitude"
-          type="text"
-          tabindex="4"
-          autocomplete="on"
-        />
-      </el-form-item>
-
-      <el-form-item prop="longitude">
-        <span class="svg-container">
-          <svg-icon icon-class="international" />
-        </span>
-        <el-input
-          ref="longitude"
-          v-model="signupForm.longitude"
-          placeholder="Longitude"
-          name="longitude"
-          type="text"
-          tabindex="5"
-          autocomplete="on"
-        />
-      </el-form-item>
-
-      <div style="margin-bottom: 22px; margin-left: 10px;">
-        <el-checkbox v-model="signupForm.isPrivate">
-          Make your profile private!
-        </el-checkbox>
-      </div>
-
-      <div style="margin-bottom: 22px">
-        <el-radio-group v-model="isTrader" style="padding: 10px;">
-          <el-radio :label="false">
-            Basic
-          </el-radio>
-          <el-radio :label="true">
-            Trader
-          </el-radio>
-        </el-radio-group>
-
-        <el-form-item v-if="isTrader" prop="iban">
-          <span class="svg-container">
-            <svg-icon icon-class="money" />
-          </span>
-          <el-input
-            ref="iban"
-            v-model="signupForm.iban"
-            placeholder="IBAN"
-            name="iban"
+            ref="email"
+            v-model="signupForm.email"
+            placeholder="Email"
+            name="email"
             type="text"
-            tabindex="6"
+            tabindex="1"
             autocomplete="on"
           />
         </el-form-item>
-      </div>
 
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleSignup">Register</el-button>
+        <el-form-item prop="username">
+          <span class="svg-container">
+            <svg-icon icon-class="user" />
+          </span>
+          <el-input
+            ref="username"
+            v-model="signupForm.username"
+            placeholder="Username"
+            name="username"
+            type="text"
+            tabindex="2"
+            autocomplete="on"
+          />
+        </el-form-item>
 
-      <div style="position:relative">
-        <div class="tips">
-          <span>Username : 3-20 characters</span>
+        <el-tooltip
+          v-model="capsTooltip"
+          content="Caps lock is ON"
+          placement="right"
+          manual
+        >
+          <el-form-item prop="password">
+            <span class="svg-container">
+              <svg-icon icon-class="password" />
+            </span>
+            <el-input
+              :key="passwordType"
+              ref="password"
+              v-model="signupForm.password"
+              :type="passwordType"
+              placeholder="Password"
+              name="password"
+              tabindex="3"
+              autocomplete="on"
+              @keyup.native="checkCapslock"
+              @blur="capsTooltip = false"
+              @keyup.enter.native="handleSignup"
+            />
+            <span
+              class="show-pwd"
+              @click="showPwd"
+            >
+              <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
+            </span>
+          </el-form-item>
+        </el-tooltip>
+
+        <el-form-item prop="latitude">
+          <span class="svg-container">
+            <svg-icon icon-class="international" />
+          </span>
+          <el-input
+            ref="latitude"
+            v-model="signupForm.latitude"
+            placeholder="Latitude"
+            name="latitude"
+            type="text"
+            tabindex="4"
+            autocomplete="on"
+          />
+        </el-form-item>
+
+        <el-form-item prop="longitude">
+          <span class="svg-container">
+            <svg-icon icon-class="international" />
+          </span>
+          <el-input
+            ref="longitude"
+            v-model="signupForm.longitude"
+            placeholder="Longitude"
+            name="longitude"
+            type="text"
+            tabindex="5"
+            autocomplete="on"
+          />
+        </el-form-item>
+
+        <div style="margin-bottom: 22px; margin-left: 10px;">
+          <el-checkbox v-model="signupForm.isPrivate">
+            Make your profile private!
+          </el-checkbox>
         </div>
-        <div class="tips">
-          <span>Password : At least 6 characters</span>
+
+        <div style="margin-bottom: 22px">
+          <el-radio-group
+            v-model="isTrader"
+            style="padding: 10px;"
+          >
+            <el-radio :label="false">
+              Basic
+            </el-radio>
+            <el-radio :label="true">
+              Trader
+            </el-radio>
+          </el-radio-group>
+
+          <el-form-item
+            v-if="isTrader"
+            prop="iban"
+          >
+            <span class="svg-container">
+              <svg-icon icon-class="money" />
+            </span>
+            <el-input
+              ref="iban"
+              v-model="signupForm.iban"
+              placeholder="IBAN"
+              name="iban"
+              type="text"
+              tabindex="6"
+              autocomplete="on"
+            />
+          </el-form-item>
         </div>
+        <el-button
+          :loading="loading"
+          type="primary"
+          style="width:100%;margin-bottom:30px;"
+          @click.native.prevent="handleSignup"
+        >
+          Register
+        </el-button>
 
-        <!-- <el-button class="thirdparty-button" type="primary" @click="showDialog=true">
-          Or connect with
-        </el-button> -->
-      </div>
-    </el-form>
+        <div style="position:relative">
+          <div class="tips">
+            <span>Username : 3-20 characters</span>
+          </div>
+          <div class="tips">
+            <span>Password : At least 6 characters</span>
+          </div>
 
-    <el-dialog title="Or connect with" :visible.sync="showDialog">
-      Can not be simulated on local, so please combine you own business simulation! ! !
-      <br>
-      <br>
-      <br>
-      <social-sign />
-    </el-dialog>
-  </div>
+          <el-button
+            class="thirdparty-button"
+            type="primary"
+            @click="showDialog=true"
+          >
+            Or connect with
+          </el-button>
+        </div>
+      </el-form>
+
+      <el-dialog
+        title="Or connect with"
+        :visible.sync="showDialog"
+      >
+        Can not be simulated on local, so please combine you own business simulation! ! !
+        <br>
+        <br>
+        <br>
+        <social-sign />
+      </el-dialog>
+    </div>
+  </body>
 </template>
 
 <script>
@@ -293,7 +330,6 @@ export default {
               this.loading = false
             })
         } else {
-          console.log('error submit!!')
           return false
         }
       })
@@ -305,10 +341,13 @@ export default {
 <style lang="scss">
   /* 修复input 背景不协调 和光标变色 */
   /* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
-
+/*
   $bg:#283443;
-  $light_gray:#fff;
-  $cursor: #fff;
+  $light_gray:#fff;*/
+  $cursor: #424646;
+  $bg:#2d3a4b;
+  $dark_gray: #424646;
+  $light_gray:#eee;
 
   @supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
     .sign-up-container .el-input input {
@@ -316,11 +355,19 @@ export default {
     }
   }
 
+  body {
+    background: url("https://thewallpaper.co//wp-content/uploads/2016/03/black-and-white-city-houses-skyline-landscape-amazing-city-view-beautiful-place-wallpaper-free-city-photos-best-town-city-images-for-windows-large-places-background-1600x1024.jpg") no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+  }
+
   /* reset element-ui css */
   .sign-up-container {
     .el-input {
       display: inline-block;
-      height: 47px;
+      height: 40px;
       width: 85%;
 
       input {
@@ -329,7 +376,7 @@ export default {
         -webkit-appearance: none;
         border-radius: 0px;
         padding: 12px 5px 12px 15px;
-        color: $light_gray;
+        color: $dark_gray;
         height: 47px;
         caret-color: $cursor;
 
@@ -340,24 +387,59 @@ export default {
       }
     }
 
+    .el-button {
+      /*padding: 15px 32px;
+      text-align: center;*/
+      transition-duration: 0.4s;
+      /*margin: 16px;*/
+      text-decoration: none;
+      font-size: 15px;
+      cursor: pointer;
+      color: $light_gray;
+      border: 2px solid $dark_gray;
+      border-radius: 4px;
+      background-color: $dark_gray;
+    }
+
+    .el-button:hover {
+      background-color: #f6f7f7; /*very light gray*/
+      color: $dark_gray;
+      border-color: #e7e7e7;
+    }
+
     .el-form-item {
       border: 1px solid rgba(255, 255, 255, 0.1);
       background: rgba(0, 0, 0, 0.1);
       border-radius: 5px;
       color: #454545;
     }
+
+
+    .el-radio {
+      /*-webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      display: inline-block;*/
+      /*background-color: #f1f1f1;*/
+      color: $dark_gray;
+      border: 0;
+      border-radius: 50px;
+      cursor: pointer;     
+      outline: none;
+    }
+
   }
 </style>
 
 <style lang="scss" scoped>
-  $bg:#2d3a4b;
-  $dark_gray:#889aa4;
-  $light_gray:#eee;
+$bg:#2d3a4b;
+$dark_gray: #424646;
+$light_gray:#eee;
 
   .sign-up-container {
     min-height: 100%;
     width: 100%;
-    background-color: $bg;
+    /*background-color: $bg;*/
     overflow: hidden;
 
     .sign-up-form {
@@ -371,7 +453,7 @@ export default {
 
     .tips {
       font-size: 14px;
-      color: #fff;
+      color: #dark_gray;
       margin-bottom: 10px;
 
       span {
@@ -394,7 +476,7 @@ export default {
 
       .title {
         font-size: 26px;
-        color: $light_gray;
+        color: $dark_gray;
         margin: 0px auto 40px auto;
         text-align: center;
         font-weight: bold;
