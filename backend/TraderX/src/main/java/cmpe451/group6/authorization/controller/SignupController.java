@@ -41,7 +41,7 @@ public class SignupController {
                 @ApiResponse(code = 412, message = "Value does not match regex."),
                 @ApiResponse(code = 500, message = "Failed to send verification email.")})
         public StringResponseWrapper signup(@ApiParam("Signup User") @RequestBody UserDataDTO user) {
-            return new StringResponseWrapper(signupService.signup(modelMapper.map(user, User.class)));
+            return new StringResponseWrapper(signupService.signup(modelMapper.map(user, User.class),user.getAppSecret()));
         }
 
 }

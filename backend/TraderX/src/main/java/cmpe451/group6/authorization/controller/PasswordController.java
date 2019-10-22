@@ -1,5 +1,7 @@
 package cmpe451.group6.authorization.controller;
 
+import cmpe451.group6.authorization.dto.LoginInfoDTO;
+import cmpe451.group6.authorization.dto.PasswordDTO;
 import cmpe451.group6.authorization.dto.StringResponseWrapper;
 import cmpe451.group6.authorization.exception.GlobalExceptionHandlerController;
 import cmpe451.group6.authorization.service.PasswordService;
@@ -36,23 +38,22 @@ public class PasswordController {
             @ApiResponse(code = 400, message = GlobalExceptionHandlerController.GENERIC_ERROR_RESPONSE),
             @ApiResponse(code = 403, message = "Invalid or expired Token")})
     public StringResponseWrapper renewPassword(
-                                @ApiParam("Token") @RequestParam String token,
-                                @ApiParam("Password") @RequestParam String newPassword) {
-
-        return new StringResponseWrapper(passwordService.setNewPassword(token,newPassword));
+            @ApiParam("New password and Token") @RequestBody PasswordDTO passwordDTO) {
+        return new StringResponseWrapper(passwordService.setNewPassword(passwordDTO.getToken()
+                ,passwordDTO.getNewPassword()));
     }
 
     @PostMapping("/change")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_BASIC') or hasRole('ROLE_TRADER')")
-    @ApiOperation(value = "Resets the password via user token.")
+    @ApiOperation(value = "Resets the password via user token. (without email)")
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = GlobalExceptionHandlerController.GENERIC_ERROR_RESPONSE),
             @ApiResponse(code = 403, message = "Invalid or expired Token"),
             @ApiResponse(code = 417, message = "Password does not conform to restrictions.")})
     public StringResponseWrapper changePassword(HttpServletRequest req,
-            @ApiParam("New Password") @RequestParam String newPassword) {
-        return new StringResponseWrapper(passwordService.changePassword(req,newPassword));
+            @ApiParam("New password. Leave token field empty.") @RequestBody PasswordDTO passwordDTO) {
+        return new StringResponseWrapper(passwordService.changePassword(req,passwordDTO.getNewPassword()));
     }
 
 

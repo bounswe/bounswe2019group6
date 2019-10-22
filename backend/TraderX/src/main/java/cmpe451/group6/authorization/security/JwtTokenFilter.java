@@ -73,7 +73,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         User user = userRepository.findByUsername(jwtTokenProvider.getUsername(token));
 
         // Check if user has been activated the account via Email or Google
-        if(user.getStatus() == RegistrationStatus.PENDING){
+        if(user.getRegistrationStatus() == RegistrationStatus.PENDING){
           // account is not validated yet. Return error response.
 
           // Comment out the next line if you want to disable verification via mail. (FOR THE EASE OF DEVELOPMENT ONLY)
