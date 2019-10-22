@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import cmpe451.group6.authorization.exception.CustomException;
 import cmpe451.group6.authorization.model.Role;
-import cmpe451.group6.authorization.repository.UserRepository;
+import cmpe451.group6.authorization.service.HazelcastService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -43,6 +43,9 @@ public class JwtTokenProvider {
   @Autowired
   private CustomizedUserDetails customizedUserDetails;
 
+  @Autowired
+  private HazelcastService hazelcastService;
+
   @PostConstruct
   protected void init() {
     secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
@@ -50,18 +53,27 @@ public class JwtTokenProvider {
 
   public String createToken(String username, List<Role> roles) {
 
+    if(hazelcastService.whiteTokensCount(username) > 10){
+      throw new CustomException("More than 10 active tokens exist for that user. The account is banned from" +
+              "the system for 30 minutes.", HttpStatus.TOO_MANY_REQUESTS);
+    }
+
     Claims claims = Jwts.claims().setSubject(username);
     claims.put("auth", roles.stream().map(s -> new SimpleGrantedAuthority(s.getAuthority())).filter(Objects::nonNull).collect(Collectors.toList()));
 
     Date now = new Date();
     Date validity = new Date(now.getTime() + validityInMilliseconds);
 
-    return Jwts.builder()//
+    String token =  Jwts.builder()//
         .setClaims(claims)//
         .setIssuedAt(now)//
         .setExpiration(validity)//
         .signWith(SignatureAlgorithm.HS256, secretKey)//
         .compact();
+
+    hazelcastService.putWhiteToken(token, username);
+
+    return token;
   }
 
   public Authentication getAuthentication(String token) {

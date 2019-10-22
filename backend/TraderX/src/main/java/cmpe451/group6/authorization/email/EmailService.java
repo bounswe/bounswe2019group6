@@ -1,5 +1,6 @@
 package cmpe451.group6.authorization.email;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import javax.mail.*;
 import javax.mail.internet.*;
@@ -10,11 +11,15 @@ import java.util.Properties;
 @Service
 public class EmailService {
 
+    @Autowired
+    EmailServiceConfig emailServiceConfig;
+
     public void sendmail(String receiverAdress, String subject, String content, String mimeContent, String attachFilePath) throws  MessagingException, IOException {
 
-        String sender = EmailServiceConfig.getSenderAdress();
-        String senderPw = EmailServiceConfig.getSenderPassword();
-        Properties props = EmailServiceConfig.getProps();
+
+        String sender = emailServiceConfig.getSenderAdress();
+        String senderPw = emailServiceConfig.getSenderPassword();
+        Properties props = emailServiceConfig.getProps();
 
         Session session = Session.getInstance(props, new javax.mail.Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {

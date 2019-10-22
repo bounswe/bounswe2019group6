@@ -5,7 +5,9 @@ import javax.servlet.http.HttpServletRequest;
 import cmpe451.group6.authorization.dto.StringResponseWrapper;
 import cmpe451.group6.authorization.dto.TokenWrapperDTO;
 import cmpe451.group6.authorization.dto.UserResponseDTO;
+import cmpe451.group6.authorization.dto.PrivateProfileDTO;
 import cmpe451.group6.authorization.exception.GlobalExceptionHandlerController;
+import cmpe451.group6.authorization.model.User;
 import cmpe451.group6.authorization.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,8 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/users")
@@ -43,15 +47,15 @@ public class UserController {
     return new StringResponseWrapper(username);
   }
 
-  @GetMapping(value = "/{username}")
-  @PreAuthorize("hasRole('ROLE_ADMIN')")
+  @GetMapping(value = "/profile/{username}")
   @ResponseStatus(HttpStatus.OK)
-  @ApiOperation(value = "Gets profile of the given user (for admin user only).", response = UserResponseDTO.class)
+  @ApiOperation(value = "Gets profile of the given user.(No token required)", response = UserResponseDTO.class)
   @ApiResponses(value = {
       @ApiResponse(code = 400, message = "Something went wrong on the serverside"),
       @ApiResponse(code = 422, message = "The user doesn't exist")})
-  public UserResponseDTO search(@ApiParam("Username") @PathVariable String username) {
-    return modelMapper.map(userService.searchUser(username), UserResponseDTO.class);
+  public Object search(@ApiParam("Username") @PathVariable String username) {
+    User user = userService.searchUser(username);
+    return modelMapper.map(user, user.getIsPrivate() ? PrivateProfileDTO.class : UserResponseDTO.class);
   }
 
   @GetMapping(value = "/me")
@@ -70,8 +74,29 @@ public class UserController {
   @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_BASIC') or hasRole('ROLE_TRADER')")
   @ApiOperation(value = "Returns a new token for the user.", response = String.class)
   public TokenWrapperDTO refresh(HttpServletRequest req) {
-    return userService.refreshToken(req.getRemoteUser());
+    return userService.refreshToken(req.getRemoteUser(),req);
   }
 
+  @PostMapping("/set_profile/private")
+  @ResponseStatus(HttpStatus.OK)
+  @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_BASIC') or hasRole('ROLE_TRADER')")
+  @ApiOperation(value = "Make senders profile private.", response = String.class)
+  public StringResponseWrapper makePrivate(HttpServletRequest req) {
+    return new StringResponseWrapper(userService.setPrivate(req));
+  }
 
+  @PostMapping("/set_profile/public")
+  @ResponseStatus(HttpStatus.OK)
+  @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_BASIC') or hasRole('ROLE_TRADER')")
+  @ApiOperation(value = "Make senders profile public.", response = String.class)
+  public StringResponseWrapper makePublic(HttpServletRequest req) {
+    return new StringResponseWrapper(userService.setPublic(req));
+  }
+
+  @GetMapping("/getAll")
+  @ResponseStatus(HttpStatus.OK)
+  @ApiOperation(value = "Returns all user profiles (Limited by 20 for now, No token required).", response = String.class)
+  public List<Object> getAll(HttpServletRequest req) {
+    return userService.getAll();
+  }
 }
