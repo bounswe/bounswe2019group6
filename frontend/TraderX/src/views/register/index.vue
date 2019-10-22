@@ -153,6 +153,24 @@
           Register
         </el-button>
 
+        <div>
+          <el-button
+            class="thirdparty-button"
+            type="primary"
+            @click="redirectHome"
+          >
+            Home
+          </el-button>
+
+          <el-button
+            style="float: right"
+            class="thirdparty-button"
+            type="primary"
+            @click="redirectLogin"
+          >
+            Login
+          </el-button>
+
         <!-- <div style="position:relative">
           <div class="tips">
             <span>Username : 3-20 characters</span>
@@ -169,6 +187,7 @@
             Or connect with
           </el-button>
         </div> -->
+        </div>
       </el-form>
 
       <el-dialog
@@ -333,6 +352,12 @@ export default {
           return false
         }
       })
+    }, 
+    redirectLogin() {
+      this.$router.push({ path: '/login'})
+    },
+    redirectHome() {
+      this.$router.push({ path: '/home'})
     }
   }
 }
@@ -493,11 +518,11 @@ $light_gray:#eee;
       user-select: none;
     }
 
-    .thirdparty-button {
+    /*.thirdparty-button {
       position: absolute;
       right: 0;
       bottom: 6px;
-    }
+    }*/
 
     @media only screen and (max-width: 470px) {
       .thirdparty-button {
