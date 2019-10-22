@@ -8,7 +8,7 @@ import getPageTitle from '@/utils/get-page-title'
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
-const whiteList = ['/login', '/auth-redirect'] // no redirect whitelist
+const whiteList = ['/login', '/auth-redirect', '/register', '/register/confirm', '/home'] // no redirect whitelist
 
 router.beforeEach(async(to, from, next) => {
   // start progress bar
@@ -22,8 +22,8 @@ router.beforeEach(async(to, from, next) => {
 
   if (hasToken) {
     if (to.path === '/login') {
-      // if is logged in, redirect to the home page
-      next({ path: '/' })
+      // if is logged in, redirect to the profile page
+      next({ path: '/profile' })
       NProgress.done()
     } else {
       // determine whether the user has obtained his permission roles through getInfo
@@ -32,8 +32,9 @@ router.beforeEach(async(to, from, next) => {
         next()
       } else {
         try {
+          // TODO this behavior will be changed so that different routes will be added to router according to user role
           // get user info
-          // note: roles must be a object array! such as: ['admin'] or ,['developer','editor']
+          // note: roles must be a object array! such as: ['basic'] or ,['trader']
           const { roles } = await store.dispatch('user/getInfo')
 
           // generate accessible routes map based on roles
@@ -44,7 +45,7 @@ router.beforeEach(async(to, from, next) => {
 
           // hack method to ensure that addRoutes is complete
           // set the replace: true, so the navigation will not leave a history record
-          next({ ...to, replace: true })
+          next({ path: '/profile' })
         } catch (error) {
           // remove token and go to login page to re-login
           await store.dispatch('user/resetToken')
@@ -55,7 +56,7 @@ router.beforeEach(async(to, from, next) => {
       }
     }
   } else {
-    /* has no token*/
+    /* has no token */
 
     if (whiteList.indexOf(to.path) !== -1) {
       // in the free login whitelist, go directly

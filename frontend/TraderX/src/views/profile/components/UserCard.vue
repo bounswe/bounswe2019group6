@@ -1,51 +1,51 @@
 <template>
   <el-card style="margin-bottom:20px;">
-    <div slot="header" class="clearfix">
+    <div
+      slot="header"
+      class="clearfix"
+    >
       <span>About me</span>
     </div>
-
     <div class="user-profile">
       <div class="box-center">
-        <pan-thumb :image="user.avatar" :height="'100px'" :width="'100px'" :hoverable="false">
-          <div>Hello</div>
-          {{ user.role }}
-        </pan-thumb>
+        <pan-thumb
+          :image="randomImage"
+          :height="'100px'"
+          :width="'100px'"
+          :hoverable="false"
+        />
       </div>
       <div class="box-center">
-        <div class="user-name text-center">{{ user.name }}</div>
-        <div class="user-role text-center text-muted">{{ user.role | uppercaseFirst }}</div>
-      </div>
-    </div>
-
-    <div class="user-bio">
-      <div class="user-education user-bio-section">
-        <div class="user-bio-section-header"><svg-icon icon-class="education" /><span>Education</span></div>
-        <div class="user-bio-section-body">
-          <div class="text-muted">
-            JS in Computer Science from the University of Technology
-          </div>
+        <div class="user-name text-center">
+          {{ user.username }}
         </div>
       </div>
-
-      <div class="user-skills user-bio-section">
-        <div class="user-bio-section-header"><svg-icon icon-class="skill" /><span>Skills</span></div>
+    </div>
+    <div class="user-bio">
+      <div class="user-personal-info user-bio-section">
+        <div class="user-bio-section-header">
+          <svg-icon icon-class="user" /><span>Personal Info</span>
+        </div>
         <div class="user-bio-section-body">
-          <div class="progress-item">
-            <span>Vue</span>
-            <el-progress :percentage="70" />
+          <div class="user-stats">
+            <p><b>Follower:</b> 0</p>
+            <p><b>Following:</b> 0</p>
+            <p><b>Articles:</b> 0</p>
+            <p><b>Comments:</b> 0</p>
           </div>
-          <div class="progress-item">
-            <span>JavaScript</span>
-            <el-progress :percentage="18" />
+          <div class="user-type">
+            <p><b>User Type:</b> {{ user.roles[0] }}</p>
           </div>
-          <div class="progress-item">
-            <span>Css</span>
-            <el-progress :percentage="12" />
-          </div>
-          <div class="progress-item">
-            <span>ESLint</span>
-            <el-progress :percentage="100" status="success" />
-          </div>
+          <p><b>IBAN:</b> {{ user.iban }}</p>
+          <p><b>Location:</b> Tokyo</p>
+          <el-switch
+            v-model="user.isPrivate"
+            active-color="#13ce66"
+            inactive-color="#ff4949"
+            style="float: left"
+            active-text="Public"
+            inactive-text="Private"
+          />
         </div>
       </div>
     </div>
@@ -54,22 +54,18 @@
 
 <script>
 import PanThumb from '@/components/PanThumb'
+import { randomImage } from '@/utils'
 
 export default {
   components: { PanThumb },
-  props: {
-    user: {
-      type: Object,
-      default: () => {
-        return {
-          name: '',
-          email: '',
-          avatar: '',
-          roles: ''
-        }
-      }
+  data() {
+    return {
+      user: this.$store.getters.userInfo
     }
-  }
+  },
+  computed: {
+    randomImage
+  },
 }
 </script>
 
