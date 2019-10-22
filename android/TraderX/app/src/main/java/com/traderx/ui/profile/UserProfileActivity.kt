@@ -1,14 +1,13 @@
-package com.traderx.activity
+package com.traderx.ui.profile
 
-
-import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
 import com.traderx.R
 
-class RegisterActivity: AppCompatActivity() {
+class UserProfileActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.layout_register_activity)
+        setContentView(R.layout.activity_user_profile)
     }
 }
