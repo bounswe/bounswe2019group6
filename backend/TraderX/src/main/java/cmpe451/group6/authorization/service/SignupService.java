@@ -144,7 +144,7 @@ public class SignupService {
     }
 
     private String buildVerificationURL(String token){
-        return baseURL+":"+port+"/"+verificationPath+"?token="+token;
+        return baseURL+"/"+verificationPath+"?token="+token;
     }
 
     private void validateUserData(User user) {
