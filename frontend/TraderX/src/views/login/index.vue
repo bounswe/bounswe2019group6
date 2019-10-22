@@ -62,23 +62,23 @@
           </el-form-item>
         </el-tooltip>
 
-      <div>
         <el-button
-          class="thirdparty-button"
+          :loading="loading"
           type="primary"
-          @click="redirectHome"
+          style="width:100%;margin-bottom:30px;"
+          @click.native.prevent="handleLogin"
         >
-          Home
+          Login
         </el-button>
 
-        <el-button
-          style="float: right"
-          class="thirdparty-button"
-          type="primary"
-          @click="redirectRegister"
-        >
-          Register
-        </el-button>
+        <div>
+          <el-button
+            class="thirdparty-button"
+            type="primary"
+            @click="redirectHome"
+          >
+            Home
+          </el-button>
 
           <el-button
             style="float: right"
@@ -284,7 +284,7 @@ body {
     /*padding: 15px 32px;
     text-align: center;*/
     transition-duration: 0.4s;
-    /*margin: 16px;*/
+    // margin: 16px;
     text-decoration: none;
     font-size: 15px;
     cursor: pointer;
@@ -295,7 +295,7 @@ body {
   }
 
   .el-button:hover {
-    background-color: #f6f7f7; /*very light gray*/
+    background-color: #f6f7f7;
     color: $dark_gray;
     border-color: #e7e7e7;
   }
@@ -317,7 +317,7 @@ $light_gray:#eee;
 .login-container {
   min-height: 100%;
   width: 100%;
-  /*background-color: $bg;*/
+  // background-color: $bg;
   overflow: hidden;
 
   .login-form {

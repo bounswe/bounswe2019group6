@@ -153,7 +153,7 @@
           Register
         </el-button>
 
-        <div style="position:relative">
+        <!-- <div style="position:relative">
           <div class="tips">
             <span>Username : 3-20 characters</span>
           </div>
@@ -168,7 +168,7 @@
           >
             Or connect with
           </el-button>
-        </div>
+        </div> -->
       </el-form>
 
       <el-dialog
@@ -356,7 +356,7 @@ export default {
   }
 
   body {
-    background: url("https://thewallpaper.co//wp-content/uploads/2016/03/black-and-white-city-houses-skyline-landscape-amazing-city-view-beautiful-place-wallpaper-free-city-photos-best-town-city-images-for-windows-large-places-background-1600x1024.jpg") no-repeat center center fixed;
+    background: url("https://thewallpaper.co//wp-content/uploads/2016/03/black-and-white-city-houses-skyline-landscape-amazing-city-view-beautiful-place-wallpaper-free-city-photos-best-town-city-images-for-windows-large-places-background-1600x1024.jpg") no-repeat;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -453,7 +453,7 @@ $light_gray:#eee;
 
     .tips {
       font-size: 14px;
-      color: #dark_gray;
+      color: $dark_gray;
       margin-bottom: 10px;
 
       span {
