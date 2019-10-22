@@ -62,23 +62,23 @@
           </el-form-item>
         </el-tooltip>
 
+      <div>
         <el-button
-          :loading="loading"
+          class="thirdparty-button"
           type="primary"
-          style="width:100%;margin-bottom:30px;"
-          @click.native.prevent="handleLogin"
+          @click="redirectHome"
         >
-          Login
+          Home
         </el-button>
 
-        <div>
-          <el-button
-            class="thirdparty-button"
-            type="primary"
-            @click="redirectHome"
-          >
-            Home
-          </el-button>
+        <el-button
+          style="float: right"
+          class="thirdparty-button"
+          type="primary"
+          @click="redirectRegister"
+        >
+          Register
+        </el-button>
 
           <el-button
             style="float: right"
