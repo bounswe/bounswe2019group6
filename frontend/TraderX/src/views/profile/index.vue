@@ -1,5 +1,6 @@
 <template>
   <div class="app-container">
+    <github-corner class="github-corner" />
     <div v-if="user">
       <el-row :gutter="20">
         <el-col
@@ -68,10 +69,11 @@ import Events from './components/Events'
 import News from './components/News'
 import Articles from './components/Articles'
 import Editprofile from './components/Editprofile'
+import GithubCorner from '@/components/GithubCorner'
 
 export default {
   name: 'Profile',
-  components: { UserCard, Portfolio, Explore, Events, News, Articles, Editprofile },
+  components: { UserCard, Portfolio, Explore, Events, News, Articles, Editprofile, GithubCorner },
   data() {
     return {
       user: {},
@@ -107,7 +109,7 @@ export default {
   $dark_gray: #424646;
   $light_gray:#eee;
 
-  .app-main {
+  .app-container {
     background-color: $light_gray;
   }
 </style>

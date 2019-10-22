@@ -349,11 +349,9 @@ export function removeClass(ele, cls) {
 export function randomImage() {
   const options = [
     'https://media.giphy.com/media/TU20nKsJ1h4NG/giphy.gif',
-    'https://media.giphy.com/media/GbUrFXadBryQ8/giphy.gif',
     'https://media.giphy.com/media/w461tXo03sQP6/giphy.gif',
     'http://giphygifs.s3.amazonaws.com/media/M7E5AkSXD7z4A/giphy.gif',
     'https://media2.giphy.com/media/4Mfzt937wSvV6/giphy.gif?cid=790b7611dc73df02dce3b3c85dac1fdb516f3b9c75e50ce3&rid=giphy.gif',
-    'https://media.giphy.com/media/inyqrgp9o3NUA/200.gif',
   ]
   return options[Math.floor(Math.random() * options.length)]
 }

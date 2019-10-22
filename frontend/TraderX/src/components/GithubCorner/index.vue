@@ -1,5 +1,5 @@
 <template>
-  <a href="https://github.com/PanJiaChen/vue-element-admin" target="_blank" class="github-corner" aria-label="View source on Github">
+  <a href="https://github.com/bounswe/bounswe2019group6" target="_blank" class="github-corner" aria-label="View source on Github" style="position: absolute; top: 0px; border: 0px; right: 0px; z-index:5">
     <svg
       width="80"
       height="80"
