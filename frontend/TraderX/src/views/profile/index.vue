@@ -107,7 +107,7 @@ export default {
   $dark_gray: #424646;
   $light_gray:#eee;
 
-  .app-container {
+  .app-main {
     background-color: $light_gray;
   }
 </style>
