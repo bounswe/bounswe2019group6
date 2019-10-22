@@ -100,3 +100,14 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+  $cursor: #424646;
+  $bg:#2d3a4b;
+  $dark_gray: #424646;
+  $light_gray:#eee;
+
+  .app-container {
+    background-color: $light_gray;
+  }
+</style>
