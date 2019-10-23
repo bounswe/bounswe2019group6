@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.traderx.R
 import com.traderx.api.ApiService
 import com.traderx.api.RequestService
-import com.traderx.api.ResponseHandler
+import com.traderx.api.ErrorHandler
 import io.reactivex.disposables.CompositeDisposable
 
 class UserSearchActivity : AppCompatActivity() {
@@ -22,7 +22,7 @@ class UserSearchActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_search)
 
-        requestService = ApiService.getInstance()
+        requestService = ApiService.getInstance(this)
 
         viewManager = LinearLayoutManager(this)
 
@@ -40,7 +40,7 @@ class UserSearchActivity : AppCompatActivity() {
             requestService.usersGetAll().subscribe({
                 userRecyclerView.adapter = UserSearchAdapter(it)
             }, {
-                ResponseHandler.handleError(it, this)
+                ErrorHandler.handleError(it, this)
             })
         )
     }

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_news">
+
+    <fragment
+        android:id="@+id/navigation_news"
+        android:name="com.traderx.ui.news.NewsFragment"
+        android:label="@string/title_news"
+        tools:layout="@layout/fragment_news" />
+
+    <fragment
+        android:id="@+id/navigation_trader_equipment"
+        android:name="com.traderx.ui.traderequipment.TraderEquipmentFragment"
+        android:label="@string/title_trader_equipment"
+        tools:layout="@layout/fragment_trader_equipment" />
+
+    <fragment
+        android:id="@+id/navigation_auth_user"
+        android:name="com.traderx.ui.profile.AuthUserFragment"
+        android:label="@string/title_profile"
+        tools:layout="@layout/fragment_auth_user" />
+</navigation>
