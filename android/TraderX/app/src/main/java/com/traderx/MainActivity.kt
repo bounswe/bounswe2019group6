@@ -1,30 +1,27 @@
 package com.traderx
 
-import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
-import com.traderx.ui.profile.AuthUserProfileActivity
-import com.traderx.ui.search.UserSearchActivity
+import androidx.navigation.findNavController
+import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
-
-    private lateinit var profileButton: Button
-    private lateinit var followButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        profileButton = findViewById(R.id.main_profile)
-        followButton = findViewById(R.id.main_follow)
+        val navView: BottomNavigationView = findViewById(R.id.nav_view)
 
-        profileButton.setOnClickListener {
-            startActivity(Intent(this, AuthUserProfileActivity::class.java))
-        }
+        val navController = findNavController(R.id.nav_host_fragment)
 
-        followButton.setOnClickListener {
-            startActivity(Intent(this, UserSearchActivity::class.java))
-        }
+//        Drop the support for Action Bar
+//        val appBarConfiguration =
+//            AppBarConfiguration(setOf(R.id.navigation_news, R.id.navigation_trader_equipment))
+//
+//        setupActionBarWithNavController(navController, appBarConfiguration)
+
+        navView.setupWithNavController(navController)
     }
 }

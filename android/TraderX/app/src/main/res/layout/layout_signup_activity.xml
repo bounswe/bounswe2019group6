@@ -31,7 +31,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/signup_activity_title"
+                        android:text="@string/title_signup"
                         android:textColor="#141a22"
                         android:textSize="19.2sp" />
                 </LinearLayout>
@@ -72,7 +72,7 @@
                 android:id="@+id/signup_username"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/your_username"
+                android:hint="@string/username"
                 android:inputType="text"
                 android:maxLines="1"
                 android:textAllCaps="false"
@@ -94,7 +94,7 @@
                 android:id="@+id/signup_mail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/your_mail"
+                android:hint="@string/email"
                 android:inputType="text"
                 android:maxLines="1"
                 android:textAllCaps="false"
@@ -199,7 +199,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight=".8"
-            tools:context="com.traderx.ui.signup.SignUpActivity"/>
+            tools:context="com.traderx.ui.auth.signup.SignUpActivity"/>
 
         <Button
             android:id="@+id/signup_button"

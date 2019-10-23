@@ -1,4 +1,4 @@
-package com.traderx.ui.signup
+package com.traderx.ui.auth.signup
 
 import com.google.android.gms.maps.model.Marker
 

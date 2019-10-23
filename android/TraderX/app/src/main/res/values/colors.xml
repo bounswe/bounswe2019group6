@@ -1,51 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#E74C3C</color>
-    <color name="colorPrimaryDark">#B83c30</color>
-    <color name="divider">#644d4d4d</color>
-    <color name="titleTextColor">@android:color/white</color>
-    <color name="primary">#3C515C</color>
-    <color name="primary_dark">#142E3C</color>
-    <color name="accent">#40C4FF</color>
-    <color name="white">#FFFFFFFF</color>
-    <color name="black">#FF000000</color>
-    <color name="black_20">#33000000</color>
-    <color name="white_20">#33FFFFFF</color>
-    <color name="transparent">#00000000</color>
-    <color name="obi">#01BBD6</color>
-    <color name="obi_title">#A3A3A3</color>
-    <color name="text_gray">#504f4f</color>
-    <color name="payment_green">#51a04c</color>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
 
-    <color name="trader_menu">#5a8b91</color>
-
-
-
-    <color name="text_enabled">#FFFFFFFF</color>
-    <color name="text_disabled">#4DFFFFFF</color>
-
-    <color name="icon_enabled">#FFFFFFFF</color>
-    <color name="icon_disabled">#FF63727B</color>
-
-    <color name="medium_text_enabled">#FF000000</color>
-    <color name="medium_text_disabled">#4D000000</color>
-
-    <color name="light_blue_500">#03A9F4</color>
-    <color name="cyan_500">#00BCD4</color>
-    <color name="teal_500">#009688</color>
-    <color name="green_500">#4CAF50</color>
-    <color name="light_green_500">#8BC34A</color>
-
+    <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
     <color name="txt_color">#141a22</color>
     <color name="blue">#006dff</color>
     <color name="light_gray">#6e7f8d</color>
     <color name="yellow">#f5b300</color>
-
-    <integer-array name="custom_tab_colors">
-        <item>@color/light_blue_500</item>
-        <item>@color/cyan_500</item>
-        <item>@color/teal_500</item>
-        <item>@color/green_500</item>
-        <item>@color/light_green_500</item>
-    </integer-array>
 </resources>

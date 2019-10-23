@@ -1,4 +1,4 @@
-package com.traderx.ui.signup
+package com.traderx.ui.auth.signup
 
 import org.hamcrest.core.Is.`is`
 import org.junit.Assert.assertThat

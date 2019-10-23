@@ -1,66 +1,16 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="android:navigationBarColor" tools:targetApi="21">@color/trader_menu</item>
-
-    </style>
-
-    <style name="Widget.MyApp.ActionBar" parent="Widget.AppCompat.ActionBar">
-        <item name="android:background">?colorPrimary</item>
-        <item name="theme">@style/ThemeOverlay.MyApp.ActionBar</item>
-        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
-    </style>
-
-    <style name="ThemeOverlay.MyApp.ActionBar" parent="ThemeOverlay.AppCompat.ActionBar">
-        <item name="android:textColorPrimary">@color/titleTextColor</item>
-    </style>
-
-    <style name="NotImplementedYet">
-        <item name="android:textSize">@dimen/abc_text_size_headline_material</item>
-        <item name="android:layout_centerInParent">true</item>
-        <item name="android:textAllCaps">true</item>
-    </style>
-
-    <style name="Title" parent="TextAppearance.AppCompat.Title">
-        <item name="android:textColor">@color/titleTextColor</item>
-    </style>
-
-    <style name="Title.Expanded" parent="Title">
-        <item name="android:textSize">32sp</item>
-    </style>
-
-    <style name="Title.collapsed" parent="Title">
-        <item name="android:textSize">@dimen/abc_text_size_title_material_toolbar</item>
-        <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="ViewText">
-        <item name="android:textColor">@color/titleTextColor</item>
-    </style>
-
-    <style name="DrawerNameText" parent="ViewText">
-        <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="Divider">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">1dp</item>
-        <item name="android:background">?android:attr/listDivider</item>
-    </style>
-
-
-    <style name="CustomDialogList">
-        <item name="android:textColorAlertDialogListItem">@android:color/white</item>
+        <item name="colorAccent">@color/colorAccent</item>
     </style>
 
     <style name="StyledTilEditText">
         <item name="android:theme">@style/StyledTilEditTextTheme</item>
         <item name="android:paddingTop">4dp</item>
     </style>
-
 
     <style name="StyledTilEditTextTheme">
         <item name="android:imeOptions">actionNext</item>
@@ -70,19 +20,4 @@
         <item name="android:textColorPrimary">@color/black</item>
 
     </style>
-
-
-    <style name="SCBSwitch" parent="Theme.AppCompat.Light">
-        <!-- active thumb & track color (30% transparency) -->
-        <item name="colorControlActivated">#4cd964</item>
-
-        <!-- inactive thumb color -->
-        <item name="colorSwitchThumbNormal">#f1f1f1
-        </item>
-
-        <!-- inactive track color (30% transparency) -->
-        <item name="android:colorForeground">#42221f1f
-        </item>
-    </style>
-
 </resources>
