@@ -1,11 +1,10 @@
-package com.traderx.ui.signup
+package com.traderx.ui.auth.signup
 
 
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
-import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
@@ -19,11 +18,12 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.traderx.R
-import com.traderx.activity.LoginActivity
 import com.traderx.api.ApiService
+import com.traderx.api.ErrorHandler
 import com.traderx.api.RequestService
-import com.traderx.api.ResponseHandler
 import com.traderx.api.request.SignUpRequest
+import com.traderx.ui.auth.login.LoginActivity
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import retrofit2.HttpException
 
@@ -117,27 +117,25 @@ class SignUpActivity : AppCompatActivity(), OnMapReadyCallback {
                     iban = if (ibanCheckbox.isChecked) iban.text.toString() else null
                 )
             )
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
+                    clearWarning()
 
-                    runOnUiThread {
-                        clearWarning()
-
-                        AlertDialog.Builder(this)
-                            .setMessage(getString(R.string.signup_success))
-                            .setPositiveButton("Ok", DialogInterface.OnClickListener { dialog, id ->
-                                startActivity(Intent(this, LoginActivity::class.java))
-                            }).create().show()
-                    }
+                    AlertDialog.Builder(this)
+                        .setMessage(getString(R.string.signup_success))
+                        .setPositiveButton("Ok", DialogInterface.OnClickListener { dialog, id ->
+                            startActivity(Intent(this, LoginActivity::class.java))
+                        }).create().show()
 
                 }, {
-                    if (!ResponseHandler.handleError(it, this)) {
+                    if (!ErrorHandler.handleError(it, this)) {
                         if (it is HttpException) {
                             val serializedError = it.response().errorBody()?.string() ?: ""
-                            Log.e("SignUpActivity", serializedError)
-                            val errorResponse = ResponseHandler.parseErrorMessage(serializedError)
+
+                            val errorResponse = ErrorHandler.parseErrorMessage(serializedError)
 
                             if (errorResponse.status == 422 || errorResponse.status == 412 || errorResponse.status == 500) {
-                                runOnUiThread { setWarning(errorResponse.message) }
+                                setWarning(errorResponse.message)
                             }
                         }
                     }

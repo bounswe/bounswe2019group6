@@ -15,7 +15,7 @@ object Injection {
 
     fun provideUserViewModelFactory(context: Context): UserViewModelFactory {
         val dataSource = provideUserDao(context)
-        val networkSource = ApiService.getInstance()
+        val networkSource = ApiService.getInstance(context)
         return UserViewModelFactory(dataSource, networkSource)
     }
 }
