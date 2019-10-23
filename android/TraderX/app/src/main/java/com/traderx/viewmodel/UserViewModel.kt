@@ -11,8 +11,6 @@ import com.traderx.db.UserDao
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 
 class UserViewModel(private val dataSource: UserDao, private val networkSource: RequestService) :
     ViewModel() {
