@@ -10,7 +10,7 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.traderx"
-        minSdkVersion 21
+        minSdkVersion 23
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -31,6 +31,14 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        targetCompatibility = 1.8
+        sourceCompatibility = 1.8
+    }
+
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
 }
 
 dependencies {
@@ -45,11 +53,22 @@ dependencies {
     implementation deps.support.gms
     implementation deps.support.material_design
 
+    //Navigation
+    implementation deps.navigation.ui
+    implementation deps.navigation.ktx_ui
+    implementation deps.navigation.fragment
+    implementation deps.navigation.ktx_fragment
+
     //Lifecycle
     implementation deps.lifecycle.viewmodel_ktx
 
     //Room
     implementation deps.room.runtime
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.0.0'
     kapt deps.room.compiler
     implementation deps.room.rxjava2
 
