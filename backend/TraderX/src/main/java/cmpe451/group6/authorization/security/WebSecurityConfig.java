@@ -23,6 +23,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   @Override
   protected void configure(HttpSecurity http) throws Exception {
 
+    http.cors();
+
     // Disable CSRF (cross site request forgery)
     http.csrf().disable();
 
