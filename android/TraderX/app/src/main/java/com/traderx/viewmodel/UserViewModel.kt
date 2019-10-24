@@ -19,13 +19,8 @@ class UserViewModel(private val dataSource: UserDao, private val networkSource: 
         private var userUpdated = false
     }
 
-    fun fetchUser(): Flowable<User> {
-        return networkSource.user().map { UserAdapter.adapt(it) }.toFlowable()
-    }
-
-    fun fetchAndUpdateUser(): Completable {
+    fun fetchUser(): Single<User> {
         return networkSource.user().map { UserAdapter.adapt(it) }
-            .flatMapCompletable { updateUser(it) }
     }
 
     fun user(context: Context): Single<User> {
@@ -33,10 +28,9 @@ class UserViewModel(private val dataSource: UserDao, private val networkSource: 
         val single: Single<User>
 
         if (!userUpdated && isNetworkConnected(context)) {
-            val networkUser = networkSource.user().map { UserAdapter.adapt(it) }
+            val networkUser = fetchUser()
                 .doOnSuccess {
                     updateUser(it).subscribe()
-                    userUpdated = true
                 }
 
             single = networkUser.flatMap { dataSource.getUser() }
@@ -48,7 +42,15 @@ class UserViewModel(private val dataSource: UserDao, private val networkSource: 
         return single
     }
 
+    fun deleteUser(): Completable {
+        userUpdated = false
+
+        return dataSource.deleteUser()
+    }
+
     fun updateUser(user: User): Completable {
+        userUpdated = true
+
         return dataSource.insertUser(user)
     }
 

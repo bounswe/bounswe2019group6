@@ -8,23 +8,23 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:focusableInTouchMode="true"
         android:clipToPadding="false"
+        android:focusableInTouchMode="true"
         android:orientation="vertical">
 
         <ImageView
-            android:layout_marginTop="14dp"
-            android:layout_marginRight="12dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_more"
-            android:layout_gravity="right"/>
+            android:layout_gravity="right"
+            android:layout_marginTop="14dp"
+            android:layout_marginRight="12dp"
+            android:src="@drawable/ic_more" />
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:layout_gravity="center"
             android:id="@+id/profile_image"
             android:layout_width="85dp"
             android:layout_height="95.7dp"
+            android:layout_gravity="center"
             android:src="@drawable/profile" />
 
         <TextView
@@ -48,21 +48,21 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginTop="15dp"
             android:layout_marginLeft="17dp"
+            android:layout_marginTop="15dp"
             android:layout_marginRight="17dp"
-            android:background="#33979797"/>
+            android:background="#33979797" />
 
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:elevation="5dp"
             android:layout_gravity="center"
             android:layout_marginBottom="15dp"
-            android:orientation="horizontal">
+            android:elevation="5dp"
+            android:orientation="horizontal"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -90,9 +90,9 @@
 
 
             <LinearLayout
-                android:layout_marginLeft="45dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="45dp"
                 android:orientation="vertical"
                 android:paddingBottom="13dp">
                 <!--                <TextView-->
@@ -113,9 +113,9 @@
 
 
             <LinearLayout
-                android:layout_marginLeft="45dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="45dp"
                 android:orientation="vertical"
                 android:paddingBottom="13dp">
 
@@ -140,8 +140,16 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="2.5dp"
-            android:background="@drawable/shadow"/>
+            android:layout_height="wrap_content"
+            android:background="@drawable/shadow"
+            android:orientation="vertical">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/logout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/logout"/>
+        </LinearLayout>
 
     </LinearLayout>
 

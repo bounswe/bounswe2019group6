@@ -2,22 +2,33 @@ package com.traderx.ui.profile
 
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
+import com.github.razir.progressbutton.bindProgressButton
+import com.github.razir.progressbutton.hideProgress
+import com.github.razir.progressbutton.isProgressActive
+import com.github.razir.progressbutton.showProgress
+import com.traderx.MainActivity
 import com.traderx.R
 import com.traderx.adapter.UserAdapter
+import com.traderx.api.ApiService
 import com.traderx.api.ErrorHandler
+import com.traderx.api.RequestService
 import com.traderx.util.Injection
+import com.traderx.util.TokenUtility
 import com.traderx.viewmodel.UserViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import java.net.ResponseCache
 
 class AuthUserFragment : Fragment() {
 
@@ -27,6 +38,7 @@ class AuthUserFragment : Fragment() {
     private lateinit var email: TextView
     private lateinit var role: TextView
     private lateinit var profilePrivate: TextView
+    private lateinit var requestService: RequestService
 
     private val disposable = CompositeDisposable()
 
@@ -47,9 +59,15 @@ class AuthUserFragment : Fragment() {
         role = root.findViewById(R.id.profile_role)
         profilePrivate = root.findViewById(R.id.profile_private)
 
-        val userViewModelFactory = Injection.provideUserViewModelFactory(root.context)
+        root.findViewById<Button>(R.id.logout)?.let { button ->
+            button.setOnClickListener { logout(button) }
+            bindProgressButton(button)
+        }
 
+        val userViewModelFactory = Injection.provideUserViewModelFactory(root.context)
         userViewModel = ViewModelProvider(this, userViewModelFactory).get(UserViewModel::class.java)
+
+        requestService = ApiService.getInstance(context)
 
         return root
     }
@@ -76,4 +94,36 @@ class AuthUserFragment : Fragment() {
                 })
         )
     }
+
+    override fun onStop() {
+        super.onStop()
+
+        disposable.clear()
+    }
+
+    private fun logout(button: Button) {
+        if (button.isProgressActive()) {
+            return
+        }
+
+        button.showProgress()
+
+        val single = userViewModel.deleteUser().andThen(requestService.signout())
+
+        disposable.add(
+            single
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .doFinally {
+                    button.hideProgress(R.string.logout)
+                }
+                .subscribe({
+                    context?.apply { TokenUtility.clearToken(this) }
+                    startActivity(Intent(context, MainActivity::class.java))
+                }, {
+                    context?.apply { ErrorHandler.handleError(it, this) }
+                })
+        )
+    }
+
 }
