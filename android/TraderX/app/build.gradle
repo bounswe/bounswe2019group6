@@ -84,6 +84,7 @@ dependencies {
 
     //Custom Library
     implementation 'de.hdodenhof:circleimageview:3.0.1'
+    implementation 'com.github.razir.progressbutton:progressbutton:1.0.3'
 
     testImplementation 'junit:junit:4.12'
     testImplementation deps.test.hamcrest

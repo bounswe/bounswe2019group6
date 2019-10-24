@@ -14,36 +14,49 @@ import retrofit2.HttpException
 import java.net.ConnectException
 
 class ErrorHandler<T> {
-
     companion object {
 
         private const val TAG = "ErrorHandler"
 
         fun handleError(error: Throwable, context: Context): Boolean {
 
-            if (error is HttpException) {
-                Log.e(TAG, error.code().toString() + " " + error.message())
+            when (error) {
+                is HttpException -> handleHttpException(error, context)
+                is ConnectException -> handleConnectException(error, context)
+                else -> {
+                    Log.e(TAG, error.javaClass.name)
+                    Log.e(TAG, error.message)
 
-                if (error.code() == 403 || error.code() == 401) {
-                    context.startActivity(Intent(context, LoginActivity::class.java))
-
-                    return true
+                    return false
                 }
-            } else if (error is ConnectException) {
-                //Show a connection error
+            }
+
+            return true
+        }
+
+        fun handleHttpException(error: HttpException, context: Context): Boolean {
+            if (error.code() == 403 || error.code() == 401) {
+                context.startActivity(Intent(context, LoginActivity::class.java))
+
+                return true
+            }
+
+            return false
+        }
+
+        fun handleConnectException(error: Throwable, context: Context): Boolean {
+            if(error is ConnectException) {
                 AlertDialog.Builder(context)
                     .setMessage(context.getString(R.string.connection_error))
                     .setPositiveButton("Ok", DialogInterface.OnClickListener { dialog, id ->
                     }).create().show()
 
                 return true
-            } else {
-                Log.e(TAG, error.javaClass.name)
-                Log.e(TAG, error.message)
             }
 
             return false
         }
+
 
         fun handleUserViewError(error: Throwable, context: Context): Boolean {
 
@@ -55,7 +68,6 @@ class ErrorHandler<T> {
 
             return false
         }
-
 
         fun parseErrorMessage(serializedMessage: String): ErrorResponse {
             val gson = GsonBuilder().create()

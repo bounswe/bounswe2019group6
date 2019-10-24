@@ -1,9 +1,6 @@
 package com.traderx.db
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import io.reactivex.*
 
 @Dao
@@ -13,4 +10,7 @@ interface UserDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertUser(user: User): Completable
+
+    @Query("DELETE FROM user")
+    fun deleteUser(): Completable
 }

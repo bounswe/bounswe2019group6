@@ -1,25 +1,30 @@
 package com.traderx.ui.auth.login
 
-import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
-import com.google.android.material.button.MaterialButton
-import com.traderx.BuildConfig
+import com.github.razir.progressbutton.bindProgressButton
+import com.github.razir.progressbutton.hideProgress
+import com.github.razir.progressbutton.isProgressActive
+import com.github.razir.progressbutton.showProgress
 import com.traderx.MainActivity
 import com.traderx.R
 import com.traderx.api.ApiService
-import com.traderx.api.RequestService
 import com.traderx.api.ErrorHandler
+import com.traderx.api.RequestService
 import com.traderx.api.request.LoginRequest
+import com.traderx.auth.forgotpassword.ForgotPasswordActivity
 import com.traderx.ui.auth.signup.SignUpActivity
 import com.traderx.ui.auth.signup.SignUpValidator
+import com.traderx.util.TokenUtility
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import retrofit2.HttpException
 
 class LoginActivity : AppCompatActivity() {
 
@@ -40,8 +45,21 @@ class LoginActivity : AppCompatActivity() {
             }
         }
 
-        findViewById<MaterialButton>(R.id.login_button).let {
-            it.setOnClickListener { login() }
+        findViewById<Button>(R.id.login_button)?.apply {
+            this.setOnClickListener {
+                login(this)
+            }
+        }
+
+        findViewById<TextView>(R.id.login_forgot_pass_text).let {
+            it.setOnClickListener {
+                startActivity(
+                    Intent(
+                        this,
+                        ForgotPasswordActivity::class.java
+                    )
+                )
+            }
         }
 
         requestService = ApiService.getInstance()
@@ -58,7 +76,12 @@ class LoginActivity : AppCompatActivity() {
         disposable.clear()
     }
 
-    private fun login() {
+    private fun login(button: Button) {
+
+        if (button.isProgressActive()) {
+            return
+        }
+
         clearWarning()
 
         when {
@@ -70,6 +93,8 @@ class LoginActivity : AppCompatActivity() {
             return
         }
 
+        button.showProgress()
+
         disposable.add(
             requestService.login(
                 LoginRequest(
@@ -77,20 +102,25 @@ class LoginActivity : AppCompatActivity() {
                     password = password.text.toString()
                 )
             ).observeOn(AndroidSchedulers.mainThread())
+                .doFinally {
+                    button.hideProgress(R.string.login)
+                }
                 .subscribe({
-                    storeToken(it.token)
-                    ApiService.refreshInstance()
+                    TokenUtility.storeToken(it.token, this)
+
                     startActivity(Intent(this, MainActivity::class.java))
-                }, { ErrorHandler.handleError(it, this) })
+                }, {
+
+                    if (!ErrorHandler.handleConnectException(it, this) && it is HttpException) {
+
+                        val errorResponse = ErrorHandler.parseErrorMessage(
+                            it.response().errorBody()?.string() ?: ""
+                        )
+
+                        setWarning(errorResponse.message)
+                    }
+                })
         )
-    }
-
-    private fun storeToken(token: String) {
-        val editor = getSharedPreferences(BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE).edit()
-
-        editor.putString("token", token)
-
-        editor.apply()
     }
 
     private fun setWarning(warning: String) {

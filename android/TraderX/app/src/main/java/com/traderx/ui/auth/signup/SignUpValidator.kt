@@ -5,7 +5,7 @@ import com.google.android.gms.maps.model.Marker
 class SignUpValidator {
     companion object {
         fun validateIban(iban: String): Boolean {
-            val patt = Regex("^[A-Z]{2}[0-9]{24}\$")
+            val patt = Regex("^[A-Z]{2}[0-9]{18}\$")
 
             return iban.matches(patt)
         }
