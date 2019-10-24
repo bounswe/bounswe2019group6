@@ -28,7 +28,6 @@ import com.traderx.viewmodel.UserViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import java.net.ResponseCache
 
 class AuthUserFragment : Fragment() {
 
@@ -115,7 +114,7 @@ class AuthUserFragment : Fragment() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .doFinally {
-                    button.hideProgress(R.string.logout)
+                    button.hideProgress(R.string.signout)
                 }
                 .subscribe({
                     context?.apply { TokenUtility.clearToken(this) }
