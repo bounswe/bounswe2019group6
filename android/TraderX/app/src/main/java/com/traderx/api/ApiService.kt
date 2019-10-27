@@ -1,6 +1,8 @@
 package com.traderx.api
 
+import android.content.Context
 import com.traderx.AppConfig
+import com.traderx.BuildConfig
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response
@@ -19,14 +21,14 @@ class ApiService {
             INSTANCE = null
         }
 
-        fun getInstance(): RequestService {
-            return INSTANCE ?: provideRequestService().also { INSTANCE = it }
+        fun getInstance(context: Context? = null): RequestService {
+            return INSTANCE ?: provideRequestService(context).also { INSTANCE = it }
         }
 
-        private fun provideRequestService(): RequestService {
+        private fun provideRequestService(context: Context?): RequestService {
             val clientBuilder = OkHttpClient.Builder()
 
-            clientBuilder.addInterceptor(RetrofitInterceptor())
+            clientBuilder.addInterceptor(RetrofitInterceptor(context))
 
             return Retrofit.Builder()
                 .baseUrl(AppConfig.API_HOST)
@@ -39,16 +41,20 @@ class ApiService {
     }
 }
 
-class RetrofitInterceptor : Interceptor {
+class RetrofitInterceptor(val context: Context?) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         var request = chain.request()
 
-        //TODO Get the token from where it is stored
-        val token = ""
+        if (context != null) {
+            val token =
+                context.getSharedPreferences(BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE)
+                    .getString("token", "")
 
-        val headers = request.headers().newBuilder().add("Authorization", "Bearer $token").build()
+            val headers =
+                request.headers().newBuilder().add("Authorization", "Bearer $token").build()
 
-        request = request.newBuilder().headers(headers).build()
+            request = request.newBuilder().headers(headers).build()
+        }
 
         return chain.proceed(request)
     }

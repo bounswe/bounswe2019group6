@@ -7,12 +7,11 @@ import androidx.room.PrimaryKey
 import java.io.ObjectInputStream
 
 @Entity(
-    tableName = "user",
-    indices = [Index("id")]
+    tableName = "user"
 )
 data class User(
     @PrimaryKey
-    @ColumnInfo(name = "id") val id: Int,
+    @ColumnInfo(name = "id") val id: Int = 1,
     @ColumnInfo(name = "username") val username: String,
     @ColumnInfo(name = "email") val email: String,
     @ColumnInfo(name = "latitude") val latitude: Float,
