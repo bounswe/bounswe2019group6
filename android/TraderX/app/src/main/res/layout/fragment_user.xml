@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.profile.AuthUserFragment">
+    tools:context=".ui.profile.UserFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -28,7 +29,7 @@
             android:src="@drawable/profile" />
 
         <TextView
-            android:id="@+id/profile_username"
+            android:id="@+id/user_username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -36,14 +37,22 @@
             android:textColor="#3b3b3b"
             android:textSize="23dp" />
 
-        <TextView
-            android:id="@+id/profile_email"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="2dp"
-            android:textColor="#a9a9b0"
-            android:textSize="14.3sp" />
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/follow_button"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_gravity="end"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:icon="@drawable/ic_person_add_black_24dp"
+                android:text="@string/follow" />
+        </LinearLayout>
 
         <View
             android:layout_width="match_parent"
@@ -143,14 +152,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/shadow"
             android:orientation="vertical">
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/logout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/signout"/>
         </LinearLayout>
 
     </LinearLayout>
-
 </FrameLayout>

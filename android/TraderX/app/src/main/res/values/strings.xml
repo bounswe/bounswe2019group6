@@ -18,11 +18,18 @@
 
     <!--    Words-->
     <string name="login">Login</string>
-    <string name="logout">Logout</string>
+    <string name="signout">Sign Out</string>
     <string name="signup">Sign Up</string>
-    <string name="forgot_pass">Forgot Password</string>
+    <string name="forgot_pass">Forgot Password</string>d
     <string name="general_false">No</string>
     <string name="general_true">Yes</string>
+    <string name="search">Search</string>
+    <string name="follow">Follow</string>
+    <string name="pending">Pending</string>
+
+    <!--    Follow-->
+    <string name="follow_requested">Following request sent to %1$s.</string>
+    <string name="follow_success">You are following %1$s now</string>
 
     <string name="not_available">Not Available</string>
     <string name="connecting">Connecting</string>
@@ -34,7 +41,6 @@
     <string name="signup_iban">IBAN (for trader user)</string>
     <string name="back">Back</string>
     <string name="reset_password">Reset Password</string>
-
 
 
     <string name="role">Role</string>
