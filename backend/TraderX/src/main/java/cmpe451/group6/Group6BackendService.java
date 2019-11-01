@@ -3,11 +3,14 @@ package cmpe451.group6;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 
 import cmpe451.group6.authorization.model.RegistrationStatus;
 import cmpe451.group6.authorization.repository.UserRepository;
 import cmpe451.group6.authorization.service.HazelcastService;
 import cmpe451.group6.authorization.service.SignupService;
+import cmpe451.group6.rest.equipment.Equipment;
+import cmpe451.group6.rest.equipment.EquipmentRepsitory;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -34,6 +37,9 @@ public class Group6BackendService implements CommandLineRunner {
 
   @Autowired
   UserRepository userRepository;
+
+  @Autowired
+  EquipmentRepsitory equipmentRepsitory;
 
   public static void main(String[] args) {
     SpringApplication.run(Group6BackendService.class, args);
@@ -93,6 +99,15 @@ public class Group6BackendService implements CommandLineRunner {
     basic.setRoles(new ArrayList<Role>(Arrays.asList(Role.ROLE_BASIC)));
     basic.setIsPrivate(false);
     signupService.internal_signup(basic);
+
+    Equipment equipment = new Equipment();
+    equipment.setName("DollarS");
+    equipment.setCurrentStock(1_231_123);
+    equipment.setCurrentValue(5.8);
+    equipment.setLastUpdated(new Date());
+    equipment.setPredictionRate(0.56);
+    equipmentRepsitory.save(equipment);
+
 
   }
 
