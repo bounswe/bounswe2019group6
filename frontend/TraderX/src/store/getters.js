@@ -6,6 +6,7 @@ const getters = {
   cachedViews: state => state.tagsView.cachedViews,
   token: state => state.user.token,
   userInfo: state => state.user.userInfo,
+  userSearchResult: state => state.search.userSearchResult,
 
   // TODO these are deprecated but we can keep useful ones
   roles: state => state.user.roles,
