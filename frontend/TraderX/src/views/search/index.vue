@@ -1,5 +1,5 @@
 <template>
-  <div style="margin-top: 50px; margin-left: 100px; margin-right: 100px">
+  <div style="margin-top: 50px; margin-bottom: 50px; margin-left: 100px; margin-right: 100px">
     <div style="padding-bottom: 30px">
       <el-input placeholder="Please input" v-model="searchText" class="input-with-select" ref="searchText" type="text" auto-complete="on" @keyup.native="liveSearch">
         <el-select style="width: 110px" v-model="selectedFilter" slot="prepend" placeholder="Search In">
@@ -61,6 +61,10 @@ export default {
   methods: {
     showUserProfile(user) {
       console.log("Send Request To Render A Profile")
+      this.$store.dispatch('search/searchUser', user.name).then(() => {
+        var res = this.$store.getters.userSearchResult
+        console.log("in", res)
+      })
     },
     handleSearch() {
       if (this.searchText == '') {
@@ -78,7 +82,7 @@ export default {
           this.searchResult = deleteMultipleUsers(Array.from(new Set(temp)))
         })  
       } else {
-        this.$store.dispatch('search/getAllUsers', this.searchText).then(() => {
+        this.$store.dispatch('search/getAllUsers').then(() => {
           var res = this.$store.getters.userSearchResult.filter(user => user.username.includes(this.searchText))
           var temp = []
           res.forEach(function (user) {
