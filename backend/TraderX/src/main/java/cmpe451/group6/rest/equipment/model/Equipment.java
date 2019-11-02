@@ -1,6 +1,7 @@
-package cmpe451.group6.rest.equipment;
+package cmpe451.group6.rest.equipment.model;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -20,8 +21,8 @@ public class Equipment {
     @Column(nullable = false)
     private Date lastUpdated;
 
-    @ElementCollection(fetch = FetchType.LAZY)
-    private List<EquipmentValue> valueHistory;
+    @ElementCollection(fetch = FetchType.EAGER)
+    private List<HistoricalValue> valueHistory;
 
     @Column(nullable = false)
     private double currentStock;
@@ -64,11 +65,11 @@ public class Equipment {
         this.lastUpdated = lastUpdated;
     }
 
-    public List<EquipmentValue> getValueHistory() {
+    public List<HistoricalValue> getValueHistory() {
         return valueHistory;
     }
 
-    public void setValueHistory(List<EquipmentValue> valueHistory) {
+    public void setValueHistory(List<HistoricalValue> valueHistory) {
         this.valueHistory = valueHistory;
     }
 
@@ -86,5 +87,40 @@ public class Equipment {
 
     public void setPredictionRate(double predictionRate) {
         this.predictionRate = predictionRate;
+    }
+
+    public void addHistoricalValue(HistoricalValue historicalValue){
+        this.valueHistory.add(historicalValue);
+    }
+
+    public static class HistoricalValue implements Serializable {
+
+        private Date timestamp;
+
+        private double value;
+
+        public HistoricalValue() {
+        }
+
+        public HistoricalValue(Date timestamp, double value) {
+            this.timestamp = timestamp;
+            this.value = value;
+        }
+
+        public Date getTimestamp() {
+            return timestamp;
+        }
+
+        public void setTimestamp(Date timestamp) {
+            this.timestamp = timestamp;
+        }
+
+        public double getValue() {
+            return value;
+        }
+
+        public void setValue(double value) {
+            this.value = value;
+        }
     }
 }
