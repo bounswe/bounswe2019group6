@@ -1,19 +1,19 @@
 <template>
-  <div>
-    <div style="margin-top: 15px;">
+  <div style="margin-top: 50px; margin-left: 100px; margin-right: 100px">
+    <div style="padding-bottom: 30px">
       <el-input placeholder="Please input" v-model="searchText" class="input-with-select" ref="searchText" type="text" auto-complete="on" @keyup.native="liveSearch">
-        <el-select v-model="selectedFilter" slot="prepend" placeholder="">
-          <el-option label="User" value="1"></el-option>
-          <el-option label="Event" value="2"></el-option>
-          <el-option label="Trading Equipment" value="3"></el-option>
+        <el-select style="width: 110px" v-model="selectedFilter" slot="prepend" placeholder="Search In">
+          <el-option label="User" value="user"></el-option>
+          <!-- <el-option label="Event" value="event"></el-option>
+          <el-option label="Trading Equipment" value="label"></el-option> -->
         </el-select>
         <el-button slot="append" icon="el-icon-search" @click.native.prevent="handleSearch">Search</el-button>
       </el-input>
     </div>
     <el-table :data="searchResult" style="width: 100%">
-      <el-table-column prop="name" label="Name" width="180"></el-table-column>
-      <el-table-column prop="privacy" label="Privacy" width="180"></el-table-column>
-      <el-table-column prop="role" label="Role" width="180"></el-table-column>
+      <el-table-column prop="name" label="Name"></el-table-column>
+      <el-table-column prop="privacy" label="Privacy"></el-table-column>
+      <el-table-column prop="role" label="Role"></el-table-column>
     </el-table>
   </div>
 </template>
@@ -25,8 +25,9 @@ export default {
   data() {
     return {
       searchText : "",
-      searchResult : [{'name':'no-user','privacy':'no-user','role':'no-user'}],
-      selectedFilter: "",
+      searchResult : [],
+      selectedFilter: "user",
+      
     }
   },
   created() {
@@ -34,9 +35,10 @@ export default {
       var res = this.$store.getters.userSearchResult
       var temp = []
       res.forEach(function (user) {
+        var privacy = user.isPrivate ? "Private" : !user.isPrivate ? 'Public': "";
         temp.push({
           'name': user.username,
-          'privacy' : user.isPrivate,
+          'privacy' : privacy,
           'role' : user.roles[0]
         })
       });
@@ -53,9 +55,10 @@ export default {
           var res = this.$store.getters.userSearchResult
           var temp = []
           res.forEach(function (user) {
+            var privacy = user.isPrivate ? "Private" : !user.isPrivate ? 'Public': "";
             temp.push({
               'name': user.username,
-              'privacy' : user.isPrivate,
+              'privacy' : privacy,
               'role' : user.roles[0]
             })
           });
@@ -66,9 +69,10 @@ export default {
           var res = this.$store.getters.userSearchResult
           var temp = []
           res.forEach(function (user) {
+            var privacy = user.isPrivate ? "Private" : !user.isPrivate ? 'Public': "";
             temp.push({
               'name': user.username,
-              'privacy' : user.isPrivate,
+              'privacy' : privacy,
               'role' : user.roles[0]
             })
           });
@@ -77,13 +81,13 @@ export default {
       }
     },
     liveSearch() {
-      //this.searchResult = this.$store.getters.userSearchResult.filter(user => user.username.includes(this.searchText))
       var res = this.$store.getters.userSearchResult.filter(user => user.username.includes(this.searchText))
       var temp = []
       res.forEach(function (user) {
+        var privacy = user.isPrivate ? "Private" : !user.isPrivate ? 'Public': "";
         temp.push({
           'name': user.username,
-          'privacy' : user.isPrivate,
+          'privacy' : privacy,
           'role' : user.roles[0]
         })
       });
@@ -103,6 +107,7 @@ export default {
       //   return uniqueArr
       // }
       this.searchResult = Array.from(new Set(temp.concat(this.searchResult)))
+      console.log(this.searchResult)
     }
     
 
