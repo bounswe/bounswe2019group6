@@ -14,20 +14,30 @@
       <el-table-column prop="name" label="Name"></el-table-column>
       <el-table-column prop="privacy" label="Privacy"></el-table-column>
       <el-table-column prop="role" label="Role"></el-table-column>
+      <el-table-column
+        fixed="right"
+        width="120">
+        <template slot-scope="scope">
+          <el-button @click.native.prevent="showUserProfile(searchResult[scope.$index])" type="text">See Profile</el-button>
+        </template>
+      </el-table-column>
     </el-table>
+    
   </div>
 </template>
 
 <script>
+
+import { deleteMultipleUsers } from '@/utils'
+
 export default {
   name: 'search',
   props: {},
   data() {
     return {
       searchText : "",
-      searchResult : [],
-      selectedFilter: "user",
-      
+      searchResult : [{'name':' ','privacy':' ','role':' '}],
+      selectedFilter: "user", 
     }
   },
   created() {
@@ -42,13 +52,16 @@ export default {
           'role' : user.roles[0]
         })
       });
-      this.searchResult = Array.from(new Set(temp.concat(this.searchResult)))
+      this.searchResult = deleteMultipleUsers(Array.from(new Set(temp)))
     })
   },
   mounted() {
 
   },
   methods: {
+    showUserProfile(user) {
+      console.log("Send Request To Render A Profile")
+    },
     handleSearch() {
       if (this.searchText == '') {
         this.$store.dispatch('search/getAllUsers').then(() => {
@@ -62,11 +75,11 @@ export default {
               'role' : user.roles[0]
             })
           });
-          this.searchResult = Array.from(new Set(temp.concat(this.searchResult)))
+          this.searchResult = deleteMultipleUsers(Array.from(new Set(temp)))
         })  
       } else {
-        this.$store.dispatch('search/searchUser', this.searchText).then(() => {
-          var res = this.$store.getters.userSearchResult
+        this.$store.dispatch('search/getAllUsers', this.searchText).then(() => {
+          var res = this.$store.getters.userSearchResult.filter(user => user.username.includes(this.searchText))
           var temp = []
           res.forEach(function (user) {
             var privacy = user.isPrivate ? "Private" : !user.isPrivate ? 'Public': "";
@@ -76,7 +89,7 @@ export default {
               'role' : user.roles[0]
             })
           });
-          this.searchResult = Array.from(new Set(temp.concat(this.searchResult)))
+          this.searchResult = deleteMultipleUsers(Array.from(new Set(temp)))
         })
       }
     },
@@ -91,28 +104,9 @@ export default {
           'role' : user.roles[0]
         })
       });
-      // deleteMultipleUsers(dupArr) {
-      //   var uniqueArr = []
-      //   dupArr.forEach(function (dupUser) {
-      //     var exists = false
-      //     uniqueArr.forEach(function (uniUser) {
-      //       if(dupUser.username == uniUser.username){
-      //         exists = true
-      //       }
-      //     });
-      //     if (!exists){
-      //       uniqueArr.push(dupUser)
-      //     }
-      //   });
-      //   return uniqueArr
-      // }
-      this.searchResult = Array.from(new Set(temp.concat(this.searchResult)))
-      console.log(this.searchResult)
+      this.searchResult = deleteMultipleUsers(Array.from(new Set(temp)))
     }
-    
-
-  }
-  
+  } 
 }
 </script>
 
