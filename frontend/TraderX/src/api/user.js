@@ -37,3 +37,19 @@ export function confirm(query) {
     params: query
   })
 }
+
+export function resetPassword(query) {
+  return request({
+    url: '/password/forgot',
+    method: 'post',
+    params: query
+  })
+}
+
+export function renew(data) {
+  return request({
+    url: '/password/renew',
+    method: 'post',
+    data
+  })
+}
