@@ -1,8 +1,8 @@
 import request from '@/utils/request'
 
-export function searchUser(searchText) {
+export function searchUser(userName) {
   return request({
-    url: '/users/profile/' + searchText,
+    url: '/users/profile/' + userName,
     method: 'get'
   })
 }
