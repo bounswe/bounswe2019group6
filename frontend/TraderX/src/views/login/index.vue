@@ -123,6 +123,7 @@
 
 <script>
 import { validUsername, validEmail } from '@/utils/validate'
+import { Message } from 'element-ui'
 
 export default {
   name: 'Login',
@@ -255,9 +256,9 @@ export default {
         if (valid) {
           this.$store.dispatch('user/resetPassword', this.passwordResetForm)
             .then(() => {
-              this.$router.push({ path: '/login' })
+              Message.success('Password reset link sent to your email address')
+              this.showDialog = false
             }).catch(() => {
-              console.log('Wrong password!')
           })
         } else {
           return false
