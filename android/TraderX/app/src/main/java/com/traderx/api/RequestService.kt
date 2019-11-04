@@ -8,22 +8,23 @@ import com.traderx.api.response.TokenResponse
 import com.traderx.api.response.UserAll
 import com.traderx.api.response.UserResponse
 import com.traderx.db.User
+import io.reactivex.Completable
 import io.reactivex.Single
 import retrofit2.http.*
 
-class ApiUri {
-    companion object {
-        const val API_URI: String = AppConfig.API_HOST
-        const val FOLLOW_URI: String = "$API_URI/follow"
-        const val FOLLOW_USER: String = "$FOLLOW_URI/follow_user"
-        const val USER_URI: String = "$API_URI/users"
-        const val USERS_GET_ALL: String = "$USER_URI/getAll"
-        const val USER_SIGNIN: String = "$API_URI/login"
-        const val USER_SIGNUP: String = "$API_URI/signup"
-        const val USER_SIGNOUT: String = "$API_URI/signout"
-        const val USER_INFO: String = "$USER_URI/me"
-        const val USER_PROFILE: String = "$USER_URI/profile/{username}"
-    }
+object ApiUri {
+    const val API_URI: String = AppConfig.API_HOST
+    const val FOLLOW_URI: String = "$API_URI/follow"
+    const val FOLLOW_USER: String = "$FOLLOW_URI/follow_user"
+    const val USER_URI: String = "$API_URI/users"
+    const val USERS_GET_ALL: String = "$USER_URI/getAll"
+    const val USER_SIGNIN: String = "$API_URI/login"
+    const val USER_SIGNUP: String = "$API_URI/signup"
+    const val USER_SIGNOUT: String = "$API_URI/signout"
+    const val USER_INFO: String = "$USER_URI/me"
+    const val USER_PROFILE: String = "$USER_URI/profile/{username}"
+    const val UPDATE_USER: String = "$USER_URI/set_profile/{status}"
+
 }
 
 interface RequestService {
@@ -47,4 +48,7 @@ interface RequestService {
 
     @POST(ApiUri.FOLLOW_USER)
     fun followUser(@Query("usernameToFollow") username: String): Single<SuccessResponse>
+
+    @POST(ApiUri.UPDATE_USER)
+    fun updateUser(@Path("status") status: String): Completable
 }

@@ -7,8 +7,8 @@
     <string name="title_news">News</string>
     <string name="title_trader_equipment">Trader Equipments</string>
     <string name="title_profile">Profile</string>
+    <string name="title_user_edit">Edit Profile</string>
     <string name="welcome_back">Welcome Back</string>
-
     <!--    Fields-->
     <string name="username">Username</string>
     <string name="email">E-mail</string>
@@ -47,7 +47,8 @@
     <string name="role_basic">Basic</string>
     <string name="role_trader">Trader</string>
     <string name="role_admin">Admin</string>
-    <string name="profile_private">Private</string>
+    <string name="profile_private">Private Profile</string>
+    <string name="profile_public">Public Profile</string>
 
     <string name="username_not_valid">Username should be between 5 and 20 characters long</string>
     <string name="email_not_valid">Email is not valid</string>

@@ -12,6 +12,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.github.razir.progressbutton.bindProgressButton
 import com.github.razir.progressbutton.hideProgress
 import com.github.razir.progressbutton.isProgressActive
@@ -61,6 +62,12 @@ class AuthUserFragment : Fragment() {
         root.findViewById<Button>(R.id.logout)?.let { button ->
             button.setOnClickListener { logout(button) }
             bindProgressButton(button)
+        }
+
+        root.findViewById<Button>(R.id.edit_profile)?.let {
+            it.setOnClickListener {
+                findNavController().navigate(AuthUserFragmentDirections.actionNavigationAuthUserToNavigationUserEdit())
+            }
         }
 
         val authUserViewModelFactory = Injection.provideAuthUserViewModelFactory(root.context)

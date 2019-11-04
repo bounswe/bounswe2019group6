@@ -10,8 +10,12 @@ import com.traderx.db.User
 import com.traderx.db.UserDao
 import io.reactivex.Completable
 import io.reactivex.Single
+import io.reactivex.schedulers.Schedulers
 
-class AuthUserViewModel(private val dataSource: UserDao, private val networkSource: RequestService) :
+class AuthUserViewModel(
+    private val dataSource: UserDao,
+    private val networkSource: RequestService
+) :
     ViewModel() {
 
     companion object {
@@ -24,21 +28,17 @@ class AuthUserViewModel(private val dataSource: UserDao, private val networkSour
 
     fun user(context: Context): Single<User> {
 
-        val single: Single<User>
-
-        if (!userUpdated && isNetworkConnected(context)) {
+        return if (!userUpdated && isNetworkConnected(context)) {
             val networkUser = fetchUser()
                 .doOnSuccess {
-                    updateUser(it).subscribe()
+                    updateUserLocal(it).subscribe()
                 }
-
-            single = networkUser.flatMap { dataSource.getUser() }
+            //Not working as expected
+            networkUser.flatMap { dataSource.getUser() }.subscribeOn(Schedulers.io())
         } else {
-            single =
-                dataSource.getUser().doOnError { ErrorHandler.handleUserViewError(it, context) }
+            dataSource.getUser().doOnError { ErrorHandler.handleUserViewError(it, context) }.subscribeOn(Schedulers.io())
         }
 
-        return single
     }
 
     fun deleteUser(): Completable {
@@ -48,6 +48,10 @@ class AuthUserViewModel(private val dataSource: UserDao, private val networkSour
     }
 
     fun updateUser(user: User): Completable {
+        return networkSource.updateUser(if (user.isPrivate) "private" else "public").andThen{ updateUserLocal(user)}
+    }
+
+    private fun updateUserLocal(user: User): Completable {
         userUpdated = true
 
         return dataSource.insertUser(user)
