@@ -1,7 +1,7 @@
 <template>
   <div style="margin-top: 50px; margin-bottom: 50px; margin-left: 100px; margin-right: 100px">
     <div style="padding-bottom: 30px">
-      <el-input placeholder="Please input" v-model="searchText" class="input-with-select" ref="searchText" type="text" auto-complete="on" @keyup.native="liveSearch">
+      <el-input placeholder="Please input" v-model="searchText" class="input-with-select" ref="searchText" type="text" auto-complete="on" @keyup.native="handleSearch">
         <el-select style="width: 110px" v-model="selectedFilter" slot="prepend" placeholder="Search In">
           <el-option label="User" value="user"></el-option>
           <!-- <el-option label="Event" value="event"></el-option>
@@ -52,7 +52,7 @@ export default {
           'role' : user.roles[0]
         })
       });
-      this.searchResult = deleteMultipleUsers(Array.from(new Set(temp)))
+      this.searchResult = temp
     })
   },
   mounted() {
@@ -60,56 +60,33 @@ export default {
   },
   methods: {
     showUserProfile(user) {
+      this.$router.push({ path: `/user/` })
+      console.log(`/user/${user.name}/profile`)
       console.log("Send Request To Render A Profile")
-      this.$store.dispatch('search/searchUser', user.name).then(() => {
-        var res = this.$store.getters.userSearchResult
-        console.log("in", res)
-      })
+      // this.$store.dispatch('search/searchUser', user.name).then(() => {
+      //   var res = this.$store.getters.userSearchResult
+      //   console.log("in", res)
+      // })
     },
     handleSearch() {
-      if (this.searchText == '') {
-        this.$store.dispatch('search/getAllUsers').then(() => {
+      this.$store.dispatch('search/getAllUsers').then(() => {
+        if (this.searchText == ''){
           var res = this.$store.getters.userSearchResult
-          var temp = []
-          res.forEach(function (user) {
-            var privacy = user.isPrivate ? "Private" : !user.isPrivate ? 'Public': "";
-            temp.push({
-              'name': user.username,
-              'privacy' : privacy,
-              'role' : user.roles[0]
-            })
-          });
-          this.searchResult = deleteMultipleUsers(Array.from(new Set(temp)))
-        })  
-      } else {
-        this.$store.dispatch('search/getAllUsers').then(() => {
+        } else {
           var res = this.$store.getters.userSearchResult.filter(user => user.username.includes(this.searchText))
-          var temp = []
-          res.forEach(function (user) {
-            var privacy = user.isPrivate ? "Private" : !user.isPrivate ? 'Public': "";
-            temp.push({
-              'name': user.username,
-              'privacy' : privacy,
-              'role' : user.roles[0]
-            })
-          });
-          this.searchResult = deleteMultipleUsers(Array.from(new Set(temp)))
-        })
-      }
-    },
-    liveSearch() {
-      var res = this.$store.getters.userSearchResult.filter(user => user.username.includes(this.searchText))
-      var temp = []
-      res.forEach(function (user) {
-        var privacy = user.isPrivate ? "Private" : !user.isPrivate ? 'Public': "";
-        temp.push({
-          'name': user.username,
-          'privacy' : privacy,
-          'role' : user.roles[0]
-        })
-      });
-      this.searchResult = deleteMultipleUsers(Array.from(new Set(temp)))
-    }
+        }
+        var temp = []
+        res.forEach(function (user) {
+          var privacy = user.isPrivate ? "Private" : !user.isPrivate ? 'Public': "";
+          temp.push({
+            'name': user.username,
+            'privacy' : privacy,
+            'role' : user.roles[0]
+          })
+        });
+        this.searchResult = temp
+      })
+    } 
   } 
 }
 </script>
