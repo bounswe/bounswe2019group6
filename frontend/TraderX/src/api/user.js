@@ -51,6 +51,8 @@ export function renew(data) {
     url: '/password/renew',
     method: 'post',
     data
+  })
+}
 
 export function getUser(username) {
   return request({
