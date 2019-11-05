@@ -59,9 +59,13 @@ import { randomImage } from '@/utils'
 export default {
   components: { PanThumb },
   data() {
-    return {
-      user: this.$store.getters.userInfo
-    }
+    return {}
+  },
+  props: {
+    user: {}
+  },
+  destroyed() {
+    
   },
   computed: {
     randomImage
