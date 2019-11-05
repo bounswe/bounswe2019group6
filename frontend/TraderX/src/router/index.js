@@ -146,6 +146,34 @@ export const constantRoutes = [
         meta: { title: 'Profile', icon: 'user', noCache: true }
       }
     ]
+  },
+  {
+    path: '/search',
+    component: Layout,
+    redirect: '/search/index',
+    hidden: false,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/search/index'),
+        name: 'Search',
+        meta: { title: 'Search', icon: 'search', noCache: true }
+      }
+    ]
+  },
+  {
+    path: '/user/:username/profile',
+    component: Layout,
+    redirect: '/user/:username/profile',
+    hidden: true,
+    children: [
+      {
+        path: '',
+        component: () => import('@/views/user-profile/index'),
+        name: 'User Profile',
+        meta: { title: 'User Profile', noCache: true },
+      }
+    ]
   }
 ]
 

@@ -1,6 +1,5 @@
 <template>
   <div class="app-container">
-    <github-corner class="github-corner" />
     <div v-if="user">
       <el-row :gutter="20">
         <el-col
@@ -23,12 +22,6 @@
                 <portfolio />
               </el-tab-pane>
               <el-tab-pane
-                label="Explore"
-                name="explore"
-              >
-                <explore />
-              </el-tab-pane>
-              <el-tab-pane
                 label="Event"
                 name="events"
               >
@@ -46,12 +39,6 @@
               >
                 <articles />
               </el-tab-pane>
-              <el-tab-pane
-                label="EditProfile"
-                name="editprofile"
-              >
-                <editprofile />
-              </el-tab-pane>
             </el-tabs>
           </el-card>
         </el-col>
@@ -61,22 +48,21 @@
 </template>
 
 <script>
+
 import { mapGetters } from 'vuex'
-import UserCard from './components/UserCard'
-import Portfolio from './components/Portfolio'
-import Explore from './components/Explore'
-import Events from './components/Events'
-import News from './components/News'
-import Articles from './components/Articles'
-import Editprofile from './components/Editprofile'
-import GithubCorner from '@/components/GithubCorner'
+import UserCard from '@/views/profile/components/UserCard'
+import Portfolio from '@/views/profile/components/Portfolio'
+import Events from '@/views/profile/components/Events'
+import News from '@/views/profile/components/News'
+import Articles from '@/views/profile/components/Articles'
+import { getUser } from '@/api/user'
 
 export default {
-  name: 'Profile',
-  components: { UserCard, Portfolio, Explore, Events, News, Articles, Editprofile, GithubCorner },
+  name: 'UserProfile',
+  components: { UserCard, Portfolio, Events, News, Articles },
   data() {
     return {
-      user: this.$store.getters.userInfo,
+      user: {},
       activeTab: 'portfolio'
     }
   },
@@ -87,22 +73,19 @@ export default {
       'roles'
     ])
   },
-  created() {   
+  created() {
+    // this.$route.path.split('/') = ["", "user", "username", "profile"] 
+    getUser(this.$route.path.split('/')[2]).then(response => {
+      this.user = response.data
+      console.log(response.data)
+    })
   },
   methods: {
-  },
-  mounted() {
+    
   }
 }
 </script>
 
-<style lang="scss">
-  $cursor: #424646;
-  $bg:#2d3a4b;
-  $dark_gray: #424646;
-  $light_gray:#eee;
+<style lang="scss" scoped>
 
-  .app-main {
-    background-color: $light_gray;
-  }
 </style>
