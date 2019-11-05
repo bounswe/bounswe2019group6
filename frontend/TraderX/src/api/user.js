@@ -37,3 +37,10 @@ export function confirm(query) {
     params: query
   })
 }
+
+export function getUser(username) {
+  return request({
+    url: '/users/profile/' + username,
+    method: 'get'
+  })
+}

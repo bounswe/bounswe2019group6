@@ -155,6 +155,20 @@ export const constantRoutes = [
         meta: { title: 'Search', icon: 'search', noCache: true }
       }
     ]
+  },
+  {
+    path: '/user/:username/profile',
+    component: Layout,
+    redirect: '/user/:username/profile',
+    hidden: true,
+    children: [
+      {
+        path: '',
+        component: () => import('@/views/user-profile/index'),
+        name: 'User Profile',
+        meta: { title: 'User Profile', noCache: true },
+      }
+    ]
   }
 ]
 

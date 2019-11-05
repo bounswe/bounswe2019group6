@@ -36,8 +36,8 @@ export default {
   data() {
     return {
       searchText : "",
-      searchResult : [{'name':' ','privacy':' ','role':' '}],
-      selectedFilter: "user", 
+      searchResult : [],
+      selectedFilter: "user",
     }
   },
   created() {
@@ -60,13 +60,7 @@ export default {
   },
   methods: {
     showUserProfile(user) {
-      this.$router.push({ path: `/user/` })
-      console.log(`/user/${user.name}/profile`)
-      console.log("Send Request To Render A Profile")
-      // this.$store.dispatch('search/searchUser', user.name).then(() => {
-      //   var res = this.$store.getters.userSearchResult
-      //   console.log("in", res)
-      // })
+      this.$router.push({ path: `/user/${user.name}/profile` })
     },
     handleSearch() {
       this.$store.dispatch('search/getAllUsers').then(() => {
