@@ -42,9 +42,44 @@ public class EquipmentUpdateService {
 
     public final String CURRENT_CURRENCY_URI = "https://api.exchangeratesapi.io/latest?base=USD";
 
-    @Scheduled(fixedDelay = DAY_IN_MS)
+    @Scheduled(fixedDelay = HOUR_IN_MS * 12, initialDelay = HOUR_IN_MS * 12)
     public void updateRates(){
-        // Update rates once per day
+        // Update rates twice per day
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        ExchangeRateDTO currentResults = restTemplate.getForObject(CURRENT_CURRENCY_URI, ExchangeRateDTO.class);
+
+        Date responseDate;
+        try {
+            responseDate = df.parse(currentResults.getDate());
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        for (Map.Entry<String,Double> pair : currentResults.getRates().entrySet()) {
+
+            Equipment equipment = equipmentRepsitory.findByName(pair.getKey());
+
+            if(equipment.getLastUpdated().getTime() >= responseDate.getTime()) {
+                // Not updated yet. Do no add to historical values
+                continue;
+            }
+
+            Date lastUpdated = equipment.getLastUpdated();
+            double lastValue = equipment.getCurrentValue();
+
+            Equipment.HistoricalValue currentHistory = new Equipment.HistoricalValue(lastUpdated,lastValue);
+
+            equipment.setLastUpdated(new Date(responseDate.getTime()));
+            equipment.setCurrentValue(pair.getValue());
+            equipment.addHistoricalValue(currentHistory);
+
+            equipmentRepsitory.save(equipment);
+
+        }
+
     }
 
     public void initializeEquipments(){
@@ -72,7 +107,7 @@ public class EquipmentUpdateService {
             equipment.setName(pair.getKey());
             equipment.setCurrentStock(1_000_000);
             equipment.setCurrentValue(pair.getValue());
-            equipment.setLastUpdated(new Date(date.getTime()));
+            equipment.setLastUpdated(new Date(date.getTime() + HOUR_IN_MS * 6));
             equipment.setPredictionRate(0);
             equipmentRepsitory.save(equipment);
 
@@ -88,8 +123,8 @@ public class EquipmentUpdateService {
 
         Date today = new Date();
 
-        String endingDate = df.format(today.getTime() - DAY_IN_MS * 2);
-        String startingDate = df.format(today.getTime() - DAY_IN_MS * 5);
+        String endingDate = df.format(today.getTime() - DAY_IN_MS);
+        String startingDate = df.format(today.getTime() - DAY_IN_MS * 7);
 
         RestTemplate restTemplate = new RestTemplate();
 
@@ -113,14 +148,13 @@ public class EquipmentUpdateService {
 
                 Equipment equipment = equipmentRepsitory.findByName(pair.getKey());
 
-                // TODO: Still includes the current one
-                if(equipment.getLastUpdated().equals(curstamp)) {
+                if(equipment.getLastUpdated().getTime() - HOUR_IN_MS * 6 == curstamp.getTime()) {
                     // Not updated yet. Do no add to historical values
                     break;
                 }
 
                 Equipment.HistoricalValue historicValue = new Equipment.HistoricalValue();
-                historicValue.setTimestamp(new Date(curstamp.getTime()));
+                historicValue.setTimestamp(new Date(curstamp.getTime() + HOUR_IN_MS * 6));
                 historicValue.setValue(pair.getValue());
                 equipment.addHistoricalValue(historicValue);
                 equipmentRepsitory.save(equipment);
@@ -129,18 +163,19 @@ public class EquipmentUpdateService {
         }
     }
 
+    private double getNextPredictionValue(List<Equipment.HistoricalValue> history){
+
+        // Generate new prediction value from the last historical values.
+        return 0;
+    }
+
+
     public void updateEquipments(){
 
         // Fetch real time values currently
         // Store them in the DB.
         // Do that every 9 A.M and 6 P.M.
 
-    }
-
-    private double getNextPredictionValue(List<Equipment.HistoricalValue> history){
-
-        // Generate new prediction value from the last historical values.
-        return 0;
     }
 
     public void saveEquipmentInfo(FileOutputStream os, String equipmentName){
@@ -154,7 +189,6 @@ public class EquipmentUpdateService {
 
         // Load saved equipment info.
         // Might be called on start up to prevent losing data between deployments.
-
 
     }
 
