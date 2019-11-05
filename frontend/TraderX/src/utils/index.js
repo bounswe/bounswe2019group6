@@ -355,3 +355,20 @@ export function randomImage() {
   ]
   return options[Math.floor(Math.random() * options.length)]
 }
+
+export function deleteMultipleUsers(dupArr) {
+  var uniqueArr = []
+  dupArr.forEach(function (dupUser) {
+    var exists = false
+    uniqueArr.forEach(function (uniUser) {
+      if(dupUser.name == uniUser.name){
+        exists = true
+      }
+    });
+    if (!exists){
+      uniqueArr.push(dupUser)
+    }
+  });
+  return uniqueArr
+}
+
