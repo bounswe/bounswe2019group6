@@ -66,6 +66,11 @@ export const constantRoutes = [
     component: () => import('@/views/register/confirm')
   },
   {
+    path: '/renew_password',
+    hidden: true,
+    component: () => import('@/views/login/renew-password')
+  },
+  {
     path: '/auth-redirect',
     component: () => import('@/views/login/auth-redirect'),
     hidden: true
