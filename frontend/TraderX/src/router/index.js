@@ -143,6 +143,20 @@ export const constantRoutes = [
     ]
   },
   {
+    path: '/trading-equipment',
+    component: Layout,
+    redirect: '/trading-equipment/list',
+    hidden: false,
+    children: [
+      {
+        path: 'list',
+        component: () => import('@/views/trading-equipment/index'),
+        name: 'Search',
+        meta: { title: 'Trading Equipments', icon: 'shopping', noCache: true }
+      }
+    ]
+  },
+  {
     path: '/search',
     component: Layout,
     redirect: '/search/index',
@@ -155,7 +169,7 @@ export const constantRoutes = [
         meta: { title: 'Search', icon: 'search', noCache: true }
       }
     ]
-  }
+  },
 ]
 
 /**
