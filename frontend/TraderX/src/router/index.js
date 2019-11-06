@@ -66,6 +66,11 @@ export const constantRoutes = [
     component: () => import('@/views/register/confirm')
   },
   {
+    path: '/renew_password',
+    hidden: true,
+    component: () => import('@/views/login/renew-password')
+  },
+  {
     path: '/auth-redirect',
     component: () => import('@/views/login/auth-redirect'),
     hidden: true
@@ -143,20 +148,6 @@ export const constantRoutes = [
     ]
   },
   {
-    path: '/trading-equipment',
-    component: Layout,
-    redirect: '/trading-equipment/list',
-    hidden: false,
-    children: [
-      {
-        path: 'list',
-        component: () => import('@/views/trading-equipment/index'),
-        name: 'Search',
-        meta: { title: 'Trading Equipments', icon: 'shopping', noCache: true }
-      }
-    ]
-  },
-  {
     path: '/search',
     component: Layout,
     redirect: '/search/index',
@@ -170,6 +161,23 @@ export const constantRoutes = [
       }
     ]
   },
+<<<<<<< HEAD
+=======
+  {
+    path: '/user/:username/profile',
+    component: Layout,
+    redirect: '/user/:username/profile',
+    hidden: true,
+    children: [
+      {
+        path: '',
+        component: () => import('@/views/user-profile/index'),
+        name: 'User Profile',
+        meta: { title: 'User Profile', noCache: true },
+      }
+    ]
+  }
+>>>>>>> f0009c9d5a5354cb71b6fd57f000afceb5a443c3
 ]
 
 /**

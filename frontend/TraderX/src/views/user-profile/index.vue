@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="app-container">
     <div v-if="user">
       <el-row :gutter="20">
         <el-col
@@ -50,11 +50,12 @@
 <script>
 
 import { mapGetters } from 'vuex'
-import UserCard from './components/UserCard'
-import Portfolio from './components/Portfolio'
-import Events from './components/Events'
-import News from './components/News'
-import Articles from './components/Articles'
+import UserCard from '@/views/profile/components/UserCard'
+import Portfolio from '@/views/profile/components/Portfolio'
+import Events from '@/views/profile/components/Events'
+import News from '@/views/profile/components/News'
+import Articles from '@/views/profile/components/Articles'
+import { getUser } from '@/api/user'
 
 export default {
   name: 'UserProfile',
@@ -73,17 +74,14 @@ export default {
     ])
   },
   created() {
-    this.getUser()
+    // this.$route.path.split('/') = ["", "user", "username", "profile"] 
+    getUser(this.$route.path.split('/')[2]).then(response => {
+      this.user = response.data
+      console.log(response.data)
+    })
   },
   methods: {
-    getUser() {
-      this.user = {
-        name: this.name,
-        roles: this.roles.join(' | '),
-        email: 'admin@test.com',
-        avatar: this.avatar
-      }
-    }
+    
   }
 }
 </script>

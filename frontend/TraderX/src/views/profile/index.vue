@@ -76,7 +76,7 @@ export default {
   components: { UserCard, Portfolio, Explore, Events, News, Articles, Editprofile, GithubCorner },
   data() {
     return {
-      user: {},
+      user: this.$store.getters.userInfo,
       activeTab: 'portfolio'
     }
   },
@@ -87,18 +87,11 @@ export default {
       'roles'
     ])
   },
-  created() {
-    this.getUser()
+  created() {   
   },
   methods: {
-    getUser() {
-      this.user = {
-        name: this.name,
-        roles: this.roles.join(' | '),
-        email: 'admin@test.com',
-        avatar: this.avatar
-      }
-    }
+  },
+  mounted() {
   }
 }
 </script>

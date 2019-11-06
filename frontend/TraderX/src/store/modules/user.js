@@ -1,4 +1,4 @@
-import { login, getInfo, logout, register, confirm } from '@/api/user'
+import { login, getInfo, logout, register, confirm, resetPassword, renew } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
 
@@ -123,6 +123,7 @@ const actions = {
       resolve()
     })
   },
+
   // user registration
   // eslint-disable-next-line no-use-before-define
   register({ commit }, data) {
@@ -134,7 +135,8 @@ const actions = {
       })
     })
   },
-// eslint-disable-next-line no-use-before-define
+
+  // eslint-disable-next-line no-use-before-define
   confirm({ dispatch }, query) {
     return new Promise((resolve, reject) => {
       confirm(query).then(() => {
@@ -144,6 +146,29 @@ const actions = {
       })
     })
   },
+
+  resetPassword({ commit }, query) {
+    return new Promise((resolve, reject) => {
+      resetPassword(query).then(() => {
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+
+  renew({ commit }, rawData) {
+    const { token, newPassword } = rawData
+    const data = { token: token, newPassword: newPassword }
+    return new Promise((resolve, reject) => {
+      renew(data).then(() => {
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+
   // TODO this is deprecated, will be removed
   // dynamically modify permissions
   changeRoles({ commit, dispatch }, role) {
