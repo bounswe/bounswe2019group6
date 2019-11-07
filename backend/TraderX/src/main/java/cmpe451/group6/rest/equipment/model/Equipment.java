@@ -15,11 +15,17 @@ public class Equipment {
     @Column(unique = true, nullable = false)
     private String name;
 
+    @Column(unique = true, nullable = false)
+    private String code;
+
     @Column(nullable = false)
     private double currentValue;
 
     @Column(nullable = false)
     private Date lastUpdated;
+
+    @Column(nullable = false)
+    private String timeZone;
 
     @ElementCollection(fetch = FetchType.EAGER)
     private List<HistoricalValue> valueHistory;
@@ -31,6 +37,22 @@ public class Equipment {
     private double predictionRate;
 
     public Equipment() {
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getTimeZone() {
+        return timeZone;
+    }
+
+    public void setTimeZone(String timeZone) {
+        this.timeZone = timeZone;
     }
 
     public Integer getId() {
@@ -97,14 +119,23 @@ public class Equipment {
 
         private Date timestamp;
 
-        private double value;
+        private double low;
+
+        private double open;
+
+        private double high;
+
+        private double close;
 
         public HistoricalValue() {
         }
 
-        public HistoricalValue(Date timestamp, double value) {
+        public HistoricalValue(Date timestamp, double low, double open, double high, double close) {
             this.timestamp = timestamp;
-            this.value = value;
+            this.low = low;
+            this.open = open;
+            this.high = high;
+            this.close = close;
         }
 
         public Date getTimestamp() {
@@ -115,12 +146,36 @@ public class Equipment {
             this.timestamp = timestamp;
         }
 
-        public double getValue() {
-            return value;
+        public double getLow() {
+            return low;
         }
 
-        public void setValue(double value) {
-            this.value = value;
+        public void setLow(double low) {
+            this.low = low;
+        }
+
+        public double getOpen() {
+            return open;
+        }
+
+        public void setOpen(double open) {
+            this.open = open;
+        }
+
+        public double getHigh() {
+            return high;
+        }
+
+        public void setHigh(double high) {
+            this.high = high;
+        }
+
+        public double getClose() {
+            return close;
+        }
+
+        public void setClose(double close) {
+            this.close = close;
         }
     }
 }

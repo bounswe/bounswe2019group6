@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface EquipmentRepsitory extends JpaRepository<Equipment,Integer> {
 
-    Equipment findByName(String name);
+    Equipment findByCode(String code);
 
     List<Equipment> findAll();
 
