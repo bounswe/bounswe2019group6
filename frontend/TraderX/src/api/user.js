@@ -61,3 +61,19 @@ export function getUser(username) {
 
   })
 }
+
+export function unfollowUser(username) {
+  return request({
+    url: '/follow/unfollow_user',
+    method: 'post',
+    params: username
+  })
+}
+
+export function followUser(username) {
+  return request({
+    url: '/follow/follow_user',
+    method: 'post',
+    params: username
+  })
+}

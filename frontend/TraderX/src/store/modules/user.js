@@ -1,4 +1,4 @@
-import { login, getInfo, logout, register, confirm, resetPassword, renew } from '@/api/user'
+import { login, getInfo, logout, register, confirm, resetPassword, renew, unfollowUser, followUser } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
 
@@ -162,6 +162,30 @@ const actions = {
     const data = { token: token, newPassword: newPassword }
     return new Promise((resolve, reject) => {
       renew(data).then(() => {
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+
+  followUser({ commit }, username) {
+    return new Promise((resolve, reject) => {
+      followUser(username).then(response => {
+        // const { data } = response
+        // commit('SET_USER_SEARCH_RESULT', data)
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+
+  unfollowUser({ commit }, username) {
+    return new Promise((resolve, reject) => {
+      unfollowUser(username).then(response => {
+        // const { data } = response
+        // commit('SET_USER_SEARCH_RESULT', data)
         resolve()
       }).catch(error => {
         reject(error)
