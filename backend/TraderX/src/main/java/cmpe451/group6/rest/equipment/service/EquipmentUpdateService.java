@@ -8,22 +8,18 @@ import cmpe451.group6.rest.equipment.repository.EquipmentRepsitory;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
+import static cmpe451.group6.rest.equipment.configuration.EquipmentConfig.*;
 
 /**
- *  Class to update Equipment values periodically.
+ *  Class containing methods to update Equipment values periodically.
  */
 
 @Component
@@ -32,39 +28,12 @@ public class EquipmentUpdateService {
     @Autowired
     EquipmentRepsitory equipmentRepsitory;
 
-    public final String datetimeFormat = "yyyy-MM-dd";
-
-    public final DateFormat df = new SimpleDateFormat(datetimeFormat);
-
-    public final long DAY_IN_MS = 1000 * 60 * 60 * 24;
-
-    public final long HOUR_IN_MS = 1000 * 60 * 60;
-
-    public final String BASE_CURRENCY_CODE = "USD";
-
-    public final String BASE_CURRENCY_NAME = "United States Dollar";
-
-    public final String BASE_CURRENCY_ZONE = "UTC";
-
-    public final double DEFAULT_STOCK = 1_000_000;
-
-    public final double DEFAULT_PREDICT_RATE = 0.1;
-
-    public final String RAW_CURRENCY_API = "https://www.alphavantage.co/query?function=" +
-            "CURRENCY_EXCHANGE_RATE&from_currency=%s&to_currency=%s&apikey=%s";
-
-    public final String RAW_CURRENCY_HISTORY_API = "https://www.alphavantage.co/query?function=" +
-            "FX_DAILY&from_symbol=%s&to_symbol=%s&apikey=%s";
-
-    public final String[] CURRENCIES = {"JPY", "EUR", "TRY"};
-
     private String apiKey1;
 
     @Autowired
     public EquipmentUpdateService(@Value("${security.alpha-api-key1}") String apiKey1) {
         this.apiKey1 = apiKey1;
     }
-
 
     public void initializeEquipments(){
         initEquipments();
@@ -95,17 +64,61 @@ public class EquipmentUpdateService {
 
         try {
             equipment.setCurrentValue(Double.parseDouble(data.get(CurrencyDTO.rate)));
-            equipment.setLastUpdated(df.parse(data.get(CurrencyDTO.lastUpdate).substring(0, 11)));
+            equipment.setLastUpdated(preciseDf.parse(data.get(CurrencyDTO.lastUpdate)));
         } catch (Exception e){
             return;
         }
 
         equipmentRepsitory.save(equipment);
 
-
     }
 
+    private void updateSingleEquipment(Map<String, String> data){
 
+        String code = data.get(CurrencyDTO.targetCode);
+        Equipment equipment = equipmentRepsitory.findByCode(code);
+        if(equipment == null){
+            throw new IllegalArgumentException("No such currency found on records: " + code);
+        }
+
+        try {
+            equipment.setCurrentValue(Double.parseDouble(data.get(CurrencyDTO.rate)));
+            equipment.setLastUpdated(preciseDf.parse(data.get(CurrencyDTO.lastUpdate)));
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new IllegalArgumentException("Invalid data from the API service");
+        }
+
+        equipmentRepsitory.save(equipment);
+    }
+
+    void scheduledUpdate(){
+
+        System.out.println("Scheduled update is working...");
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        for (String currency: CURRENCIES) {
+            // Init other currencies
+
+            String uri = String.format(RAW_CURRENCY_API, BASE_CURRENCY_CODE, currency, apiKey1);
+
+            String responseString = restTemplate.getForObject(uri, String.class);
+
+            JSONObject jsonObject = new JSONObject(responseString);
+
+            @SuppressWarnings("unchecked")
+            Map<String,String> data = (Map<String,String>) jsonObject.toMap().get(CurrencyDTO.header);
+
+            if(data == null){ continue; }
+
+            updateSingleEquipment(data);
+
+        }
+
+        System.out.println("Scheduled update is done...");
+
+    }
 
     private void initEquipments(){
 
@@ -132,18 +145,12 @@ public class EquipmentUpdateService {
 
     }
 
-
     // Initialize history after 1 min passed since the initialization of the base.
     // This is required since the service is limited by 5 calls per min for
     // an IP and using different apiKey makes no sense.
-    @Scheduled(initialDelay = 70000L, fixedDelay = Long.MAX_VALUE)
-    public void loadEquipmentHistory(){
-
-        System.out.println("Loading historical data");
-
+    void loadEquipmentHistory(){
 
         RestTemplate restTemplate = new RestTemplate();
-
 
         for (String currency: CURRENCIES) { // No need to load history for base currency.
             // Init other currencies
@@ -162,7 +169,6 @@ public class EquipmentUpdateService {
             Map<String, String> metadata = (Map<String, String>)
                     jsonObject.toMap().get(CurrencyHistoryDTO.metadata);
 
-
             if(history == null || metadata == null) {
                 System.err.println("Null response for currency history:" + currency);
                 continue;
@@ -171,26 +177,19 @@ public class EquipmentUpdateService {
             saveSingleEquipmentHistory(history,metadata);
         }
 
-        System.out.println("History is initialized for currencies.");
+        System.out.println("Currency history has been loaded.");
 
     }
 
     private void saveSingleEquipmentHistory(Map<String, Map<String, String>> history, Map<String, String> metadata){
 
-        String from = metadata.get(CurrencyHistoryDTO.fromSymbol);
         String to = metadata.get(CurrencyHistoryDTO.toSymbol);
-        Date lastUpdated;
-
-        try {
-            lastUpdated = df.parse(metadata.get(CurrencyHistoryDTO.lastRefreshed).substring(0,10));
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return;
-        }
 
         Equipment equipment = equipmentRepsitory.findByCode(to);
 
         if(equipment == null) return;
+
+        equipment.getValueHistory().clear();
 
         for (Map.Entry<String, Map<String, String>> daily : history.entrySet()) {
             Date current;
@@ -211,13 +210,14 @@ public class EquipmentUpdateService {
 
         }
 
+        equipment.getValueHistory().sort((o1, o2) -> o1.getTimestamp().compareTo(o2.getTimestamp()));
+
         equipmentRepsitory.save(equipment);
 
     }
 
 
-    @Scheduled(fixedDelay = HOUR_IN_MS, initialDelay = HOUR_IN_MS)
-    public void updateEquipments(){
+    void updateEquipments(){
 
         // Fetch real time values currently
         // Store them in the DB.
@@ -225,29 +225,28 @@ public class EquipmentUpdateService {
 
     }
 
-    @Scheduled(cron = "0 3 * * *")
-    public void updateEquipmentsHistory(){
+    void updateEquipmentsHistory(){
 
         // Save last day's data to history.
 
     }
 
 
-    private double getNextPredictionValue(List<Equipment.HistoricalValue> history){
+    double getNextPredictionValue(List<Equipment.HistoricalValue> history){
 
         // Generate new prediction value from the last historical values.
         return 0;
     }
 
 
-    public void saveEquipmentInfo(FileOutputStream os, String equipmentName){
+    void saveEquipmentInfo(FileOutputStream os, String equipmentName){
 
         // Persist equipment info on file.
         // Might be called by a shutdown hook to prevent losing data between deployments.
 
     }
 
-    public void loadEquipmentInfo(FileInputStream is, String equipmentName){
+    void loadEquipmentInfo(FileInputStream is, String equipmentName){
 
         // Load saved equipment info.
         // Might be called on start up to prevent losing data between deployments.

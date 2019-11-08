@@ -1,11 +1,14 @@
 package cmpe451.group6.rest.equipment.controller;
 
+import cmpe451.group6.rest.equipment.dto.EquipmentMetaWrapper;
 import cmpe451.group6.rest.equipment.service.EquipmentService;
 import cmpe451.group6.rest.equipment.model.Equipment;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import static cmpe451.group6.authorization.exception.GlobalExceptionHandlerController.GENERIC_ERROR_RESPONSE;
 
 
 @RestController
@@ -23,6 +26,15 @@ public class EquipmentController {
             @ApiResponse(code = 417, message = "No such an equipment found.")})
     public Equipment getEquipment(@ApiParam("Equipment Name") @PathVariable String name) {
         return equipmentService.getEquipment(name);
+    }
+
+    @GetMapping(value = "")
+    @ResponseStatus(HttpStatus.OK)
+    @ApiOperation(value = "Returns equipment names only (no auth required)", response = EquipmentMetaWrapper.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE)})
+    public EquipmentMetaWrapper getEquipments() {
+        return equipmentService.getEquipments();
     }
 
 }

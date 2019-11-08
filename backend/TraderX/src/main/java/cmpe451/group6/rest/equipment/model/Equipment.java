@@ -2,6 +2,7 @@ package cmpe451.group6.rest.equipment.model;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -28,7 +29,7 @@ public class Equipment {
     private String timeZone;
 
     @ElementCollection(fetch = FetchType.EAGER)
-    private List<HistoricalValue> valueHistory;
+    private List<HistoricalValue> valueHistory = new ArrayList<>();
 
     @Column(nullable = false)
     private double currentStock;
@@ -91,7 +92,7 @@ public class Equipment {
         return valueHistory;
     }
 
-    public void setValueHistory(List<HistoricalValue> valueHistory) {
+    public void setValueHistory(ArrayList<HistoricalValue> valueHistory) {
         this.valueHistory = valueHistory;
     }
 
