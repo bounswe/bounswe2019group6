@@ -1,4 +1,5 @@
-import { login, getInfo, logout, register, confirm, resetPassword, renew, unfollowUser, followUser } from '@/api/user'
+import { login, getInfo, logout, register, confirm, resetPassword, renew, unfollowUser,
+   followUser, setProfilePublic, setProfilePrivate } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
 
@@ -188,6 +189,27 @@ const actions = {
         // commit('SET_USER_SEARCH_RESULT', data)
         resolve()
       }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+
+  setProfilePublic({ commit }, username) {
+    return new Promise((resolve, reject) => {
+      setProfilePublic().then(response => {
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+
+  setProfilePrivate({ commit }, username) {
+    return new Promise((resolve, reject) => {
+      setProfilePrivate().then(response => {
+        resolve()
+      }).catch(error => {
+        console.log(response)
         reject(error)
       })
     })

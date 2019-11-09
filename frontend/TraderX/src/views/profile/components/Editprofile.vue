@@ -17,7 +17,7 @@
         </el-input>
       </el-collapse-item>
       <el-collapse-item title="Privacy" name="4">
-        <el-switch v-model="privatepublic" active-color="#13ce66" inactive-color="#ff4949" style="float: left" active-text="Private" inactive-text="Public"/>
+        <el-switch v-model="privatepublic" active-color="#13ce66" inactive-color="#ff4949" style="float: left" active-text="Public" inactive-text="Private"/>
         <el-button @click="updatePrivacy(privatepublic)" style="margin-left: 50px; margin-bottom: 10px">Update</el-button>
       </el-collapse-item>
       <el-collapse-item title="Role" name="5">
@@ -48,7 +48,7 @@
         passwordinput: '',
         newibaninput: '',
         traderibaninput: '',
-        privatepublic: this.user.isPrivate,
+        privatepublic: !this.user.isPrivate,
         istrader: this.user.roles[0] == 'ROLE_TRADER' ? true : false,
         seen: false
       };
@@ -67,7 +67,31 @@
         console.log(iban)
       },
       updatePrivacy(isPrivate){
-        console.log(isPrivate)
+        if(isPrivate){
+          if (this.user.isPrivate){
+              this.$store.dispatch('user/setProfilePublic').then(response => {
+                this.$message.success('Your Profile Is Public Now!')
+                this.user.isPrivate = false
+            }).catch(error => {
+              console.log("errorrr in profile change")
+              console.log(error)
+            })
+          } else {
+            this.$message.error('Your Profile Is Public Already!')
+          }
+        } else {
+          if (!this.user.isPrivate){
+            this.$store.dispatch('user/setProfilePrivate').then(response => {
+              this.$message.success('Your Profile Is Private Now!')
+              this.user.isPrivate = true
+            }).catch(error => {
+              console.log("errorrr in profile change")
+              console.log(error)
+            })
+          } else {
+            this.$message.error('Your Profile Is Private Already!')
+          }
+        }
       }
     }
   }

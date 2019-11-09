@@ -77,3 +77,17 @@ export function followUser(username) {
     params: username
   })
 }
+
+export function setProfilePublic() {
+  return request({
+    url: '/users/set_profile/public',
+    method: 'post',
+  })
+}
+
+export function setProfilePrivate() {
+  return request({
+    url: '/users/set_profile/private',
+    method: 'post',
+  })
+}
