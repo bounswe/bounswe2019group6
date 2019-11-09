@@ -3,13 +3,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_news">
+    app:startDestination="@+id/navigation_home">
 
     <fragment
-        android:id="@+id/navigation_news"
-        android:name="com.traderx.ui.news.NewsFragment"
-        android:label="@string/title_news"
-        tools:layout="@layout/fragment_news" />
+        android:id="@+id/navigation_home"
+        android:name="com.traderx.ui.home.HomeFragment"
+        android:label="@string/title_home"
+        tools:layout="@layout/fragment_news" >
+        <action
+            android:id="@+id/action_navigation_home_to_navigation_article"
+            app:destination="@id/navigation_article" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_article"
+        android:name="com.traderx.ui.article.ArticleCreate"
+        android:label="Article"
+        tools:layout="@layout/fragment_article_create" />
 
     <fragment
         android:id="@+id/navigation_trader_equipment"
