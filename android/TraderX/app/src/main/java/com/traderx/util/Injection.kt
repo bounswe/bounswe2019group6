@@ -4,6 +4,7 @@ import android.content.Context
 import com.traderx.api.ApiService
 import com.traderx.db.AppDatabase
 import com.traderx.db.UserDao
+import com.traderx.viewmodel.AuthUserViewModelFactory
 import com.traderx.viewmodel.UserViewModelFactory
 
 object Injection {
@@ -13,9 +14,14 @@ object Injection {
         return database.userDao()
     }
 
-    fun provideUserViewModelFactory(context: Context): UserViewModelFactory {
+    fun provideAuthUserViewModelFactory(context: Context): AuthUserViewModelFactory {
         val dataSource = provideUserDao(context)
         val networkSource = ApiService.getInstance(context)
-        return UserViewModelFactory(dataSource, networkSource)
+        return AuthUserViewModelFactory(dataSource, networkSource)
+    }
+
+    fun provideUserViewModelFactory(context: Context): UserViewModelFactory {
+        val networkSource = ApiService.getInstance(context)
+        return UserViewModelFactory(networkSource)
     }
 }

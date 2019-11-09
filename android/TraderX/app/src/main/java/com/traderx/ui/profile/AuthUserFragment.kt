@@ -12,6 +12,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.github.razir.progressbutton.bindProgressButton
 import com.github.razir.progressbutton.hideProgress
 import com.github.razir.progressbutton.isProgressActive
@@ -24,14 +25,14 @@ import com.traderx.api.ErrorHandler
 import com.traderx.api.RequestService
 import com.traderx.util.Injection
 import com.traderx.util.TokenUtility
-import com.traderx.viewmodel.UserViewModel
+import com.traderx.viewmodel.AuthUserViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
 class AuthUserFragment : Fragment() {
 
-    private lateinit var userViewModel: UserViewModel
+    private lateinit var authUserViewModel: AuthUserViewModel
 
     private lateinit var userName: TextView
     private lateinit var email: TextView
@@ -63,8 +64,14 @@ class AuthUserFragment : Fragment() {
             bindProgressButton(button)
         }
 
-        val userViewModelFactory = Injection.provideUserViewModelFactory(root.context)
-        userViewModel = ViewModelProvider(this, userViewModelFactory).get(UserViewModel::class.java)
+        root.findViewById<Button>(R.id.edit_profile)?.let {
+            it.setOnClickListener {
+                findNavController().navigate(AuthUserFragmentDirections.actionNavigationAuthUserToNavigationUserEdit())
+            }
+        }
+
+        val authUserViewModelFactory = Injection.provideAuthUserViewModelFactory(root.context)
+        authUserViewModel = ViewModelProvider(this, authUserViewModelFactory).get(AuthUserViewModel::class.java)
 
         requestService = ApiService.getInstance(context)
 
@@ -79,7 +86,7 @@ class AuthUserFragment : Fragment() {
         val activity = this.activity as FragmentActivity
 
         disposable.add(
-            userViewModel.user(context)
+            authUserViewModel.user(context)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe({
@@ -107,7 +114,7 @@ class AuthUserFragment : Fragment() {
 
         button.showProgress()
 
-        val single = userViewModel.deleteUser().andThen(requestService.signout())
+        val single = authUserViewModel.deleteUser().andThen(requestService.signout())
 
         disposable.add(
             single
