@@ -38,14 +38,7 @@
           </div>
           <p><b>IBAN:</b> {{ user.iban }}</p>
           <p><b>Location:</b> Tokyo</p>
-          <el-switch
-            v-model="user.isPrivate"
-            active-color="#13ce66"
-            inactive-color="#ff4949"
-            style="float: left"
-            active-text="Public"
-            inactive-text="Private"
-          />
+          <p><b>Current Status:</b> {{ user.isPrivate ? "Private" : !user.isPrivate ? 'Public': "" }}</p>
         </div>
       </div>
     </div>

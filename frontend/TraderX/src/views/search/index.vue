@@ -16,13 +16,13 @@
         <el-table-column prop="privacy" label="Privacy"></el-table-column>
         <el-table-column prop="role" label="Role"></el-table-column>
         <el-table-column prop="followinfo">
-          <template slot-scope="scope">
-            <el-button @click.native.prevent="takeFollowUnfollowAction(searchResult[scope.$index])" :type="scope.row.isFollow === 'true' ? 'danger' : 'primary'" plain>{{ scope.row.followText }}</el-button>
+          <template slot-scope="scope" >
+            <el-button @click.native.prevent="takeFollowUnfollowAction(searchResult[scope.$index])" :type="scope.row.isFollow === 'true' ? 'danger' : 'primary'" style="float:right" plain>{{ scope.row.followText }}</el-button>
           </template>
         </el-table-column>
         <el-table-column fixed="right" width="120">
           <template slot-scope="scope">
-            <el-button @click.native.prevent="showUserProfile(searchResult[scope.$index])" type="primary" round>See Profile</el-button>
+            <el-button @click.native.prevent="showUserProfile(searchResult[scope.$index])" type="text" round>See Profile</el-button>
           </template>
         </el-table-column>
       </el-table>  

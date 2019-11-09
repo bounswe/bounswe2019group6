@@ -50,7 +50,7 @@
                 label="EditProfile"
                 name="editprofile"
               >
-                <editprofile />
+                <editprofile :user="this.user"/>
               </el-tab-pane>
             </el-tabs>
           </el-card>
