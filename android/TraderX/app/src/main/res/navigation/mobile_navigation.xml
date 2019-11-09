@@ -28,8 +28,41 @@
         tools:layout="@layout/fragment_trader_equipment" />
 
     <fragment
+        android:id="@+id/navigation_user_search"
+        android:name="com.traderx.ui.search.UserSearchFragment"
+        android:label="@string/search"
+        tools:layout="@layout/fragment_user_search">
+        <action
+            android:id="@+id/action_navigation_user_search_to_navigation_user"
+            app:destination="@id/navigation_user" />
+    </fragment>
+
+    <fragment
         android:id="@+id/navigation_auth_user"
         android:name="com.traderx.ui.profile.AuthUserFragment"
         android:label="@string/title_profile"
-        tools:layout="@layout/fragment_auth_user" />
+        tools:layout="@layout/fragment_auth_user" >
+        <action
+            android:id="@+id/action_navigation_auth_user_to_navigation_user_edit"
+            app:destination="@id/navigation_user_edit" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_user"
+        android:name="com.traderx.ui.profile.UserFragment"
+        android:label="@string/title_profile"
+        tools:layout="@layout/fragment_user">
+        <argument
+            android:name="username"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_user_edit"
+        android:name="com.traderx.ui.profile.AuthUserEditFragment"
+        android:label="@string/title_user_edit"
+        tools:layout="@layout/fragment_auth_user_edit" />
+
 </navigation>

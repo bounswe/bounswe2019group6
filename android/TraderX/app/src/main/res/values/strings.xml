@@ -8,8 +8,8 @@
     <string name="title_home">Home</string>
     <string name="title_trader_equipment">Trader Equipments</string>
     <string name="title_profile">Profile</string>
+    <string name="title_user_edit">Edit Profile</string>
     <string name="welcome_back">Welcome Back</string>
-
     <!--    Fields-->
     <string name="username">Username</string>
     <string name="email">E-mail</string>
@@ -19,11 +19,18 @@
 
     <!--    Words-->
     <string name="login">Login</string>
-    <string name="signup">Sign Up</string>
     <string name="signout">Sign Out</string>
-    <string name="forgot_pass">Forgot Password</string>
+    <string name="signup">Sign Up</string>
+    <string name="forgot_pass">Forgot Password</string>d
     <string name="general_false">No</string>
     <string name="general_true">Yes</string>
+    <string name="search">Search</string>
+    <string name="follow">Follow</string>
+    <string name="pending">Pending</string>
+
+    <!--    Follow-->
+    <string name="follow_requested">Following request sent to %1$s.</string>
+    <string name="follow_success">You are following %1$s now</string>
 
     <string name="not_available">Not Available</string>
     <string name="connecting">Connecting</string>
@@ -40,7 +47,8 @@
     <string name="role_basic">Basic</string>
     <string name="role_trader">Trader</string>
     <string name="role_admin">Admin</string>
-    <string name="profile_private">Private</string>
+    <string name="profile_private">Private Profile</string>
+    <string name="profile_public">Public Profile</string>
 
     <string name="username_not_valid">Username should be between 5 and 20 characters long</string>
     <string name="email_not_valid">Email is not valid</string>

@@ -5,11 +5,15 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
+import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.github.razir.progressbutton.hideProgress
+import com.github.razir.progressbutton.isProgressActive
+import com.github.razir.progressbutton.showProgress
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -35,7 +39,6 @@ class SignUpActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var passwordConfirm: EditText
     private lateinit var warning: TextView
     private lateinit var warningLayout: ConstraintLayout
-    private lateinit var signUpButton: Button
     private lateinit var ibanCheckbox: CheckBox
     private lateinit var iban: EditText
     private lateinit var mMap: GoogleMap
@@ -58,20 +61,23 @@ class SignUpActivity : AppCompatActivity(), OnMapReadyCallback {
         email = findViewById(R.id.signup_mail)
         password = findViewById(R.id.signup_pass)
         passwordConfirm = findViewById(R.id.signup_pass_confirm)
-        warning = findViewById(R.id.signup_warning)
-        signUpButton = findViewById(R.id.signup_button)
-        warningLayout = findViewById(R.id.signup_warning_layout)
-        ibanCheckbox = findViewById(R.id.signup_iban_checkbox)
+        ibanCheckbox = findViewById<CheckBox>(R.id.signup_iban_checkbox).also {
+            it.setOnCheckedChangeListener { compound: CompoundButton, checked: Boolean ->
+                changeIbanEdit(iban, checked)
+            }
+        }
+
         iban = findViewById(R.id.signup_iban)
+        warning = findViewById(R.id.signup_warning)
+        warningLayout = findViewById(R.id.signup_warning_layout)
+
         //Disable iban editable
         changeIbanEdit(iban, false)
 
-        ibanCheckbox.setOnCheckedChangeListener { compound: CompoundButton, checked: Boolean ->
-            changeIbanEdit(iban, checked)
-        }
-
-        signUpButton.setOnClickListener {
-            signUpUser()
+        findViewById<Button>(R.id.signup_button)?.apply {
+            setOnClickListener {
+                signUpUser(this)
+            }
         }
     }
 
@@ -81,7 +87,12 @@ class SignUpActivity : AppCompatActivity(), OnMapReadyCallback {
         disposable.clear()
     }
 
-    private fun signUpUser() {
+    private fun signUpUser(button: Button) {
+
+        if (button.isProgressActive()) {
+            return
+        }
+
         clearWarning()
 
         when {
@@ -106,6 +117,8 @@ class SignUpActivity : AppCompatActivity(), OnMapReadyCallback {
             return
         }
 
+        button.showProgress()
+
         disposable.add(
             requestService.register(
                 SignUpRequest(
@@ -118,6 +131,9 @@ class SignUpActivity : AppCompatActivity(), OnMapReadyCallback {
                 )
             )
                 .observeOn(AndroidSchedulers.mainThread())
+                .doFinally {
+                    button.hideProgress(R.string.signup)
+                }
                 .subscribe({
                     clearWarning()
 

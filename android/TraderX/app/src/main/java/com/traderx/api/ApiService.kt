@@ -16,19 +16,27 @@ class ApiService {
     companion object {
 
         private var INSTANCE: RequestService? = null
+        private var CONTEXT_INSTANCE: RequestService? = null
 
         fun refreshInstance() {
+            CONTEXT_INSTANCE = null
             INSTANCE = null
         }
 
         fun getInstance(context: Context? = null): RequestService {
-            return INSTANCE ?: provideRequestService(context).also { INSTANCE = it }
+            return if (context != null) {
+                CONTEXT_INSTANCE ?: provideRequestService(context).also { CONTEXT_INSTANCE = it }
+            } else {
+                INSTANCE ?: provideRequestService(context).also { INSTANCE = it }
+            }
         }
 
         private fun provideRequestService(context: Context?): RequestService {
             val clientBuilder = OkHttpClient.Builder()
 
-            clientBuilder.addInterceptor(RetrofitInterceptor(context))
+            if (context != null) {
+                clientBuilder.addInterceptor(RetrofitInterceptor(context))
+            }
 
             return Retrofit.Builder()
                 .baseUrl(AppConfig.API_HOST)
@@ -41,20 +49,18 @@ class ApiService {
     }
 }
 
-class RetrofitInterceptor(val context: Context?) : Interceptor {
+class RetrofitInterceptor(val context: Context) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         var request = chain.request()
 
-        if (context != null) {
-            val token =
-                context.getSharedPreferences(BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE)
-                    .getString("token", "")
+        val token =
+            context.getSharedPreferences(BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE)
+                .getString("token", "")
 
-            val headers =
-                request.headers().newBuilder().add("Authorization", "Bearer $token").build()
+        val headers =
+            request.headers().newBuilder().add("Authorization", "Bearer $token").build()
 
-            request = request.newBuilder().headers(headers).build()
-        }
+        request = request.newBuilder().headers(headers).build()
 
         return chain.proceed(request)
     }

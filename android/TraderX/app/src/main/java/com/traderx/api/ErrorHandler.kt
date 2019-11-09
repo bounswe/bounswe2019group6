@@ -7,6 +7,7 @@ import android.util.Log
 import androidx.appcompat.app.AlertDialog
 import androidx.room.EmptyResultSetException
 import com.google.gson.GsonBuilder
+import com.google.gson.JsonSyntaxException
 import com.traderx.R
 import com.traderx.api.response.ErrorResponse
 import com.traderx.ui.auth.login.LoginActivity
@@ -19,19 +20,17 @@ class ErrorHandler<T> {
         private const val TAG = "ErrorHandler"
 
         fun handleError(error: Throwable, context: Context): Boolean {
+            Log.e(TAG, error.javaClass.name)
+            Log.e(TAG, error.message)
 
-            when (error) {
+            return when (error) {
                 is HttpException -> handleHttpException(error, context)
                 is ConnectException -> handleConnectException(error, context)
                 else -> {
-                    Log.e(TAG, error.javaClass.name)
-                    Log.e(TAG, error.message)
 
-                    return false
+                    false
                 }
             }
-
-            return true
         }
 
         fun handleHttpException(error: HttpException, context: Context): Boolean {
@@ -45,7 +44,7 @@ class ErrorHandler<T> {
         }
 
         fun handleConnectException(error: Throwable, context: Context): Boolean {
-            if(error is ConnectException) {
+            if (error is ConnectException) {
                 AlertDialog.Builder(context)
                     .setMessage(context.getString(R.string.connection_error))
                     .setPositiveButton("Ok", DialogInterface.OnClickListener { dialog, id ->
@@ -72,7 +71,11 @@ class ErrorHandler<T> {
         fun parseErrorMessage(serializedMessage: String): ErrorResponse {
             val gson = GsonBuilder().create()
 
-            return gson.fromJson<ErrorResponse>(serializedMessage, ErrorResponse::class.java)
+            return try {
+                gson.fromJson<ErrorResponse>(serializedMessage, ErrorResponse::class.java)
+            } catch (e: JsonSyntaxException) {
+                ErrorResponse(0, 0, "", "", "")
+            }
         }
     }
 
