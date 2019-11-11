@@ -3,11 +3,15 @@ package cmpe451.group6;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 
 import cmpe451.group6.authorization.model.RegistrationStatus;
 import cmpe451.group6.authorization.repository.UserRepository;
 import cmpe451.group6.authorization.service.HazelcastService;
 import cmpe451.group6.authorization.service.SignupService;
+import cmpe451.group6.rest.equipment.model.Equipment;
+import cmpe451.group6.rest.equipment.repository.EquipmentRepsitory;
+import cmpe451.group6.rest.equipment.service.EquipmentUpdateService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -17,6 +21,7 @@ import org.springframework.context.annotation.Bean;
 
 import cmpe451.group6.authorization.model.Role;
 import cmpe451.group6.authorization.model.User;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
@@ -24,6 +29,7 @@ import org.springframework.web.filter.CorsFilter;
 // TODO: Interface for user to supply new password when resent link is sent. (Frontend related.)
 
 @SpringBootApplication
+@EnableScheduling
 public class Group6BackendService implements CommandLineRunner {
 
   @Autowired
@@ -34,6 +40,9 @@ public class Group6BackendService implements CommandLineRunner {
 
   @Autowired
   UserRepository userRepository;
+
+  @Autowired
+  EquipmentUpdateService equipmentUpdateService;
 
   public static void main(String[] args) {
     SpringApplication.run(Group6BackendService.class, args);
@@ -94,6 +103,8 @@ public class Group6BackendService implements CommandLineRunner {
     basic.setIsPrivate(false);
     signupService.internal_signup(basic);
 
+
+    equipmentUpdateService.initializeEquipments();
   }
 
 }
