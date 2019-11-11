@@ -1,6 +1,5 @@
 package cmpe451.group6.rest.equipment.service;
 
-
 import cmpe451.group6.rest.equipment.dto.CurrencyDTO;
 import cmpe451.group6.rest.equipment.dto.CurrencyHistoryDTO;
 import cmpe451.group6.rest.equipment.model.Equipment;
@@ -14,7 +13,12 @@ import org.springframework.web.client.RestTemplate;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.text.ParseException;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.logging.Logger;
+
 
 import static cmpe451.group6.rest.equipment.configuration.EquipmentConfig.*;
 
@@ -29,6 +33,9 @@ public class EquipmentUpdateService {
     EquipmentRepsitory equipmentRepsitory;
 
     private String apiKey1;
+
+    Logger logger = Logger.getLogger(EquipmentUpdateService.class.getName());
+
 
     @Autowired
     public EquipmentUpdateService(@Value("${security.alpha-api-key1}") String apiKey1) {
@@ -74,7 +81,6 @@ public class EquipmentUpdateService {
     }
 
     private void updateSingleEquipment(Map<String, String> data){
-
         String code = data.get(CurrencyDTO.targetCode);
         Equipment equipment = equipmentRepsitory.findByCode(code);
         if(equipment == null){
@@ -88,13 +94,13 @@ public class EquipmentUpdateService {
             e.printStackTrace();
             throw new IllegalArgumentException("Invalid data from the API service");
         }
-
         equipmentRepsitory.save(equipment);
     }
 
     void scheduledUpdate(){
 
-        System.out.println("Scheduled update is working...");
+
+        logger.info("Scheduled update is working...");
 
         RestTemplate restTemplate = new RestTemplate();
 
@@ -116,7 +122,7 @@ public class EquipmentUpdateService {
 
         }
 
-        System.out.println("Scheduled update is done...");
+        logger.info("Scheduled update is done...");
 
     }
 
@@ -141,7 +147,7 @@ public class EquipmentUpdateService {
             saveSingleEquipment(data);
         }
 
-        System.out.println("Currencies are initialized.");
+        logger.info("Currencies are initialized.");
 
     }
 
@@ -170,14 +176,14 @@ public class EquipmentUpdateService {
                     jsonObject.toMap().get(CurrencyHistoryDTO.metadata);
 
             if(history == null || metadata == null) {
-                System.err.println("Null response for currency history:" + currency);
+                logger.warning("Null response for currency history:" + currency);
                 continue;
             }
 
             saveSingleEquipmentHistory(history,metadata);
         }
 
-        System.out.println("Currency history has been loaded.");
+        logger.info("Currency history has been loaded.");
 
     }
 
@@ -212,30 +218,39 @@ public class EquipmentUpdateService {
 
         equipment.getValueHistory().sort((o1, o2) -> o1.getTimestamp().compareTo(o2.getTimestamp()));
 
+        double predictRate = getNextPredictionRate(equipment.getValueHistory(), equipment.getCurrentValue());
+        equipment.setPredictionRate(predictRate);
+
         equipmentRepsitory.save(equipment);
 
     }
 
+    // Generate new prediction value from the last historical values.
+    double getNextPredictionRate(List<Equipment.HistoricalValue> history, double currentVal){
 
-    void updateEquipments(){
+        if (history.size() == 0) return DEFAULT_PREDICT_RATE;
 
-        // Fetch real time values currently
-        // Store them in the DB.
-        // Do that every 9 A.M and 6 P.M.
+        int amount = Math.min(history.size(), PREDICT_RATE_HISTORY_SIZE);
+        double totalAvg = 0;
 
+        for(int i = 0; i < amount; i++){
+            Equipment.HistoricalValue current = history.get(i);
+            totalAvg += (current.getHigh() + current.getLow() + current.getClose() + current.getOpen())/4;
+        }
+
+        totalAvg /= amount;
+
+        Random rand = new Random();
+        double rate = (currentVal - totalAvg)/totalAvg;
+        rate *= rand.nextInt(7);
+        return rate;
     }
+
 
     void updateEquipmentsHistory(){
 
         // Save last day's data to history.
 
-    }
-
-
-    double getNextPredictionValue(List<Equipment.HistoricalValue> history){
-
-        // Generate new prediction value from the last historical values.
-        return 0;
     }
 
 

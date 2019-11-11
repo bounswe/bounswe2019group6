@@ -12,6 +12,7 @@ public class EquipmentConfig {
     public static final String BASE_CURRENCY_ZONE = "UTC";
     public static final double DEFAULT_STOCK = 1_000_000;
     public static final double DEFAULT_PREDICT_RATE = 0.1;
+    public static final int PREDICT_RATE_HISTORY_SIZE = 5;
 
     public static final String RAW_CURRENCY_API = "https://www.alphavantage.co/query?function=" +
             "CURRENCY_EXCHANGE_RATE&from_currency=%s&to_currency=%s&apikey=%s";
