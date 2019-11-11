@@ -20,7 +20,7 @@ public class ScheduledUpdateService {
     public final long MIN_IN_MS = 1000 * 60;
 
     @Scheduled(cron = "0 15 * * * *")
-    public void scheduledCurrencyUpdateDaily(){
+    public void scheduledCurrencyUpdateLive(){
         // Update current values at xx:15
         equipmentUpdateService.scheduledUpdate();
     }

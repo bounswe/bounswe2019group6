@@ -28,7 +28,7 @@ public class EquipmentController {
         return equipmentService.getEquipment(name);
     }
 
-    @GetMapping(value = "")
+    @GetMapping(value = "/list")
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Returns equipment names only (no auth required)", response = EquipmentMetaWrapper.class)
     @ApiResponses(value = {

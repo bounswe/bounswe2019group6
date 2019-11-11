@@ -31,6 +31,8 @@ security:
     token:
       secret-key: secret-key
       expire-length: 1800000 # 30 minutes duration by default (in miliseconds)
+  alpha-api-key1: "***************"
+  alpha-api-key2: "***************"
 
 email:
   sender_address: "bounswegroup6@gmail.com"
