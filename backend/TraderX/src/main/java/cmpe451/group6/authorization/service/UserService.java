@@ -2,9 +2,11 @@ package cmpe451.group6.authorization.service;
 
 import javax.servlet.http.HttpServletRequest;
 
+import cmpe451.group6.authorization.dto.EditProfileDTO;
 import cmpe451.group6.authorization.dto.PrivateProfileDTO;
 import cmpe451.group6.authorization.dto.TokenWrapperDTO;
 import cmpe451.group6.authorization.dto.UserResponseDTO;
+import cmpe451.group6.authorization.model.Role;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,7 +17,6 @@ import cmpe451.group6.authorization.model.User;
 import cmpe451.group6.authorization.repository.UserRepository;
 import cmpe451.group6.authorization.security.JwtTokenProvider;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -75,6 +76,56 @@ public class UserService {
     user.setIsPrivate(false);
     userRepository.save(user);
     return "Profile has been set as public";
+  }
+
+  public String editProfile(EditProfileDTO editProfileDTO, HttpServletRequest req){
+    User user = userRepository.findByUsername(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)));
+    if(user == null) {
+      throw new CustomException("Token is not registered for a valid user",HttpStatus.GONE);
+    }
+
+    String newLat = editProfileDTO.getNewLatitude();
+    String newLon = editProfileDTO.getNewLongitude();
+    String newIBAN = editProfileDTO.getNewIBAN();
+    //String newUsername = editProfileDTO.getNewUsername();
+
+    if(newLat != null){
+      if(!newLat.matches(User.locationRegex)){
+        throw new CustomException("Invalid latitude value: " + newLat, HttpStatus.NOT_ACCEPTABLE);
+      }
+      user.setLatitude(newLat);
+    }
+    if(newLon != null){
+      if(!newLon.matches(User.locationRegex)){
+        throw new CustomException("Invalid longitude value: " + newLon, HttpStatus.NOT_ACCEPTABLE);
+      }
+      user.setLongitude(newLon);
+    }
+    if(newIBAN != null){
+      if(!newIBAN.matches(User.IBANRegex)){
+        throw new CustomException("Invalid IBAN value: " + newIBAN, HttpStatus.NOT_ACCEPTABLE);
+      }
+      if(!(user.getRoles().get(0) == Role.ROLE_TRADER)){
+        throw new CustomException("To set an IBAN, be a trader user first", HttpStatus.NOT_ACCEPTABLE);
+      }
+      user.setIBAN(newIBAN);
+    }
+
+    //Changing username property is postponed for now.
+
+    /*if(newUsername != null){
+      if(!newUsername.matches(User.usernameRegex)){
+        throw new CustomException("Invalid username: " + newUsername, HttpStatus.NOT_ACCEPTABLE);
+      }
+      if(userRepository.findByUsername(newUsername)!=null){
+        throw new CustomException("This username is already in use: " + newUsername, HttpStatus.NOT_ACCEPTABLE);
+      }
+      // TODO : Tokens are saved for the previous username.
+      user.setUsername(newUsername);
+    }*/
+
+    userRepository.save(user);
+    return "Changes has been saved.";
   }
 
   public List<Object> getAll(){

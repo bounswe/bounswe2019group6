@@ -6,6 +6,7 @@ import cmpe451.group6.authorization.dto.StringResponseWrapper;
 import cmpe451.group6.authorization.dto.TokenWrapperDTO;
 import cmpe451.group6.authorization.dto.UserResponseDTO;
 import cmpe451.group6.authorization.dto.PrivateProfileDTO;
+import cmpe451.group6.authorization.dto.EditProfileDTO;
 import cmpe451.group6.authorization.exception.GlobalExceptionHandlerController;
 import cmpe451.group6.authorization.model.User;
 import cmpe451.group6.authorization.service.UserService;
@@ -67,6 +68,19 @@ public class UserController {
       @ApiResponse(code = 403, message = "Access denied")})
   public UserResponseDTO whoami(HttpServletRequest req) {
     return modelMapper.map(userService.whoami(req), UserResponseDTO.class);
+  }
+
+  @PostMapping(value = "/edit")
+  @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_BASIC') or hasRole('ROLE_TRADER')")
+  @ResponseStatus(HttpStatus.OK)
+  @ApiOperation(value = "Edit profile info via token.", response = StringResponseWrapper.class)
+  @ApiResponses(value = {
+          @ApiResponse(code = 406, message = "Invalid field value"),
+          @ApiResponse(code = 410, message = "Token is not registered (internal issue)")})
+  public StringResponseWrapper editProfile(
+          @ApiParam("New values. Do not include the values which are not to be changed")
+          @RequestBody EditProfileDTO editProfileDTO, HttpServletRequest req) {
+    return new StringResponseWrapper(userService.editProfile(editProfileDTO,req));
   }
 
   @GetMapping("/refresh")

@@ -25,7 +25,6 @@ public class User implements Serializable {
 
   @Pattern(regexp = usernameRegex)
   @Column(unique = true, nullable = false)
-  // TODO determine size on both database and here
   private String username;
 
   @Pattern(regexp = emailRegex)
