@@ -21,6 +21,14 @@ public class UserResponseDTO {
   List<Role> roles;
   @ApiModelProperty(position = 6)
   private boolean isPrivate;
+  @ApiModelProperty(position = 7)
+  private int followersCount;
+  @ApiModelProperty(position = 8)
+  private int followingsCount;
+  @ApiModelProperty(position = 9)
+  private int articlesCount;
+  @ApiModelProperty(position = 10)
+  private int commentsCount;
 
   // NOTE : DO NOT CHANGE GETTER and SETTER SIGNATURES FOR THIS FIELD !!
   // Because the mapper seeks the getter & setter fields by these names,
@@ -57,4 +65,35 @@ public class UserResponseDTO {
 
   public void setRoles(List<Role> roles) { this.roles = roles; }
 
+  public int getFollowersCount() {
+    return followersCount;
+  }
+
+  public void setFollowersCount(int followersCount) {
+    this.followersCount = followersCount;
+  }
+
+  public int getFollowingsCount() {
+    return followingsCount;
+  }
+
+  public void setFollowingsCount(int followingsCount) {
+    this.followingsCount = followingsCount;
+  }
+
+  public int getArticlesCount() {
+    return articlesCount;
+  }
+
+  public void setArticlesCount(int articlesCount) {
+    this.articlesCount = articlesCount;
+  }
+
+  public int getCommentsCount() {
+    return commentsCount;
+  }
+
+  public void setCommentsCount(int commentsCount) {
+    this.commentsCount = commentsCount;
+  }
 }

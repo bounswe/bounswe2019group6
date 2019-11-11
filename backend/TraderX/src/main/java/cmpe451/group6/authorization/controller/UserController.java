@@ -10,6 +10,7 @@ import cmpe451.group6.authorization.dto.EditProfileDTO;
 import cmpe451.group6.authorization.exception.GlobalExceptionHandlerController;
 import cmpe451.group6.authorization.model.User;
 import cmpe451.group6.authorization.service.UserService;
+import cmpe451.group6.rest.follow.service.FollowService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,6 +31,9 @@ public class UserController {
 
   @Autowired
   private UserService userService;
+
+  @Autowired
+  private FollowService followService;
 
   @Autowired
   private ModelMapper modelMapper;
@@ -54,9 +58,19 @@ public class UserController {
   @ApiResponses(value = {
       @ApiResponse(code = 400, message = "Something went wrong on the serverside"),
       @ApiResponse(code = 422, message = "The user doesn't exist")})
-  public Object search(@ApiParam("Username") @PathVariable String username) {
+  public Object search(@ApiParam("Username") @PathVariable String username, HttpServletRequest req) {
     User user = userService.searchUser(username);
-    return modelMapper.map(user, user.getIsPrivate() ? PrivateProfileDTO.class : UserResponseDTO.class);
+
+    if(user.getIsPrivate()){
+      return modelMapper.map(user, PrivateProfileDTO.class);
+    }
+
+    UserResponseDTO dto = modelMapper.map(user, UserResponseDTO.class);
+    dto.setFollowersCount(Integer.parseInt(followService.following_number(req)));
+    dto.setFollowingsCount(Integer.parseInt(followService.followee_number(req)));
+    dto.setArticlesCount(0); // not active yet
+    dto.setCommentsCount(0); // not active yet
+    return dto;
   }
 
   @GetMapping(value = "/me")
@@ -67,7 +81,12 @@ public class UserController {
       @ApiResponse(code = 400, message = "Something went wrong"),
       @ApiResponse(code = 403, message = "Access denied")})
   public UserResponseDTO whoami(HttpServletRequest req) {
-    return modelMapper.map(userService.whoami(req), UserResponseDTO.class);
+    UserResponseDTO dto = modelMapper.map(userService.whoami(req), UserResponseDTO.class);
+    dto.setFollowersCount(Integer.parseInt(followService.following_number(req)));
+    dto.setFollowingsCount(Integer.parseInt(followService.followee_number(req)));
+    dto.setArticlesCount(0); // not active yet
+    dto.setCommentsCount(0); // not active yet
+    return dto;
   }
 
   @PostMapping(value = "/edit")
