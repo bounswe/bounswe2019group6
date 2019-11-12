@@ -55,10 +55,19 @@ public class FollowService {
         FollowDAO temp = new FollowDAO();
         temp.setFollower(currentUser);
         temp.setFollowee(userToFollow);
-        temp.setFollowStatus(FollowStatus.PENDING);
+
+        String followStatus ;
+        if (userToFollow.getIsPrivate()) {
+            followStatus = " wants to follow ";
+            temp.setFollowStatus(FollowStatus.PENDING);
+        } else {
+            followStatus = " is now following ";
+            temp.setFollowStatus(FollowStatus.APPROVED);
+        }
 
         followRepository.save(temp);
-        return String.format("%s want to follow %s", currentUser.getUsername(), userToFollow.getUsername());
+        return (currentUser.getUsername() + followStatus + userToFollow.getUsername());        
+        
     }
 
     /**
