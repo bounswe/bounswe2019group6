@@ -37,7 +37,7 @@ import LineChart from './components/LineChart'
 // Creating mock data
 // This part of the code will be deleted when we will be receiving data from backend
 let bitCoinsArray = [
-  { label: 'Bit Coin', key: 'BC'}
+  { label: 'BitCoin', key: 'BC'}
 ];
 
 let stocksArray = [
@@ -56,7 +56,7 @@ let moneyCurrenciesArray = [
 
 const tradingEquipments = [
   { data: moneyCurrenciesArray, label: 'Money Currencies', activeTab: moneyCurrenciesArray[0].key},
-  { data: bitCoinsArray, label: 'Bit Coin', activeTab: bitCoinsArray[0].key},
+  { data: bitCoinsArray, label: 'BitCoin', activeTab: bitCoinsArray[0].key},
   { data: stocksArray, label: 'Stocks', activeTab: stocksArray[0].key},
 ];
 
