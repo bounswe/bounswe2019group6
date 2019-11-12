@@ -10,6 +10,7 @@ import cmpe451.group6.authorization.dto.EditProfileDTO;
 import cmpe451.group6.authorization.exception.GlobalExceptionHandlerController;
 import cmpe451.group6.authorization.model.User;
 import cmpe451.group6.authorization.service.UserService;
+import cmpe451.group6.rest.follow.model.FollowStatus;
 import cmpe451.group6.rest.follow.service.FollowService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +39,6 @@ public class UserController {
   @Autowired
   private ModelMapper modelMapper;
 
-
   @DeleteMapping(value = "/{username}")
   @PreAuthorize("hasRole('ROLE_ADMIN')")
   @ApiOperation(value = "Deletes specified user from the system permanently (for admin user only)")
@@ -60,10 +60,25 @@ public class UserController {
       @ApiResponse(code = 400, message = "Something went wrong on the serverside"),
       @ApiResponse(code = 422, message = "The user doesn't exist")})
   public Object search(@ApiParam("Username") @PathVariable String username, HttpServletRequest req) {
+    // TODO: Move those methods to service and compound with `whoami`.
     User user = userService.searchUser(username);
 
+    String clientUsername = userService.unwrapUsername(req);
+    FollowStatus status = followService.getFollowStatus(clientUsername,username);
+    UserResponseDTO.FollowingStatus statusDTO;
+
+    if(status == null){ // not following
+      statusDTO = UserResponseDTO.FollowingStatus.NOT_FOLLOWING;
+    } else if(status == FollowStatus.PENDING){
+      statusDTO = UserResponseDTO.FollowingStatus.PENDING;
+    } else { // following
+      statusDTO = UserResponseDTO.FollowingStatus.FOLLOWING;
+    }
+
     if(user.getIsPrivate()){
-      return modelMapper.map(user, PrivateProfileDTO.class);
+      PrivateProfileDTO dto = modelMapper.map(user, PrivateProfileDTO.class);
+      dto.setFollowingStatus(statusDTO);
+      return dto;
     }
 
     UserResponseDTO dto = modelMapper.map(user, UserResponseDTO.class);
@@ -71,7 +86,7 @@ public class UserController {
     dto.setFollowingsCount(Integer.parseInt(followService.followee_number(req)));
     dto.setArticlesCount(0); // not active yet
     dto.setCommentsCount(0); // not active yet
-    dto.setIsFollowing(followService.amIFollowing(username,req));
+    dto.setFollowingStatus(statusDTO);
     return dto;
   }
 
@@ -88,7 +103,6 @@ public class UserController {
     dto.setFollowingsCount(Integer.parseInt(followService.followee_number(req)));
     dto.setArticlesCount(0); // not active yet
     dto.setCommentsCount(0); // not active yet
-    dto.setIsFollowing(false);
     return dto;
   }
 

@@ -9,8 +9,6 @@ import cmpe451.group6.authorization.model.RegistrationStatus;
 import cmpe451.group6.authorization.repository.UserRepository;
 import cmpe451.group6.authorization.service.HazelcastService;
 import cmpe451.group6.authorization.service.SignupService;
-import cmpe451.group6.rest.equipment.model.Equipment;
-import cmpe451.group6.rest.equipment.repository.EquipmentRepsitory;
 import cmpe451.group6.rest.equipment.service.EquipmentUpdateService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,7 +100,6 @@ public class Group6BackendService implements CommandLineRunner {
     basic.setRoles(new ArrayList<Role>(Arrays.asList(Role.ROLE_BASIC)));
     basic.setIsPrivate(false);
     signupService.internal_signup(basic);
-
 
     equipmentUpdateService.initializeEquipments();
   }

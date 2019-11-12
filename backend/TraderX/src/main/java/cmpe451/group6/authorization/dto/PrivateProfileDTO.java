@@ -16,6 +16,17 @@ public class PrivateProfileDTO {
     @ApiModelProperty(position = 2)
     private boolean isPrivate;
 
+    @ApiModelProperty(position = 3)
+    private UserResponseDTO.FollowingStatus followingStatus;
+
+    public UserResponseDTO.FollowingStatus getFollowingStatus() {
+        return followingStatus;
+    }
+
+    public void setFollowingStatus(UserResponseDTO.FollowingStatus followingStatus) {
+        this.followingStatus = followingStatus;
+    }
+
     public boolean getIsPrivate() {
         return isPrivate;
     }

@@ -7,6 +7,7 @@ import cmpe451.group6.authorization.dto.PrivateProfileDTO;
 import cmpe451.group6.authorization.dto.TokenWrapperDTO;
 import cmpe451.group6.authorization.dto.UserResponseDTO;
 import cmpe451.group6.authorization.model.Role;
+import cmpe451.group6.rest.follow.model.FollowStatus;
 import cmpe451.group6.rest.follow.service.FollowService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,9 +33,6 @@ public class UserService {
 
   @Autowired
   private HazelcastService hazelcastService;
-
-  @Autowired
-  private UserService userService;
 
   @Autowired
   private FollowService followService;
@@ -133,19 +131,40 @@ public class UserService {
   }
 
   public List<Object> getAll(HttpServletRequest req){
+    String clientUsername = unwrapUsername(req);
     List<Object> userList = userRepository.getUsersByIdLessThan(20);
     ListIterator iterator = userList.listIterator();
     while(iterator.hasNext()) {
       User usr = (User) iterator.next();
-      boolean isFollowing = followService.amIFollowing(usr.getUsername(),req);
-      if(usr.getIsPrivate() && !isFollowing){
-        iterator.set(modelMapper.map(usr, PrivateProfileDTO.class));
-      } else { //public or following private
+      FollowStatus tmpStatus = followService.getFollowStatus(clientUsername,usr.getUsername());
+      UserResponseDTO.FollowingStatus status = convertStatus(tmpStatus);
+      if(usr.getIsPrivate() && status != UserResponseDTO.FollowingStatus.FOLLOWING){
+        PrivateProfileDTO dto = modelMapper.map(usr, PrivateProfileDTO.class);
+        dto.setFollowingStatus(status);
+        iterator.set(dto);
+      } else { //public or followed private
         UserResponseDTO dto = modelMapper.map(usr, UserResponseDTO.class);
-        dto.setIsFollowing(isFollowing);
+        dto.setFollowingStatus(status);
         iterator.set(dto);
       }
     }
     return userList;
   }
+
+  public String unwrapUsername(HttpServletRequest req){
+    return jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req));
+  }
+
+  public UserResponseDTO.FollowingStatus convertStatus(FollowStatus status){
+    UserResponseDTO.FollowingStatus statusDTO;
+    if(status == null){ // not following
+      statusDTO = UserResponseDTO.FollowingStatus.NOT_FOLLOWING;
+    } else if(status == FollowStatus.PENDING){
+      statusDTO = UserResponseDTO.FollowingStatus.PENDING;
+    } else { // following
+      statusDTO = UserResponseDTO.FollowingStatus.FOLLOWING;
+    }
+    return statusDTO;
+  }
+
 }

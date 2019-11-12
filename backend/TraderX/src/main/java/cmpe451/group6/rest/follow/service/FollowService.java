@@ -81,8 +81,6 @@ public class FollowService {
         User userToUnfollow = userRepository.findByUsername(followee_username);
         String currentUsername = jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(request));
 
-        User currentUser = userRepository.findByUsername(currentUsername);
-
         if (userToUnfollow == null) {
             throw new CustomException("There is no user named " + followee_username + ". Thus, can not be unfollowed",
                     HttpStatus.NOT_ACCEPTABLE);
@@ -170,6 +168,12 @@ public class FollowService {
                     jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(request)));
         }
 
+    }
+
+    public FollowStatus getFollowStatus(String user, String follower){
+        FollowDAO dao = followRepository.findByFolloweeUsernameAndFollowerUsername(follower,user);
+        if(dao == null) return null;
+        return dao.getFollowStatus();
     }
 
 }
