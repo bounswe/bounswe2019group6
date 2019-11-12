@@ -103,8 +103,11 @@ public class Group6BackendService implements CommandLineRunner {
     basic.setIsPrivate(false);
     signupService.internal_signup(basic);
 
+    // Disabled for the ease of development. Uncomment before deploy
+    //equipmentUpdateService.initializeEquipments();
 
-    equipmentUpdateService.initializeEquipments();
+    equipmentUpdateService.initMock();
+
   }
 
 }

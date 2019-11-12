@@ -60,6 +60,44 @@ public class EquipmentUpdateService {
         equipmentRepsitory.save(equipment);
     }
 
+    // For the ease of development only. Do not use on deployment
+    public void initMock(){
+
+        initBase();
+
+        Equipment equipment = new Equipment();
+        equipment.setName("Japanese Yen");
+        equipment.setCode("JPY");
+        equipment.setTimeZone(BASE_CURRENCY_ZONE);
+        equipment.setCurrentStock(DEFAULT_STOCK);
+        equipment.setPredictionRate(DEFAULT_PREDICT_RATE);
+        equipment.setCurrentValue(1.33);
+        equipment.setLastUpdated(new Date());
+        equipmentRepsitory.save(equipment);
+
+        Equipment equipment1 = new Equipment();
+        equipment1.setName("Turkish Lira");
+        equipment1.setCode("TRY");
+        equipment1.setTimeZone(BASE_CURRENCY_ZONE);
+        equipment1.setCurrentStock(DEFAULT_STOCK);
+        equipment1.setPredictionRate(DEFAULT_PREDICT_RATE);
+        equipment1.setCurrentValue(2.66);
+        equipment1.setLastUpdated(new Date());
+        equipmentRepsitory.save(equipment1);
+
+        Equipment equipment2 = new Equipment();
+        equipment2.setName("Euro");
+        equipment2.setCode("EUR");
+        equipment2.setTimeZone(BASE_CURRENCY_ZONE);
+        equipment2.setCurrentStock(DEFAULT_STOCK);
+        equipment2.setPredictionRate(DEFAULT_PREDICT_RATE);
+        equipment2.setCurrentValue(3.99);
+        equipment2.setLastUpdated(new Date());
+        equipmentRepsitory.save(equipment2);
+
+        logger.info("Mock values are initialized.");
+    }
+
     private void saveSingleEquipment(Map<String, String> data){
 
         Equipment equipment = new Equipment();
