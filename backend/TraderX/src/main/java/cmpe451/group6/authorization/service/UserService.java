@@ -7,6 +7,7 @@ import cmpe451.group6.authorization.dto.PrivateProfileDTO;
 import cmpe451.group6.authorization.dto.TokenWrapperDTO;
 import cmpe451.group6.authorization.dto.UserResponseDTO;
 import cmpe451.group6.authorization.model.Role;
+import cmpe451.group6.rest.follow.service.FollowService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -34,6 +35,9 @@ public class UserService {
 
   @Autowired
   private UserService userService;
+
+  @Autowired
+  private FollowService followService;
 
   @Autowired
   private ModelMapper modelMapper;
@@ -128,12 +132,19 @@ public class UserService {
     return "Changes has been saved.";
   }
 
-  public List<Object> getAll(){
+  public List<Object> getAll(HttpServletRequest req){
     List<Object> userList = userRepository.getUsersByIdLessThan(20);
     ListIterator iterator = userList.listIterator();
     while(iterator.hasNext()) {
       User usr = (User) iterator.next();
-      iterator.set(modelMapper.map(usr, usr.getIsPrivate() ? PrivateProfileDTO.class : UserResponseDTO.class));
+      boolean isFollowing = followService.amIFollowing(usr.getUsername(),req);
+      if(usr.getIsPrivate() && !isFollowing){
+        iterator.set(modelMapper.map(usr, PrivateProfileDTO.class));
+      } else { //public or following private
+        UserResponseDTO dto = modelMapper.map(usr, UserResponseDTO.class);
+        dto.setIsFollowing(isFollowing);
+        iterator.set(dto);
+      }
     }
     return userList;
   }

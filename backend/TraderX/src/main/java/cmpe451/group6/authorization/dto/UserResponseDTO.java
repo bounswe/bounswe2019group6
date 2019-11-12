@@ -29,16 +29,27 @@ public class UserResponseDTO {
   private int articlesCount;
   @ApiModelProperty(position = 10)
   private int commentsCount;
+  @ApiModelProperty(position = 11)
+  private boolean isFollowing;
 
   // NOTE : DO NOT CHANGE GETTER and SETTER SIGNATURES FOR THIS FIELD !!
   // Because the mapper seeks the getter & setter fields by these names,
   // not with "isPrivate()" or "setPrivate(boolean _)"
+
   public boolean getIsPrivate() {
     return isPrivate;
   }
 
   public void setIsPrivate(boolean aPrivate) {
     isPrivate = aPrivate;
+  }
+
+  public boolean getIsFollowing() {
+    return isFollowing;
+  }
+
+  public void setIsFollowing(boolean aFollowing) {
+    isFollowing = aFollowing;
   }
 
   public String getLatitude() { return latitude; }

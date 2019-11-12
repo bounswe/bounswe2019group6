@@ -54,7 +54,8 @@ public class UserController {
 
   @GetMapping(value = "/profile/{username}")
   @ResponseStatus(HttpStatus.OK)
-  @ApiOperation(value = "Gets profile of the given user.(No token required)", response = UserResponseDTO.class)
+  @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_BASIC') or hasRole('ROLE_TRADER')")
+  @ApiOperation(value = "Gets profile of the given user.(Token required", response = UserResponseDTO.class)
   @ApiResponses(value = {
       @ApiResponse(code = 400, message = "Something went wrong on the serverside"),
       @ApiResponse(code = 422, message = "The user doesn't exist")})
@@ -70,6 +71,7 @@ public class UserController {
     dto.setFollowingsCount(Integer.parseInt(followService.followee_number(req)));
     dto.setArticlesCount(0); // not active yet
     dto.setCommentsCount(0); // not active yet
+    dto.setIsFollowing(followService.amIFollowing(username,req));
     return dto;
   }
 
@@ -86,6 +88,7 @@ public class UserController {
     dto.setFollowingsCount(Integer.parseInt(followService.followee_number(req)));
     dto.setArticlesCount(0); // not active yet
     dto.setCommentsCount(0); // not active yet
+    dto.setIsFollowing(false);
     return dto;
   }
 
@@ -127,9 +130,10 @@ public class UserController {
   }
 
   @GetMapping("/getAll")
+  @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_BASIC') or hasRole('ROLE_TRADER')")
   @ResponseStatus(HttpStatus.OK)
   @ApiOperation(value = "Returns all user profiles (Limited by 20 for now, No token required).", response = String.class)
   public List<Object> getAll(HttpServletRequest req) {
-    return userService.getAll();
+    return userService.getAll(req);
   }
 }
