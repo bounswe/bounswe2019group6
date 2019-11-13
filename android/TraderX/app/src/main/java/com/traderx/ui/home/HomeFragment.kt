@@ -4,8 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
+import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.traderx.R
 
 class HomeFragment : Fragment() {
@@ -17,9 +18,9 @@ class HomeFragment : Fragment() {
         // Inflate the layout for this fragment
         val root = inflater.inflate(R.layout.fragment_home, container, false)
 
-        root.findViewById<Button>(R.id.home_create_article)?.let {
+        root.findViewById<LinearLayout>(R.id.home_article_action)?.let {
             it.setOnClickListener {
-                
+                findNavController().navigate(HomeFragmentDirections.actionNavigationHomeToNavigationArticles())
             }
         }
 

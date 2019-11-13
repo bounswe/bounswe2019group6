@@ -11,21 +11,33 @@
         android:label="@string/title_home"
         tools:layout="@layout/fragment_news" >
         <action
-            android:id="@+id/action_navigation_home_to_navigation_article"
-            app:destination="@id/navigation_article" />
+            android:id="@+id/action_navigation_home_to_navigation_articles"
+            app:destination="@id/navigation_articles" />
     </fragment>
 
     <fragment
+        android:id="@+id/navigation_articles"
+        android:name="com.traderx.ui.article.ArticlesFragment"
+        android:label="@string/article"
+        tools:layout="@layout/fragment_articles"/>
+
+    <fragment
         android:id="@+id/navigation_article"
-        android:name="com.traderx.ui.article.ArticleCreate"
+        android:name="com.traderx.ui.article.ArticleFragment"
         android:label="Article"
-        tools:layout="@layout/fragment_article_create" />
+        tools:layout="@layout/fragment_article" />
 
     <fragment
         android:id="@+id/navigation_trader_equipment"
         android:name="com.traderx.ui.traderequipment.TraderEquipmentFragment"
         android:label="@string/title_trader_equipment"
         tools:layout="@layout/fragment_trader_equipment" />
+
+    <fragment
+        android:id="@+id/navigation_article_create"
+        android:name="com.traderx.ui.article.ArticleCreateFragment"
+        android:label="@string/article"
+        tools:layout="@layout/fragment_article_create"/>
 
     <fragment
         android:id="@+id/navigation_user_search"
