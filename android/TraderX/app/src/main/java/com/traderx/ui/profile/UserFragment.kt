@@ -2,7 +2,6 @@ package com.traderx.ui.profile
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,9 +14,7 @@ import com.github.razir.progressbutton.isProgressActive
 import com.github.razir.progressbutton.showProgress
 import com.google.android.material.snackbar.Snackbar
 import com.traderx.R
-import com.traderx.api.ApiService
 import com.traderx.api.ErrorHandler
-import com.traderx.api.RequestService
 import com.traderx.util.Injection
 import com.traderx.viewmodel.UserViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
