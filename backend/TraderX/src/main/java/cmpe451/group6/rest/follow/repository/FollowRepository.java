@@ -18,10 +18,10 @@ public interface FollowRepository extends JpaRepository<FollowDAO, Integer> {
     void deleteByFolloweeUsernameAndFollowerUsername(String followee, String follower);
 
     @Query("SELECT COUNT(f) FROM FollowDAO f WHERE f.followee.username=?1")
-    Long getFollowersCount(String username);
+    int getFollowersCount(String username);
 
     @Query("SELECT COUNT(f) FROM FollowDAO f WHERE f.follower.username=?1")
-    Long getFollowingsCount(String username);
+    int getFollowingsCount(String username);
 
     @Query("SELECT f FROM FollowDAO f WHERE f.follower.username=?1 AND f.followee.username=?2")
     FollowDAO getFollowDAO(String follower, String followee);

@@ -152,11 +152,11 @@ public class FollowService {
         }
     }
 
-    public long getFollowingsCount(String username) {
+    public int getFollowingsCount(String username) {
         return followRepository.getFollowingsCount(username);
     }
 
-    public long getFollowersCount(String username) {
+    public int getFollowersCount(String username) {
         return followRepository.getFollowersCount(username);
     }
 
