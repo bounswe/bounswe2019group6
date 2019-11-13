@@ -1,7 +1,6 @@
 package com.traderx.ui.search
 
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,12 +9,10 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.traderx.R
 import com.traderx.api.response.UserAll
-import com.traderx.ui.profile.UserFragment
 import kotlinx.android.synthetic.main.item_user_search.view.*
 
 class UserSearchRecyclerViewAdapter(
     private val mValues: List<UserAll>
-//    private val mListener: OnListFragmentInteractionListener?
 ) : RecyclerView.Adapter<UserSearchRecyclerViewAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

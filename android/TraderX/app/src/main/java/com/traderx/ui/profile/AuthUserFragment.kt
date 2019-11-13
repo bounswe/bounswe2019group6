@@ -19,7 +19,6 @@ import com.github.razir.progressbutton.isProgressActive
 import com.github.razir.progressbutton.showProgress
 import com.traderx.MainActivity
 import com.traderx.R
-import com.traderx.adapter.UserAdapter
 import com.traderx.api.ApiService
 import com.traderx.api.ErrorHandler
 import com.traderx.api.RequestService
@@ -92,7 +91,7 @@ class AuthUserFragment : Fragment() {
                 .subscribe({
                     userName.text = it.username
                     email.text = it.email
-                    role.text = getString(UserAdapter.adaptRole(it.role))
+                    role.text = it.localizedRole(context)
                     profilePrivate.text =
                         if (it.isPrivate) getString(R.string.general_true) else getString(R.string.general_false)
                 }, {
