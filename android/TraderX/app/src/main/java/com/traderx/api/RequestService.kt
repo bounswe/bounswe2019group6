@@ -6,7 +6,7 @@ import com.traderx.api.request.SignUpRequest
 import com.traderx.api.response.SuccessResponse
 import com.traderx.api.response.TokenResponse
 import com.traderx.api.response.UserAll
-import com.traderx.api.response.UserResponse
+import com.traderx.db.Article
 import com.traderx.db.User
 import io.reactivex.Completable
 import io.reactivex.Single
@@ -24,12 +24,14 @@ object ApiUri {
     const val USER_INFO: String = "$USER_URI/me"
     const val USER_PROFILE: String = "$USER_URI/profile/{username}"
     const val UPDATE_USER: String = "$USER_URI/set_profile/{status}"
-
+    const val ARTICLE: String = "$API_URI/article/{articleId}"
+    const val ARTICLES: String = "$API_URI/test"
+    const val INSERT_ARTICLE: String = "$API_URI/article"
 }
 
 interface RequestService {
     @GET(ApiUri.USER_INFO)
-    fun user(): Single<UserResponse>
+    fun user(): Single<User>
 
     @POST(ApiUri.USER_SIGNIN)
     fun login(@Body loginRequest: LoginRequest): Single<TokenResponse>
@@ -51,4 +53,16 @@ interface RequestService {
 
     @POST(ApiUri.UPDATE_USER)
     fun updateUser(@Path("status") status: String): Completable
+
+    @GET(ApiUri.ARTICLE)
+    fun getArticle(@Path("articleId") articleId: Int): Single<Article>
+
+    @GET(ApiUri.ARTICLES)
+    fun getArticles(): Single<List<Article>>
+
+    @POST(ApiUri.INSERT_ARTICLE)
+    fun insertArticle(@Body article: Article): Completable
+
+    @DELETE(ApiUri.INSERT_ARTICLE)
+    fun deleteArticle(articleId: Int): Completable
 }

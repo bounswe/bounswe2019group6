@@ -27,6 +27,9 @@
     <string name="search">Search</string>
     <string name="follow">Follow</string>
     <string name="pending">Pending</string>
+    <string name="article">Article</string>
+    <string name="keywords">Keywords</string>
+    <string name="title">Title</string>
 
     <!--    Follow-->
     <string name="follow_requested">Following request sent to %1$s.</string>
