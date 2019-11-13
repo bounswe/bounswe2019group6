@@ -109,15 +109,8 @@ public class UserController {
   @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_BASIC') or hasRole('ROLE_TRADER')")
   @ResponseStatus(HttpStatus.OK)
   @ApiOperation(value = "Returns all user profiles (token is required).")
-  public List<Object> getAll(@ApiParam("Optional limiting size. Min:10, Max: 100, default: 50")
-                               @RequestParam String size ,HttpServletRequest req) {
-    int limit;
-    try {
-      limit = Integer.parseInt(size);
-      limit = limit > 10 && limit < 100 ? limit : 50;
-    } catch (NumberFormatException e) {
-      limit = 50;
-    }
+  public List<Object> getAll(HttpServletRequest req) {
+    int limit = 50; // TODO : Make this optional on reques
     return userService.getAll(util.unwrapUsername(req),limit);
   }
 }
