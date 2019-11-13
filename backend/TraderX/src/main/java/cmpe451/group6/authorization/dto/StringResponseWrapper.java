@@ -8,8 +8,8 @@ public class StringResponseWrapper {
 
     private final String message;
 
-    public StringResponseWrapper(String message) {
-        this.message = message;
+    public StringResponseWrapper(Object message) {
+        this.message = message.toString();
     }
 
     public String getMessage() {
