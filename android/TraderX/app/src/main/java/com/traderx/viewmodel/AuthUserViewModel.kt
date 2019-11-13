@@ -1,9 +1,6 @@
 package com.traderx.viewmodel
 
 import android.content.Context
-import android.net.ConnectivityManager
-import androidx.lifecycle.ViewModel
-import com.traderx.adapter.UserAdapter
 import com.traderx.api.ErrorHandler
 import com.traderx.api.RequestService
 import com.traderx.db.User
@@ -15,15 +12,14 @@ import io.reactivex.schedulers.Schedulers
 class AuthUserViewModel(
     private val dataSource: UserDao,
     private val networkSource: RequestService
-) :
-    ViewModel() {
+) : BaseViewModel() {
 
     companion object {
         private var userUpdated = false
     }
 
     fun fetchUser(): Single<User> {
-        return networkSource.user().map { UserAdapter.adapt(it) }
+        return networkSource.user()
     }
 
     fun user(context: Context): Single<User> {
@@ -36,9 +32,9 @@ class AuthUserViewModel(
             //Not working as expected
             networkUser.flatMap { dataSource.getUser() }.subscribeOn(Schedulers.io())
         } else {
-            dataSource.getUser().doOnError { ErrorHandler.handleUserViewError(it, context) }.subscribeOn(Schedulers.io())
+            dataSource.getUser().doOnError { ErrorHandler.handleUserViewError(it, context) }
+                .subscribeOn(Schedulers.io())
         }
-
     }
 
     fun deleteUser(): Completable {
@@ -48,18 +44,13 @@ class AuthUserViewModel(
     }
 
     fun updateUser(user: User): Completable {
-        return networkSource.updateUser(if (user.isPrivate) "private" else "public").andThen{ updateUserLocal(user)}
+        return networkSource.updateUser(if (user.isPrivate) "private" else "public")
+            .andThen { updateUserLocal(user) }
     }
 
     private fun updateUserLocal(user: User): Completable {
         userUpdated = true
 
         return dataSource.insertUser(user)
-    }
-
-    private fun isNetworkConnected(context: Context): Boolean {
-        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-
-        return cm.activeNetworkInfo != null && cm.activeNetworkInfo.isConnected
     }
 }
