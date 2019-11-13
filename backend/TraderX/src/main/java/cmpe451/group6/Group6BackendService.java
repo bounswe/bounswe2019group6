@@ -10,6 +10,7 @@ import cmpe451.group6.authorization.repository.UserRepository;
 import cmpe451.group6.authorization.service.HazelcastService;
 import cmpe451.group6.authorization.service.SignupService;
 import cmpe451.group6.rest.equipment.service.EquipmentUpdateService;
+import cmpe451.group6.rest.follow.service.FollowService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -41,6 +42,9 @@ public class Group6BackendService implements CommandLineRunner {
 
   @Autowired
   EquipmentUpdateService equipmentUpdateService;
+
+  @Autowired
+  FollowService followService;
 
   public static void main(String[] args) {
     SpringApplication.run(Group6BackendService.class, args);
@@ -100,6 +104,13 @@ public class Group6BackendService implements CommandLineRunner {
     basic.setRoles(new ArrayList<Role>(Arrays.asList(Role.ROLE_BASIC)));
     basic.setIsPrivate(false);
     signupService.internal_signup(basic);
+
+    followService.followUser("basic","admin");
+    followService.followUser("trader","admin");
+    followService.answerRequest("trader","admin",true);
+    followService.followUser("trader","basic");
+    followService.answerRequest("trader","basic",true);
+    followService.followUser("basic","trader");
 
     equipmentUpdateService.initializeEquipments();
   }

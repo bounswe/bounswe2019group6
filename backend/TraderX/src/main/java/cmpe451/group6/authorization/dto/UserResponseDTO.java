@@ -22,9 +22,9 @@ public class UserResponseDTO {
   @ApiModelProperty(position = 6)
   private boolean isPrivate;
   @ApiModelProperty(position = 7)
-  private int followersCount;
+  private long followersCount;
   @ApiModelProperty(position = 8)
-  private int followingsCount;
+  private long followingsCount;
   @ApiModelProperty(position = 9)
   private int articlesCount;
   @ApiModelProperty(position = 10)
@@ -76,19 +76,19 @@ public class UserResponseDTO {
 
   public void setRoles(List<Role> roles) { this.roles = roles; }
 
-  public int getFollowersCount() {
+  public long getFollowersCount() {
     return followersCount;
   }
 
-  public void setFollowersCount(int followersCount) {
+  public void setFollowersCount(long followersCount) {
     this.followersCount = followersCount;
   }
 
-  public int getFollowingsCount() {
+  public long getFollowingsCount() {
     return followingsCount;
   }
 
-  public void setFollowingsCount(int followingsCount) {
+  public void setFollowingsCount(long followingsCount) {
     this.followingsCount = followingsCount;
   }
 

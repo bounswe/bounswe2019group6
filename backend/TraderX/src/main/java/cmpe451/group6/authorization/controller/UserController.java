@@ -2,6 +2,7 @@ package cmpe451.group6.authorization.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
+import cmpe451.group6.Util;
 import cmpe451.group6.authorization.dto.StringResponseWrapper;
 import cmpe451.group6.authorization.dto.TokenWrapperDTO;
 import cmpe451.group6.authorization.dto.UserResponseDTO;
@@ -38,6 +39,9 @@ public class UserController {
 
   @Autowired
   private ModelMapper modelMapper;
+
+  @Autowired
+  private Util util;
 
   @DeleteMapping(value = "/{username}")
   @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -82,8 +86,8 @@ public class UserController {
     }
 
     UserResponseDTO dto = modelMapper.map(user, UserResponseDTO.class);
-    dto.setFollowersCount(Integer.parseInt(followService.following_number(req)));
-    dto.setFollowingsCount(Integer.parseInt(followService.followee_number(req)));
+    dto.setFollowersCount(followService.getFollowingsCount(util.unwrapUsername(req)));
+    dto.setFollowingsCount(followService.getFollowersCount(util.unwrapUsername(req)));
     dto.setArticlesCount(0); // not active yet
     dto.setCommentsCount(0); // not active yet
     dto.setFollowingStatus(statusDTO);
@@ -99,8 +103,8 @@ public class UserController {
       @ApiResponse(code = 403, message = "Access denied")})
   public UserResponseDTO whoami(HttpServletRequest req) {
     UserResponseDTO dto = modelMapper.map(userService.whoami(req), UserResponseDTO.class);
-    dto.setFollowersCount(Integer.parseInt(followService.following_number(req)));
-    dto.setFollowingsCount(Integer.parseInt(followService.followee_number(req)));
+    dto.setFollowersCount(followService.getFollowingsCount(util.unwrapUsername(req)));
+    dto.setFollowingsCount(followService.getFollowersCount(util.unwrapUsername(req)));
     dto.setArticlesCount(0); // not active yet
     dto.setCommentsCount(0); // not active yet
     return dto;
