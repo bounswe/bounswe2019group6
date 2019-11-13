@@ -48,40 +48,28 @@ public class UserService {
     userRepository.deleteByUsername(username);
   }
 
-  public User searchUser(String username) {
-    User user = userRepository.findByUsername(username);
-    if (user == null) {
-      throw new CustomException("The user doesn't exist", HttpStatus.UNPROCESSABLE_ENTITY);
-    }
-    return user;
-  }
-
-  public User whoami(HttpServletRequest req) {
-    return userRepository.findByUsername(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)));
-  }
-
   public TokenWrapperDTO refreshToken(String username, HttpServletRequest req) {
     String currentToken = jwtTokenProvider.resolveToken(req);
     hazelcastService.invalidateToken(currentToken, username);
     return new TokenWrapperDTO(jwtTokenProvider.createToken(username, userRepository.findByUsername(username).getRoles()));
   }
 
-  public String setPrivate(HttpServletRequest req){
-    User user = userRepository.findByUsername(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)));
+  public String setPrivate(String username){
+    User user = userRepository.findByUsername(username);
     user.setIsPrivate(true);
     userRepository.save(user);
     return "Profile has been set as private";
   }
 
-  public String setPublic(HttpServletRequest req){
-    User user = userRepository.findByUsername(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)));
+  public String setPublic(String username){
+    User user = userRepository.findByUsername(username);
     user.setIsPrivate(false);
     userRepository.save(user);
     return "Profile has been set as public";
   }
 
-  public String editProfile(EditProfileDTO editProfileDTO, HttpServletRequest req){
-    User user = userRepository.findByUsername(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)));
+  public String editProfile(EditProfileDTO editProfileDTO, String username){
+    User user = userRepository.findByUsername(username);
     if(user == null) {
       throw new CustomException("Token is not registered for a valid user",HttpStatus.GONE);
     }
@@ -122,7 +110,7 @@ public class UserService {
       if(userRepository.findByUsername(newUsername)!=null){
         throw new CustomException("This username is already in use: " + newUsername, HttpStatus.NOT_ACCEPTABLE);
       }
-      // TODO : Tokens are saved for the previous username.
+      // TODO : [CRITICAL] Tokens are saved for the previous username and have to be updated !!
       user.setUsername(newUsername);
     }*/
 
@@ -130,32 +118,54 @@ public class UserService {
     return "Changes has been saved.";
   }
 
-  public List<Object> getAll(HttpServletRequest req){
-    String clientUsername = unwrapUsername(req);
-    List<Object> userList = userRepository.getUsersByIdLessThan(20);
+  public List<Object> getAll(String senderUsername, int limit){
+    List<Object> userList = userRepository.getUsersByIdLessThan(limit);
     ListIterator iterator = userList.listIterator();
     while(iterator.hasNext()) {
       User usr = (User) iterator.next();
-      FollowStatus tmpStatus = followService.getFollowStatus(clientUsername,usr.getUsername());
-      UserResponseDTO.FollowingStatus status = convertStatus(tmpStatus);
-      if(usr.getIsPrivate() && status != UserResponseDTO.FollowingStatus.FOLLOWING){
-        PrivateProfileDTO dto = modelMapper.map(usr, PrivateProfileDTO.class);
-        dto.setFollowingStatus(status);
-        iterator.set(dto);
-      } else { //public or followed private
-        UserResponseDTO dto = modelMapper.map(usr, UserResponseDTO.class);
-        dto.setFollowingStatus(status);
-        iterator.set(dto);
+      if (usr.getUsername().equals(senderUsername)) {
+        // ignore self
+        iterator.remove();
+        continue;
       }
+      iterator.set(getUserProfile(usr.getUsername(),senderUsername));
     }
     return userList;
   }
 
-  public String unwrapUsername(HttpServletRequest req){
-    return jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req));
+  public Object getUserProfile(String profileOwner, String requestSender){
+      User owner = userRepository.findByUsername(profileOwner);
+
+      if(owner == null) throw new CustomException("No such a user is found",HttpStatus.NOT_ACCEPTABLE);
+      if(profileOwner.equals(requestSender)) return getDetailedProfile(owner,null);
+
+      FollowStatus status = followService.getFollowStatus(profileOwner,requestSender);
+      if(owner.getIsPrivate() && status != FollowStatus.APPROVED){
+        return getRestrictedProfile(owner,status);
+      } else {
+        return getDetailedProfile(owner,status);
+      }
   }
 
-  public UserResponseDTO.FollowingStatus convertStatus(FollowStatus status){
+  private UserResponseDTO getDetailedProfile(User profileOwner, FollowStatus status){
+    UserResponseDTO response = modelMapper.map(profileOwner, UserResponseDTO.class);
+    response.setFollowersCount(followService.getFollowersCount(profileOwner.getUsername()));
+    response.setFollowingsCount(followService.getFollowingsCount(profileOwner.getUsername()));
+    response.setFollowingStatus(convertStatus(status));
+    response.setArticlesCount(0); // not active yet
+    response.setCommentsCount(0); // not active yet
+    return response;
+  }
+
+  private PrivateProfileDTO getRestrictedProfile(User profileOwner, FollowStatus status){
+    PrivateProfileDTO response = modelMapper.map(profileOwner, PrivateProfileDTO.class);
+    response.setFollowingStatus(convertStatus(status));
+    response.setFollowersCount(followService.getFollowersCount(profileOwner.getUsername()));
+    response.setFollowingsCount(followService.getFollowingsCount(profileOwner.getUsername()));
+    return response;
+  }
+
+  private UserResponseDTO.FollowingStatus convertStatus(FollowStatus status){
     UserResponseDTO.FollowingStatus statusDTO;
     if(status == null){ // not following
       statusDTO = UserResponseDTO.FollowingStatus.NOT_FOLLOWING;

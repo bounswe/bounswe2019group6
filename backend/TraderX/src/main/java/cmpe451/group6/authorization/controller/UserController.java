@@ -6,14 +6,9 @@ import cmpe451.group6.Util;
 import cmpe451.group6.authorization.dto.StringResponseWrapper;
 import cmpe451.group6.authorization.dto.TokenWrapperDTO;
 import cmpe451.group6.authorization.dto.UserResponseDTO;
-import cmpe451.group6.authorization.dto.PrivateProfileDTO;
 import cmpe451.group6.authorization.dto.EditProfileDTO;
 import cmpe451.group6.authorization.exception.GlobalExceptionHandlerController;
-import cmpe451.group6.authorization.model.User;
 import cmpe451.group6.authorization.service.UserService;
-import cmpe451.group6.rest.follow.model.FollowStatus;
-import cmpe451.group6.rest.follow.service.FollowService;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -35,12 +30,6 @@ public class UserController {
   private UserService userService;
 
   @Autowired
-  private FollowService followService;
-
-  @Autowired
-  private ModelMapper modelMapper;
-
-  @Autowired
   private Util util;
 
   @DeleteMapping(value = "/{username}")
@@ -59,39 +48,12 @@ public class UserController {
   @GetMapping(value = "/profile/{username}")
   @ResponseStatus(HttpStatus.OK)
   @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_BASIC') or hasRole('ROLE_TRADER')")
-  @ApiOperation(value = "Gets profile of the given user.(Token required", response = UserResponseDTO.class)
+  @ApiOperation(value = "Gets profile of the given user. (Token required)", response = UserResponseDTO.class)
   @ApiResponses(value = {
       @ApiResponse(code = 400, message = "Something went wrong on the serverside"),
-      @ApiResponse(code = 422, message = "The user doesn't exist")})
+      @ApiResponse(code = 406, message = "No such a user is found")})
   public Object search(@ApiParam("Username") @PathVariable String username, HttpServletRequest req) {
-    // TODO: Move those methods to service and compound with `whoami`.
-    User user = userService.searchUser(username);
-
-    String clientUsername = userService.unwrapUsername(req);
-    FollowStatus status = followService.getFollowStatus(clientUsername,username);
-    UserResponseDTO.FollowingStatus statusDTO;
-
-    if(status == null){ // not following
-      statusDTO = UserResponseDTO.FollowingStatus.NOT_FOLLOWING;
-    } else if(status == FollowStatus.PENDING){
-      statusDTO = UserResponseDTO.FollowingStatus.PENDING;
-    } else { // following
-      statusDTO = UserResponseDTO.FollowingStatus.FOLLOWING;
-    }
-
-    if(user.getIsPrivate()){
-      PrivateProfileDTO dto = modelMapper.map(user, PrivateProfileDTO.class);
-      dto.setFollowingStatus(statusDTO);
-      return dto;
-    }
-
-    UserResponseDTO dto = modelMapper.map(user, UserResponseDTO.class);
-    dto.setFollowersCount(followService.getFollowingsCount(util.unwrapUsername(req)));
-    dto.setFollowingsCount(followService.getFollowersCount(util.unwrapUsername(req)));
-    dto.setArticlesCount(0); // not active yet
-    dto.setCommentsCount(0); // not active yet
-    dto.setFollowingStatus(statusDTO);
-    return dto;
+    return userService.getUserProfile(username,util.unwrapUsername(req));
   }
 
   @GetMapping(value = "/me")
@@ -102,12 +64,8 @@ public class UserController {
       @ApiResponse(code = 400, message = "Something went wrong"),
       @ApiResponse(code = 403, message = "Access denied")})
   public UserResponseDTO whoami(HttpServletRequest req) {
-    UserResponseDTO dto = modelMapper.map(userService.whoami(req), UserResponseDTO.class);
-    dto.setFollowersCount(followService.getFollowingsCount(util.unwrapUsername(req)));
-    dto.setFollowingsCount(followService.getFollowersCount(util.unwrapUsername(req)));
-    dto.setArticlesCount(0); // not active yet
-    dto.setCommentsCount(0); // not active yet
-    return dto;
+    String self = util.unwrapUsername(req);
+    return (UserResponseDTO) userService.getUserProfile(self,self);
   }
 
   @PostMapping(value = "/edit")
@@ -120,7 +78,7 @@ public class UserController {
   public StringResponseWrapper editProfile(
           @ApiParam("New values. Do not include the values which are not to be changed")
           @RequestBody EditProfileDTO editProfileDTO, HttpServletRequest req) {
-    return new StringResponseWrapper(userService.editProfile(editProfileDTO,req));
+    return new StringResponseWrapper(userService.editProfile(editProfileDTO,util.unwrapUsername(req)));
   }
 
   @GetMapping("/refresh")
@@ -136,7 +94,7 @@ public class UserController {
   @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_BASIC') or hasRole('ROLE_TRADER')")
   @ApiOperation(value = "Make senders profile private.", response = String.class)
   public StringResponseWrapper makePrivate(HttpServletRequest req) {
-    return new StringResponseWrapper(userService.setPrivate(req));
+    return new StringResponseWrapper(userService.setPrivate(util.unwrapUsername(req)));
   }
 
   @PostMapping("/set_profile/public")
@@ -144,14 +102,22 @@ public class UserController {
   @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_BASIC') or hasRole('ROLE_TRADER')")
   @ApiOperation(value = "Make senders profile public.", response = String.class)
   public StringResponseWrapper makePublic(HttpServletRequest req) {
-    return new StringResponseWrapper(userService.setPublic(req));
+    return new StringResponseWrapper(userService.setPublic(util.unwrapUsername(req)));
   }
 
   @GetMapping("/getAll")
   @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_BASIC') or hasRole('ROLE_TRADER')")
   @ResponseStatus(HttpStatus.OK)
-  @ApiOperation(value = "Returns all user profiles (Limited by 20 for now, No token required).", response = String.class)
-  public List<Object> getAll(HttpServletRequest req) {
-    return userService.getAll(req);
+  @ApiOperation(value = "Returns all user profiles (token is required).")
+  public List<Object> getAll(@ApiParam("Optional limiting size. Min:10, Max: 100, default: 50")
+                               @RequestParam String size ,HttpServletRequest req) {
+    int limit;
+    try {
+      limit = Integer.parseInt(size);
+      limit = limit > 10 && limit < 100 ? limit : 50;
+    } catch (NumberFormatException e) {
+      limit = 50;
+    }
+    return userService.getAll(util.unwrapUsername(req),limit);
   }
 }
