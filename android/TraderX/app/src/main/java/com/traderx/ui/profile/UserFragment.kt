@@ -15,6 +15,7 @@ import com.github.razir.progressbutton.showProgress
 import com.google.android.material.snackbar.Snackbar
 import com.traderx.R
 import com.traderx.api.ErrorHandler
+import com.traderx.enum.FollowingStatus
 import com.traderx.util.Injection
 import com.traderx.viewmodel.UserViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -25,7 +26,12 @@ class UserFragment : Fragment() {
     private lateinit var userViewModel: UserViewModel
 
     private var username: String? = null
-    private lateinit var usernameTextView: TextView
+    private lateinit var userName: TextView
+    private lateinit var role: TextView
+    private lateinit var followerCount: TextView
+    private lateinit var followingCount: TextView
+    private lateinit var profilePrivate: TextView
+    private lateinit var followButton: Button
     private val disposable = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,12 +52,16 @@ class UserFragment : Fragment() {
         }
 
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_user, container, false)
+        val root = inflater.inflate(R.layout.fragment_user, container, false)
 
-        usernameTextView = view.findViewById(R.id.user_username)
-        view.findViewById<Button>(R.id.follow_button)?.apply {
-            setOnClickListener {
-                followUser(this)
+        userName = root.findViewById(R.id.profile_username)
+        role = root.findViewById(R.id.profile_role)
+        profilePrivate = root.findViewById(R.id.profile_private)
+        followerCount = root.findViewById(R.id.profile_follower)
+        followingCount = root.findViewById(R.id.profile_following)
+        followButton = root.findViewById<Button>(R.id.follow_button).also { button ->
+            button.setOnClickListener {
+                followUser(button)
             }
         }
 
@@ -59,11 +69,18 @@ class UserFragment : Fragment() {
             userViewModel.userProfile(username ?: "")
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    usernameTextView.text = it.username
+                    userName.text = it.username
+                    role.text = it.localizedRole(context as Context)
+                    profilePrivate.text = it.localizedIsPrivate(context as Context)
+                    followerCount.text = it.followersCount.toString()
+                    followingCount.text = it.followingsCount.toString()
+                    followButton.text = it.localizedFollowingStatus(context as Context)
+                    followButton.setEnabled(it.followingStatus != FollowingStatus.PENDING.value)
+
                 }, { context?.let { context -> ErrorHandler.handleError(it, context) } })
         )
 
-        return view
+        return root
     }
 
     fun followUser(button: Button) {

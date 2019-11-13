@@ -40,7 +40,7 @@ interface RequestService {
     fun register(@Body signUpRequest: SignUpRequest): Single<SuccessResponse>
 
     @GET(ApiUri.USERS_GET_ALL)
-    fun usersGetAll(): Single<List<UserAll>>
+    fun allUsers(): Single<List<User>>
 
     @GET(ApiUri.USER_PROFILE)
     fun userProfile(@Path("username") username: String): Single<User>

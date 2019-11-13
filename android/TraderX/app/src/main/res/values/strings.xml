@@ -30,6 +30,8 @@
     <string name="article">Article</string>
     <string name="keywords">Keywords</string>
     <string name="title">Title</string>
+    <string name="followers">Followers</string>
+    <string name="following">Following</string>
 
     <!--    Follow-->
     <string name="follow_requested">Following request sent to %1$s.</string>

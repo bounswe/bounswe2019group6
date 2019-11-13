@@ -36,14 +36,12 @@ class AuthUserFragment : Fragment() {
     private lateinit var userName: TextView
     private lateinit var email: TextView
     private lateinit var role: TextView
+    private lateinit var followerCount: TextView
+    private lateinit var followingCount: TextView
     private lateinit var profilePrivate: TextView
     private lateinit var requestService: RequestService
 
     private val disposable = CompositeDisposable()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -57,6 +55,8 @@ class AuthUserFragment : Fragment() {
         email = root.findViewById(R.id.profile_email)
         role = root.findViewById(R.id.profile_role)
         profilePrivate = root.findViewById(R.id.profile_private)
+        followerCount = root.findViewById(R.id.profile_follower)
+        followingCount = root.findViewById(R.id.profile_following)
 
         root.findViewById<Button>(R.id.logout)?.let { button ->
             button.setOnClickListener { logout(button) }
@@ -70,7 +70,8 @@ class AuthUserFragment : Fragment() {
         }
 
         val authUserViewModelFactory = Injection.provideAuthUserViewModelFactory(root.context)
-        authUserViewModel = ViewModelProvider(this, authUserViewModelFactory).get(AuthUserViewModel::class.java)
+        authUserViewModel =
+            ViewModelProvider(this, authUserViewModelFactory).get(AuthUserViewModel::class.java)
 
         requestService = ApiService.getInstance(context)
 
@@ -92,8 +93,9 @@ class AuthUserFragment : Fragment() {
                     userName.text = it.username
                     email.text = it.email
                     role.text = it.localizedRole(context)
-                    profilePrivate.text =
-                        if (it.isPrivate) getString(R.string.general_true) else getString(R.string.general_false)
+                    profilePrivate.text =it.localizedIsPrivate(context)
+                    followerCount.text = it.followersCount.toString()
+                    followingCount.text = it.followingsCount.toString()
                 }, {
                     ErrorHandler.handleError(it, activity)
                 })

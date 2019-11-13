@@ -8,38 +8,41 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageButton
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.traderx.R
-import com.traderx.api.ApiService
 import com.traderx.api.ErrorHandler
 import com.traderx.api.RequestService
+import com.traderx.util.Injection
+import com.traderx.viewmodel.UserViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.BehaviorSubject
 
 class UserSearchFragment : Fragment() {
 
+    private lateinit var userViewModel: UserViewModel
+
     private lateinit var searchEditText: EditText
     private lateinit var skeletonAdapter: UserSearchSkeletonRecyclerViewAdapter
     private lateinit var recyclerView: RecyclerView
-    private lateinit var requestService: RequestService
     private var loading = false
     private lateinit var viewManager: LinearLayoutManager
     private val subject: BehaviorSubject<String> = BehaviorSubject.create()
     private val disposable = CompositeDisposable()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        requestService = ApiService.getInstance(context)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_user_search, container, false)
+
+        context?.let {
+            val userViewModelFactory = Injection.provideUserViewModelFactory(it)
+            userViewModel =
+                ViewModelProvider(this, userViewModelFactory).get(UserViewModel::class.java)
+        }
 
         viewManager = LinearLayoutManager(context)
         recyclerView = view.findViewById<RecyclerView>(R.id.user_list).apply  {
@@ -72,7 +75,7 @@ class UserSearchFragment : Fragment() {
                     loading = true
                 }
 
-                requestService.usersGetAll().toObservable()
+                userViewModel.allUsers().toObservable()
             }
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext {
