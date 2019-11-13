@@ -3,10 +3,12 @@ package com.traderx.api
 import com.traderx.AppConfig
 import com.traderx.api.request.LoginRequest
 import com.traderx.api.request.SignUpRequest
+import com.traderx.api.response.EquipmentResponse
 import com.traderx.api.response.SuccessResponse
 import com.traderx.api.response.TokenResponse
 import com.traderx.api.response.UserAll
 import com.traderx.db.Article
+import com.traderx.db.Equipment
 import com.traderx.db.User
 import io.reactivex.Completable
 import io.reactivex.Single
@@ -15,8 +17,9 @@ import retrofit2.http.*
 object ApiUri {
     const val API_URI: String = AppConfig.API_HOST
     const val FOLLOW_URI: String = "$API_URI/follow"
-    const val FOLLOW_USER: String = "$FOLLOW_URI/follow_user"
     const val USER_URI: String = "$API_URI/users"
+    const val EQUIPMENT_URI: String = "$API_URI/equipment"
+    const val FOLLOW_USER: String = "$FOLLOW_URI/follow_user"
     const val USERS_GET_ALL: String = "$USER_URI/getAll"
     const val USER_SIGNIN: String = "$API_URI/login"
     const val USER_SIGNUP: String = "$API_URI/signup"
@@ -27,6 +30,8 @@ object ApiUri {
     const val ARTICLE: String = "$API_URI/article/{articleId}"
     const val ARTICLES: String = "$API_URI/test"
     const val INSERT_ARTICLE: String = "$API_URI/article"
+    const val EQUIPMENT: String = "$EQUIPMENT_URI/{name}"
+    const val EQUIPMENT_LIST: String = "$EQUIPMENT_URI/list"
 }
 
 interface RequestService {
@@ -65,4 +70,10 @@ interface RequestService {
 
     @DELETE(ApiUri.INSERT_ARTICLE)
     fun deleteArticle(articleId: Int): Completable
+
+    @GET(ApiUri.EQUIPMENT)
+    fun getEquipment(@Path("name") name: String): Single<Equipment>
+
+    @GET(ApiUri.EQUIPMENT_LIST)
+    fun getEquipments(): Single<EquipmentResponse>
 }

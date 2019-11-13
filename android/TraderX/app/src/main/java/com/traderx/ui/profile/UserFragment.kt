@@ -39,11 +39,9 @@ class UserFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        context?.let {
-            val userViewModelFactory = Injection.provideUserViewModelFactory(it)
-            userViewModel =
-                ViewModelProvider(this, userViewModelFactory).get(UserViewModel::class.java)
-        }
+        val userViewModelFactory = Injection.provideUserViewModelFactory(context as Context)
+        userViewModel =
+            ViewModelProvider(this, userViewModelFactory).get(UserViewModel::class.java)
 
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_user, container, false)

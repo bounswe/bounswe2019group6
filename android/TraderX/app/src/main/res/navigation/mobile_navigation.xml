@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_navigation_home_to_navigation_articles"
             app:destination="@id/navigation_articles" />
+        <action
+            android:id="@+id/action_navigation_home_to_navigation_trader_equipment"
+            app:destination="@+id/navigation_trader_equipment" />
     </fragment>
 
     <fragment
@@ -29,9 +32,9 @@
 
     <fragment
         android:id="@+id/navigation_trader_equipment"
-        android:name="com.traderx.ui.traderequipment.TraderEquipmentFragment"
+        android:name="com.traderx.ui.equipment.EquipmentsFragment"
         android:label="@string/title_trader_equipment"
-        tools:layout="@layout/fragment_trader_equipment" />
+        tools:layout="@layout/fragment_equipments" />
 
     <fragment
         android:id="@+id/navigation_article_create"
