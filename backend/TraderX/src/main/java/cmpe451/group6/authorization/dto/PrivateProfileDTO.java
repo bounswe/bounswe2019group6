@@ -16,6 +16,39 @@ public class PrivateProfileDTO {
     @ApiModelProperty(position = 2)
     private boolean isPrivate;
 
+    @ApiModelProperty(position = 3)
+    private UserResponseDTO.FollowingStatus followingStatus;
+
+    @ApiModelProperty(position = 4)
+    private int followingsCount;
+
+    @ApiModelProperty(position = 5)
+    private int followersCount;
+
+    public int getFollowingsCount() {
+        return followingsCount;
+    }
+
+    public void setFollowingsCount(int followingsCount) {
+        this.followingsCount = followingsCount;
+    }
+
+    public int getFollowersCount() {
+        return followersCount;
+    }
+
+    public void setFollowersCount(int followersCount) {
+        this.followersCount = followersCount;
+    }
+
+    public UserResponseDTO.FollowingStatus getFollowingStatus() {
+        return followingStatus;
+    }
+
+    public void setFollowingStatus(UserResponseDTO.FollowingStatus followingStatus) {
+        this.followingStatus = followingStatus;
+    }
+
     public boolean getIsPrivate() {
         return isPrivate;
     }

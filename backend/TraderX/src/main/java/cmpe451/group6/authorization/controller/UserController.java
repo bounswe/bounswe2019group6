@@ -2,16 +2,13 @@ package cmpe451.group6.authorization.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
+import cmpe451.group6.Util;
 import cmpe451.group6.authorization.dto.StringResponseWrapper;
 import cmpe451.group6.authorization.dto.TokenWrapperDTO;
 import cmpe451.group6.authorization.dto.UserResponseDTO;
-import cmpe451.group6.authorization.dto.PrivateProfileDTO;
 import cmpe451.group6.authorization.dto.EditProfileDTO;
 import cmpe451.group6.authorization.exception.GlobalExceptionHandlerController;
-import cmpe451.group6.authorization.model.User;
 import cmpe451.group6.authorization.service.UserService;
-import cmpe451.group6.rest.follow.service.FollowService;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -33,11 +30,7 @@ public class UserController {
   private UserService userService;
 
   @Autowired
-  private FollowService followService;
-
-  @Autowired
-  private ModelMapper modelMapper;
-
+  private Util util;
 
   @DeleteMapping(value = "/{username}")
   @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -54,23 +47,13 @@ public class UserController {
 
   @GetMapping(value = "/profile/{username}")
   @ResponseStatus(HttpStatus.OK)
-  @ApiOperation(value = "Gets profile of the given user.(No token required)", response = UserResponseDTO.class)
+  @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_BASIC') or hasRole('ROLE_TRADER')")
+  @ApiOperation(value = "Gets profile of the given user. (Token required)", response = UserResponseDTO.class)
   @ApiResponses(value = {
       @ApiResponse(code = 400, message = "Something went wrong on the serverside"),
-      @ApiResponse(code = 422, message = "The user doesn't exist")})
+      @ApiResponse(code = 406, message = "No such a user is found")})
   public Object search(@ApiParam("Username") @PathVariable String username, HttpServletRequest req) {
-    User user = userService.searchUser(username);
-
-    if(user.getIsPrivate()){
-      return modelMapper.map(user, PrivateProfileDTO.class);
-    }
-
-    UserResponseDTO dto = modelMapper.map(user, UserResponseDTO.class);
-    dto.setFollowersCount(Integer.parseInt(followService.following_number(req)));
-    dto.setFollowingsCount(Integer.parseInt(followService.followee_number(req)));
-    dto.setArticlesCount(0); // not active yet
-    dto.setCommentsCount(0); // not active yet
-    return dto;
+    return userService.getUserProfile(username,util.unwrapUsername(req));
   }
 
   @GetMapping(value = "/me")
@@ -81,12 +64,8 @@ public class UserController {
       @ApiResponse(code = 400, message = "Something went wrong"),
       @ApiResponse(code = 403, message = "Access denied")})
   public UserResponseDTO whoami(HttpServletRequest req) {
-    UserResponseDTO dto = modelMapper.map(userService.whoami(req), UserResponseDTO.class);
-    dto.setFollowersCount(Integer.parseInt(followService.following_number(req)));
-    dto.setFollowingsCount(Integer.parseInt(followService.followee_number(req)));
-    dto.setArticlesCount(0); // not active yet
-    dto.setCommentsCount(0); // not active yet
-    return dto;
+    String self = util.unwrapUsername(req);
+    return (UserResponseDTO) userService.getUserProfile(self,self);
   }
 
   @PostMapping(value = "/edit")
@@ -99,7 +78,7 @@ public class UserController {
   public StringResponseWrapper editProfile(
           @ApiParam("New values. Do not include the values which are not to be changed")
           @RequestBody EditProfileDTO editProfileDTO, HttpServletRequest req) {
-    return new StringResponseWrapper(userService.editProfile(editProfileDTO,req));
+    return new StringResponseWrapper(userService.editProfile(editProfileDTO,util.unwrapUsername(req)));
   }
 
   @GetMapping("/refresh")
@@ -115,7 +94,7 @@ public class UserController {
   @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_BASIC') or hasRole('ROLE_TRADER')")
   @ApiOperation(value = "Make senders profile private.", response = String.class)
   public StringResponseWrapper makePrivate(HttpServletRequest req) {
-    return new StringResponseWrapper(userService.setPrivate(req));
+    return new StringResponseWrapper(userService.setPrivate(util.unwrapUsername(req)));
   }
 
   @PostMapping("/set_profile/public")
@@ -123,13 +102,15 @@ public class UserController {
   @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_BASIC') or hasRole('ROLE_TRADER')")
   @ApiOperation(value = "Make senders profile public.", response = String.class)
   public StringResponseWrapper makePublic(HttpServletRequest req) {
-    return new StringResponseWrapper(userService.setPublic(req));
+    return new StringResponseWrapper(userService.setPublic(util.unwrapUsername(req)));
   }
 
   @GetMapping("/getAll")
+  @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_BASIC') or hasRole('ROLE_TRADER')")
   @ResponseStatus(HttpStatus.OK)
-  @ApiOperation(value = "Returns all user profiles (Limited by 20 for now, No token required).", response = String.class)
+  @ApiOperation(value = "Returns all user profiles (token is required).")
   public List<Object> getAll(HttpServletRequest req) {
-    return userService.getAll();
+    int limit = 50; // TODO : Make this optional on reques
+    return userService.getAll(util.unwrapUsername(req),limit);
   }
 }

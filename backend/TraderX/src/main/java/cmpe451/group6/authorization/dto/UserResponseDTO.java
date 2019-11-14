@@ -29,16 +29,27 @@ public class UserResponseDTO {
   private int articlesCount;
   @ApiModelProperty(position = 10)
   private int commentsCount;
+  @ApiModelProperty(position = 11)
+  private FollowingStatus followingStatus;
 
   // NOTE : DO NOT CHANGE GETTER and SETTER SIGNATURES FOR THIS FIELD !!
   // Because the mapper seeks the getter & setter fields by these names,
   // not with "isPrivate()" or "setPrivate(boolean _)"
+
   public boolean getIsPrivate() {
     return isPrivate;
   }
 
   public void setIsPrivate(boolean aPrivate) {
     isPrivate = aPrivate;
+  }
+
+  public FollowingStatus getFollowingStatus() {
+    return followingStatus;
+  }
+
+  public void setFollowingStatus(FollowingStatus followingStatus) {
+    this.followingStatus = followingStatus;
   }
 
   public String getLatitude() { return latitude; }
@@ -96,4 +107,10 @@ public class UserResponseDTO {
   public void setCommentsCount(int commentsCount) {
     this.commentsCount = commentsCount;
   }
+
+  // Used only in this DTO. Differs from the follow.mode.FollowStatus
+  public enum FollowingStatus {
+    FOLLOWING,PENDING,NOT_FOLLOWING;
+  }
+
 }

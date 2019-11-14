@@ -38,11 +38,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .antMatchers("/password/forgot").permitAll()
         .antMatchers("/password/renew").permitAll()
         .antMatchers("/signup/confirm").permitAll()
-        .antMatchers("/users/profile/**").permitAll()
         .antMatchers("/h2-console/**/**").permitAll()
         .antMatchers("/trial/public").permitAll()
-        .antMatchers("/users/getAll").permitAll()
-            .antMatchers("/equipment/**").permitAll()
+        .antMatchers("/equipment/**").permitAll()
         // Disallow everything else..
         .anyRequest().authenticated();
 
@@ -68,10 +66,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .antMatchers("/password/forgot")
         .antMatchers("/password/renew")
         .antMatchers("/signup/confirm")
-        .antMatchers("/users/profile/**")
         .antMatchers("/h2-console/**/**")
         .antMatchers("/trial/public")
-        .antMatchers("/users/getAll")
         .antMatchers("/equipment/**")
         
         // Un-secure H2 Database (for testing purposes, H2 console shouldn't be unprotected in production)
