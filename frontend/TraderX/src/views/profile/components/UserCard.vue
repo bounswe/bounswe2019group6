@@ -19,6 +19,9 @@
         <div class="user-name text-center">
           {{ user.username }}
         </div>
+        <div class="user-name text-center">
+          {{ user.email }}
+        </div>
       </div>
     </div>
     <div class="user-bio">
@@ -28,16 +31,18 @@
         </div>
         <div class="user-bio-section-body">
           <div class="user-stats">
-            <p><b>Follower:</b> 0</p>
-            <p><b>Following:</b> 0</p>
-            <p><b>Articles:</b> 0</p>
-            <p><b>Comments:</b> 0</p>
+            <p><b>Follower:</b> {{ user.followersCount }}</p>
+            <p><b>Following:</b> {{ user.followingsCount }}</p>
+            <p><b>Articles:</b> {{ user.articlesCount }}</p>
+            <p><b>Comments:</b> {{ user.commentsCount }}</p>
           </div>
           <div class="user-type">
             <p><b>User Type:</b> {{ user.roles[0] }}</p>
           </div>
           <p><b>IBAN:</b> {{ user.iban }}</p>
-          <p><b>Location:</b> Tokyo</p>
+          
+          <p><b>Latitude:</b> {{ user.latitude }}</p>
+          <p><b>Longitude:</b> {{ user.longitude }}</p>
           <p><b>Current Status:</b> {{ user.isPrivate ? "Private" : !user.isPrivate ? 'Public': "" }}</p>
         </div>
       </div>
@@ -63,6 +68,9 @@ export default {
   computed: {
     randomImage
   },
+  created() {
+    console.log(this.user)
+  }
 }
 </script>
 
@@ -79,6 +87,7 @@ export default {
  .user-profile {
    .user-name {
      font-weight: bold;
+     padding-bottom: 5px;
    }
 
    .box-center {

@@ -99,3 +99,11 @@ export function changeIBAN(data) {
     data
   })
 }
+
+export function updatePassword(password) {
+  return request({
+    url: '/password/change',
+    method: 'post',
+    password
+  })
+}

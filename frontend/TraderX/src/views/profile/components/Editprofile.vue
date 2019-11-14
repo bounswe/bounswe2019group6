@@ -25,6 +25,8 @@
   </div>
 </template>
 <script>
+  import { getToken } from '@/utils/auth' // get token from cookie
+
   export default {
     props: {
       user: Object
@@ -53,7 +55,18 @@
     },
     methods: {
       updatePassword(pass) {
-        console.log(pass)
+        var temp = {
+              "token": getToken(),
+              "newPassword": pass
+          }
+        console.log(temp)
+        this.$store.dispatch('user/updatePassword', temp).then(() => {
+              this.$message.success('Your Password Is Changed Successfully!')
+              this.passwordinput = ""
+           }).catch(error => {
+            console.log("errorrr in iban change")
+            console.log(error)
+          })
       },
       updateIban(iban) {
         if(!this.istrader){
