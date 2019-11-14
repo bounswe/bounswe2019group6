@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -69,6 +70,18 @@ class AuthUserFragment : Fragment() {
             }
         }
 
+        root.findViewById<LinearLayout>(R.id.followers_list_action)?.let {
+            it.setOnClickListener {
+                findNavController().navigate(AuthUserFragmentDirections.actionNavigationAuthUserToNavigationFollowers())
+            }
+        }
+
+        root.findViewById<LinearLayout>(R.id.followings_list_action)?.let {
+            it.setOnClickListener {
+                findNavController().navigate(AuthUserFragmentDirections.actionNavigationAuthUserToNavigationFollowings())
+            }
+        }
+
         val authUserViewModelFactory = Injection.provideAuthUserViewModelFactory(root.context)
         authUserViewModel =
             ViewModelProvider(this, authUserViewModelFactory).get(AuthUserViewModel::class.java)
@@ -93,7 +106,7 @@ class AuthUserFragment : Fragment() {
                     userName.text = it.username
                     email.text = it.email
                     role.text = it.localizedRole(context)
-                    profilePrivate.text =it.localizedIsPrivate(context)
+                    profilePrivate.text = it.localizedIsPrivate(context)
                     followerCount.text = it.followersCount.toString()
                     followingCount.text = it.followingsCount.toString()
                 }, {

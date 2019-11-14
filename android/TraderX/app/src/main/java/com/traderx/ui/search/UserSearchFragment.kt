@@ -1,5 +1,6 @@
 package com.traderx.ui.search
 
+import android.content.Context
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.LayoutInflater
@@ -13,7 +14,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.traderx.R
 import com.traderx.api.ErrorHandler
-import com.traderx.api.RequestService
 import com.traderx.util.Injection
 import com.traderx.viewmodel.UserViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -36,16 +36,13 @@ class UserSearchFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        val userViewModelFactory = Injection.provideUserViewModelFactory(context as Context)
+        userViewModel = ViewModelProvider(this, userViewModelFactory).get(UserViewModel::class.java)
+
         val view = inflater.inflate(R.layout.fragment_user_search, container, false)
 
-        context?.let {
-            val userViewModelFactory = Injection.provideUserViewModelFactory(it)
-            userViewModel =
-                ViewModelProvider(this, userViewModelFactory).get(UserViewModel::class.java)
-        }
-
         viewManager = LinearLayoutManager(context)
-        recyclerView = view.findViewById<RecyclerView>(R.id.user_list).apply  {
+        recyclerView = view.findViewById<RecyclerView>(R.id.user_list).apply {
             layoutManager = viewManager
         }
 
@@ -54,7 +51,7 @@ class UserSearchFragment : Fragment() {
         searchEditText = view.findViewById(R.id.search_text)
 
         view.findViewById<ImageButton>(R.id.search_button)?.let {
-            it.setOnClickListener{
+            it.setOnClickListener {
                 subject.onNext(searchEditText.text.toString())
             }
         }

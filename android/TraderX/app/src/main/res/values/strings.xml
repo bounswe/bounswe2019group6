@@ -32,6 +32,8 @@
     <string name="title">Title</string>
     <string name="followers">Followers</string>
     <string name="following">Following</string>
+    <string name="followers_list">Followers List</string>
+    <string name="followings_list">Followings List</string>
 
     <!--    Follow-->
     <string name="follow_requested">Following request sent to %1$s.</string>
