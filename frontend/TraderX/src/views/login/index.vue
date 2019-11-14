@@ -11,7 +11,7 @@
       >
         <div class="title-container">
           <h3 class="title">
-            Login Form
+            Login
           </h3>
         </div>
 
@@ -75,7 +75,9 @@
           Login
         </el-button>
 
-        <div>
+        <div id="my-signin2"></div>
+
+        <div style="margin-top: -39px; float: right;">
           <el-button
             class="thirdparty-button"
             type="primary"
@@ -85,7 +87,6 @@
           </el-button>
 
           <el-button
-            style="float: right"
             class="thirdparty-button"
             type="primary"
             @click="redirectRegister"
@@ -124,6 +125,15 @@
 <script>
 import { validUsername, validEmail } from '@/utils/validate'
 import { Message } from 'element-ui'
+
+function handleSuccess(googleUser) {
+    const profile = googleUser.getBasicProfile();
+    console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+    console.log('Name: ' + profile.getName());
+    console.log('Image URL: ' + profile.getImageUrl());
+    console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+
+}
 
 export default {
   name: 'Login',
@@ -188,6 +198,19 @@ export default {
     // window.addEventListener('storage', this.afterQRScan)
   },
   mounted() {
+    /* eslint-disable */
+    gapi.load('auth2', function(){
+        gapi.auth2.init({
+            client_id: '878451092423-3ksgjtr0q19lrn9e6rdijdh0iddhl9pp.apps.googleusercontent.com'
+        }).then(() => {
+            gapi.signin2.render('my-signin2', {
+                height: 39,
+                theme: 'light',
+                longtitle: false,
+                onsuccess: handleSuccess
+            })
+        })
+    })
     if (this.loginForm.username === '') {
       this.$refs.username.focus()
     } else if (this.loginForm.password === '') {
@@ -264,8 +287,16 @@ export default {
           return false
         }
       })
+    },
+    onSignIn(googleUser) {
+      var profile = googleUser.getBasicProfile();
+      console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+      console.log('Name: ' + profile.getName());
+      console.log('Image URL: ' + profile.getImageUrl());
+      console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
     }
-  }
+
+}
 }
 </script>
 
@@ -368,7 +399,7 @@ $light_gray:#eee;
     position: relative;
     width: 520px;
     max-width: 100%;
-    padding: 160px 35px 0;
+    padding: 160px 35px 10px;
     margin: 0 auto;
     overflow: hidden;
   }

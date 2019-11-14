@@ -150,7 +150,9 @@
           Register
         </el-button>
 
-        <div>
+        <div id="my-signin2"></div>
+
+        <div style="margin-top: -39px; float: right">
           <el-button
             class="thirdparty-button"
             type="primary"
@@ -160,7 +162,6 @@
           </el-button>
 
           <el-button
-            style="float: right"
             class="thirdparty-button"
             type="primary"
             @click="redirectLogin"
@@ -285,6 +286,18 @@ export default {
     }
   },
   created() {
+
+    gapi.load('auth2', function(){
+        gapi.auth2.init({
+            client_id: '878451092423-3ksgjtr0q19lrn9e6rdijdh0iddhl9pp.apps.googleusercontent.com'
+        }).then(() => {
+            gapi.signin2.render('my-signin2', {
+                height: 39,
+                theme: 'light',
+                longtitle: true
+            })
+        })
+    })
     // window.addEventListener('storage', this.afterQRScan)
   },
   mounted() {
@@ -468,7 +481,7 @@ $light_gray:#eee;
       position: relative;
       width: 520px;
       max-width: 100%;
-      padding: 40px 35px 0;
+      padding: 40px 35px 10px;
       margin: 0 auto;
       overflow: hidden;
     }
