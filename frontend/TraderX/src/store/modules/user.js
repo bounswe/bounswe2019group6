@@ -1,5 +1,5 @@
 import { login, getInfo, logout, register, confirm, resetPassword, renew, unfollowUser,
-   followUser, setProfilePublic, setProfilePrivate } from '@/api/user'
+   followUser, setProfilePublic, setProfilePrivate, changeIBAN } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
 
@@ -209,7 +209,17 @@ const actions = {
       setProfilePrivate().then(response => {
         resolve()
       }).catch(error => {
-        console.log(response)
+        reject(error)
+      })
+    })
+  },
+
+  changeIBAN({ commit }, iban) {
+    return new Promise((resolve, reject) => {
+      changeIBAN(iban).then(() => {
+        commit('SET_IBAN', iban)
+        resolve()
+      }).catch(error => {
         reject(error)
       })
     })

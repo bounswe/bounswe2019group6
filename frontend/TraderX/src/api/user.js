@@ -91,3 +91,11 @@ export function setProfilePrivate() {
     method: 'post',
   })
 }
+
+export function changeIBAN(data) {
+  return request({
+    url: '/users/edit',
+    method: 'post',
+    data
+  })
+}
