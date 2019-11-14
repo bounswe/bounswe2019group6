@@ -29,11 +29,11 @@ public class Transaction implements Serializable {
     @Column(nullable = false)
     private TransactionType transactionType;
 
-    @Column(nullable = false, name = "createdAt", updatable=false)
+    @Column(nullable = false, name = "createdAt", updatable=false, columnDefinition= " datetime default NOW() ")
     private Date createdAt;
 
-    @Column(name = "count", nullable=false)
-    private double count;
+    @Column(name = "amount", nullable=false)
+    private float amount;
 
     @PrePersist
     public void addTimestamp(){

@@ -21,9 +21,10 @@ public interface TransactionRepository extends JpaRepository<Transaction,Integer
 
     int countByEquipment_code(String code);
 
+    @Query("SELECT COUNT(t) FROM Transaction t ")
     int countAll();
 
-    @Query("select * from Transaction where createdAt BETWEEN  ?1 and ?2")
+    @Query("SELECT t FROM Transaction t WHERE t.createdAt BETWEEN  ?1 AND ?2")
     List<Transaction> findByDateBetween(Date start, Date end);
 
 
