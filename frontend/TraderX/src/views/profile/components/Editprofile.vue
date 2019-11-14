@@ -78,7 +78,7 @@
               "newLongitude": "123"
           }).then(() => {
               this.$message.success('Your IBAN Is Changed Successfully!')
-              this.istrader = true
+              this.user.iban = iban
           }).catch(error => {
             console.log("errorrr in iban change")
             console.log(error)
