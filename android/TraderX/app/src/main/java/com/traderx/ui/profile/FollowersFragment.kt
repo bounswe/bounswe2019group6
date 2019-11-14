@@ -42,7 +42,11 @@ class FollowersFragment : Fragment() {
             userViewModel.followers(context as Context)
                 .compose(Helper.applySchedulers<List<FollowerResponse>>())
                 .subscribe({
-                    recyclerView.adapter = FollowersRecyclerViewAdapter(it)
+                    recyclerView.adapter = FollowersRecyclerViewAdapter(it) { username ->
+                        FollowersFragmentDirections.actionNavigationFollowersToNavigationUser(
+                            username
+                        )
+                    }
                 },
                     { ErrorHandler.handleError(it, context as Context) })
         )

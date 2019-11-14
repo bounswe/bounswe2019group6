@@ -3,13 +3,14 @@ package com.traderx.ui.profile
 
 import android.content.Context
 import android.os.Bundle
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+
 import com.traderx.R
 import com.traderx.api.ErrorHandler
 import com.traderx.api.response.FollowerResponse
@@ -19,7 +20,7 @@ import com.traderx.util.Injection
 import com.traderx.viewmodel.AuthUserViewModel
 import io.reactivex.disposables.CompositeDisposable
 
-class FollowingsFragment : Fragment() {
+class PendingFollowRequestsFragment : Fragment() {
 
     private lateinit var userViewModel: AuthUserViewModel
     private lateinit var recyclerView: RecyclerView
@@ -33,24 +34,23 @@ class FollowingsFragment : Fragment() {
         userViewModel =
             ViewModelProvider(this, userViewModelFactory).get(AuthUserViewModel::class.java)
 
-        val root = inflater.inflate(R.layout.fragment_followings, container, false)
+        val root = inflater.inflate(R.layout.fragment_pending_follow_requests, container, false)
 
-        recyclerView = root.findViewById<RecyclerView>(R.id.followings_list).apply {
+        recyclerView = root.findViewById<RecyclerView>(R.id.pending_following_requests_list).apply {
             layoutManager = LinearLayoutManager(context)
             adapter = UserSearchSkeletonRecyclerViewAdapter(5)
         }
 
         disposable.add(
-            userViewModel.followings(context as Context)
+            userViewModel.pendingFollowRequests(context as Context)
                 .compose(Helper.applySchedulers<List<FollowerResponse>>())
                 .subscribe({
-                    recyclerView.adapter = FollowersRecyclerViewAdapter(it) { username ->
-                        FollowingsFragmentDirections.actionNavigationFollowingsToNavigationUser(
-                            username
-                        )
+                    recyclerView.adapter = FollowersRecyclerViewAdapter(it) {
+                        PendingFollowRequestsFragmentDirections.actionNavigationPendingFollowRequestsToNavigationUser(it)
                     }
-                },
-                    { ErrorHandler.handleError(it, context as Context) })
+                }, {
+                    ErrorHandler.handleError(it, context as Context)
+                })
         )
 
         return root

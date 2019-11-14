@@ -82,6 +82,12 @@ class AuthUserFragment : Fragment() {
             }
         }
 
+        root.findViewById<LinearLayout>(R.id.pending_follow_requests_action)?.let {
+            it.setOnClickListener {
+                findNavController().navigate(AuthUserFragmentDirections.actionNavigationAuthUserToNavigationPendingFollowRequests())
+            }
+        }
+
         val authUserViewModelFactory = Injection.provideAuthUserViewModelFactory(root.context)
         authUserViewModel =
             ViewModelProvider(this, authUserViewModelFactory).get(AuthUserViewModel::class.java)

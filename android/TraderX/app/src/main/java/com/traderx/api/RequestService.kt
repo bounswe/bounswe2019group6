@@ -19,6 +19,7 @@ object ApiUri {
     const val FOLLOW_USER: String = "$FOLLOW_URI/follow"
     const val FOLLOWERS_LIST: String = "$FOLLOW_URI/followers/list"
     const val FOLLOWINGS_LIST: String = "$FOLLOW_URI/follows/list"
+    const val PENDING_FOLLOW_REQUESTS: String = "$FOLLOW_URI/request/list"
     const val USER_URI: String = "$API_URI/users"
     const val USERS_ALL: String = "$USER_URI/getAll"
     const val USER_SIGNIN: String = "$API_URI/login"
@@ -59,6 +60,9 @@ interface RequestService {
 
     @GET(ApiUri.FOLLOWINGS_LIST)
     fun followingsList(@Query("username") username: String): Single<List<FollowerResponse>>
+
+    @GET(ApiUri.PENDING_FOLLOW_REQUESTS)
+    fun pendingFollowRequests(@Query("username") username: String): Single<List<FollowerResponse>>
 
     @POST(ApiUri.UPDATE_USER)
     fun updateUser(@Path("status") status: String): Completable

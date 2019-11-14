@@ -19,13 +19,31 @@
         android:id="@+id/navigation_followers"
         android:name="com.traderx.ui.profile.FollowersFragment"
         android:label="@string/followers"
-        tools:layout="@layout/fragment_followers"/>
+        tools:layout="@layout/fragment_followers">
+        <action
+            android:id="@+id/action_navigation_followers_to_navigation_user"
+            app:destination="@id/navigation_user" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_followings"
         android:name="com.traderx.ui.profile.FollowingsFragment"
         android:label="@string/following"
-        tools:layout="@layout/fragment_followings"/>
+        tools:layout="@layout/fragment_followings">
+        <action
+            android:id="@+id/action_navigation_followings_to_navigation_user"
+            app:destination="@id/navigation_user" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_pending_follow_requests"
+        android:name="com.traderx.ui.profile.PendingFollowRequestsFragment"
+        android:label="@string/pending"
+        tools:layout="@layout/fragment_pending_follow_requests">
+        <action
+            android:id="@+id/action_navigation_pending_follow_requests_to_navigation_user"
+            app:destination="@id/navigation_user" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_articles"
@@ -75,6 +93,9 @@
         <action
             android:id="@+id/action_navigation_auth_user_to_navigation_followings"
             app:destination="@id/navigation_followings" />
+        <action
+            android:id="@+id/action_navigation_auth_user_to_navigation_pending_follow_requests"
+            app:destination="@id/navigation_pending_follow_requests" />
     </fragment>
 
     <fragment

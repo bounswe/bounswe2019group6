@@ -54,6 +54,10 @@ class AuthUserViewModel(
         return user(context).flatMap { networkSource.followingsList(it.username) }
     }
 
+    fun pendingFollowRequests(context: Context): Single<List<FollowerResponse>> {
+        return user(context).flatMap { networkSource.pendingFollowRequests(it.username) }
+    }
+
     private fun fetchUser(): Single<User> {
         return networkSource.user()
     }
