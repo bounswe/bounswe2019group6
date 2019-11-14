@@ -67,9 +67,6 @@ export default {
   },
   computed: {
     randomImage
-  },
-  created() {
-    console.log(this.user)
   }
 }
 </script>

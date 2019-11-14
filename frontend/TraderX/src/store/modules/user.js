@@ -227,7 +227,7 @@ const actions = {
 
   updatePassword({ commit }, password) {
     return new Promise((resolve, reject) => {
-      changeIBAN(password).then(() => {
+      updatePassword(password).then(() => {
         resolve()
       }).catch(error => {
         reject(error)

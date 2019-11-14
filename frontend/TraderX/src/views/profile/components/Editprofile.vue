@@ -64,7 +64,7 @@
               this.$message.success('Your Password Is Changed Successfully!')
               this.passwordinput = ""
            }).catch(error => {
-            console.log("errorrr in iban change")
+            console.log("errorrr in password change")
             console.log(error)
           })
       },

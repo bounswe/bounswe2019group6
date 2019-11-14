@@ -104,6 +104,6 @@ export function updatePassword(password) {
   return request({
     url: '/password/change',
     method: 'post',
-    password
+    data: password
   })
 }
