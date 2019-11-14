@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_home">
+
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="com.traderx.ui.home.HomeFragment"
+        android:label="@string/title_home"
+        tools:layout="@layout/fragment_news" >
+        <action
+            android:id="@+id/action_navigation_home_to_navigation_articles"
+            app:destination="@id/navigation_articles" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_articles"
+        android:name="com.traderx.ui.article.ArticlesFragment"
+        android:label="@string/article"
+        tools:layout="@layout/fragment_articles"/>
+
+    <fragment
+        android:id="@+id/navigation_article"
+        android:name="com.traderx.ui.article.ArticleFragment"
+        android:label="Article"
+        tools:layout="@layout/fragment_article" />
+
+    <fragment
+        android:id="@+id/navigation_trader_equipment"
+        android:name="com.traderx.ui.traderequipment.TraderEquipmentFragment"
+        android:label="@string/title_trader_equipment"
+        tools:layout="@layout/fragment_trader_equipment" />
+
+    <fragment
+        android:id="@+id/navigation_article_create"
+        android:name="com.traderx.ui.article.ArticleCreateFragment"
+        android:label="@string/article"
+        tools:layout="@layout/fragment_article_create"/>
+
+    <fragment
+        android:id="@+id/navigation_user_search"
+        android:name="com.traderx.ui.search.UserSearchFragment"
+        android:label="@string/search"
+        tools:layout="@layout/fragment_user_search">
+        <action
+            android:id="@+id/action_navigation_user_search_to_navigation_user"
+            app:destination="@id/navigation_user" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_auth_user"
+        android:name="com.traderx.ui.profile.AuthUserFragment"
+        android:label="@string/title_profile"
+        tools:layout="@layout/fragment_auth_user" >
+        <action
+            android:id="@+id/action_navigation_auth_user_to_navigation_user_edit"
+            app:destination="@id/navigation_user_edit" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_user"
+        android:name="com.traderx.ui.profile.UserFragment"
+        android:label="@string/title_profile"
+        tools:layout="@layout/fragment_user">
+        <argument
+            android:name="username"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_user_edit"
+        android:name="com.traderx.ui.profile.AuthUserEditFragment"
+        android:label="@string/title_user_edit"
+        tools:layout="@layout/fragment_auth_user_edit" />
+
+</navigation>

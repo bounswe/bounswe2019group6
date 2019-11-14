@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_home"
+        android:icon="@drawable/ic_home_black_24dp"
+        android:title="@string/title_home" />
+
+    <item
+        android:id="@+id/navigation_trader_equipment"
+        android:icon="@drawable/ic_dashboard_black_24dp"
+        android:title="@string/title_trader_equipment" />
+
+    <item
+        android:id="@+id/navigation_user_search"
+        android:icon="@drawable/ic_search_black_24dp"
+        android:title="@string/search" />
+
+    <item
+        android:id="@+id/navigation_auth_user"
+        android:icon="@drawable/ic_person_black_24dp"
+        android:title="@string/title_profile" />
+</menu>

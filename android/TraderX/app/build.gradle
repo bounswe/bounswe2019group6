@@ -6,11 +6,13 @@ apply plugin: 'kotlin-android-extensions'
 
 apply plugin: 'kotlin-kapt'
 
+apply plugin: "androidx.navigation.safeargs.kotlin"
+
 android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.traderx"
-        minSdkVersion 21
+        minSdkVersion 23
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -31,6 +33,14 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        targetCompatibility = 1.8
+        sourceCompatibility = 1.8
+    }
+
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
 }
 
 dependencies {
@@ -45,8 +55,15 @@ dependencies {
     implementation deps.support.gms
     implementation deps.support.material_design
 
+    //Navigation
+    implementation deps.navigation.ui
+    implementation deps.navigation.ktx_ui
+    implementation deps.navigation.fragment
+    implementation deps.navigation.ktx_fragment
+
     //Lifecycle
     implementation deps.lifecycle.viewmodel_ktx
+    implementation deps.lifecycle.extensions
 
     //Room
     implementation deps.room.runtime
@@ -68,7 +85,9 @@ dependencies {
     implementation deps.retrofit.rxjava_adapter
 
     //Custom Library
-    implementation 'de.hdodenhof:circleimageview:2.2.0'
+    implementation 'de.hdodenhof:circleimageview:3.0.1'
+    implementation 'com.github.razir.progressbutton:progressbutton:1.0.3'
+    implementation 'com.facebook.shimmer:shimmer:0.5.0'
 
     testImplementation 'junit:junit:4.12'
     testImplementation deps.test.hamcrest

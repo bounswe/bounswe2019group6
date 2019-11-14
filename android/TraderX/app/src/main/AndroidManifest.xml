@@ -17,15 +17,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.profile.UserProfileActivity"></activity>
-        <activity android:name=".ui.search.UserSearchActivity" />
-        <activity android:name=".ui.profile.AuthUserProfileActivity" />
+        <activity android:name=".ui.auth.login.LoginActivity" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name=".activity.LoginActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -34,12 +31,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.signup.SignUpActivity"
+            android:name=".ui.auth.signup.SignUpActivity"
             android:label="Register"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.ForgotPassActivity"
-            android:label="ForgotPass"
             android:screenOrientation="portrait" />
         <activity
             android:name=".auth.forgotpassword.ForgotPasswordActivity"
