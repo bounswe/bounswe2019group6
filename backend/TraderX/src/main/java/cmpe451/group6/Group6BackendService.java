@@ -9,6 +9,8 @@ import cmpe451.group6.authorization.model.RegistrationStatus;
 import cmpe451.group6.authorization.repository.UserRepository;
 import cmpe451.group6.authorization.service.HazelcastService;
 import cmpe451.group6.authorization.service.SignupService;
+import cmpe451.group6.rest.equipment.model.Equipment;
+import cmpe451.group6.rest.equipment.repository.EquipmentRepository;
 import cmpe451.group6.rest.equipment.service.EquipmentUpdateService;
 import cmpe451.group6.rest.follow.service.FollowService;
 import org.modelmapper.ModelMapper;
@@ -28,7 +30,7 @@ import org.springframework.web.filter.CorsFilter;
 // TODO: Interface for user to supply new password when resent link is sent. (Frontend related.)
 
 @SpringBootApplication
-@EnableScheduling
+//@EnableScheduling
 public class Group6BackendService implements CommandLineRunner {
 
   @Autowired
@@ -105,6 +107,7 @@ public class Group6BackendService implements CommandLineRunner {
     basic.setIsPrivate(false);
     signupService.internal_signup(basic);
 
+
     followService.followUser("basic","admin");
     followService.followUser("trader","admin");
     followService.answerRequest("trader","admin",true);
@@ -112,7 +115,9 @@ public class Group6BackendService implements CommandLineRunner {
     followService.answerRequest("trader","basic",true);
     followService.followUser("basic","trader");
 
-    equipmentUpdateService.initializeEquipments();
+    // Disabled for the ease of development. Uncomment before deploy
+    //equipmentUpdateService.initializeEquipments();
+
   }
 
 }

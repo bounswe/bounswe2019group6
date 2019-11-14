@@ -1,6 +1,8 @@
 package cmpe451.group6.authorization.model;
 
 import cmpe451.group6.rest.follow.model.FollowDAO;
+import cmpe451.group6.rest.equipment.model.Transaction;
+
 
 import java.io.Serializable;
 import java.util.List;
@@ -48,6 +50,9 @@ public class User implements Serializable {
 
   @OneToMany(mappedBy = "followee",cascade = CascadeType.ALL)
   private Set<FollowDAO> followeeDAOs;
+
+  @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+  private Set<Transaction> transactions;
 
   //   ^               # start-of-string
   // (?=.*[0-9])       # a digit must occur at least once

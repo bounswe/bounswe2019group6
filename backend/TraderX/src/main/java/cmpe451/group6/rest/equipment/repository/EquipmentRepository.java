@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface EquipmentRepsitory extends JpaRepository<Equipment,Integer> {
+public interface EquipmentRepository extends JpaRepository<Equipment,Integer> {
 
     Equipment findByCode(String code);
 

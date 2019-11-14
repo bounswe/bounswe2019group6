@@ -1,13 +1,15 @@
 package cmpe451.group6.rest.equipment.model;
 
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Entity
-public class Equipment {
+public class Equipment implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,7 +30,7 @@ public class Equipment {
     @Column(nullable = false)
     private String timeZone;
 
-    @ElementCollection(fetch = FetchType.EAGER)
+    @ElementCollection(fetch = FetchType.LAZY)
     private List<HistoricalValue> valueHistory = new ArrayList<>();
 
     @Column(nullable = false)
@@ -37,8 +39,13 @@ public class Equipment {
     @Column(nullable = false)
     private double predictionRate;
 
+
     public Equipment() {
     }
+
+    @OneToMany(mappedBy = "equipment",cascade = CascadeType.ALL)
+    private Set<Transaction> transactions;
+
 
     public String getCode() {
         return code;
