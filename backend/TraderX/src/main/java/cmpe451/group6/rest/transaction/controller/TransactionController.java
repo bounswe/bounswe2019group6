@@ -1,14 +1,11 @@
-package cmpe451.group6.rest.equipment.controller;
+package cmpe451.group6.rest.transaction.controller;
 
 import cmpe451.group6.Util;
-import cmpe451.group6.rest.equipment.dto.EquipmentMetaWrapper;
-import cmpe451.group6.rest.equipment.dto.TransactionDTO;
-import cmpe451.group6.rest.equipment.model.Equipment;
-import cmpe451.group6.rest.equipment.model.Transaction;
-import cmpe451.group6.rest.equipment.service.TransactionService;
+import cmpe451.group6.rest.transaction.dto.TransactionDTO;
+import cmpe451.group6.rest.transaction.model.Transaction;
+import cmpe451.group6.rest.transaction.service.TransactionService;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -94,6 +91,26 @@ public class TransactionController {
             @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE)})
     public int countAllTransactions(@ApiParam("User Name") @PathVariable String code) {
         return transactionService.numberOfTransactionByCode(code);
+    }
+
+    @PostMapping(value = "/buy")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_TRADER')")
+    @ApiOperation(value = " Buy asset ", response = Boolean.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE)})
+    public boolean buyAsset(@ApiParam("Code of asset") @RequestParam String code, @ApiParam("Amount wanted to buy") @RequestParam float amount, HttpServletRequest req ) {
+        return transactionService.buyAsset(util.unwrapUsername(req), code, amount);
+    }
+
+    @PostMapping(value = "/sell")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_TRADER')")
+    @ApiOperation(value = " Sell asset ", response = Boolean.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE)})
+    public boolean sellAsset(@ApiParam("Code of asset") @RequestParam String code, @ApiParam("Amount wanted to sell") @RequestParam float amount, HttpServletRequest req ) {
+        return transactionService.sellAsset(util.unwrapUsername(req), code, amount);
     }
 
 }

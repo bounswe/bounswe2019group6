@@ -1,4 +1,4 @@
-package cmpe451.group6.rest.equipment.model;
+package cmpe451.group6.rest.transaction.model;
 
 public enum TransactionType {
     BUY, SELL;

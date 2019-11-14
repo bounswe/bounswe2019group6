@@ -1,14 +1,12 @@
-package cmpe451.group6.rest.equipment.model;
+package cmpe451.group6.rest.transaction.model;
 
 
 import cmpe451.group6.rest.equipment.model.Equipment;
 import cmpe451.group6.authorization.model.User;
+
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-
 
 
 @Entity

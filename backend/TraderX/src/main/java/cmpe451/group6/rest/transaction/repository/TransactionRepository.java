@@ -1,8 +1,7 @@
-package cmpe451.group6.rest.equipment.repository;
+package cmpe451.group6.rest.transaction.repository;
 
 
-import cmpe451.group6.rest.equipment.model.Equipment;
-import cmpe451.group6.rest.equipment.model.Transaction;
+import cmpe451.group6.rest.transaction.model.Transaction;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

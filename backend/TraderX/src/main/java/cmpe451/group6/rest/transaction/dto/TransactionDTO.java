@@ -1,10 +1,8 @@
-package cmpe451.group6.rest.equipment.dto;
+package cmpe451.group6.rest.transaction.dto;
 
 import java.util.Date;
-import java.util.List;
-import cmpe451.group6.authorization.model.Role;
-import cmpe451.group6.rest.equipment.model.Transaction;
-import cmpe451.group6.rest.equipment.model.TransactionType;
+
+import cmpe451.group6.rest.transaction.model.TransactionType;
 import io.swagger.annotations.ApiModelProperty;
 
 public class TransactionDTO {
