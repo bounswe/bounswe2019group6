@@ -17,7 +17,11 @@
         <el-table-column prop="role" label="Role"></el-table-column>
         <el-table-column prop="followinfo">
           <template slot-scope="scope" >
-            <el-button @click.native.prevent="takeFollowUnfollowAction(searchResult[scope.$index])" :type="scope.row.isFollowing ? 'danger' : 'primary'" style="float:right" plain>{{ scope.row.followText }}</el-button>
+            <el-button 
+              @click.native.prevent="takeFollowUnfollowAction(searchResult[scope.$index])" 
+              :type="scope.row.isNotFollowing ? 'primary' : scope.row.isFollowing ? 'danger' : 'warning'" 
+              style="float:right" plain>{{ scope.row.followText }}
+            </el-button>
           </template>
         </el-table-column>
         <el-table-column fixed="right" width="120">
@@ -43,6 +47,8 @@ export default {
       searchText : "",
       searchResult : [{
         isFollowing : '',
+        isNotFollowing : '',
+        isPending : '',
         followText : ''
       }],
       selectedFilter: "user",
@@ -55,18 +61,19 @@ export default {
       var temp = []
       res.forEach(function (user) {
         console.log(user)
-        var privacy = user.isPrivate ? "Private" : !user.isPrivate ? 'Public': "";
-        var isFollow = user.followingStatus == "NOT_FOLLOWING" ? false : true;
-        var followText = isFollow ? "Unfollow" : "Follow"
-        // something like the below line will be added after getting info from the backend
-        // var followStatus = user.isFollow ? 'true' : 'false'; 
+        var followText = user.followingStatus == 'NOT_FOLLOWING' ? "Follow" : user.followingStatus == 'FOLLOWING' ? "Unfollow" : 'Requested'
+        var isFollowing = user.followingStatus == 'FOLLOWING' ? true : false
+        var isNotFollowing = user.followingStatus == 'NOT_FOLLOWING' ? true : false
+        var isPending = user.followingStatus == 'PENDING' ? true : false
         if (currentUserName != user.username) {
           temp.push({
             name: user.username,
-            privacy : privacy,
+            privacy : user.isPrivate ? "Private" : 'Public',
             role : user.roles[0],
-            isFollow : isFollow,
-            followText : followText
+            followText : followText,
+            isFollowing : isFollowing,
+            isNotFollowing : isNotFollowing,
+            isPending : isPending,
           })
         }
       });
@@ -82,16 +89,34 @@ export default {
       this.$router.push({ path: `/user/${user.name}/profile` })
     },
     takeFollowUnfollowAction(user) {
-      console.log(user)
-      if(user.followingStatus != "NOT_FOLLOWING"){
-        this.$store.dispatch('user/followUser', {'username' : user.name}).then(() => {
-          this.$message.success('Follow User Success')
+      if(user.isNotFollowing){
+        this.$store.dispatch('user/followUser', {'username' : user.name}).then(response => {
+          user.isNotFollowing = false
+          if (user.privacy == 'Private'){
+            this.$message.success('Follow Request Is Sent')
+            user.isPending = true
+            user.isFollowing = false
+          } else {
+            this.$message.success('Follow User Success')
+            user.isFollowing = true  
+            user.isPending = false
+          }
+          user.followText = user.isNotFollowing ? "Follow" : user.isFollowing ? "Unfollow" : 'Requested'
         }).catch(err => {
           console.log(err)
         })
       } else {
+        var tempIsPending = user.isPending
         this.$store.dispatch('user/unfollowUser', {'username' : user.name}).then(() => {
-          this.$message.success('Unfollowed User Success')
+          user.isNotFollowing = true
+          if (tempIsPending){
+            this.$message.success('Follow Request Is Deleted')
+            user.isPending = false
+          } else {
+            this.$message.success('Unfollowed User Success')
+            user.isFollowing = false
+          }
+          user.followText = user.isNotFollowing ? "Follow" : user.isFollowing ? "Unfollow" : 'Requested'
         }).catch(() => {
           console.log("errorrr in unfollowing user")
         })
