@@ -3,7 +3,7 @@ package cmpe451.group6.rest.equipment.service;
 import cmpe451.group6.rest.equipment.dto.CurrencyDTO;
 import cmpe451.group6.rest.equipment.dto.CurrencyHistoryDTO;
 import cmpe451.group6.rest.equipment.model.Equipment;
-import cmpe451.group6.rest.equipment.repository.EquipmentRepsitory;
+import cmpe451.group6.rest.equipment.repository.EquipmentRepository;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,7 +30,7 @@ import static cmpe451.group6.rest.equipment.configuration.EquipmentConfig.*;
 public class EquipmentUpdateService {
 
     @Autowired
-    EquipmentRepsitory equipmentRepsitory;
+    EquipmentRepository EquipmentRepository;
 
     private String apiKey1;
 
@@ -57,7 +57,7 @@ public class EquipmentUpdateService {
         equipment.setCurrentValue(1); // since this is the base
         equipment.setLastUpdated(new Date());
 
-        equipmentRepsitory.save(equipment);
+        EquipmentRepository.save(equipment);
     }
 
     // For the ease of development only. Do not use on deployment
@@ -73,7 +73,7 @@ public class EquipmentUpdateService {
         equipment.setPredictionRate(DEFAULT_PREDICT_RATE);
         equipment.setCurrentValue(1.33);
         equipment.setLastUpdated(new Date());
-        equipmentRepsitory.save(equipment);
+        EquipmentRepository.save(equipment);
 
         Equipment equipment1 = new Equipment();
         equipment1.setName("Turkish Lira");
@@ -83,7 +83,7 @@ public class EquipmentUpdateService {
         equipment1.setPredictionRate(DEFAULT_PREDICT_RATE);
         equipment1.setCurrentValue(2.66);
         equipment1.setLastUpdated(new Date());
-        equipmentRepsitory.save(equipment1);
+        EquipmentRepository.save(equipment1);
 
         Equipment equipment2 = new Equipment();
         equipment2.setName("Euro");
@@ -93,7 +93,7 @@ public class EquipmentUpdateService {
         equipment2.setPredictionRate(DEFAULT_PREDICT_RATE);
         equipment2.setCurrentValue(3.99);
         equipment2.setLastUpdated(new Date());
-        equipmentRepsitory.save(equipment2);
+        EquipmentRepository.save(equipment2);
 
         logger.info("Mock values are initialized.");
     }
@@ -114,13 +114,13 @@ public class EquipmentUpdateService {
             return;
         }
 
-        equipmentRepsitory.save(equipment);
+        EquipmentRepository.save(equipment);
 
     }
 
     private void updateSingleEquipment(Map<String, String> data){
         String code = data.get(CurrencyDTO.targetCode);
-        Equipment equipment = equipmentRepsitory.findByCode(code);
+        Equipment equipment = EquipmentRepository.findByCode(code);
         if(equipment == null){
             throw new IllegalArgumentException("No such currency found on records: " + code);
         }
@@ -132,7 +132,7 @@ public class EquipmentUpdateService {
             e.printStackTrace();
             throw new IllegalArgumentException("Invalid data from the API service");
         }
-        equipmentRepsitory.save(equipment);
+        EquipmentRepository.save(equipment);
     }
 
     void scheduledUpdate(){
@@ -229,7 +229,7 @@ public class EquipmentUpdateService {
 
         String to = metadata.get(CurrencyHistoryDTO.toSymbol);
 
-        Equipment equipment = equipmentRepsitory.findByCode(to);
+        Equipment equipment = EquipmentRepository.findByCode(to);
 
         if(equipment == null) return;
 
@@ -259,7 +259,7 @@ public class EquipmentUpdateService {
         double predictRate = getNextPredictionRate(equipment.getValueHistory(), equipment.getCurrentValue());
         equipment.setPredictionRate(predictRate);
 
-        equipmentRepsitory.save(equipment);
+        EquipmentRepository.save(equipment);
 
     }
 
