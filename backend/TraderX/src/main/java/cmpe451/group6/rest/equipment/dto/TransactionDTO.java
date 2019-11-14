@@ -21,36 +21,35 @@ public class TransactionDTO {
     public String getEquipment() {
         return equipment;
     }
-    public void setEquipment(String equipment) { this.equipment=equipment; }
+
+    public void setEquipment(String equipment) {
+        this.equipment = equipment;
+    }
 
 
     public TransactionType getTransactionType() {
         return transactionType;
     }
-    public void setTransactionType(TransactionType type) { this.transactionType=type; }
 
-    public String getLatitude() {
-        return latitude;
+    public void setTransactionType(TransactionType type) {
+        this.transactionType = type;
     }
 
-    public void setLatitude(String latitude) {
-        this.latitude = latitude;
+    public Date getCreatedAt() {
+        return createdAt;
     }
 
-    public String getUsername() {
-        return username;
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public double getCount() {
+        return count;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
+    public void setCount(double count) {
+        this.count = count;
     }
 
 }
+
