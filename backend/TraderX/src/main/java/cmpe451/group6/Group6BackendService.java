@@ -3,12 +3,12 @@ package cmpe451.group6;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Date;
 
 import cmpe451.group6.authorization.model.RegistrationStatus;
 import cmpe451.group6.authorization.repository.UserRepository;
 import cmpe451.group6.authorization.service.HazelcastService;
 import cmpe451.group6.authorization.service.SignupService;
+import cmpe451.group6.rest.comment.service.EquipmentCommentService;
 import cmpe451.group6.rest.equipment.service.EquipmentUpdateService;
 import cmpe451.group6.rest.follow.service.FollowService;
 import org.modelmapper.ModelMapper;
@@ -45,6 +45,9 @@ public class Group6BackendService implements CommandLineRunner {
 
   @Autowired
   FollowService followService;
+
+  @Autowired
+  EquipmentCommentService commentService;
 
   public static void main(String[] args) {
     SpringApplication.run(Group6BackendService.class, args);
@@ -113,6 +116,9 @@ public class Group6BackendService implements CommandLineRunner {
     followService.followUser("basic","trader");
 
     equipmentUpdateService.initializeEquipments();
+
+    commentService.postEquipmentComment("admin","asd","USD");
+    commentService.editEquipmentComment("admin",1,"updated content");
   }
 
 }

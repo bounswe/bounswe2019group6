@@ -1,5 +1,6 @@
 package cmpe451.group6.authorization.model;
 
+import cmpe451.group6.rest.comment.model.EquipmentComment;
 import cmpe451.group6.rest.follow.model.FollowDAO;
 
 import java.io.Serializable;
@@ -162,6 +163,22 @@ public class User implements Serializable {
 
   public void setRoles(List<Role> roles) {
     this.roles = roles;
+  }
+
+  public Set<FollowDAO> getFollowerDAOs() {
+    return followerDAOs;
+  }
+
+  public void setFollowerDAOs(Set<FollowDAO> followerDAOs) {
+    this.followerDAOs = followerDAOs;
+  }
+
+  public Set<FollowDAO> getFolloweeDAOs() {
+    return followeeDAOs;
+  }
+
+  public void setFolloweeDAOs(Set<FollowDAO> followeeDAOs) {
+    this.followeeDAOs = followeeDAOs;
   }
 
 }

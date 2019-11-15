@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-public class Equipment {
+public class Equipment implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
