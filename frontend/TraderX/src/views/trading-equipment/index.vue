@@ -1,7 +1,7 @@
 <template>
 
   <div class="trading-eqipment-list-container">
-    <el-row class='row' v-for="te in tradingEquipments" :gutter="20" style="padding:16px 16px 0;margin-bottom:32px;">
+    <el-row class='row' v-for="te in tradingEquipments" v-bind:key="te.label" :gutter="20" style="padding:16px 16px 0;margin-bottom:32px;">
       <el-col class='te-type-column' :span="4" :xs="24">
         <el-card class='te-type-container'>
           <h1 class='te-type-text'>{{ te.label }}</h1>
@@ -34,32 +34,6 @@
 <script>
 import LineChart from './components/LineChart'
 
-// Creating mock data
-// This part of the code will be deleted when we will be receiving data from backend
-let bitCoinsArray = [
-  { label: 'BitCoin', key: 'BC'}
-];
-
-let stocksArray = [
-  { label: 'Google', key: 'Google'},
-  { label: 'Apple', key: 'Apple'},
-  { label: 'Microsoft', key: 'Microsoft'},
-  { label: 'Facebook', key: 'FB'}
-]
-
-let moneyCurrenciesArray = [
-  { label: 'United States Dollar', key: 'US'},
-  { label: 'Euro', key: 'EU'},
-  { label: 'Pound Sterling', key: 'PS'},
-  { label: 'Japanese Yen', key: 'JP'}
-];
-
-const tradingEquipments = [
-  { data: moneyCurrenciesArray, label: 'Money Currencies', activeTab: moneyCurrenciesArray[0].key},
-  { data: bitCoinsArray, label: 'BitCoin', activeTab: bitCoinsArray[0].key},
-  { data: stocksArray, label: 'Stocks', activeTab: stocksArray[0].key},
-];
-
 export default {
   name: 'DashboardAdmin',
   components: {
@@ -67,26 +41,98 @@ export default {
   },
   data() {
     return {
-      tradingEquipments: tradingEquipments
+      tradingEquipments : [],
     }
   },
-  created() {
-    this.initializeData();
+  async created() {
+    // equipmentList = ['JPY', 'TRY', ...]
+    var equipmentList = await this.getEquipmentList() 
+    // equipmentOpenningValues = [{label="Turkish Lira", key="TRY", data={actualData=[5.6, 4.34, 7.54,...]}}, {label="Japanese Yen", key="JPY", data={actualData=[12.2312, 11.234545, 10.23234, ...]}} ...]
+    var equipmentOpenningValues = await this.getEquipmentValues(equipmentList)
+    var tempTradingEquipment = this.createTempTE(equipmentList, equipmentOpenningValues)
+    this.tradingEquipments = tempTradingEquipment
   },
+
   methods: {
-    initializeData() {
+    // Promise for getting equipments list
+    async getEquipmentList() {
+      try {
+        await this.$store.dispatch('equipment/listEquipment')
+        var res = this.$store.getters.equipmentQueryResult
+        return res.equipments
+      } catch (error) {
+        console.log(error)
+        return error
+      }  
+    },
+
+    // equipment = ['JPY', 'TRY', ...]
+    async getEquipmentValues(equipment) {
+      // equipmentOpenningValues = [{label="Turkish Lira", key="TRY", data={actualData=[5.6, 4.34, 7.54,...]}}, {label="Japanese Yen", key="JPY", data={actualData=[12.2312, 11.234545, 10.23234, ...]}} ...]
+      // This will only have the datas
+      var equipmentOpenningValues = []
+      equipment.forEach(async function(e) {
+        try {
+          await this.$store.dispatch('equipment/getEquipment', e.toLowerCase())
+          var res = this.$store.getters.equipmentQueryResult
+          equipmentOpenningValues.push({})
+          equipmentOpenningValues[equipmentOpenningValues.length-1].key = e
+          equipmentOpenningValues[equipmentOpenningValues.length-1].label = res.name
+          equipmentOpenningValues[equipmentOpenningValues.length-1].data = {
+            actualData: []
+          }
+          // equipmentOpenningValues.push([])
+          res.valueHistory.forEach(function(val) {
+            equipmentOpenningValues[equipmentOpenningValues.length-1].data.actualData.push(val.open)
+          })
+        } catch (error) {
+          console.log(error)
+        }
+      }, this)
+      return equipmentOpenningValues
+    },
+
+    createTempTE(equipmentList, equipmentOpenningValues) {
+      let bitCoinsArray = [
+        { label: 'Bit Coin', key: 'BC'}
+      ];
+
+      let stocksArray = [
+        { label: 'Google', key: 'Google'},
+        { label: 'Apple', key: 'Apple'},
+        { label: 'Microsoft', key: 'Microsoft'},
+        { label: 'Facebook', key: 'FB'}
+      ]
+
+      var tempTE = [
+        { data: [], label: 'Money Currencies'}, // this will be added afterwards
+        { data: bitCoinsArray, label: 'Cryptocurrency', activeTab: bitCoinsArray[0].key},
+        { data: stocksArray, label: 'Stocks', activeTab: stocksArray[0].key},
+      ];
+
       var te;
-      for (te of tradingEquipments) {
+      for (te of tempTE) {
         const teData = te.data;
         var t;
         for (t of teData) {
           t.data = {
-            expectedData: Array.from({length: 7}, () => Math.floor(Math.random() * 1000)),
-            actualData: Array.from({length: 7}, () => Math.floor(Math.random() * 1000))
+            actualData: Array.from({length: 100}, () => Math.floor(Math.random() * 100))
           }
         }
       }
-    },
+
+      var cnt = 1
+      equipmentList.forEach(function(equipmentKey) {
+        if (cnt == 1) {
+          tempTE[0].activeTab = equipmentKey
+        }
+      })
+
+      tempTE[0].data = equipmentOpenningValues
+      return tempTE
+
+    }, 
+
     learnMoreAboutEquipment() {
       this.$notify({
         title: 'Success',

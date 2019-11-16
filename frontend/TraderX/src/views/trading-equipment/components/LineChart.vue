@@ -61,10 +61,12 @@ export default {
       this.chart = echarts.init(this.$el, 'macarons')
       this.setOptions(this.chartData)
     },
-    setOptions({ expectedData, actualData } = {}) {
+    setOptions({ /*expectedData, */actualData } = {}) {
       this.chart.setOption({
         xAxis: {
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          // Since the data we have shows the last 100 days
+          // xAxis should be from day 1 to day 100
+          data: Array.from(Array(100).keys()),
           boundaryGap: false,
           axisTick: {
             show: false
@@ -87,27 +89,32 @@ export default {
         yAxis: {
           axisTick: {
             show: false
-          }
-        },
-        legend: {
-          data: ['expected', 'actual']
-        },
-        series: [{
-          name: 'expected', itemStyle: {
-            normal: {
-              color: '#FF005A',
-              lineStyle: {
-                color: '#FF005A',
-                width: 2
-              }
-            }
           },
-          smooth: true,
-          type: 'line',
-          data: expectedData,
-          animationDuration: 2800,
-          animationEasing: 'cubicInOut'
+          type: 'value',
+          min: 'dataMin',
+          max: 'dataMax'
         },
+        // With this page only actual data is used
+        legend: {
+          data: [/*'expected', */'actual']
+        },
+        series: [
+        // {
+        //   name: 'expected', itemStyle: {
+        //     normal: {
+        //       color: '#FF005A',
+        //       lineStyle: {
+        //         color: '#FF005A',
+        //         width: 2
+        //       }
+        //     }
+        //   },
+        //   smooth: true,
+        //   type: 'line',
+        //   data: expectedData,
+        //   animationDuration: 2800,
+        //   animationEasing: 'cubicInOut'
+        // },
         {
           name: 'actual',
           smooth: true,
