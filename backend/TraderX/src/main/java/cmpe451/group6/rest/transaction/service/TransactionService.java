@@ -44,99 +44,100 @@ public class TransactionService {
     @Autowired
     private ModelMapper modelMapper;
 
-
     public List<Transaction> getTransactionsByUser(String username, String requesterName) {
         User user = userRepository.findByUsername(username);
         if (user == null) {
             throw new CustomException("There is no user named " + username + ".", HttpStatus.NOT_ACCEPTABLE);
-        } else if (user.getIsPrivate() && (followRepository.getFollowDAO(requesterName, username)==null || followRepository.getFollowDAO(requesterName, username).getFollowStatus() != FollowStatus.APPROVED ) ) {
-            throw new CustomException("The requested user's profile is private and requester is not following!", HttpStatus.NOT_ACCEPTABLE);
+        } else if (user.getIsPrivate() && (followRepository.getFollowDAO(requesterName, username) == null
+                || followRepository.getFollowDAO(requesterName, username).getFollowStatus() != FollowStatus.APPROVED)) {
+            throw new CustomException("The requested user's profile is private and requester is not following!",
+                    HttpStatus.NOT_ACCEPTABLE);
         } else {
             List<Transaction> transactions = TransactionRepository.findByUser_username(username);
             return transactions;
         }
     }
 
-    public List<TransactionDTO> getTransactions(){
+    public List<TransactionDTO> getTransactions() {
         List<TransactionDTO> transactionDTOs = new ArrayList<TransactionDTO>();
         TransactionRepository.findAll()
                 .forEach(item -> transactionDTOs.add(modelMapper.map(item, TransactionDTO.class)));
         return transactionDTOs;
     }
 
-    public List<TransactionDTO> getTransactionsByCode(String code){
+    public List<TransactionDTO> getTransactionsByCode(String code) {
         List<TransactionDTO> transactionDTOs = new ArrayList<TransactionDTO>();
         TransactionRepository.findByEquipment_code(code)
                 .forEach(item -> transactionDTOs.add(modelMapper.map(item, TransactionDTO.class)));
         return transactionDTOs;
     }
 
-    public List<TransactionDTO> getTransactionByDateBetween(Date start, Date end){
+    public List<TransactionDTO> getTransactionByDateBetween(Date start, Date end) {
         List<TransactionDTO> transactionDTOs = new ArrayList<TransactionDTO>();
         TransactionRepository.findByDateBetween(start, end)
                 .forEach(item -> transactionDTOs.add(modelMapper.map(item, TransactionDTO.class)));
         return transactionDTOs;
     }
 
-    public int numberOfTransactions(){
+    public int numberOfTransactions() {
         return TransactionRepository.countAll();
     }
 
-    public int numberOfTransactionByUser(String username, String requesterName){
+    public int numberOfTransactionByUser(String username, String requesterName) {
         User user = userRepository.findByUsername(username);
         if (user == null) {
             throw new CustomException("There is no user named " + username + ".", HttpStatus.NOT_ACCEPTABLE);
-        } else if (user.getIsPrivate() && (followRepository.getFollowDAO(requesterName, username)==null || followRepository.getFollowDAO(requesterName, username).getFollowStatus() != FollowStatus.APPROVED ) ) {
-            throw new CustomException("The requested user's profile is private and requester is not following!", HttpStatus.NOT_ACCEPTABLE);
-        }else {
+        } else if (user.getIsPrivate() && (followRepository.getFollowDAO(requesterName, username) == null
+                || followRepository.getFollowDAO(requesterName, username).getFollowStatus() != FollowStatus.APPROVED)) {
+            throw new CustomException("The requested user's profile is private and requester is not following!",
+                    HttpStatus.NOT_ACCEPTABLE);
+        } else {
             return TransactionRepository.countByUser_username(username);
         }
     }
 
-    public int numberOfTransactionByCode(String code){
+    public int numberOfTransactionByCode(String code) {
         return TransactionRepository.countByEquipment_code(code);
     }
 
-    public boolean buyAsset(String requesterName, String code, float amount){
+    public boolean buyAsset(String requesterName, String code, float amount) {
         User user = userRepository.findByUsername(requesterName);
-        if(user == null ){
+        if (user == null) {
             throw new CustomException("There is no user named " + requesterName + ".", HttpStatus.NOT_ACCEPTABLE);
         }
         Equipment equipment = equipmentRepository.findByCode(code);
-        if( equipment == null ){
+        if (equipment == null) {
             throw new CustomException("There is no equipment with code " + code + ".", HttpStatus.NOT_ACCEPTABLE);
         }
 
         Asset asset = assetRepository.getAsset(requesterName, EquipmentConfig.BASE_CURRENCY_CODE);
-        if( asset == null ){
+        if (asset == null) {
             throw new CustomException("The user has no money in application.", HttpStatus.NOT_ACCEPTABLE);
         }
 
-        float neededMoney = (float) (amount*equipment.getCurrentValue());
+        float neededMoney = (float) (amount * equipment.getCurrentValue());
         float usersMoney = asset.getAmount();
-        if( neededMoney > usersMoney ){
-            throw new CustomException("The user doesn't have enough money to buy " + amount + " " + code +  ".", HttpStatus.NOT_ACCEPTABLE);
+        if (neededMoney > usersMoney) {
+            throw new CustomException("The user doesn't have enough money to buy " + amount + " " + code + ".",
+                    HttpStatus.NOT_ACCEPTABLE);
         }
 
-        //CAN BUY
+        // CAN BUY
 
-
-
-        //set remaining money
-        asset.setAmount( usersMoney - neededMoney);
+        // set remaining money
+        asset.setAmount(usersMoney - neededMoney);
         assetRepository.save(asset);
 
-
-        //check if the user already had asset of that type
+        // check if the user already had asset of that type
         Asset alreadyHad = assetRepository.getAsset(requesterName, equipment.getCode());
-        if( alreadyHad == null) {
-            //set newly bought asset
+        if (alreadyHad == null) {
+            // set newly bought asset
             Asset temp = new Asset();
             temp.setAmount(amount);
             temp.setUser(user);
             temp.setEquipment(equipmentRepository.findByCode(code));
             assetRepository.save(temp);
-        }else{
+        } else {
             alreadyHad.setAmount(alreadyHad.getAmount() + amount);
             assetRepository.save(alreadyHad);
         }
@@ -149,41 +150,44 @@ public class TransactionService {
         return true;
     }
 
-    public boolean sellAsset(String requesterName, String code, float amount){
+    public boolean sellAsset(String requesterName, String code, float amount) {
         User user = userRepository.findByUsername(requesterName);
-        if(user == null ){
+        if (user == null) {
             throw new CustomException("There is no user named " + requesterName + ".", HttpStatus.NOT_ACCEPTABLE);
         }
         Equipment equipment = equipmentRepository.findByCode(code);
-        if( equipment == null ){
+        if (equipment == null) {
             throw new CustomException("There is no equipment with code " + code + ".", HttpStatus.NOT_ACCEPTABLE);
         }
 
         Asset asset = assetRepository.getAsset(requesterName, code);
-        if( asset == null ){
-            throw new CustomException("The user has no asset named " +code+ " in application.", HttpStatus.NOT_ACCEPTABLE);
+        if (asset == null) {
+            throw new CustomException("The user has no asset named " + code + " in application.",
+                    HttpStatus.NOT_ACCEPTABLE);
         }
 
-        if( asset.getAmount() < amount ){
-            throw new CustomException("The user doesn't have enough asset with code "+code+" to sell "+amount+" amount",HttpStatus.NOT_ACCEPTABLE);
+        if (asset.getAmount() < amount) {
+            throw new CustomException(
+                    "The user doesn't have enough asset with code " + code + " to sell " + amount + " amount",
+                    HttpStatus.NOT_ACCEPTABLE);
         }
 
-        //CAN SELL
+        // CAN SELL
         Asset a = assetRepository.getAsset(requesterName, EquipmentConfig.BASE_CURRENCY_CODE);
         float usersMoney = a.getAmount();
-        float newMoney = (float) (amount*equipment.getCurrentValue());
+        float newMoney = (float) (amount * equipment.getCurrentValue());
 
-        //set new money
+        // set new money
         Asset temp = assetRepository.getAsset(requesterName, EquipmentConfig.BASE_CURRENCY_CODE);
-        temp.setAmount( usersMoney + newMoney);
+        temp.setAmount(usersMoney + newMoney);
         assetRepository.save(asset);
 
-        //all sold
-        if( amount == asset.getAmount() ){
+        // all sold
+        if (amount == asset.getAmount()) {
             assetRepository.delete(asset);
 
-        }else {
-            //set remaining asset
+        } else {
+            // set remaining asset
             float oldAmount = asset.getAmount();
             asset.setAmount(oldAmount - amount);
             assetRepository.save(asset);

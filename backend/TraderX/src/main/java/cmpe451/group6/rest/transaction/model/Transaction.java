@@ -1,13 +1,11 @@
 package cmpe451.group6.rest.transaction.model;
 
-
 import cmpe451.group6.rest.equipment.model.Equipment;
 import cmpe451.group6.authorization.model.User;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
-
 
 @Entity
 public class Transaction implements Serializable {
@@ -27,25 +25,30 @@ public class Transaction implements Serializable {
     @Column(nullable = false)
     private TransactionType transactionType;
 
-    @Column(nullable = false, name = "createdAt", updatable=false, columnDefinition= " datetime default NOW() ")
+    @Column(nullable = false, name = "createdAt", updatable = false, columnDefinition = " datetime default NOW() ")
     private Date createdAt;
 
-    @Column(name = "amount", nullable=false)
+    @Column(name = "amount", nullable = false)
     private float amount;
 
     @PrePersist
-    public void addTimestamp(){
+    public void addTimestamp() {
         createdAt = new Date();
     }
 
+    public User getUser() {
+        return user;
+    }
 
-    public User getUser(){ return user; }
-    public void setUser(User user){
+    public void setUser(User user) {
         this.user = user;
     }
 
-    public Equipment getEquipment() { return equipment; }
-    public void setEquipment(Equipment equipmentCode){
+    public Equipment getEquipment() {
+        return equipment;
+    }
+
+    public void setEquipment(Equipment equipmentCode) {
         this.equipment = equipmentCode;
     }
 
@@ -57,9 +60,12 @@ public class Transaction implements Serializable {
         this.transactionType = transactionType;
     }
 
-    public Date getDate() { return createdAt; }
-    public void setDate(Date createdAt){
-        this.createdAt=createdAt;
+    public Date getDate() {
+        return createdAt;
+    }
+
+    public void setDate(Date createdAt) {
+        this.createdAt = createdAt;
     }
 
 }

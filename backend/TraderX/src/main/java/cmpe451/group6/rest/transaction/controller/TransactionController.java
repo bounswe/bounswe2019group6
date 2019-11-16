@@ -16,7 +16,6 @@ import java.util.List;
 
 import static cmpe451.group6.authorization.exception.GlobalExceptionHandlerController.GENERIC_ERROR_RESPONSE;
 
-
 @RestController
 @RequestMapping("/transaction")
 @Api(tags = "Transaction")
@@ -32,17 +31,16 @@ public class TransactionController {
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_BASIC') or hasRole('ROLE_TRADER')")
     @ApiOperation(value = "Gets transactions of an user", response = Transaction.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = 417, message = "No such an equipment found.")})
-    public List<Transaction> getTransactionsByUser(@ApiParam("User Name") @PathVariable String username, HttpServletRequest req) {
+    @ApiResponses(value = { @ApiResponse(code = 417, message = "No such an equipment found.") })
+    public List<Transaction> getTransactionsByUser(@ApiParam("User Name") @PathVariable String username,
+            HttpServletRequest req) {
         return transactionService.getTransactionsByUser(username, util.unwrapUsername(req));
     }
 
     @GetMapping(value = "/{code}")
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Returns transactions on specified equipment code (no auth required)", response = TransactionDTO.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE)})
+    @ApiResponses(value = { @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE) })
     public List<TransactionDTO> getTransactionsByCode(@ApiParam("User Name") @PathVariable String code) {
         return transactionService.getTransactionsByCode(code);
     }
@@ -50,8 +48,7 @@ public class TransactionController {
     @GetMapping(value = "/all")
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Returns all transactions (no auth required)", response = TransactionDTO.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE)})
+    @ApiResponses(value = { @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE) })
     public List<TransactionDTO> getAllTransactions() {
         return transactionService.getTransactions();
     }
@@ -59,17 +56,16 @@ public class TransactionController {
     @GetMapping(value = "/byDate")
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Returns transactions in between start date and end date (no auth required)", response = TransactionDTO.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE)})
-    public List<TransactionDTO> getTransactionsByDateBetween(@ApiParam("Start Date") @RequestParam Date start, @ApiParam("End Date") @RequestParam Date end ) {
+    @ApiResponses(value = { @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE) })
+    public List<TransactionDTO> getTransactionsByDateBetween(@ApiParam("Start Date") @RequestParam Date start,
+            @ApiParam("End Date") @RequestParam Date end) {
         return transactionService.getTransactionByDateBetween(start, end);
     }
 
     @GetMapping(value = "/count/all")
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Returns number of all transactions  (no auth required)", response = Integer.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE)})
+    @ApiResponses(value = { @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE) })
     public int countAllTransactions() {
         return transactionService.numberOfTransactions();
     }
@@ -78,8 +74,7 @@ public class TransactionController {
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_BASIC') or hasRole('ROLE_TRADER')")
     @ApiOperation(value = "Returns number of all transactions made by specific user ", response = Integer.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE)})
+    @ApiResponses(value = { @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE) })
     public int countAllTransactions(@ApiParam("User Name") @PathVariable String username, HttpServletRequest req) {
         return transactionService.numberOfTransactionByUser(username, util.unwrapUsername(req));
     }
@@ -87,8 +82,7 @@ public class TransactionController {
     @GetMapping(value = "/count/{code}")
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Returns number of all transactions made by specific user (no auth required) ", response = Integer.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE)})
+    @ApiResponses(value = { @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE) })
     public int countAllTransactions(@ApiParam("User Name") @PathVariable String code) {
         return transactionService.numberOfTransactionByCode(code);
     }
@@ -97,9 +91,9 @@ public class TransactionController {
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_TRADER')")
     @ApiOperation(value = " Buy asset ", response = Boolean.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE)})
-    public boolean buyAsset(@ApiParam("Code of asset") @RequestParam String code, @ApiParam("Amount wanted to buy") @RequestParam float amount, HttpServletRequest req ) {
+    @ApiResponses(value = { @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE) })
+    public boolean buyAsset(@ApiParam("Code of asset") @RequestParam String code,
+            @ApiParam("Amount wanted to buy") @RequestParam float amount, HttpServletRequest req) {
         return transactionService.buyAsset(util.unwrapUsername(req), code, amount);
     }
 
@@ -107,14 +101,10 @@ public class TransactionController {
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_TRADER')")
     @ApiOperation(value = " Sell asset ", response = Boolean.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE)})
-    public boolean sellAsset(@ApiParam("Code of asset") @RequestParam String code, @ApiParam("Amount wanted to sell") @RequestParam float amount, HttpServletRequest req ) {
+    @ApiResponses(value = { @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE) })
+    public boolean sellAsset(@ApiParam("Code of asset") @RequestParam String code,
+            @ApiParam("Amount wanted to sell") @RequestParam float amount, HttpServletRequest req) {
         return transactionService.sellAsset(util.unwrapUsername(req), code, amount);
     }
 
 }
-
-
-
-

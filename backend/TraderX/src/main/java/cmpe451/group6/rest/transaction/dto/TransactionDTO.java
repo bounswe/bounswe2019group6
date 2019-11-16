@@ -24,7 +24,6 @@ public class TransactionDTO {
         this.equipment = equipment;
     }
 
-
     public TransactionType getTransactionType() {
         return transactionType;
     }
@@ -50,4 +49,3 @@ public class TransactionDTO {
     }
 
 }
-

@@ -1,9 +1,9 @@
 package cmpe451.group6.rest.transaction.model;
 
 public enum TransactionType {
-    BUY, SELL;
+  BUY, SELL;
 
-    public String getTransactionType() {
+  public String getTransactionType() {
     return name();
   }
 

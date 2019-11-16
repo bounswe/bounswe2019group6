@@ -23,23 +23,31 @@ public class Asset {
     @JoinColumn(name = "equipment", referencedColumnName = "code", nullable = false)
     private Equipment equipment;
 
-    @Column(name = "amount", nullable=false)
+    @Column(name = "amount", nullable = false)
     private float amount;
 
+    public User getUser() {
+        return user;
+    }
 
-    public User getUser(){ return user; }
-    public void setUser(User user){
+    public void setUser(User user) {
         this.user = user;
     }
 
-    public Equipment getEquipment() { return equipment; }
-    public void setEquipment(Equipment equipmentCode){
+    public Equipment getEquipment() {
+        return equipment;
+    }
+
+    public void setEquipment(Equipment equipmentCode) {
         this.equipment = equipmentCode;
     }
 
-    public float getAmount(){ return amount; }
-    public void setAmount(float amount){ this.amount = amount;}
+    public float getAmount() {
+        return amount;
+    }
 
-
+    public void setAmount(float amount) {
+        this.amount = amount;
+    }
 
 }

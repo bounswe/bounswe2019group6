@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.Date;
 import java.util.List;
 
-public interface AssetRepository extends JpaRepository<Asset,Integer> {
+public interface AssetRepository extends JpaRepository<Asset, Integer> {
 
     @Query("SELECT a FROM Asset a WHERE a.user.username=?1 AND a.equipment.code=?2")
     Asset getAsset(String user, String equipment);
