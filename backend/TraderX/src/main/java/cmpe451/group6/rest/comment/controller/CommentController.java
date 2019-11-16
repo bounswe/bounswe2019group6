@@ -43,7 +43,7 @@ public class CommentController {
     @ApiOperation(value = "Delete comment", response = StringResponseWrapper.class)
     @ApiResponses(value = {
             @ApiResponse(code = 406, message = "Cannot delete other's comment."),
-            @ApiResponse(code = 412, message = "No such an equipment/user found or improper length.")})
+            @ApiResponse(code = 412, message = "No such an comment found.")})
     public StringResponseWrapper deleteComment(@ApiParam("Equipment Code") @PathVariable int id,
                                                HttpServletRequest req) {
         equipmentCommentService.deleteEquipmentComment(util.unwrapUsername(req),id);
@@ -82,9 +82,9 @@ public class CommentController {
     @GetMapping(value = "/equipment/{code}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_BASIC') or hasRole('ROLE_TRADER')")
-    @ApiOperation(value = "Post comment by code", response = CommentResponseDTO.class)
+    @ApiOperation(value = "Find equipment comments", response = CommentResponseDTO.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 412, message = "No such an equipment/user found")})
+            @ApiResponse(code = 412, message = "No such an equipment found")})
     public List<CommentResponseDTO> findEquipmentComments(@ApiParam("Equipment Code") @PathVariable String code,
                                               HttpServletRequest req) {
         return equipmentCommentService.findEquipmentComments(code,util.unwrapUsername(req));
@@ -93,10 +93,10 @@ public class CommentController {
     @GetMapping(value = "/user/{username}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_BASIC') or hasRole('ROLE_TRADER')")
-    @ApiOperation(value = "Post comment by code", response = CommentResponseDTO.class)
+    @ApiOperation(value = "Find user comments.", response = CommentResponseDTO.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 412, message = "No such an equipment/user found"),
-            @ApiResponse(code = 428, message = "Profile is private")})
+            @ApiResponse(code = 428, message = "Profile is private"),
+            @ApiResponse(code = 412, message = "No such user is found")})
     public List<CommentResponseDTO> findUserComments(@ApiParam("Username")
                                                        @PathVariable String username,
                                                    HttpServletRequest req) {
