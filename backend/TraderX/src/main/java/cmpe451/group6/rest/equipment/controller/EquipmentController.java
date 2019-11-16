@@ -1,6 +1,7 @@
 package cmpe451.group6.rest.equipment.controller;
 
 import cmpe451.group6.rest.equipment.dto.EquipmentMetaWrapper;
+import cmpe451.group6.rest.equipment.dto.EquipmentResponseDTO;
 import cmpe451.group6.rest.equipment.service.EquipmentService;
 import cmpe451.group6.rest.equipment.model.Equipment;
 import io.swagger.annotations.*;
@@ -21,10 +22,10 @@ public class EquipmentController {
 
     @GetMapping(value = "/{name}")
     @ResponseStatus(HttpStatus.OK)
-    @ApiOperation(value = "Gets general information of an equipment (no auth required)", response = Equipment.class)
+    @ApiOperation(value = "Gets general information of an equipment (no auth required)", response = EquipmentResponseDTO.class)
     @ApiResponses(value = {
             @ApiResponse(code = 417, message = "No such an equipment found.")})
-    public Equipment getEquipment(@ApiParam("Equipment Name") @PathVariable String name) {
+    public EquipmentResponseDTO getEquipment(@ApiParam("Equipment Name") @PathVariable String name) {
         return equipmentService.getEquipment(name);
     }
 

@@ -1,9 +1,11 @@
 package cmpe451.group6.rest.equipment.service;
 
-import cmpe451.group6.rest.equipment.dto.CurrencyDTO;
-import cmpe451.group6.rest.equipment.dto.CurrencyHistoryDTO;
+import cmpe451.group6.rest.equipment.dto.Currency3rdPartyDTO;
+import cmpe451.group6.rest.equipment.dto.CurrencyHistory3rdPrtyDTO;
 import cmpe451.group6.rest.equipment.model.Equipment;
+import cmpe451.group6.rest.equipment.model.HistoricalValue;
 import cmpe451.group6.rest.equipment.repository.EquipmentRepsitory;
+import cmpe451.group6.rest.equipment.repository.HistoricalValueRepository;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,6 +33,9 @@ public class EquipmentUpdateService {
 
     @Autowired
     EquipmentRepsitory equipmentRepsitory;
+
+    @Autowired
+    HistoricalValueRepository historicalValueRepository;
 
     private String apiKey1;
 
@@ -63,15 +68,15 @@ public class EquipmentUpdateService {
     private void saveSingleEquipment(Map<String, String> data){
 
         Equipment equipment = new Equipment();
-        equipment.setName(data.get(CurrencyDTO.targetName));
-        equipment.setCode(data.get(CurrencyDTO.targetCode));
-        equipment.setTimeZone(data.get(CurrencyDTO.zone));
+        equipment.setName(data.get(Currency3rdPartyDTO.targetName));
+        equipment.setCode(data.get(Currency3rdPartyDTO.targetCode));
+        equipment.setTimeZone(data.get(Currency3rdPartyDTO.zone));
         equipment.setCurrentStock(DEFAULT_STOCK);
         equipment.setPredictionRate(DEFAULT_PREDICT_RATE);
 
         try {
-            equipment.setCurrentValue(Double.parseDouble(data.get(CurrencyDTO.rate)));
-            equipment.setLastUpdated(preciseDf.parse(data.get(CurrencyDTO.lastUpdate)));
+            equipment.setCurrentValue(Double.parseDouble(data.get(Currency3rdPartyDTO.rate)));
+            equipment.setLastUpdated(preciseDf.parse(data.get(Currency3rdPartyDTO.lastUpdate)));
         } catch (Exception e){
             return;
         }
@@ -81,15 +86,15 @@ public class EquipmentUpdateService {
     }
 
     private void updateSingleEquipment(Map<String, String> data){
-        String code = data.get(CurrencyDTO.targetCode);
+        String code = data.get(Currency3rdPartyDTO.targetCode);
         Equipment equipment = equipmentRepsitory.findByCode(code);
         if(equipment == null){
             throw new IllegalArgumentException("No such currency found on records: " + code);
         }
 
         try {
-            equipment.setCurrentValue(Double.parseDouble(data.get(CurrencyDTO.rate)));
-            equipment.setLastUpdated(preciseDf.parse(data.get(CurrencyDTO.lastUpdate)));
+            equipment.setCurrentValue(Double.parseDouble(data.get(Currency3rdPartyDTO.rate)));
+            equipment.setLastUpdated(preciseDf.parse(data.get(Currency3rdPartyDTO.lastUpdate)));
         } catch (Exception e){
             e.printStackTrace();
             throw new IllegalArgumentException("Invalid data from the API service");
@@ -114,7 +119,7 @@ public class EquipmentUpdateService {
             JSONObject jsonObject = new JSONObject(responseString);
 
             @SuppressWarnings("unchecked")
-            Map<String,String> data = (Map<String,String>) jsonObject.toMap().get(CurrencyDTO.header);
+            Map<String,String> data = (Map<String,String>) jsonObject.toMap().get(Currency3rdPartyDTO.header);
 
             if(data == null){ continue; }
 
@@ -142,7 +147,7 @@ public class EquipmentUpdateService {
             JSONObject jsonObject = new JSONObject(responseString);
 
             @SuppressWarnings("unchecked")
-            Map<String,String> data = (Map<String,String>) jsonObject.toMap().get(CurrencyDTO.header);
+            Map<String,String> data = (Map<String,String>) jsonObject.toMap().get(Currency3rdPartyDTO.header);
 
             saveSingleEquipment(data);
         }
@@ -169,11 +174,11 @@ public class EquipmentUpdateService {
 
             @SuppressWarnings("unchecked")
             Map<String, Map<String, String>> history = (Map<String, Map<String, String>>)
-                    jsonObject.toMap().get(CurrencyHistoryDTO.history);
+                    jsonObject.toMap().get(CurrencyHistory3rdPrtyDTO.history);
 
             @SuppressWarnings("unchecked")
             Map<String, String> metadata = (Map<String, String>)
-                    jsonObject.toMap().get(CurrencyHistoryDTO.metadata);
+                    jsonObject.toMap().get(CurrencyHistory3rdPrtyDTO.metadata);
 
             if(history == null || metadata == null) {
                 logger.warning("Null response for currency history:" + currency);
@@ -189,13 +194,13 @@ public class EquipmentUpdateService {
 
     private void saveSingleEquipmentHistory(Map<String, Map<String, String>> history, Map<String, String> metadata){
 
-        String to = metadata.get(CurrencyHistoryDTO.toSymbol);
+        String to = metadata.get(CurrencyHistory3rdPrtyDTO.toSymbol);
 
         Equipment equipment = equipmentRepsitory.findByCode(to);
 
         if(equipment == null) return;
 
-        equipment.getValueHistory().clear();
+        historicalValueRepository.deleteAllByEquipment_Code(equipment.getCode());
 
         for (Map.Entry<String, Map<String, String>> daily : history.entrySet()) {
             Date current;
@@ -206,19 +211,20 @@ public class EquipmentUpdateService {
                 continue;
             }
 
-            double low = Double.parseDouble(daily.getValue().get(CurrencyHistoryDTO.low));
-            double high = Double.parseDouble(daily.getValue().get(CurrencyHistoryDTO.high));
-            double open = Double.parseDouble(daily.getValue().get(CurrencyHistoryDTO.open));
-            double close = Double.parseDouble(daily.getValue().get(CurrencyHistoryDTO.close));
+            double low = Double.parseDouble(daily.getValue().get(CurrencyHistory3rdPrtyDTO.low));
+            double high = Double.parseDouble(daily.getValue().get(CurrencyHistory3rdPrtyDTO.high));
+            double open = Double.parseDouble(daily.getValue().get(CurrencyHistory3rdPrtyDTO.open));
+            double close = Double.parseDouble(daily.getValue().get(CurrencyHistory3rdPrtyDTO.close));
 
-            Equipment.HistoricalValue hw = new Equipment.HistoricalValue(current,low,open,high,close);
-            equipment.addHistoricalValue(hw);
+            HistoricalValue hw = new HistoricalValue(current,low,open,high,close,equipment);
+            historicalValueRepository.save(hw);
 
         }
 
-        equipment.getValueHistory().sort((o1, o2) -> o1.getTimestamp().compareTo(o2.getTimestamp()));
+        List<HistoricalValue> predictionList = historicalValueRepository.findAllByEquipment_Code(equipment.getCode());
+        predictionList.sort((o1, o2) -> o1.getTimestamp().compareTo(o2.getTimestamp()));
 
-        double predictRate = getNextPredictionRate(equipment.getValueHistory(), equipment.getCurrentValue());
+        double predictRate = getNextPredictionRate(predictionList, equipment.getCurrentValue());
         equipment.setPredictionRate(predictRate);
 
         equipmentRepsitory.save(equipment);
@@ -226,7 +232,7 @@ public class EquipmentUpdateService {
     }
 
     // Generate new prediction value from the last historical values.
-    double getNextPredictionRate(List<Equipment.HistoricalValue> history, double currentVal){
+    double getNextPredictionRate(List<HistoricalValue> history, double currentVal){
 
         if (history.size() == 0) return DEFAULT_PREDICT_RATE;
 
@@ -234,7 +240,7 @@ public class EquipmentUpdateService {
         double totalAvg = 0;
 
         for(int i = 0; i < amount; i++){
-            Equipment.HistoricalValue current = history.get(i);
+            HistoricalValue current = history.get(i);
             totalAvg += (current.getHigh() + current.getLow() + current.getClose() + current.getOpen())/4;
         }
 
@@ -242,7 +248,7 @@ public class EquipmentUpdateService {
 
         Random rand = new Random();
         double rate = (currentVal - totalAvg)/totalAvg;
-        rate *= rand.nextInt(7);
+        rate *= rand.nextInt(4)+1;
         return rate;
     }
 
