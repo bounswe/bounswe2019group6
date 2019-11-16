@@ -131,12 +131,21 @@ export default {
           var res = this.$store.getters.userSearchResult.filter(user => user.username.includes(this.searchText))
         }
         var temp = []
+        
         res.forEach(function (user) {
-          var privacy = user.isPrivate ? "Private" : !user.isPrivate ? 'Public': "";
+          var followText = user.followingStatus == 'NOT_FOLLOWING' ? "Follow" : user.followingStatus == 'FOLLOWING' ? "Unfollow" : 'Requested'
+          var isFollowing = user.followingStatus == 'FOLLOWING' ? true : false
+          var isNotFollowing = user.followingStatus == 'NOT_FOLLOWING' ? true : false
+          var isPending = user.followingStatus == 'PENDING' ? true : false
           temp.push({
             'name': user.username,
-            'privacy' : privacy,
-            'role' : user.roles[0]
+            'privacy' : user.isPrivate ? "Private" : 'Public',
+            'role' : user.roles[0],
+            'followText' : followText,
+            'isFollowing' : isFollowing,
+            'isNotFollowing' : isNotFollowing,
+            'isPending' : isPending,
+
           })
         });
         this.searchResult = temp
