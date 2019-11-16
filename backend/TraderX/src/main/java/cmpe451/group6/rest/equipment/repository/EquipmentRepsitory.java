@@ -10,6 +10,8 @@ public interface EquipmentRepsitory extends JpaRepository<Equipment,Integer> {
 
     Equipment findByCode(String code);
 
+    boolean existsByCode(String code);
+
     List<Equipment> findAll();
 
 

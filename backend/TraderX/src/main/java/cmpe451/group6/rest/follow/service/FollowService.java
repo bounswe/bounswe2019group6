@@ -176,6 +176,15 @@ public class FollowService {
             throw new CustomException("Profile is private.", HttpStatus.PRECONDITION_REQUIRED);
     }
 
+    public boolean isPermitted(String username, String requesterUsername){
+        User user = userRepository.findByUsername(username);
+
+        if(user == null ) return true; // Null check is handled by other methods.
+        if(username.equals(requesterUsername)) return true; // Allow self profile information
+
+        return !(user.getIsPrivate() && getFollowStatus(username,requesterUsername) != FollowStatus.APPROVED);
+    }
+
     public String answerRequest(String username, String requesterUsername, boolean accept){
         FollowDAO dao = followRepository.getFollowDAO(requesterUsername,username);
         if (dao == null) throw new CustomException("No such request exists",HttpStatus.PRECONDITION_FAILED);//412

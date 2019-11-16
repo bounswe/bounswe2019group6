@@ -17,6 +17,7 @@ spring:
       ddl-auto: create
     properties:
       hibernate:
+        current_session_context_class: thread
         dialect: org.hibernate.dialect.MySQLDialect
         format_sql: true
         id:
