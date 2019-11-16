@@ -8,10 +8,7 @@ import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import javax.transaction.Transactional;
-import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 @Entity
 public class EquipmentComment {
@@ -35,7 +32,6 @@ public class EquipmentComment {
     @JoinColumn(name = "Equipment", referencedColumnName = "code", nullable = false)
     private Equipment equipment;
 
-    @Transactional
     public void updateComment(String newComment){
         Date now = new Date();
         setLastModifiedTime(now);

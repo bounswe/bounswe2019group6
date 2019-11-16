@@ -117,8 +117,8 @@ public class Group6BackendService implements CommandLineRunner {
 
     equipmentUpdateService.initializeEquipments();
 
-    commentService.postEquipmentComment("admin","asd","USD");
-    commentService.editEquipmentComment("admin",1,"updated content");
+    commentService.postEquipmentComment("trader","trader comment","USD");
+    commentService.postEquipmentComment("basic","basic comment","USD");
   }
 
 }

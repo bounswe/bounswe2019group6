@@ -3,17 +3,20 @@ package cmpe451.group6.rest.comment.service;
 import cmpe451.group6.authorization.exception.CustomException;
 import cmpe451.group6.authorization.model.User;
 import cmpe451.group6.authorization.repository.UserRepository;
+import cmpe451.group6.rest.comment.model.CommentResponseDTO;
 import cmpe451.group6.rest.comment.model.EquipmentComment;
 import cmpe451.group6.rest.comment.repository.EquipmentCommentRepository;
 import cmpe451.group6.rest.equipment.model.Equipment;
 import cmpe451.group6.rest.equipment.repository.EquipmentRepsitory;
-import org.hibernate.Hibernate;
+import cmpe451.group6.rest.follow.service.FollowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class EquipmentCommentService {
@@ -27,8 +30,11 @@ public class EquipmentCommentService {
     @Autowired
     EquipmentRepsitory equipmentRepsitory;
 
+    @Autowired
+    FollowService followService;
 
-    public void postEquipmentComment(String authorUsername, String content, String code){
+
+    public int postEquipmentComment(String authorUsername, String content, String code){
         EquipmentComment comment = new EquipmentComment();
 
         User author = userRepository.findByUsername(authorUsername);
@@ -44,13 +50,14 @@ public class EquipmentCommentService {
         comment.setEquipment(equipment);
         comment.setLastModifiedTime(new Date());
         commentRepository.save(comment);
+        return comment.getId();
     }
 
     public void deleteEquipmentComment(String claimerUsername, int commentId){
         EquipmentComment comment = commentRepository.findById(commentId);
         if(comment == null) throw new CustomException("No such comment found", HttpStatus.PRECONDITION_FAILED);
         if(!claimerUsername.equals(comment.getAuthor().getUsername()))
-            throw new CustomException("Cannot delete other's comment", HttpStatus.PRECONDITION_FAILED);
+            throw new CustomException("Cannot delete other's comment", HttpStatus.NOT_ACCEPTABLE);
         commentRepository.delete(commentId);
     }
 
@@ -58,33 +65,53 @@ public class EquipmentCommentService {
         EquipmentComment comment = commentRepository.findById(commentId);
         if(comment == null) throw new CustomException("No such comment found", HttpStatus.PRECONDITION_FAILED);
         if(!claimerUsername.equals(comment.getAuthor().getUsername()))
-            throw new CustomException("Cannot edit other's comment", HttpStatus.PRECONDITION_FAILED);
+            throw new CustomException("Cannot edit other's comment", HttpStatus.NOT_ACCEPTABLE);
         comment.updateComment(newContent);
         commentRepository.save(comment);
     }
 
-    public List<EquipmentComment> findEquipmentCommentsByUser(String authorUsername, String equipmentCode){
+    public List<CommentResponseDTO> findEquipmentCommentsByUser(String claimerUsername, String authorUsername, String equipmentCode){
+        followService.checkPermission(authorUsername,claimerUsername); //428
         if(!userRepository.existsByUsername(authorUsername)){
             throw new CustomException("No such user found", HttpStatus.PRECONDITION_FAILED);
         }
         if(!equipmentRepsitory.existsByCode(equipmentCode)){
             throw new CustomException("No such equipment found", HttpStatus.PRECONDITION_FAILED);
         }
-        return commentRepository.findTop50ByAuthor_UsernameAndEquipment_Code(authorUsername,equipmentCode);
+        return convertToDto(commentRepository.findTop50ByAuthor_UsernameAndEquipment_Code(authorUsername,equipmentCode));
     }
 
-    public List<EquipmentComment> findEquipmentComments(String equipmentCode){
+    public List<CommentResponseDTO>  findEquipmentComments(String equipmentCode, String claimerUsername){
         if(!equipmentRepsitory.existsByCode(equipmentCode)){
             throw new CustomException("No such equipment found", HttpStatus.PRECONDITION_FAILED);
         }
-        return commentRepository.findTop50ByEquipment_Code(equipmentCode);
+        List<EquipmentComment> response = commentRepository.findTop50ByEquipment_Code(equipmentCode);
+        return convertToDto(response.stream().filter(c ->
+                followService.isPermitted(c.getAuthor().getUsername(),claimerUsername))
+                .collect(Collectors.toList()));
     }
 
-    public List<EquipmentComment> findUserComments(String username){
+    public List<CommentResponseDTO>  findUserComments(String username,String claimerUsername){
+        followService.checkPermission(username,claimerUsername); //428
         if(!userRepository.existsByUsername(username)){
             throw new CustomException("No such user found", HttpStatus.PRECONDITION_FAILED);
         }
-        return commentRepository.findTop50ByAuthor_Username(username);
+        return convertToDto(commentRepository.findTop50ByAuthor_Username(username));
     }
+
+    public int getCommentsCount(String username){
+        return commentRepository.countByAuthor_Username(username);
+    }
+
+    private List<CommentResponseDTO> convertToDto(List<EquipmentComment> comments){
+        List<CommentResponseDTO> dto = new ArrayList<>();
+        for (EquipmentComment ec: comments) {
+            dto.add(new CommentResponseDTO(ec.getId(),ec.getLastModifiedTime(),ec.getComment(),
+                    ec.getAuthor().getUsername(),ec.getEquipment().getCode()));
+        }
+        return dto;
+    }
+
+
 
 }

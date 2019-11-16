@@ -7,6 +7,7 @@ import cmpe451.group6.authorization.dto.PrivateProfileDTO;
 import cmpe451.group6.authorization.dto.TokenWrapperDTO;
 import cmpe451.group6.authorization.dto.UserResponseDTO;
 import cmpe451.group6.authorization.model.Role;
+import cmpe451.group6.rest.comment.service.EquipmentCommentService;
 import cmpe451.group6.rest.follow.model.FollowStatus;
 import cmpe451.group6.rest.follow.service.FollowService;
 import org.modelmapper.ModelMapper;
@@ -39,6 +40,9 @@ public class UserService {
 
   @Autowired
   private ModelMapper modelMapper;
+
+  @Autowired
+  private EquipmentCommentService equipmentCommentService;
 
   public void deleteUser(String username) {
     User user = userRepository.findByUsername(username);
@@ -153,7 +157,7 @@ public class UserService {
     response.setFollowingsCount(followService.getFollowingsCount(profileOwner.getUsername()));
     response.setFollowingStatus(convertStatus(status));
     response.setArticlesCount(0); // not active yet
-    response.setCommentsCount(0); // not active yet
+    response.setCommentsCount(equipmentCommentService.getCommentsCount(profileOwner.getUsername()));
     return response;
   }
 

@@ -16,4 +16,6 @@ public interface EquipmentCommentRepository extends JpaRepository<EquipmentComme
 
     EquipmentComment findById(int id);
 
+    int countByAuthor_Username(String username);
+
 }
