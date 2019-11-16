@@ -3,8 +3,6 @@ package cmpe451.group6.authorization.model;
 import cmpe451.group6.rest.asset.model.Asset;
 import cmpe451.group6.rest.follow.model.FollowDAO;
 import cmpe451.group6.rest.transaction.model.Transaction;
-
-
 import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
@@ -174,4 +172,35 @@ public class User implements Serializable {
     this.roles = roles;
   }
 
+  public Set<FollowDAO> getFollowerDAOs() {
+    return followerDAOs;
+  }
+
+  public void setFollowerDAOs(Set<FollowDAO> followerDAOs) {
+    this.followerDAOs = followerDAOs;
+  }
+
+  public Set<FollowDAO> getFolloweeDAOs() {
+    return followeeDAOs;
+  }
+
+  public void setFolloweeDAOs(Set<FollowDAO> followeeDAOs) {
+    this.followeeDAOs = followeeDAOs;
+  }
+
+  public Set<Transaction> getTransactions() {
+    return transactions;
+  }
+
+  public void setTransactions(Set<Transaction> transactions) {
+    this.transactions = transactions;
+  }
+
+  public Set<Asset> getAssets() {
+    return assets;
+  }
+
+  public void setAssets(Set<Asset> assets) {
+    this.assets = assets;
+  }
 }

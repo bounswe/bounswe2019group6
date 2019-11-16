@@ -6,9 +6,7 @@ import cmpe451.group6.rest.transaction.model.Transaction;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -32,9 +30,6 @@ public class Equipment implements Serializable {
 
     @Column(nullable = false)
     private String timeZone;
-
-    @ElementCollection(fetch = FetchType.LAZY)
-    private List<HistoricalValue> valueHistory = new ArrayList<>();
 
     @Column(nullable = false)
     private double currentStock;
@@ -100,14 +95,6 @@ public class Equipment implements Serializable {
         this.lastUpdated = lastUpdated;
     }
 
-    public List<HistoricalValue> getValueHistory() {
-        return valueHistory;
-    }
-
-    public void setValueHistory(ArrayList<HistoricalValue> valueHistory) {
-        this.valueHistory = valueHistory;
-    }
-
     public double getCurrentStock() {
         return currentStock;
     }
@@ -124,71 +111,19 @@ public class Equipment implements Serializable {
         this.predictionRate = predictionRate;
     }
 
-    public void addHistoricalValue(HistoricalValue historicalValue){
-        this.valueHistory.add(historicalValue);
+    public Set<Transaction> getTransactions() {
+        return transactions;
     }
 
-    public static class HistoricalValue implements Serializable {
+    public void setTransactions(Set<Transaction> transactions) {
+        this.transactions = transactions;
+    }
 
-        private Date timestamp;
+    public Set<Asset> getAssets() {
+        return assets;
+    }
 
-        private double low;
-
-        private double open;
-
-        private double high;
-
-        private double close;
-
-        public HistoricalValue() {
-        }
-
-        public HistoricalValue(Date timestamp, double low, double open, double high, double close) {
-            this.timestamp = timestamp;
-            this.low = low;
-            this.open = open;
-            this.high = high;
-            this.close = close;
-        }
-
-        public Date getTimestamp() {
-            return timestamp;
-        }
-
-        public void setTimestamp(Date timestamp) {
-            this.timestamp = timestamp;
-        }
-
-        public double getLow() {
-            return low;
-        }
-
-        public void setLow(double low) {
-            this.low = low;
-        }
-
-        public double getOpen() {
-            return open;
-        }
-
-        public void setOpen(double open) {
-            this.open = open;
-        }
-
-        public double getHigh() {
-            return high;
-        }
-
-        public void setHigh(double high) {
-            this.high = high;
-        }
-
-        public double getClose() {
-            return close;
-        }
-
-        public void setClose(double close) {
-            this.close = close;
-        }
+    public void setAssets(Set<Asset> assets) {
+        this.assets = assets;
     }
 }

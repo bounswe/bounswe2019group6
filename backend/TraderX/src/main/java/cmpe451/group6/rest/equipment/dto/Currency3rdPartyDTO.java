@@ -1,6 +1,6 @@
 package cmpe451.group6.rest.equipment.dto;
 
-public class CurrencyDTO {
+public class Currency3rdPartyDTO {
 
     /*
         Response from "https://www.alphavantage.co/query?function=" +

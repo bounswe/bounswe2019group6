@@ -1,17 +1,16 @@
 package cmpe451.group6.rest.equipment.service;
 
-import cmpe451.group6.rest.equipment.dto.CurrencyDTO;
-import cmpe451.group6.rest.equipment.dto.CurrencyHistoryDTO;
+import cmpe451.group6.rest.equipment.dto.Currency3rdPartyDTO;
+import cmpe451.group6.rest.equipment.dto.CurrencyHistory3rdPrtyDTO;
 import cmpe451.group6.rest.equipment.model.Equipment;
+import cmpe451.group6.rest.equipment.model.HistoricalValue;
 import cmpe451.group6.rest.equipment.repository.EquipmentRepository;
+import cmpe451.group6.rest.equipment.repository.HistoricalValueRepository;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
@@ -30,7 +29,10 @@ import static cmpe451.group6.rest.equipment.configuration.EquipmentConfig.*;
 public class EquipmentUpdateService {
 
     @Autowired
-    EquipmentRepository EquipmentRepository;
+    EquipmentRepository equipmentRepository;
+
+    @Autowired
+    HistoricalValueRepository historicalValueRepository;
 
     private String apiKey1;
 
@@ -57,82 +59,45 @@ public class EquipmentUpdateService {
         equipment.setCurrentValue(1); // since this is the base
         equipment.setLastUpdated(new Date());
 
-        EquipmentRepository.save(equipment);
-    }
-
-    // For the ease of development only. Do not use on deployment
-    public void initMock(){
-
-        initBase();
-
-        Equipment equipment = new Equipment();
-        equipment.setName("Japanese Yen");
-        equipment.setCode("JPY");
-        equipment.setTimeZone(BASE_CURRENCY_ZONE);
-        equipment.setCurrentStock(DEFAULT_STOCK);
-        equipment.setPredictionRate(DEFAULT_PREDICT_RATE);
-        equipment.setCurrentValue(1.33);
-        equipment.setLastUpdated(new Date());
-        EquipmentRepository.save(equipment);
-
-        Equipment equipment1 = new Equipment();
-        equipment1.setName("Turkish Lira");
-        equipment1.setCode("TRY");
-        equipment1.setTimeZone(BASE_CURRENCY_ZONE);
-        equipment1.setCurrentStock(DEFAULT_STOCK);
-        equipment1.setPredictionRate(DEFAULT_PREDICT_RATE);
-        equipment1.setCurrentValue(2.66);
-        equipment1.setLastUpdated(new Date());
-        EquipmentRepository.save(equipment1);
-
-        Equipment equipment2 = new Equipment();
-        equipment2.setName("Euro");
-        equipment2.setCode("EUR");
-        equipment2.setTimeZone(BASE_CURRENCY_ZONE);
-        equipment2.setCurrentStock(DEFAULT_STOCK);
-        equipment2.setPredictionRate(DEFAULT_PREDICT_RATE);
-        equipment2.setCurrentValue(3.99);
-        equipment2.setLastUpdated(new Date());
-        EquipmentRepository.save(equipment2);
-
-        logger.info("Mock values are initialized.");
+        equipmentRepository.save(equipment);
     }
 
     private void saveSingleEquipment(Map<String, String> data){
 
         Equipment equipment = new Equipment();
-        equipment.setName(data.get(CurrencyDTO.targetName));
-        equipment.setCode(data.get(CurrencyDTO.targetCode));
-        equipment.setTimeZone(data.get(CurrencyDTO.zone));
+        equipment.setName(data.get(Currency3rdPartyDTO.targetName));
+        equipment.setCode(data.get(Currency3rdPartyDTO.targetCode));
+        equipment.setTimeZone(data.get(Currency3rdPartyDTO.zone));
         equipment.setCurrentStock(DEFAULT_STOCK);
         equipment.setPredictionRate(DEFAULT_PREDICT_RATE);
 
         try {
-            equipment.setCurrentValue(Double.parseDouble(data.get(CurrencyDTO.rate)));
-            equipment.setLastUpdated(preciseDf.parse(data.get(CurrencyDTO.lastUpdate)));
+            equipment.setCurrentValue(Double.parseDouble(data.get(Currency3rdPartyDTO.rate)));
+            equipment.setLastUpdated(preciseDf.parse(data.get(Currency3rdPartyDTO.lastUpdate)));
         } catch (Exception e){
             return;
         }
 
-        EquipmentRepository.save(equipment);
+        equipmentRepository.save(equipment);
 
     }
 
     private void updateSingleEquipment(Map<String, String> data){
-        String code = data.get(CurrencyDTO.targetCode);
-        Equipment equipment = EquipmentRepository.findByCode(code);
+
+        String code = data.get(Currency3rdPartyDTO.targetCode);
+        Equipment equipment = equipmentRepository.findByCode(code);
         if(equipment == null){
             throw new IllegalArgumentException("No such currency found on records: " + code);
         }
 
         try {
-            equipment.setCurrentValue(Double.parseDouble(data.get(CurrencyDTO.rate)));
-            equipment.setLastUpdated(preciseDf.parse(data.get(CurrencyDTO.lastUpdate)));
+            equipment.setCurrentValue(Double.parseDouble(data.get(Currency3rdPartyDTO.rate)));
+            equipment.setLastUpdated(preciseDf.parse(data.get(Currency3rdPartyDTO.lastUpdate)));
         } catch (Exception e){
             e.printStackTrace();
             throw new IllegalArgumentException("Invalid data from the API service");
         }
-        EquipmentRepository.save(equipment);
+        equipmentRepository.save(equipment);
     }
 
     void scheduledUpdate(){
@@ -152,7 +117,7 @@ public class EquipmentUpdateService {
             JSONObject jsonObject = new JSONObject(responseString);
 
             @SuppressWarnings("unchecked")
-            Map<String,String> data = (Map<String,String>) jsonObject.toMap().get(CurrencyDTO.header);
+            Map<String,String> data = (Map<String,String>) jsonObject.toMap().get(Currency3rdPartyDTO.header);
 
             if(data == null){ continue; }
 
@@ -180,7 +145,7 @@ public class EquipmentUpdateService {
             JSONObject jsonObject = new JSONObject(responseString);
 
             @SuppressWarnings("unchecked")
-            Map<String,String> data = (Map<String,String>) jsonObject.toMap().get(CurrencyDTO.header);
+            Map<String,String> data = (Map<String,String>) jsonObject.toMap().get(Currency3rdPartyDTO.header);
 
             saveSingleEquipment(data);
         }
@@ -207,11 +172,11 @@ public class EquipmentUpdateService {
 
             @SuppressWarnings("unchecked")
             Map<String, Map<String, String>> history = (Map<String, Map<String, String>>)
-                    jsonObject.toMap().get(CurrencyHistoryDTO.history);
+                    jsonObject.toMap().get(CurrencyHistory3rdPrtyDTO.history);
 
             @SuppressWarnings("unchecked")
             Map<String, String> metadata = (Map<String, String>)
-                    jsonObject.toMap().get(CurrencyHistoryDTO.metadata);
+                    jsonObject.toMap().get(CurrencyHistory3rdPrtyDTO.metadata);
 
             if(history == null || metadata == null) {
                 logger.warning("Null response for currency history:" + currency);
@@ -227,13 +192,13 @@ public class EquipmentUpdateService {
 
     private void saveSingleEquipmentHistory(Map<String, Map<String, String>> history, Map<String, String> metadata){
 
-        String to = metadata.get(CurrencyHistoryDTO.toSymbol);
+        String to = metadata.get(CurrencyHistory3rdPrtyDTO.toSymbol);
 
-        Equipment equipment = EquipmentRepository.findByCode(to);
+        Equipment equipment = equipmentRepository.findByCode(to);
 
         if(equipment == null) return;
 
-        equipment.getValueHistory().clear();
+        historicalValueRepository.deleteAllByEquipment_Code(equipment.getCode());
 
         for (Map.Entry<String, Map<String, String>> daily : history.entrySet()) {
             Date current;
@@ -244,27 +209,28 @@ public class EquipmentUpdateService {
                 continue;
             }
 
-            double low = Double.parseDouble(daily.getValue().get(CurrencyHistoryDTO.low));
-            double high = Double.parseDouble(daily.getValue().get(CurrencyHistoryDTO.high));
-            double open = Double.parseDouble(daily.getValue().get(CurrencyHistoryDTO.open));
-            double close = Double.parseDouble(daily.getValue().get(CurrencyHistoryDTO.close));
+            double low = Double.parseDouble(daily.getValue().get(CurrencyHistory3rdPrtyDTO.low));
+            double high = Double.parseDouble(daily.getValue().get(CurrencyHistory3rdPrtyDTO.high));
+            double open = Double.parseDouble(daily.getValue().get(CurrencyHistory3rdPrtyDTO.open));
+            double close = Double.parseDouble(daily.getValue().get(CurrencyHistory3rdPrtyDTO.close));
 
-            Equipment.HistoricalValue hw = new Equipment.HistoricalValue(current,low,open,high,close);
-            equipment.addHistoricalValue(hw);
+            HistoricalValue hw = new HistoricalValue(current,low,open,high,close,equipment);
+            historicalValueRepository.save(hw);
 
         }
 
-        equipment.getValueHistory().sort((o1, o2) -> o1.getTimestamp().compareTo(o2.getTimestamp()));
+        List<HistoricalValue> predictionList = historicalValueRepository.findAllByEquipment_Code(equipment.getCode());
+        predictionList.sort((o1, o2) -> o1.getTimestamp().compareTo(o2.getTimestamp()));
 
-        double predictRate = getNextPredictionRate(equipment.getValueHistory(), equipment.getCurrentValue());
+        double predictRate = getNextPredictionRate(predictionList, equipment.getCurrentValue());
         equipment.setPredictionRate(predictRate);
 
-        EquipmentRepository.save(equipment);
+        equipmentRepository.save(equipment);
 
     }
 
     // Generate new prediction value from the last historical values.
-    double getNextPredictionRate(List<Equipment.HistoricalValue> history, double currentVal){
+    double getNextPredictionRate(List<HistoricalValue> history, double currentVal){
 
         if (history.size() == 0) return DEFAULT_PREDICT_RATE;
 
@@ -272,7 +238,7 @@ public class EquipmentUpdateService {
         double totalAvg = 0;
 
         for(int i = 0; i < amount; i++){
-            Equipment.HistoricalValue current = history.get(i);
+            HistoricalValue current = history.get(i);
             totalAvg += (current.getHigh() + current.getLow() + current.getClose() + current.getOpen())/4;
         }
 
@@ -280,32 +246,7 @@ public class EquipmentUpdateService {
 
         Random rand = new Random();
         double rate = (currentVal - totalAvg)/totalAvg;
-        rate *= rand.nextInt(7);
+        rate *= rand.nextInt(4)+1;
         return rate;
     }
-
-
-    void updateEquipmentsHistory(){
-
-        // Save last day's data to history.
-
-    }
-
-
-    void saveEquipmentInfo(FileOutputStream os, String equipmentName){
-
-        // Persist equipment info on file.
-        // Might be called by a shutdown hook to prevent losing data between deployments.
-
-    }
-
-    void loadEquipmentInfo(FileInputStream is, String equipmentName){
-
-        // Load saved equipment info.
-        // Might be called on start up to prevent losing data between deployments.
-
-    }
-
-
-
 }
