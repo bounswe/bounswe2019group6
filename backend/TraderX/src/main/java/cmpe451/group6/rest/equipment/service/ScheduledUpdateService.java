@@ -19,22 +19,19 @@ public class ScheduledUpdateService {
 
     public final long MIN_IN_MS = 1000 * 60;
 
-    // Disabled for the ease of development. Uncomment before deploy
-    //@Scheduled(cron = "0 15 * * * *")
+    @Scheduled(cron = "0 15 * * * *")
     public void scheduledCurrencyUpdateLive(){
         // Update current values at xx:15
         equipmentUpdateService.scheduledUpdate();
     }
 
-    // Disabled for the ease of development. Uncomment before deploy
-    //@Scheduled(initialDelay = 90_000L, fixedDelay = Long.MAX_VALUE)
+    @Scheduled(initialDelay = 90_000L, fixedDelay = Long.MAX_VALUE)
     public void scheduledCurrencyUpdateOnce(){
         // Initialize history only once on start up.
         equipmentUpdateService.loadEquipmentHistory();
     }
 
-    // Disabled for the ease of development. Uncomment before deploy
-    //@Scheduled(cron = "0 30 4 * * *")
+    @Scheduled(cron = "0 30 4 * * *")
     public void scheduledCurrencyUpdate(){
         // Update history everyday at 4:30 A.M.
         equipmentUpdateService.loadEquipmentHistory();
