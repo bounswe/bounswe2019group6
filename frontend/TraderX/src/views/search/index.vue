@@ -60,7 +60,6 @@ export default {
       var res = this.$store.getters.userSearchResult
       var temp = []
       res.forEach(function (user) {
-        console.log(user)
         var followText = user.followingStatus == 'NOT_FOLLOWING' ? "Follow" : user.followingStatus == 'FOLLOWING' ? "Unfollow" : 'Requested'
         var isFollowing = user.followingStatus == 'FOLLOWING' ? true : false
         var isNotFollowing = user.followingStatus == 'NOT_FOLLOWING' ? true : false
