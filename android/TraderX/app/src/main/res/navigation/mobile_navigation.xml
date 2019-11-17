@@ -73,7 +73,7 @@
         android:id="@+id/navigation_user_search"
         android:name="com.traderx.ui.search.UserSearchFragment"
         android:label="@string/search"
-        tools:layout="@layout/fragment_user_search">
+        tools:layout="@layout/fragment_search">
         <action
             android:id="@+id/action_navigation_user_search_to_navigation_user"
             app:destination="@id/navigation_user" />

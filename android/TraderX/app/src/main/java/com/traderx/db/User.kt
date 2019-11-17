@@ -36,7 +36,7 @@ data class User(
     }
 
     fun localizedIsPrivate(context: Context): String =
-        if (isPrivate) context.getString(R.string.general_true) else context.getString(R.string.general_false)
+        if (isPrivate) context.getString(R.string.sprivate) else context.getString(R.string.spublic)
 
     fun localizedFollowingStatus(context: Context): String = when(followingStatus) {
         FollowingStatus.FOLLOWING.value -> context.getString(R.string.following)

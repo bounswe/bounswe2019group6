@@ -15,9 +15,13 @@ import com.github.razir.progressbutton.showProgress
 import com.google.android.material.snackbar.Snackbar
 import com.traderx.R
 import com.traderx.api.ErrorHandler
+import com.traderx.api.response.SuccessResponse
+import com.traderx.db.User
 import com.traderx.enum.FollowingStatus
+import com.traderx.util.Helper
 import com.traderx.util.Injection
 import com.traderx.viewmodel.UserViewModel
+import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 
@@ -26,6 +30,7 @@ class UserFragment : Fragment() {
     private lateinit var userViewModel: UserViewModel
 
     private var username: String? = null
+    private lateinit var user: User
     private lateinit var userName: TextView
     private lateinit var role: TextView
     private lateinit var followerCount: TextView
@@ -66,43 +71,43 @@ class UserFragment : Fragment() {
         }
 
         disposable.add(
-            userViewModel.userProfile(username ?: "")
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    userName.text = it.username
-                    role.text = it.localizedRole(context as Context)
-                    profilePrivate.text = it.localizedIsPrivate(context as Context)
-                    followerCount.text = it.followersCount.toString()
-                    followingCount.text = it.followingsCount.toString()
-                    followButton.text = it.localizedFollowingStatus(context as Context)
-                    followButton.setEnabled(it.followingStatus != FollowingStatus.PENDING.value)
-
-                }, { context?.let { context -> ErrorHandler.handleError(it, context) } })
+            fetchUser().subscribe({
+                updateUser(it)
+            }, { ErrorHandler.handleError(it, context as Context) })
         )
 
         return root
     }
 
-    fun followUser(button: Button) {
+    private fun followUser(button: Button) {
         if (button.isProgressActive()) {
             return
         }
 
         button.showProgress()
 
+        val status = user.followingStatus ?: ""
+        val isPrivate = user.isPrivate
+
+        val request: Single<SuccessResponse> =
+            if (status == FollowingStatus.FOLLOWING.value || status == FollowingStatus.PENDING.value)
+                userViewModel.unfollowUser(username ?: "")
+            else
+                userViewModel.followUser(username ?: "")
+
         disposable.add(
-            userViewModel.followUser(username ?: "")
+            request.flatMap { fetchUser().doOnSuccess { updateUser(it) } }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    button.hideProgress(R.string.pending)
+                    button.hideProgress(getButtonTextId(it.followingStatus ?: ""))
 
                     Snackbar.make(
                         requireView(),
-                        getString(R.string.follow_requested, username),
+                        getActionMessage(status, isPrivate),
                         Snackbar.LENGTH_SHORT
                     ).show()
                 }, {
-                    button.hideProgress(R.string.follow)
+                    button.hideProgress(getButtonTextId(user.followingStatus ?: ""))
 
                     ErrorHandler.handleError(it, context as Context)
                 })
@@ -114,16 +119,45 @@ class UserFragment : Fragment() {
         disposable.clear()
     }
 
+    private fun fetchUser(): Single<User> {
+        return userViewModel.userProfile(username ?: "")
+            .compose(Helper.applySchedulers<User>())
+    }
+
+    private fun updateUser(user: User) {
+        this.user = user
+        userName.text = user.username
+        role.text = user.localizedRole(context as Context)
+        profilePrivate.text = user.localizedIsPrivate(context as Context)
+        followerCount.text = user.followersCount.toString()
+        followingCount.text = user.followingsCount.toString()
+        followButton.text = user.localizedFollowingStatus(context as Context)
+        val status = user.followingStatus ?: ""
+        followButton.text = getString(getButtonTextId(status))
+    }
+
+    private fun getButtonTextId(status: String): Int {
+        return when(status) {
+            FollowingStatus.PENDING.value -> R.string.cancel_request
+            FollowingStatus.FOLLOWING.value -> R.string.unfollow
+            else -> R.string.follow
+        }
+    }
+
+    private fun getActionMessage(status: String, isPrivate: Boolean): String {
+
+        var message = when {
+            status == FollowingStatus.PENDING.value -> R.string.request_canceled
+            status == FollowingStatus.FOLLOWING.value -> R.string.unfollowed
+            isPrivate -> R.string.follow_requested
+            else -> R.string.follow_success
+        }
+
+        return getString(message, username)
+    }
+
     companion object {
 
         private const val ARG_USERNAME = "username"
-
-        @JvmStatic
-        fun newInstance(username: String) =
-            UserFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_USERNAME, username)
-                }
-            }
     }
 }

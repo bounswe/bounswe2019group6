@@ -13,6 +13,7 @@ import com.traderx.R
 import com.traderx.api.ErrorHandler
 import com.traderx.api.response.FollowerResponse
 import com.traderx.ui.search.UserSearchSkeletonRecyclerViewAdapter
+import com.traderx.util.FragmentTitleListeners
 import com.traderx.util.Helper
 import com.traderx.util.Injection
 import com.traderx.viewmodel.AuthUserViewModel
@@ -52,5 +53,13 @@ class FollowersFragment : Fragment() {
         )
 
         return root
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        if(context is FragmentTitleListeners) {
+            context.showFragmentTitle(getString(R.string.followers))
+        }
     }
 }

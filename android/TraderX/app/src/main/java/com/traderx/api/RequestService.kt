@@ -17,6 +17,7 @@ object ApiUri {
     const val API_URI: String = AppConfig.API_HOST
     const val FOLLOW_URI: String = "$API_URI/follow"
     const val FOLLOW_USER: String = "$FOLLOW_URI/follow"
+    const val UNFOLLOW_USER: String = "$FOLLOW_URI/unfollow"
     const val FOLLOWERS_LIST: String = "$FOLLOW_URI/followers/list"
     const val FOLLOWINGS_LIST: String = "$FOLLOW_URI/follows/list"
     const val PENDING_FOLLOW_REQUESTS: String = "$FOLLOW_URI/request/list"
@@ -54,6 +55,9 @@ interface RequestService {
 
     @POST(ApiUri.FOLLOW_USER)
     fun followUser(@Query("username") username: String): Single<SuccessResponse>
+
+    @POST(ApiUri.UNFOLLOW_USER)
+    fun unfollowUser(@Query("username") username: String): Single<SuccessResponse>
 
     @GET(ApiUri.FOLLOWERS_LIST)
     fun followersList(@Query("username") username: String): Single<List<FollowerResponse>>

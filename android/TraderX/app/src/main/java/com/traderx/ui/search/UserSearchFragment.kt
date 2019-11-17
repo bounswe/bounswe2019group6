@@ -39,7 +39,7 @@ class UserSearchFragment : Fragment() {
         val userViewModelFactory = Injection.provideUserViewModelFactory(context as Context)
         userViewModel = ViewModelProvider(this, userViewModelFactory).get(UserViewModel::class.java)
 
-        val view = inflater.inflate(R.layout.fragment_user_search, container, false)
+        val view = inflater.inflate(R.layout.fragment_search, container, false)
 
         viewManager = LinearLayoutManager(context)
         recyclerView = view.findViewById<RecyclerView>(R.id.user_list).apply {
