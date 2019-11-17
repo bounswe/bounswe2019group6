@@ -7,6 +7,7 @@ const getters = {
   token: state => state.user.token,
   userInfo: state => state.user.userInfo,
   userSearchResult: state => state.search.userSearchResult,
+  equipmentQueryResult: state => state.equipment.equipmentQueryResult,
 
   // TODO these are deprecated but we can keep useful ones
   roles: state => state.user.roles,
