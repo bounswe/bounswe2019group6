@@ -20,9 +20,18 @@ import com.traderx.viewmodel.AuthUserViewModel
 import io.reactivex.disposables.CompositeDisposable
 
 class FollowersFragment : Fragment() {
+    private lateinit var username: String
     private lateinit var userViewModel: AuthUserViewModel
     private lateinit var recyclerView: RecyclerView
     private val disposable = CompositeDisposable()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        arguments?.let {
+            username = it.getString(ARG_USERNAME) as String
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,7 +50,7 @@ class FollowersFragment : Fragment() {
 
         disposable.add(
             userViewModel.followers(context as Context)
-                .compose(Helper.applySchedulers<List<FollowerResponse>>())
+                .compose(Helper.applySingleSchedulers<List<FollowerResponse>>())
                 .subscribe({
                     recyclerView.adapter = FollowersRecyclerViewAdapter(it) { username ->
                         FollowersFragmentDirections.actionNavigationFollowersToNavigationUser(
@@ -61,5 +70,9 @@ class FollowersFragment : Fragment() {
         if(context is FragmentTitleListeners) {
             context.showFragmentTitle(getString(R.string.followers))
         }
+    }
+
+    companion object {
+        private const val ARG_USERNAME = "username"
     }
 }
