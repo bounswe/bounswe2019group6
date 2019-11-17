@@ -13,13 +13,13 @@
           <el-tabs v-model="te.activeTab" >
             <el-tab-pane class='te-tab-pane' v-for="t in te.data" :key="t.key" :label="t.label" :name="t.key" :type="t.key">
                 <div v-if="te.activeTab==t.key">
-                  <p class="te-info-text">Last week's data for {{ t.label }} is as follows:</p>
+                  <p class="te-info-text">Last 100 days' American Dollar / {{ t.label }} is as follows:</p>
                  
                   <div class='chart-wrapper'>
                     <line-chart :type="t.key" :chart-data="t.data"/>
                   </div>
 
-                  <el-button class='learn-more-button' @click="learnMoreAboutEquipment"><svg-icon style="margin-right:10px" icon-class="chart" />Learn More About Equipment</el-button>
+                  <el-button class='learn-more-button' @click="learnMoreAboutEquipment(te.label)"><svg-icon style="margin-right:10px" icon-class="chart" />Learn More About Equipment</el-button>
                   <el-button class='buy-button' @click="buyEquipment"><svg-icon style="margin-right:10px" icon-class="shopping" />Buy Equipment</el-button>
                 </div>
             </el-tab-pane>
@@ -106,7 +106,7 @@ export default {
 
       var tempTE = [
         { data: [], label: 'Money Currencies'}, // this will be added afterwards
-        { data: bitCoinsArray, label: 'Cryptocurrency', activeTab: bitCoinsArray[0].key},
+        { data: bitCoinsArray, label: 'Cryptocurrencies', activeTab: bitCoinsArray[0].key},
         { data: stocksArray, label: 'Stocks', activeTab: stocksArray[0].key},
       ];
 
@@ -121,25 +121,19 @@ export default {
         }
       }
 
-      var cnt = 1
-      equipmentList.forEach(function(equipmentKey) {
-        if (cnt == 1) {
-          tempTE[0].activeTab = equipmentKey
-        }
-      })
+      tempTE[0].activeTab = equipmentList[0]
 
       tempTE[0].data = equipmentOpenningValues
       return tempTE
 
     }, 
 
-    learnMoreAboutEquipment() {
-      this.$notify({
-        title: 'Success',
-        message: 'Learning More About Equipment',
-        type: 'success',
-        duration: 2000
-      })
+    learnMoreAboutEquipment(equipmentLabel) {
+      if (equipmentLabel == 'Money Currencies') {
+        this.$router.push({ path: '/trading-equipment/money-currencies' })
+      } else {
+        this.$router.push({ path: '/trading-equipment/' +  equipmentLabel.toLowerCase()})
+      }
     },
 
     buyEquipment() {

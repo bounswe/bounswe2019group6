@@ -150,15 +150,38 @@ export const constantRoutes = [
   {
     path: '/trading-equipment',
     component: Layout,
-    redirect: '/trading-equipment/list',
+    // redirect: '/trading-equipment/list',
     hidden: false,
+    meta: {
+      title: 'Trading Equipment', 
+      icon: 'shopping',
+      noCache: true
+    },
     children: [
       {
         path: 'list',
         component: () => import('@/views/trading-equipment/index'),
-        name: 'Search',
-        meta: { title: 'Trading Equipments', icon: 'shopping', noCache: true }
-      }
+        // name: 'Trading Equipment List',
+        meta: { title: 'List of Equipment' }
+      }, 
+      {
+        path: 'money-currencies',
+        component: () => import('@/views/trading-equipment/money_currencies'),
+        // name: 'Money Currencies',
+        meta: { title: 'Money Currencies'}
+      },
+      {
+        path: 'cryptocurrencies',
+        component: () => import('@/views/trading-equipment/cryptocurrencies'),
+        // name: 'Cryptocurrencies',
+        meta: { title: 'Cryptocurrencies'}
+      },
+      {
+        path: 'stocks',
+        component: () => import('@/views/trading-equipment/stocks'),
+        // name: 'Stocks',
+        meta: { title: 'Stocks'}
+      },
     ]
   },
   {
