@@ -62,6 +62,19 @@ public class TransactionController {
         return transactionService.getTransactionByDateBetween(start, end);
     }
 
+    // CHANGED CHANGED CHANGED CHANGED
+
+    @GetMapping(value = "/byDate/{username}")
+    @ResponseStatus(HttpStatus.OK)
+    @ApiOperation(value = "Returns transactions of a specific user in between start date and end date (no auth required)", response = TransactionDTO.class)
+    @ApiResponses(value = { @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE) })
+    public List<TransactionDTO> getTransactionsByDateBetween(@ApiParam("Start Date") @RequestParam Date start,
+            @ApiParam("End Date") @RequestParam Date end,@ApiParam("User Name") @PathVariable String username, HttpServletRequest req) {
+        return transactionService.getTransactionByDateBetween(start, end, username, util.unwrapUsername(req));
+    }
+
+    // CHANGED CHANGED CHANGED CHANGED
+
     @GetMapping(value = "/count/all")
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Returns number of all transactions  (no auth required)", response = Integer.class)
@@ -83,7 +96,7 @@ public class TransactionController {
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Returns number of all transactions made by specific user (no auth required) ", response = Integer.class)
     @ApiResponses(value = { @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE) })
-    public int countAllTransactions(@ApiParam("User Name") @PathVariable String code) {
+    public int countAllTransactions(@ApiParam("Code of asset") @PathVariable String code) {
         return transactionService.numberOfTransactionByCode(code);
     }
 

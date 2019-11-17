@@ -1,6 +1,7 @@
 package cmpe451.group6.authorization.model;
 
 import cmpe451.group6.rest.asset.model.Asset;
+import cmpe451.group6.rest.portfolio.model.Portfolio;
 import cmpe451.group6.rest.follow.model.FollowDAO;
 import cmpe451.group6.rest.transaction.model.Transaction;
 import java.io.Serializable;
@@ -55,6 +56,9 @@ public class User implements Serializable {
 
   @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
   private Set<Asset> assets;
+
+  @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+  private Set<Portfolio> portfolios;
 
 
   //   ^               # start-of-string
@@ -202,5 +206,13 @@ public class User implements Serializable {
 
   public void setAssets(Set<Asset> assets) {
     this.assets = assets;
+  }
+
+  public Set<Portfolio> getPortfolios() {
+    return portfolios;
+  }
+
+  public void setPortfolios(Set<Portfolio> portfolios) {
+    this.portfolios = portfolios;
   }
 }

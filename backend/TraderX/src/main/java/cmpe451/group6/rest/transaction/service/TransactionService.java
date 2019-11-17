@@ -1,6 +1,8 @@
 package cmpe451.group6.rest.transaction.service;
 
 import cmpe451.group6.authorization.exception.CustomException;
+import cmpe451.group6.rest.portfolio.model.Portfolio;
+import cmpe451.group6.rest.portfolio.repository.PortfolioRepository;
 import cmpe451.group6.rest.asset.model.Asset;
 import cmpe451.group6.rest.asset.repository.AssetRepository;
 import cmpe451.group6.rest.equipment.configuration.EquipmentConfig;
@@ -42,6 +44,9 @@ public class TransactionService {
     private AssetRepository assetRepository;
 
     @Autowired
+    private PortfolioRepository portfolioRepository;    
+
+    @Autowired
     private ModelMapper modelMapper;
 
     public List<Transaction> getTransactionsByUser(String username, String requesterName) {
@@ -78,6 +83,28 @@ public class TransactionService {
                 .forEach(item -> transactionDTOs.add(modelMapper.map(item, TransactionDTO.class)));
         return transactionDTOs;
     }
+
+    // CHANGED// CHANGED// CHANGED// CHANGED// CHANGED// CHANGED// CHANGED
+    public List<TransactionDTO> getTransactionByDateBetweenOfUser(Date start, Date end, User username,
+            String requesterName) {
+
+        User user = userRepository.findByUsername(username);
+        if (user == null) {
+            throw new CustomException("There is no user named " + username + ".", HttpStatus.NOT_ACCEPTABLE);
+        } else if (!followService.isPermitted(username, requesterName)) {
+            throw new CustomException("The requested user's profile is private and requester is not following!",
+                    HttpStatus.NOT_ACCEPTABLE);
+        } else {
+            List<TransactionDTO> transactionDTOs = new ArrayList<TransactionDTO>();
+            TransactionRepository.findByDateBetweenOfUser(start, end, username)
+                    .forEach(item -> transactionDTOs.add(modelMapper.map(item, TransactionDTO.class)));
+            return transactionDTOs;
+
+        }
+
+    }
+
+    // CHANGED// CHANGED// CHANGED// CHANGED// CHANGED// CHANGED// CHANGED
 
     public int numberOfTransactions() {
         return TransactionRepository.countAll();

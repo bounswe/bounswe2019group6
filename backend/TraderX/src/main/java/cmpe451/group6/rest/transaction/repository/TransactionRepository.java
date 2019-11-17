@@ -25,4 +25,9 @@ public interface TransactionRepository extends JpaRepository<Transaction, Intege
     @Query("SELECT t FROM Transaction t WHERE t.createdAt BETWEEN  ?1 AND ?2")
     List<Transaction> findByDateBetween(Date start, Date end);
 
+    // CHANGED// CHANGED// CHANGED
+    @Query("SELECT t FROM Transaction t WHERE t.createdAt >= ?1 AND t.createdAt <= ?2 AND t.user= ?3")
+    List<Transaction> findByDateBetweenOfUser(Date start, Date end, User user);
+    // CHANGED// CHANGED// CHANGED
+
 }

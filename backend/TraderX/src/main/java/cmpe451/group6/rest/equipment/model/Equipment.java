@@ -1,6 +1,7 @@
 package cmpe451.group6.rest.equipment.model;
 
 
+import cmpe451.group6.rest.portfolio.model.Portfolio;
 import cmpe451.group6.rest.asset.model.Asset;
 import cmpe451.group6.rest.transaction.model.Transaction;
 
@@ -46,6 +47,9 @@ public class Equipment implements Serializable {
 
     @OneToMany(mappedBy = "equipment",cascade = CascadeType.ALL)
     private Set<Asset> assets;
+
+    @OneToMany(mappedBy = "equipment",cascade = CascadeType.ALL)
+    private Set<Portfolio> portfolios;
 
     public String getCode() {
         return code;
@@ -125,5 +129,13 @@ public class Equipment implements Serializable {
 
     public void setAssets(Set<Asset> assets) {
         this.assets = assets;
+    }
+
+    public Set<Portfolio> getPortfolios() {
+        return portfolios;
+    }
+
+    public void setPortfolios(Set<Portfolio> portfolios) {
+        this.portfolios = portfolios;
     }
 }
