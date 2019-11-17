@@ -7,12 +7,13 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:clipToPadding="false"
         android:focusableInTouchMode="true"
         android:orientation="vertical">
 
         <ImageView
+            android:id="@+id/action_menu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
@@ -88,29 +89,55 @@
 
             </LinearLayout>
 
-
             <LinearLayout
+                android:id="@+id/followers_list_action"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="45dp"
                 android:orientation="vertical"
                 android:paddingBottom="13dp">
-                <!--                <TextView-->
-                <!--                    android:paddingTop="13dp"-->
-                <!--                    android:layout_gravity="center"-->
-                <!--                    android:layout_width="wrap_content"-->
-                <!--                    android:layout_height="wrap_content"-->
-                <!--                    android:text="4.6"-->
-                <!--                    android:textSize="12sp"-->
-                <!--                    android:textColor="#3b3b3b"/>-->
-                <!--                <TextView-->
-                <!--                    android:layout_width="wrap_content"-->
-                <!--                    android:layout_height="wrap_content"-->
-                <!--                    android:text="Avg. Rating"-->
-                <!--                    android:textSize="13sp"-->
-                <!--                    android:textColor="#a9a9b0"/>-->
+
+                <TextView
+                    android:id="@+id/profile_follower"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:paddingTop="13dp"
+                    android:textColor="#3b3b3b"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/followers"
+                    android:textColor="#a9a9b0"
+                    android:textSize="13sp" />
             </LinearLayout>
 
+            <LinearLayout
+                android:id="@+id/followings_list_action"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="45dp"
+                android:orientation="vertical"
+                android:paddingBottom="13dp">
+
+                <TextView
+                    android:id="@+id/profile_following"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:paddingTop="13dp"
+                    android:textColor="#3b3b3b"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/following"
+                    android:textColor="#a9a9b0"
+                    android:textSize="13sp" />
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -131,7 +158,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/profile_private"
+                    android:text="@string/profile"
                     android:textColor="#a9a9b0"
                     android:textSize="12sp" />
             </LinearLayout>
@@ -141,20 +168,36 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/shadow"
+            android:layout_marginLeft="19.3dp"
+            android:layout_marginRight="19.3dp"
+            android:layout_marginBottom="19.3dp"
+            android:background="@color/white"
             android:orientation="vertical">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/edit_profile"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/pending_follow_requests_action"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Edit Profile"/>
+                android:orientation="horizontal"
+                android:padding="19.2dp">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/logout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/signout"/>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/pending_following_requests"
+                        android:textColor="@color/txt_color"
+                        android:textSize="17.3sp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
         </LinearLayout>
 
     </LinearLayout>

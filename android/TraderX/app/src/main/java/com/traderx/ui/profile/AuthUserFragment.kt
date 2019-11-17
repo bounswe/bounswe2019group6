@@ -7,8 +7,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
+import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
@@ -36,14 +35,12 @@ class AuthUserFragment : Fragment() {
     private lateinit var userName: TextView
     private lateinit var email: TextView
     private lateinit var role: TextView
+    private lateinit var followerCount: TextView
+    private lateinit var followingCount: TextView
     private lateinit var profilePrivate: TextView
     private lateinit var requestService: RequestService
 
     private val disposable = CompositeDisposable()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -57,20 +54,36 @@ class AuthUserFragment : Fragment() {
         email = root.findViewById(R.id.profile_email)
         role = root.findViewById(R.id.profile_role)
         profilePrivate = root.findViewById(R.id.profile_private)
+        followerCount = root.findViewById(R.id.profile_follower)
+        followingCount = root.findViewById(R.id.profile_following)
 
-        root.findViewById<Button>(R.id.logout)?.let { button ->
-            button.setOnClickListener { logout(button) }
-            bindProgressButton(button)
+        root.findViewById<LinearLayout>(R.id.followers_list_action)?.let {
+            it.setOnClickListener {
+                findNavController().navigate(AuthUserFragmentDirections.actionNavigationAuthUserToNavigationFollowers())
+            }
         }
 
-        root.findViewById<Button>(R.id.edit_profile)?.let {
+        root.findViewById<LinearLayout>(R.id.followings_list_action)?.let {
             it.setOnClickListener {
-                findNavController().navigate(AuthUserFragmentDirections.actionNavigationAuthUserToNavigationUserEdit())
+                findNavController().navigate(AuthUserFragmentDirections.actionNavigationAuthUserToNavigationFollowings())
+            }
+        }
+
+        root.findViewById<LinearLayout>(R.id.pending_follow_requests_action)?.let {
+            it.setOnClickListener {
+                findNavController().navigate(AuthUserFragmentDirections.actionNavigationAuthUserToNavigationPendingFollowRequests())
+            }
+        }
+
+        root.findViewById<ImageView>(R.id.action_menu)?.let { imageView ->
+            imageView.setOnClickListener {
+                showMenu(it as View)
             }
         }
 
         val authUserViewModelFactory = Injection.provideAuthUserViewModelFactory(root.context)
-        authUserViewModel = ViewModelProvider(this, authUserViewModelFactory).get(AuthUserViewModel::class.java)
+        authUserViewModel =
+            ViewModelProvider(this, authUserViewModelFactory).get(AuthUserViewModel::class.java)
 
         requestService = ApiService.getInstance(context)
 
@@ -92,8 +105,9 @@ class AuthUserFragment : Fragment() {
                     userName.text = it.username
                     email.text = it.email
                     role.text = it.localizedRole(context)
-                    profilePrivate.text =
-                        if (it.isPrivate) getString(R.string.general_true) else getString(R.string.general_false)
+                    profilePrivate.text = it.localizedIsPrivate(context)
+                    followerCount.text = it.followersCount.toString()
+                    followingCount.text = it.followingsCount.toString()
                 }, {
                     ErrorHandler.handleError(it, activity)
                 })
@@ -106,22 +120,30 @@ class AuthUserFragment : Fragment() {
         disposable.clear()
     }
 
-    private fun logout(button: Button) {
-        if (button.isProgressActive()) {
-            return
+    private fun showMenu(anchor: View) {
+        val popupMenu = PopupMenu(context, anchor)
+
+        popupMenu.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.signout_action -> logout()
+                R.id.edit_profile_action -> findNavController().navigate(AuthUserFragmentDirections.actionNavigationAuthUserToNavigationUserEdit())
+                else -> false
+            }
+
+            true
         }
 
-        button.showProgress()
+        popupMenu.menuInflater.inflate(R.menu.user_profile_menu, popupMenu.menu)
+        popupMenu.show()
+    }
 
+    private fun logout() {
         val single = authUserViewModel.deleteUser().andThen(requestService.signout())
 
         disposable.add(
             single
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .doFinally {
-                    button.hideProgress(R.string.signout)
-                }
                 .subscribe({
                     context?.apply { TokenUtility.clearToken(this) }
                     startActivity(Intent(context, MainActivity::class.java))

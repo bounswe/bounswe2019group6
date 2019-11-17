@@ -14,4 +14,12 @@ class UserViewModel(private val networkSource: RequestService): ViewModel() {
     fun followUser(username: String): Single<SuccessResponse> {
         return networkSource.followUser(username)
     }
+
+    fun unfollowUser(username: String): Single<SuccessResponse> {
+        return networkSource.unfollowUser(username)
+    }
+
+    fun allUsers(): Single<List<User>> {
+        return networkSource.allUsers()
+    }
 }

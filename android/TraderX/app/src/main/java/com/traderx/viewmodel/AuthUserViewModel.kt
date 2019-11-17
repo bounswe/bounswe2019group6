@@ -3,6 +3,7 @@ package com.traderx.viewmodel
 import android.content.Context
 import com.traderx.api.ErrorHandler
 import com.traderx.api.RequestService
+import com.traderx.api.response.FollowerResponse
 import com.traderx.db.User
 import com.traderx.db.UserDao
 import io.reactivex.Completable
@@ -18,9 +19,6 @@ class AuthUserViewModel(
         private var userUpdated = false
     }
 
-    fun fetchUser(): Single<User> {
-        return networkSource.user()
-    }
 
     fun user(context: Context): Single<User> {
 
@@ -29,10 +27,10 @@ class AuthUserViewModel(
                 .doOnSuccess {
                     updateUserLocal(it).subscribe()
                 }
-            //Not working as expected
-            networkUser.flatMap { dataSource.getUser() }.subscribeOn(Schedulers.io())
+            //To make this work, the func should return flowable.
+            networkUser.flatMap { localUser() }.subscribeOn(Schedulers.io())
         } else {
-            dataSource.getUser().doOnError { ErrorHandler.handleUserViewError(it, context) }
+            localUser().doOnError { ErrorHandler.handleUserViewError(it, context) }
                 .subscribeOn(Schedulers.io())
         }
     }
@@ -46,6 +44,26 @@ class AuthUserViewModel(
     fun updateUser(user: User): Completable {
         return networkSource.updateUser(if (user.isPrivate) "private" else "public")
             .andThen { updateUserLocal(user) }
+    }
+
+    fun followers(context: Context): Single<List<FollowerResponse>> {
+        return user(context).flatMap{ networkSource.followersList(it.username) }
+    }
+
+    fun followings(context: Context): Single<List<FollowerResponse>> {
+        return user(context).flatMap { networkSource.followingsList(it.username) }
+    }
+
+    fun pendingFollowRequests(context: Context): Single<List<FollowerResponse>> {
+        return user(context).flatMap { networkSource.pendingFollowRequests(it.username) }
+    }
+
+    private fun fetchUser(): Single<User> {
+        return networkSource.user()
+    }
+
+    private fun localUser(): Single<User> {
+        return dataSource.getUser()
     }
 
     private fun updateUserLocal(user: User): Completable {

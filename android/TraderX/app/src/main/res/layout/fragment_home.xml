@@ -4,41 +4,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.home.HomeFragment">
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
-            android:orientation="horizontal"
-            android:padding="28.7dp">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/title_home"
-                android:textColor="@color/txt_color"
-                android:textSize="17.3sp" />
-
-
-            <!--            <ImageView-->
-            <!--                android:layout_width="20dp"-->
-            <!--                android:layout_height="20dp"-->
-            <!--                android:src="@drawable/ic_plus2"/>-->
-
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:layout_margin="19.3dp"
-            android:background="@color/white"
 
             android:orientation="vertical">
 
@@ -79,9 +55,10 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="19.3dp"
             android:background="@color/white"
-
+            android:layout_marginRight="19.3dp"
+            android:layout_marginLeft="19.3dp"
+            android:layout_marginBottom="19.3dp"
             android:orientation="vertical">
 
             <LinearLayout
@@ -92,9 +69,9 @@
                 android:padding="19.2dp">
 
                 <LinearLayout
+                    android:layout_weight="1"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:orientation="vertical">
 
                     <TextView
