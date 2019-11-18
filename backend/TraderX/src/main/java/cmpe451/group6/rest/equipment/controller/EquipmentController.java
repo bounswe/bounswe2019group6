@@ -3,10 +3,10 @@ package cmpe451.group6.rest.equipment.controller;
 import cmpe451.group6.rest.equipment.dto.EquipmentMetaWrapper;
 import cmpe451.group6.rest.equipment.dto.EquipmentResponseDTO;
 import cmpe451.group6.rest.equipment.service.EquipmentService;
-import cmpe451.group6.rest.equipment.model.Equipment;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import static cmpe451.group6.authorization.exception.GlobalExceptionHandlerController.GENERIC_ERROR_RESPONSE;
@@ -29,13 +29,52 @@ public class EquipmentController {
         return equipmentService.getEquipment(name);
     }
 
-    @GetMapping(value = "/list")
+    @GetMapping(value = "/currency/list")
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Returns equipment names only (no auth required)", response = EquipmentMetaWrapper.class)
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE)})
-    public EquipmentMetaWrapper getEquipments() {
-        return equipmentService.getEquipments();
+    public EquipmentMetaWrapper getCurrencies() {
+        return equipmentService.getCurrencies();
+    }
+
+    @GetMapping(value = "/crypto-currency/list")
+    @ResponseStatus(HttpStatus.OK)
+    @ApiOperation(value = "Returns equipment names only (no auth required)", response = EquipmentMetaWrapper.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE)})
+    public EquipmentMetaWrapper getCryptoCurrencies() {
+        return equipmentService.getCryptoCurrencies();
+    }
+
+    @PostMapping(value = "/force/init")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @ApiOperation(value = "Ignore this endpoint. (ADMIN ONLY))")
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE)})
+    public void forceInit(@RequestParam String code, @RequestParam String isCrypto) {
+        equipmentService.forceInit(code,isCrypto);
+    }
+
+    @PostMapping(value = "/force/load_history")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @ApiOperation(value = "Ignore this endpoint. (ADMIN ONLY))")
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE)})
+    public void forceLoadHistory(@RequestParam String code, @RequestParam String isCrypto) {
+        equipmentService.forceLoadHistory(code,isCrypto);
+    }
+
+    @PostMapping(value = "/force/update")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @ApiOperation(value = "Ignore this endpoint. (ADMIN ONLY))")
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE)})
+    public void forceUpdate(@RequestParam String code, @RequestParam String isCrypto) {
+        equipmentService.forceUpdate(code,isCrypto);
     }
 
 }

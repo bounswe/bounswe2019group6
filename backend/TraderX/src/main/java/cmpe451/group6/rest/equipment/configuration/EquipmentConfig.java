@@ -19,6 +19,12 @@ public class EquipmentConfig {
     public static final String RAW_CURRENCY_HISTORY_API = "https://www.alphavantage.co/query?function=" +
             "FX_DAILY&from_symbol=%s&to_symbol=%s&apikey=%s";
 
-    public static final String[] CURRENCIES = {"JPY", "EUR", "TRY"};
+    public static final String RAW_CRYPTO_CURRENCY_HISTORY_API = "https://www.alphavantage.co/query?function=" +
+            "DIGITAL_CURRENCY_DAILY&symbol=%s&market=%s&apikey=%s";
+
+    public static final String[] CURRENCIES_BATCH_1 = {"JPY", "EUR", "TRY"};
+    public static final String[] CURRENCIES_BATCH_2 = {"CZK", "GBP", "CNY"};
+    public static final String[] CRYPTO_CURRENCIES_BATCH_1 = {"BTC", "ETC", "VIB"};
+    public static final String[] CRYPTO_CURRENCIES_BATCH_2 = {"ETH", "BTG", "ZEN"};
 
 }

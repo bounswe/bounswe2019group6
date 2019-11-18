@@ -1,6 +1,6 @@
 package cmpe451.group6.rest.equipment.dto;
 
-public class CurrencyHistory3rdPrtyDTO {
+public class CurrencyHistory3rdPartyDTO {
 
     public static final String metadata = "Meta Data";
     public static final String fromSymbol = "2. From Symbol";
