@@ -119,6 +119,7 @@ public class Group6BackendService implements CommandLineRunner {
 
     commentService.postEquipmentComment("trader","trader comment","USD");
     commentService.postEquipmentComment("basic","basic comment","USD");
+
   }
 
 }

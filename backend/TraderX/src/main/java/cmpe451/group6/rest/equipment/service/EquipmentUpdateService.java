@@ -4,7 +4,7 @@ import cmpe451.group6.rest.equipment.alpha.api.*;
 import cmpe451.group6.rest.equipment.model.Equipment;
 import cmpe451.group6.rest.equipment.model.EquipmentType;
 import cmpe451.group6.rest.equipment.model.HistoricalValue;
-import cmpe451.group6.rest.equipment.repository.EquipmentRepsitory;
+import cmpe451.group6.rest.equipment.repository.EquipmentRepository;
 import cmpe451.group6.rest.equipment.repository.HistoricalValueRepository;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ import static cmpe451.group6.rest.equipment.configuration.EquipmentConfig.*;
 public class EquipmentUpdateService {
 
     @Autowired
-    EquipmentRepsitory equipmentRepsitory;
+    EquipmentRepository equipmentRepository;
 
     @Autowired
     HistoricalValueRepository historicalValueRepository;
@@ -60,8 +60,49 @@ public class EquipmentUpdateService {
         equipment.setPredictionRate(DEFAULT_PREDICT_RATE);
         equipment.setCurrentValue(1); // since this is the base
         equipment.setLastUpdated(new Date());
+
+        equipmentRepository.save(equipment);
+    }
+
+    private void saveSingleEquipment(Map<String, String> data){
+
+        Equipment equipment = new Equipment();
+        equipment.setName(data.get(Currency3rdPartyDTO.targetName));
+        equipment.setCode(data.get(Currency3rdPartyDTO.targetCode));
+        equipment.setTimeZone(data.get(Currency3rdPartyDTO.zone));
+        equipment.setCurrentStock(DEFAULT_STOCK);
+        equipment.setPredictionRate(DEFAULT_PREDICT_RATE);
+
+        try {
+            equipment.setCurrentValue(Double.parseDouble(data.get(Currency3rdPartyDTO.rate)));
+            equipment.setLastUpdated(preciseDf.parse(data.get(Currency3rdPartyDTO.lastUpdate)));
+        } catch (Exception e){
+            return;
+        }
+
+        equipmentRepository.save(equipment);
+
+    }
+
+    private void updateSingleEquipment(Map<String, String> data){
+
+        String code = data.get(Currency3rdPartyDTO.targetCode);
+        Equipment equipment = equipmentRepository.findByCode(code);
+        if(equipment == null){
+            throw new IllegalArgumentException("No such currency found on records: " + code);
+        }
+
+        try {
+            equipment.setCurrentValue(Double.parseDouble(data.get(Currency3rdPartyDTO.rate)));
+            equipment.setLastUpdated(preciseDf.parse(data.get(Currency3rdPartyDTO.lastUpdate)));
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new IllegalArgumentException("Invalid data from the API service");
+        }
+        equipmentRepository.save(equipment);
         equipment.setEquipmentType(EquipmentType.CURRENCY);
         equipmentRepsitory.save(equipment);
+
     }
 
     // Creates equipments on DB. Call once for each batch on start-up
@@ -259,6 +300,7 @@ public class EquipmentUpdateService {
                 closeHeader = StockHistory3rdParty.close;
         }
 
+        Equipment equipment = equipmentRepository.findByCode(to);
         String code = metadata.get(codeHeader);
 
         Equipment equipment = equipmentRepsitory.findByCode(code);
@@ -295,7 +337,7 @@ public class EquipmentUpdateService {
         double predictRate = getNextPredictionRate(predictionList, equipment.getCurrentValue());
         equipment.setPredictionRate(predictRate);
 
-        equipmentRepsitory.save(equipment);
+        equipmentRepository.save(equipment);
 
     }
 
@@ -327,4 +369,5 @@ public class EquipmentUpdateService {
             return 0;
         }
     }
+
 }

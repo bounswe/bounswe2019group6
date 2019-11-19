@@ -8,8 +8,8 @@ import cmpe451.group6.rest.equipment.dto.EquipmentMetaWrapper;
 import cmpe451.group6.rest.equipment.dto.EquipmentResponseDTO;
 import cmpe451.group6.rest.equipment.model.EquipmentType;
 import cmpe451.group6.rest.equipment.model.HistoricalValue;
-import cmpe451.group6.rest.equipment.repository.EquipmentRepsitory;
 import cmpe451.group6.rest.equipment.model.Equipment;
+import cmpe451.group6.rest.equipment.repository.EquipmentRepository;
 import cmpe451.group6.rest.equipment.repository.HistoricalValueRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ public class EquipmentService {
     Logger logger = Logger.getLogger(EquipmentService.class.getName());
 
     @Autowired
-    EquipmentRepsitory equipmentRepsitory;
+    EquipmentRepository equipmentRepository;
 
     @Autowired
     HistoricalValueRepository historicalValueRepository;
@@ -39,7 +39,7 @@ public class EquipmentService {
     private ModelMapper modelMapper;
 
     public EquipmentResponseDTO getEquipment(String code){
-        Equipment equipment = equipmentRepsitory.findByCode(code);
+        Equipment equipment = equipmentRepository.findByCode(code);
         if(equipment == null){
             throw new CustomException("No such an equipment found", HttpStatus.BAD_REQUEST);
         }

@@ -1,8 +1,8 @@
 package cmpe451.group6.authorization.model;
 
-import cmpe451.group6.rest.comment.model.EquipmentComment;
+import cmpe451.group6.rest.asset.model.Asset;
 import cmpe451.group6.rest.follow.model.FollowDAO;
-
+import cmpe451.group6.rest.transaction.model.Transaction;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
@@ -17,7 +17,7 @@ public class User implements Serializable {
   // TODO: reformat iban regex (limit only a few country ibans)
   public static final transient String IBANRegex = "^[A-Z]{2}[0-9]{18}$";
   public static final transient String locationRegex = "^(-?\\d{1,5}(\\.\\d{1,10})?)$";
-  public static final transient String passwordRegex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{6,}$";
+  public static final transient String passwordRegex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=_])(?=\\S+$).{6,}$";
   public static final transient String emailRegex = "^\\w+([-+.']\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$";
 
   @Id
@@ -49,6 +49,13 @@ public class User implements Serializable {
 
   @OneToMany(mappedBy = "followee",cascade = CascadeType.ALL)
   private Set<FollowDAO> followeeDAOs;
+
+  @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+  private Set<Transaction> transactions;
+
+  @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+  private Set<Asset> assets;
+
 
   //   ^               # start-of-string
   // (?=.*[0-9])       # a digit must occur at least once
@@ -181,4 +188,19 @@ public class User implements Serializable {
     this.followeeDAOs = followeeDAOs;
   }
 
+  public Set<Transaction> getTransactions() {
+    return transactions;
+  }
+
+  public void setTransactions(Set<Transaction> transactions) {
+    this.transactions = transactions;
+  }
+
+  public Set<Asset> getAssets() {
+    return assets;
+  }
+
+  public void setAssets(Set<Asset> assets) {
+    this.assets = assets;
+  }
 }

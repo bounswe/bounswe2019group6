@@ -7,7 +7,7 @@ import cmpe451.group6.rest.comment.model.CommentResponseDTO;
 import cmpe451.group6.rest.comment.model.EquipmentComment;
 import cmpe451.group6.rest.comment.repository.EquipmentCommentRepository;
 import cmpe451.group6.rest.equipment.model.Equipment;
-import cmpe451.group6.rest.equipment.repository.EquipmentRepsitory;
+import cmpe451.group6.rest.equipment.repository.EquipmentRepository;
 import cmpe451.group6.rest.follow.service.FollowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,7 +28,7 @@ public class EquipmentCommentService {
     EquipmentCommentRepository commentRepository;
 
     @Autowired
-    EquipmentRepsitory equipmentRepsitory;
+    EquipmentRepository equipmentRepository;
 
     @Autowired
     FollowService followService;
@@ -38,7 +38,7 @@ public class EquipmentCommentService {
         EquipmentComment comment = new EquipmentComment();
 
         User author = userRepository.findByUsername(authorUsername);
-        Equipment equipment = equipmentRepsitory.findByCode(code);
+        Equipment equipment = equipmentRepository.findByCode(code);
 
         if(author == null) throw new CustomException("No such user", HttpStatus.NOT_ACCEPTABLE);
         if(equipment == null) throw new CustomException("No such equipment", HttpStatus.NOT_ACCEPTABLE);
@@ -75,14 +75,14 @@ public class EquipmentCommentService {
         if(!userRepository.existsByUsername(authorUsername)){
             throw new CustomException("No such user found", HttpStatus.PRECONDITION_FAILED);
         }
-        if(!equipmentRepsitory.existsByCode(equipmentCode)){
+        if(!equipmentRepository.existsByCode(equipmentCode)){
             throw new CustomException("No such equipment found", HttpStatus.PRECONDITION_FAILED);
         }
         return convertToDto(commentRepository.findTop50ByAuthor_UsernameAndEquipment_Code(authorUsername,equipmentCode));
     }
 
     public List<CommentResponseDTO>  findEquipmentComments(String equipmentCode, String claimerUsername){
-        if(!equipmentRepsitory.existsByCode(equipmentCode)){
+        if(!equipmentRepository.existsByCode(equipmentCode)){
             throw new CustomException("No such equipment found", HttpStatus.PRECONDITION_FAILED);
         }
         List<EquipmentComment> response = commentRepository.findTop50ByEquipment_Code(equipmentCode);

@@ -1,8 +1,13 @@
 package cmpe451.group6.rest.equipment.model;
 
+
+import cmpe451.group6.rest.asset.model.Asset;
+import cmpe451.group6.rest.transaction.model.Transaction;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 public class Equipment implements Serializable {
@@ -32,12 +37,20 @@ public class Equipment implements Serializable {
     @Column(nullable = false)
     private double predictionRate;
 
+
     @Column(nullable = false)
     private EquipmentType equipmentType;
 
     public Equipment() {
     }
 
+
+    @OneToMany(mappedBy = "equipment",cascade = CascadeType.ALL)
+    private Set<Transaction> transactions;
+
+    @OneToMany(mappedBy = "equipment",cascade = CascadeType.ALL)
+    private Set<Asset> assets;
+  
     public EquipmentType getEquipmentType() {
         return equipmentType;
     }
@@ -110,5 +123,20 @@ public class Equipment implements Serializable {
         this.predictionRate = predictionRate;
     }
 
+    public Set<Transaction> getTransactions() {
+        return transactions;
+    }
+
+    public void setTransactions(Set<Transaction> transactions) {
+        this.transactions = transactions;
+    }
+
+    public Set<Asset> getAssets() {
+        return assets;
+    }
+
+    public void setAssets(Set<Asset> assets) {
+        this.assets = assets;
+    }
 
 }
