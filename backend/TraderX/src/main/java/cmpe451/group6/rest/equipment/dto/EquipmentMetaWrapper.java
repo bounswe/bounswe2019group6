@@ -4,11 +4,11 @@ import java.util.List;
 
 public class EquipmentMetaWrapper {
 
-    private List<String> equipments;
+    private String[] equipments;
 
     private String base;
 
-    public EquipmentMetaWrapper(List<String> equipments, String base) {
+    public EquipmentMetaWrapper(String[] equipments, String base) {
         this.equipments = equipments;
         this.base = base;
     }
@@ -21,11 +21,11 @@ public class EquipmentMetaWrapper {
         this.base = base;
     }
 
-    public List<String> getEquipments() {
+    public String[] getEquipments() {
         return equipments;
     }
 
-    public void setEquipments(List<String> equipments) {
+    public void setEquipments(String[] equipments) {
         this.equipments = equipments;
     }
 }

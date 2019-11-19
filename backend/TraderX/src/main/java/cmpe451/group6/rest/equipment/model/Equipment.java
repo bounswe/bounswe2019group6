@@ -32,7 +32,18 @@ public class Equipment implements Serializable {
     @Column(nullable = false)
     private double predictionRate;
 
+    @Column(nullable = false)
+    private EquipmentType equipmentType;
+
     public Equipment() {
+    }
+
+    public EquipmentType getEquipmentType() {
+        return equipmentType;
+    }
+
+    public void setEquipmentType(EquipmentType equipmentType) {
+        this.equipmentType = equipmentType;
     }
 
     public String getCode() {
@@ -98,5 +109,6 @@ public class Equipment implements Serializable {
     public void setPredictionRate(double predictionRate) {
         this.predictionRate = predictionRate;
     }
+
 
 }
