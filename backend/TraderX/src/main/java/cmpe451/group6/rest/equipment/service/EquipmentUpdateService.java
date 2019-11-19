@@ -58,6 +58,7 @@ public class EquipmentUpdateService {
         equipment.setTimeZone(BASE_CURRENCY_ZONE);
         equipment.setCurrentStock(DEFAULT_STOCK);
         equipment.setPredictionRate(DEFAULT_PREDICT_RATE);
+        equipment.setEquipmentType(EquipmentType.CURRENCY);
         equipment.setCurrentValue(1); // since this is the base
         equipment.setLastUpdated(new Date());
 
@@ -99,9 +100,8 @@ public class EquipmentUpdateService {
             e.printStackTrace();
             throw new IllegalArgumentException("Invalid data from the API service");
         }
-        equipmentRepository.save(equipment);
         equipment.setEquipmentType(EquipmentType.CURRENCY);
-        equipmentRepsitory.save(equipment);
+        equipmentRepository.save(equipment);
 
     }
 
@@ -243,7 +243,7 @@ public class EquipmentUpdateService {
             return;
         }
 
-        equipmentRepsitory.save(equipment);
+        equipmentRepository.save(equipment);
 
     }
 
@@ -251,7 +251,7 @@ public class EquipmentUpdateService {
         final boolean isStock = type == EquipmentType.STOCK;
 
         String code = data.get(isStock ? Stock3rdParty.symbol : Currency3rdPartyDTO.targetCode);
-        Equipment equipment = equipmentRepsitory.findByCode(code);
+        Equipment equipment = equipmentRepository.findByCode(code);
         if(equipment == null){
             throw new IllegalArgumentException("No such currency found on records: " + code);
         }
@@ -267,7 +267,7 @@ public class EquipmentUpdateService {
             e.printStackTrace();
             throw new IllegalArgumentException("Invalid data from the API service");
         }
-        equipmentRepsitory.save(equipment);
+        equipmentRepository.save(equipment);
     }
 
 
@@ -300,10 +300,9 @@ public class EquipmentUpdateService {
                 closeHeader = StockHistory3rdParty.close;
         }
 
-        Equipment equipment = equipmentRepository.findByCode(to);
         String code = metadata.get(codeHeader);
 
-        Equipment equipment = equipmentRepsitory.findByCode(code);
+        Equipment equipment = equipmentRepository.findByCode(code);
 
         if(equipment == null) {
             logger.warning(String.format("No saved data found for equipment %s. Cancelling history update.", code));
