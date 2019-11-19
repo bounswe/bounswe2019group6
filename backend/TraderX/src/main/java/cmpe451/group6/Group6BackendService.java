@@ -50,6 +50,9 @@ public class Group6BackendService implements CommandLineRunner {
   @Autowired
   EquipmentCommentService commentService;
 
+  @Value("${security.admin-un}")
+  String adminUsername;
+
   @Value("${security.admin-pw}")
   String adminPassword;
 
@@ -79,7 +82,7 @@ public class Group6BackendService implements CommandLineRunner {
   public void run(String... params) throws Exception {
 
     User admin = new User();
-    admin.setUsername("kral06");
+    admin.setUsername(adminUsername);
     admin.setPassword(adminPassword);
     admin.setEmail("admin@email.com");
     admin.setLatitude("6");
@@ -112,9 +115,9 @@ public class Group6BackendService implements CommandLineRunner {
     basic.setIsPrivate(false);
     signupService.internal_signup(basic);
 
-    followService.followUser("basic","admin");
-    followService.followUser("trader","admin");
-    followService.answerRequest("trader","admin",true);
+    followService.followUser("basic",adminUsername);
+    followService.followUser("trader",adminUsername);
+    followService.answerRequest("trader",adminUsername,true);
     followService.followUser("trader","basic");
     followService.answerRequest("trader","basic",true);
     followService.followUser("basic","trader");
