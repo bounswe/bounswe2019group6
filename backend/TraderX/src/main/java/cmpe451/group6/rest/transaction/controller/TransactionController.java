@@ -27,7 +27,7 @@ public class TransactionController {
     @Autowired
     private Util util;
 
-    @GetMapping(value = "/{username}")
+    @GetMapping(value = "/user/{username}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_BASIC') or hasRole('ROLE_TRADER')")
     @ApiOperation(value = "Gets transactions of an user", response = Transaction.class)
@@ -37,7 +37,7 @@ public class TransactionController {
         return transactionService.getTransactionsByUser(username, util.unwrapUsername(req));
     }
 
-    @GetMapping(value = "/{code}")
+    @GetMapping(value = "/equipment/{code}")
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Returns transactions on specified equipment code (no auth required)", response = TransactionDTO.class)
     @ApiResponses(value = { @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE) })
@@ -70,7 +70,7 @@ public class TransactionController {
         return transactionService.numberOfTransactions();
     }
 
-    @GetMapping(value = "/count/{username}")
+    @GetMapping(value = "/count/user/{username}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_BASIC') or hasRole('ROLE_TRADER')")
     @ApiOperation(value = "Returns number of all transactions made by specific user ", response = Integer.class)
@@ -81,7 +81,7 @@ public class TransactionController {
         return transactionService.numberOfTransactionByUser(username, util.unwrapUsername(req));
     }
 
-    @GetMapping(value = "/count/{code}")
+    @GetMapping(value = "/count/equipment/{code}")
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Returns number of all transactions made by specific user (no auth required) ", response = Integer.class)
     @ApiResponses(value = { @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE) })

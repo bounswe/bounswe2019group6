@@ -34,6 +34,7 @@ security:
       expire-length: 1800000 # 30 minutes duration by default (in miliseconds)
   alpha-api-key1: "***************"
   alpha-api-key2: "***************"
+  admin-pw: "*******"
 
 email:
   sender_address: "bounswegroup6@gmail.com"

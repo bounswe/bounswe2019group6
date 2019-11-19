@@ -2,7 +2,7 @@ package cmpe451.group6.rest.equipment.alpha.api;
 
 public class CryptoHistory3rdPartyDTO {
 
-/*
+    /*
     "Meta Data": {
         "1. Information": "Weekly Prices and Volumes for Digital Currency",
                 "2. Digital Currency Code": "BTC",
@@ -24,7 +24,7 @@ public class CryptoHistory3rdPartyDTO {
                     "4b. close (USD)": "8494.56000000",
                     "5. volume": "1503.90134400",
                     "6. market cap (USD)": "1503.90134400"
-        }*/
+    }*/
 
     public static final String metadata = "Meta Data";
     public static final String fromSymbol = "2. Digital Currency Code";

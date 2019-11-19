@@ -65,46 +65,6 @@ public class EquipmentUpdateService {
         equipmentRepository.save(equipment);
     }
 
-    private void saveSingleEquipment(Map<String, String> data){
-
-        Equipment equipment = new Equipment();
-        equipment.setName(data.get(Currency3rdPartyDTO.targetName));
-        equipment.setCode(data.get(Currency3rdPartyDTO.targetCode));
-        equipment.setTimeZone(data.get(Currency3rdPartyDTO.zone));
-        equipment.setCurrentStock(DEFAULT_STOCK);
-        equipment.setPredictionRate(DEFAULT_PREDICT_RATE);
-
-        try {
-            equipment.setCurrentValue(Double.parseDouble(data.get(Currency3rdPartyDTO.rate)));
-            equipment.setLastUpdated(preciseDf.parse(data.get(Currency3rdPartyDTO.lastUpdate)));
-        } catch (Exception e){
-            return;
-        }
-
-        equipmentRepository.save(equipment);
-
-    }
-
-    private void updateSingleEquipment(Map<String, String> data){
-
-        String code = data.get(Currency3rdPartyDTO.targetCode);
-        Equipment equipment = equipmentRepository.findByCode(code);
-        if(equipment == null){
-            throw new IllegalArgumentException("No such currency found on records: " + code);
-        }
-
-        try {
-            equipment.setCurrentValue(Double.parseDouble(data.get(Currency3rdPartyDTO.rate)));
-            equipment.setLastUpdated(preciseDf.parse(data.get(Currency3rdPartyDTO.lastUpdate)));
-        } catch (Exception e){
-            e.printStackTrace();
-            throw new IllegalArgumentException("Invalid data from the API service");
-        }
-        equipment.setEquipmentType(EquipmentType.CURRENCY);
-        equipmentRepository.save(equipment);
-
-    }
-
     // Creates equipments on DB. Call once for each batch on start-up
     void initializeEquipment(String[] equipments, EquipmentType type){
 
@@ -114,19 +74,7 @@ public class EquipmentUpdateService {
 
         for (String equipment: equipments) {
             // Init other currencies
-
-            String uri = isStock ?
-                    String.format(RAW_STOCK_API, equipment, apiKey1) :
-                    String.format(RAW_CURRENCY_API, BASE_CURRENCY_CODE, equipment, apiKey1);
-
-            String responseString = restTemplate.getForObject(uri, String.class);
-
-            JSONObject jsonObject = new JSONObject(responseString);
-
-            @SuppressWarnings("unchecked")
-            Map<String,String> data = (Map<String,String>) jsonObject.toMap().get
-                    (isStock ? Stock3rdParty.header : Currency3rdPartyDTO.header);
-
+            Map<String, String> data = getDataMap(restTemplate, isStock, equipment);
             saveSingleEquipment(data, type);
         }
     }
@@ -141,24 +89,11 @@ public class EquipmentUpdateService {
 
         for (String equipment: equipments) {
             // Init other currencies
-
-            String uri = isStock ?
-                    String.format(RAW_STOCK_API, equipment, apiKey1) :
-                    String.format(RAW_CURRENCY_API, BASE_CURRENCY_CODE, equipment, apiKey1);
-
-            String responseString = restTemplate.getForObject(uri, String.class);
-
-            JSONObject jsonObject = new JSONObject(responseString);
-
-            @SuppressWarnings("unchecked")
-            Map<String,String> data = (Map<String,String>) jsonObject.toMap().get
-                    (isStock ? Stock3rdParty.header : Currency3rdPartyDTO.header);
-
+            Map<String, String> data = getDataMap(restTemplate, isStock, equipment);
             if(data == null){
                 logger.warning("Null response when updating latest values for equipment:" + equipment);
                 continue;
             }
-
             updateSingleEquipment(data,type);
         }
     }
@@ -177,7 +112,7 @@ public class EquipmentUpdateService {
             final String uri,historyHeader, metaHeader;
             switch (type) {
                 case CURRENCY:
-                    uri =  String.format(RAW_CURRENCY_HISTORY_API, currency, BASE_CURRENCY_CODE, apiKey1);
+                    uri =  String.format(RAW_CURRENCY_HISTORY_API, BASE_CURRENCY_CODE, currency, apiKey1);
                     historyHeader = CurrencyHistory3rdPartyDTO.history;
                     metaHeader = CurrencyHistory3rdPartyDTO.metadata;
                     break;
@@ -243,6 +178,11 @@ public class EquipmentUpdateService {
             return;
         }
 
+        if(type == EquipmentType.CRYPTO_CURRENCY) {
+            // make value USD based.
+            equipment.setCurrentValue(1/equipment.getCurrentValue());
+        }
+
         equipmentRepository.save(equipment);
 
     }
@@ -266,6 +206,11 @@ public class EquipmentUpdateService {
         } catch (Exception e){
             e.printStackTrace();
             throw new IllegalArgumentException("Invalid data from the API service");
+        }
+
+        if(type == EquipmentType.CRYPTO_CURRENCY) {
+            // make value USD based.
+            equipment.setCurrentValue(1/equipment.getCurrentValue());
         }
         equipmentRepository.save(equipment);
     }
@@ -367,6 +312,19 @@ public class EquipmentUpdateService {
         } catch (ParseException pe){
             return 0;
         }
+    }
+
+    private Map<String,String> getDataMap(RestTemplate restTemplate, boolean isStock, String equipment) {
+        String uri = isStock ?
+                String.format(RAW_STOCK_API, equipment, apiKey1) :
+                String.format(RAW_CURRENCY_API, BASE_CURRENCY_CODE, equipment, apiKey1);
+
+        String responseString = restTemplate.getForObject(uri, String.class);
+
+        JSONObject jsonObject = new JSONObject(responseString);
+
+        return (Map<String,String>) jsonObject.toMap().get
+                (isStock ? Stock3rdParty.header : Currency3rdPartyDTO.header);
     }
 
 }
