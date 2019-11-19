@@ -118,7 +118,7 @@ public class TransactionService {
 
         Asset asset = assetRepository.getAsset(requesterName, EquipmentConfig.BASE_CURRENCY_CODE);
         if (asset == null) {
-            throw new CustomException("The user has no money in application.", HttpStatus.NOT_ACCEPTABLE);
+            throw new CustomException("The user has no money in application.", HttpStatus.PRECONDITION_FAILED);
         }
 
         if( amount < 0 ){
@@ -129,7 +129,7 @@ public class TransactionService {
         float usersMoney = asset.getAmount();
         if (neededMoney > usersMoney) {
             throw new CustomException("The user doesn't have enough money to buy " + amount + " " + code + ".",
-                    HttpStatus.NOT_ACCEPTABLE);
+                    HttpStatus.PRECONDITION_FAILED);
         }
 
         // CAN BUY

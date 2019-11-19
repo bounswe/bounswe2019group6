@@ -74,7 +74,9 @@ public class TransactionController {
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_BASIC') or hasRole('ROLE_TRADER')")
     @ApiOperation(value = "Returns number of all transactions made by specific user ", response = Integer.class)
-    @ApiResponses(value = { @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE) })
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE),
+            @ApiResponse(code = 406, message = "No such a user found or profile of the user is private and not following") } )
     public int countAllTransactions(@ApiParam("User Name") @PathVariable String username, HttpServletRequest req) {
         return transactionService.numberOfTransactionByUser(username, util.unwrapUsername(req));
     }
@@ -91,7 +93,10 @@ public class TransactionController {
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_TRADER')")
     @ApiOperation(value = " Buy asset ", response = Boolean.class)
-    @ApiResponses(value = { @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE) })
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE),
+            @ApiResponse(code = 406, message = "There is no user or equipment found."),
+            @ApiResponse(code = 412, message = "User does not have enough money for the transaction.")})
     public boolean buyAsset(@ApiParam("Code of asset") @RequestParam String code,
             @ApiParam("Amount wanted to buy") @RequestParam float amount, HttpServletRequest req) {
         return transactionService.buyAsset(util.unwrapUsername(req), code, amount);
@@ -101,7 +106,10 @@ public class TransactionController {
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_TRADER')")
     @ApiOperation(value = " Sell asset ", response = Boolean.class)
-    @ApiResponses(value = { @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE) })
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE),
+            @ApiResponse(code = 406, message = "There is no user or equipment found."),
+            @ApiResponse(code = 412, message = "User does not have enough asset for the transaction.")})
     public boolean sellAsset(@ApiParam("Code of asset") @RequestParam String code,
             @ApiParam("Amount wanted to sell") @RequestParam float amount, HttpServletRequest req) {
         return transactionService.sellAsset(util.unwrapUsername(req), code, amount);
