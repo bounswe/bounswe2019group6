@@ -17,7 +17,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Array;
-import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -62,20 +61,24 @@ public class EquipmentService {
                 EquipmentConfig.CRYPTO_CURRENCIES_BATCH_2),EquipmentConfig.BASE_CURRENCY_CODE);
     }
 
-    public void forceInit(String code, String isCrypto){
+    public EquipmentMetaWrapper getStocks(){
+        return new EquipmentMetaWrapper(concatenate(EquipmentConfig.STOCKS_BATCH_1,
+                EquipmentConfig.STOCKS_BATCH_2),EquipmentConfig.BASE_CURRENCY_CODE);
+    }
+
+    public void forceInit(String code, String type){
         logger.warning("Forcefully initializing " + code);
-        EquipmentType type = isCrypto.equals("true") ? EquipmentType.CRYPTO_CURRENCY : EquipmentType.CURRENCY;
-        equipmentUpdateService.initializeEquipment(new String[]{code},type);
+        equipmentUpdateService.initializeEquipment(new String[]{code},stringToType(type));
     }
 
-    public void forceUpdate(String code, String isCrypto){
+    public void forceUpdate(String code, String type){
         logger.warning("Forcefully updating: " + code);
-        equipmentUpdateService.updateLatestValues(new String[]{code});
+        equipmentUpdateService.updateLatestValues(new String[]{code},stringToType(type));
     }
 
-    public void forceLoadHistory(String code, String isCrypto){
+    public void forceLoadHistory(String code, String type){
         logger.warning("Forcefully loading history: " + code);
-        equipmentUpdateService.loadEquipmentHistory(new String[]{code},isCrypto.equals("true"));
+        equipmentUpdateService.loadEquipmentHistory(new String[]{code},stringToType(type));
     }
 
     private <T> T[] concatenate(T[] a, T[] b) {
@@ -88,6 +91,13 @@ public class EquipmentService {
         System.arraycopy(b, 0, c, aLen, bLen);
 
         return c;
+    }
+
+    private EquipmentType stringToType(String type){
+        if(type.equals("CURRENCY")) return EquipmentType.CURRENCY;
+        if(type.equals("CRYPTO_CURRENCY")) return EquipmentType.CRYPTO_CURRENCY;
+        if(type.equals("STOCK")) return EquipmentType.STOCK;
+        throw new CustomException("Invalid Equipment type: " + type, HttpStatus.NOT_ACCEPTABLE);
     }
 
 }

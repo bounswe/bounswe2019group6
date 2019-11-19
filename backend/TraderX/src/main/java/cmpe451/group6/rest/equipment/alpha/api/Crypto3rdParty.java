@@ -1,4 +1,4 @@
-package cmpe451.group6.rest.equipment.dto;
+package cmpe451.group6.rest.equipment.alpha.api;
 
 public class Crypto3rdParty {
 

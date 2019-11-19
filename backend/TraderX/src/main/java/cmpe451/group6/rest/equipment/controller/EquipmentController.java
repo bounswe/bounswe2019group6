@@ -31,7 +31,7 @@ public class EquipmentController {
 
     @GetMapping(value = "/currency/list")
     @ResponseStatus(HttpStatus.OK)
-    @ApiOperation(value = "Returns equipment names only (no auth required)", response = EquipmentMetaWrapper.class)
+    @ApiOperation(value = "Returns currency names only (no auth required)", response = EquipmentMetaWrapper.class)
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE)})
     public EquipmentMetaWrapper getCurrencies() {
@@ -40,11 +40,20 @@ public class EquipmentController {
 
     @GetMapping(value = "/crypto-currency/list")
     @ResponseStatus(HttpStatus.OK)
-    @ApiOperation(value = "Returns equipment names only (no auth required)", response = EquipmentMetaWrapper.class)
+    @ApiOperation(value = "Returns crypto currency names only (no auth required)", response = EquipmentMetaWrapper.class)
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE)})
     public EquipmentMetaWrapper getCryptoCurrencies() {
         return equipmentService.getCryptoCurrencies();
+    }
+
+    @GetMapping(value = "/stock/list")
+    @ResponseStatus(HttpStatus.OK)
+    @ApiOperation(value = "Returns stock names only (no auth required)", response = EquipmentMetaWrapper.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE)})
+    public EquipmentMetaWrapper getStocks() {
+        return equipmentService.getStocks();
     }
 
     @PostMapping(value = "/force/init")
@@ -53,8 +62,8 @@ public class EquipmentController {
     @ApiOperation(value = "Ignore this endpoint. (ADMIN ONLY))")
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE)})
-    public void forceInit(@RequestParam String code, @RequestParam String isCrypto) {
-        equipmentService.forceInit(code,isCrypto);
+    public void forceInit(@RequestParam String code, @RequestParam String type) {
+        equipmentService.forceInit(code,type);
     }
 
     @PostMapping(value = "/force/load_history")
@@ -63,8 +72,8 @@ public class EquipmentController {
     @ApiOperation(value = "Ignore this endpoint. (ADMIN ONLY))")
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE)})
-    public void forceLoadHistory(@RequestParam String code, @RequestParam String isCrypto) {
-        equipmentService.forceLoadHistory(code,isCrypto);
+    public void forceLoadHistory(@RequestParam String code, @RequestParam String type) {
+        equipmentService.forceLoadHistory(code,type);
     }
 
     @PostMapping(value = "/force/update")
@@ -73,8 +82,8 @@ public class EquipmentController {
     @ApiOperation(value = "Ignore this endpoint. (ADMIN ONLY))")
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE)})
-    public void forceUpdate(@RequestParam String code, @RequestParam String isCrypto) {
-        equipmentService.forceUpdate(code,isCrypto);
+    public void forceUpdate(@RequestParam String code, @RequestParam String type) {
+        equipmentService.forceUpdate(code,type);
     }
 
 }
