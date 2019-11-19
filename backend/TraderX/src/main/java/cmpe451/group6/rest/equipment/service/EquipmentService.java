@@ -48,7 +48,7 @@ public class EquipmentService {
         List<EquipmentHistoryDTO> hist = history.stream().map(h ->
                 (modelMapper.map(h,EquipmentHistoryDTO.class))).collect(Collectors.toList());
 
-        return new EquipmentResponseDTO(equipment,hist);
+        return new EquipmentResponseDTO(modelMapper.map(equipment,EquipmentResponseDTO.EquipmentDTO.class),hist);
     }
 
     public EquipmentMetaWrapper getCurrencies(){
