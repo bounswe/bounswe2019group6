@@ -6,6 +6,7 @@ import cmpe451.group6.rest.asset.repository.AssetRepository;
 import cmpe451.group6.rest.equipment.configuration.EquipmentConfig;
 import cmpe451.group6.rest.equipment.model.Equipment;
 import cmpe451.group6.rest.equipment.repository.EquipmentRepository;
+import cmpe451.group6.rest.follow.service.FollowService;
 import cmpe451.group6.rest.transaction.dto.TransactionDTO;
 import cmpe451.group6.rest.transaction.model.Transaction;
 import cmpe451.group6.rest.transaction.model.TransactionType;
@@ -19,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import javax.swing.event.HyperlinkEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Date;
@@ -42,14 +44,16 @@ public class TransactionService {
     private AssetRepository assetRepository;
 
     @Autowired
+    private FollowService followService;
+
+    @Autowired
     private ModelMapper modelMapper;
 
     public List<Transaction> getTransactionsByUser(String username, String requesterName) {
         User user = userRepository.findByUsername(username);
         if (user == null) {
             throw new CustomException("There is no user named " + username + ".", HttpStatus.NOT_ACCEPTABLE);
-        } else if (user.getIsPrivate() && (followRepository.getFollowDAO(requesterName, username) == null
-                || followRepository.getFollowDAO(requesterName, username).getFollowStatus() != FollowStatus.APPROVED)) {
+        } else if ( followService.isPermitted(username,requesterName) ) {
             throw new CustomException("The requested user's profile is private and requester is not following!",
                     HttpStatus.NOT_ACCEPTABLE);
         } else {
@@ -87,8 +91,7 @@ public class TransactionService {
         User user = userRepository.findByUsername(username);
         if (user == null) {
             throw new CustomException("There is no user named " + username + ".", HttpStatus.NOT_ACCEPTABLE);
-        } else if (user.getIsPrivate() && (followRepository.getFollowDAO(requesterName, username) == null
-                || followRepository.getFollowDAO(requesterName, username).getFollowStatus() != FollowStatus.APPROVED)) {
+        } else if (followService.isPermitted(username, requesterName)) {
             throw new CustomException("The requested user's profile is private and requester is not following!",
                     HttpStatus.NOT_ACCEPTABLE);
         } else {
@@ -97,6 +100,9 @@ public class TransactionService {
     }
 
     public int numberOfTransactionByCode(String code) {
+        if(!equipmentRepository.existsByCode(code)){
+            throw new CustomException("No such equipment found", HttpStatus.PRECONDITION_FAILED);
+        }
         return TransactionRepository.countByEquipment_code(code);
     }
 
@@ -113,6 +119,10 @@ public class TransactionService {
         Asset asset = assetRepository.getAsset(requesterName, EquipmentConfig.BASE_CURRENCY_CODE);
         if (asset == null) {
             throw new CustomException("The user has no money in application.", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        if( amount < 0 ){
+            throw new CustomException("The amount of investment cannot be negative value", HttpStatus.PRECONDITION_FAILED);
         }
 
         float neededMoney = (float) (amount * equipment.getCurrentValue());
@@ -164,6 +174,10 @@ public class TransactionService {
         if (asset == null) {
             throw new CustomException("The user has no asset named " + code + " in application.",
                     HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        if( amount < 0 ){
+            throw new CustomException("The amount of investment cannot be negative",HttpStatus.PRECONDITION_FAILED);
         }
 
         if (asset.getAmount() < amount) {
