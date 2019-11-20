@@ -11,11 +11,15 @@ class EquipmentViewModel(
     private val networkSource: RequestService
 ) : BaseViewModel() {
 
-    fun fetchEquipments(): Single<List<Equipment>> {
-        return networkSource.getEquipments().map { it.equipments }
+    fun getCurrencyEquipments(): Flowable<List<String>> {
+        return networkSource.getCurrencyEquipments().map { it.equipments }.toFlowable()
     }
 
-    fun getEquipments(): Flowable<List<Equipment>> {
-        return dataSource.getEquipments().flatMap { fetchEquipments().toFlowable() }
+    fun getCryptoCurrencyEquipments(): Flowable<List<String>> {
+        return networkSource.getCryptoCurrencyEquipments().map { it.equipments }.toFlowable()
+    }
+
+    fun getStockEquipments(): Flowable<List<String>> {
+        return networkSource.getStockEquipments().map { it.equipments }.toFlowable()
     }
 }

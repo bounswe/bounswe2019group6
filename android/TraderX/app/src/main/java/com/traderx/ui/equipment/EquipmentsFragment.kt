@@ -11,44 +11,63 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.traderx.R
 import com.traderx.api.ErrorHandler
+import com.traderx.enum.EquipmentType
+import com.traderx.ui.search.UserSearchSkeletonRecyclerViewAdapter
+import com.traderx.util.FragmentTitleEmitters
+import com.traderx.util.FragmentTitleListeners
+import com.traderx.util.Helper
 import com.traderx.util.Injection
 import com.traderx.viewmodel.EquipmentViewModel
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 
-class EquipmentsFragment : Fragment() {
+class EquipmentsFragment : Fragment(), FragmentTitleEmitters {
 
+    private var equipmentType: EquipmentType? = null
     private lateinit var equipmentViewModel: EquipmentViewModel
     private lateinit var recyclerView: RecyclerView
-    private lateinit var viewManager: LinearLayoutManager
 
     private val disposable = CompositeDisposable()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        arguments?.let {
+            equipmentType = it.getSerializable(ARG_EQUIPMENT_TYPE) as EquipmentType
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        setFragmentTitle(context, getString(R.string.title_trader_equipment))
+
         val equipmentViewModelFactory =
             Injection.provideTraderEquipmentViewModelFactory(context as Context)
 
-        equipmentViewModel = ViewModelProvider(
-            this,
-            equipmentViewModelFactory
-        ).get(EquipmentViewModel::class.java)
+        equipmentViewModel = ViewModelProvider(this, equipmentViewModelFactory)
+            .get(EquipmentViewModel::class.java)
 
         val root = inflater.inflate(R.layout.fragment_equipments, container, false)
 
-        viewManager = LinearLayoutManager(context)
+        val viewManager = LinearLayoutManager(context)
+
         recyclerView = root.findViewById<RecyclerView>(R.id.equipment_list).apply {
             layoutManager = viewManager
+            adapter = UserSearchSkeletonRecyclerViewAdapter(3)
+        }
+
+        val source = when (equipmentType) {
+            EquipmentType.STOCK -> equipmentViewModel.getStockEquipments()
+            EquipmentType.CURRENCY -> equipmentViewModel.getCurrencyEquipments()
+            else -> equipmentViewModel.getCryptoCurrencyEquipments()
         }
 
         disposable.add(
-            equipmentViewModel.getEquipments().observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
+            source
+                .compose(Helper.applyFlowableSchedulers<List<String>>())
                 .subscribe({
-                    recyclerView.swapAdapter(EquipmentRecyclerViewAdapter(it), false)
+                    recyclerView.adapter = EquipmentRecyclerViewAdapter(it)
                 },
                     { ErrorHandler.handleError(it, context as Context) })
         )
@@ -56,8 +75,13 @@ class EquipmentsFragment : Fragment() {
         return root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun setFragmentTitle(context: Context?, title: String?) {
+        if(context is FragmentTitleListeners) {
+            context.showFragmentTitle(title)
+        }
     }
 
+    companion object {
+        private const val ARG_EQUIPMENT_TYPE = "equipment_type"
+    }
 }

@@ -47,21 +47,22 @@ class ApiService {
                 .create(RequestService::class.java)
         }
     }
-}
 
-class RetrofitInterceptor(val context: Context) : Interceptor {
-    override fun intercept(chain: Interceptor.Chain): Response {
-        var request = chain.request()
+    class RetrofitInterceptor(val context: Context) : Interceptor {
+        override fun intercept(chain: Interceptor.Chain): Response {
+            var request = chain.request()
 
-        val token =
-            context.getSharedPreferences(BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE)
-                .getString("token", "")
+            val token =
+                context.getSharedPreferences(BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE)
+                    .getString("token", "")
 
-        val headers =
-            request.headers().newBuilder().add("Authorization", "Bearer $token").build()
+            val headers =
+                request.headers().newBuilder().add("Authorization", "Bearer $token").build()
 
-        request = request.newBuilder().headers(headers).build()
+            request = request.newBuilder().headers(headers).build()
 
-        return chain.proceed(request)
+            return chain.proceed(request)
+        }
     }
 }
+
