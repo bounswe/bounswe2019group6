@@ -1,36 +1,56 @@
 <template>
   <div class="app-container">
     <div style="margin-top: 30px; margin-bottom: 50px; margin-left: 60px; margin-right: 60px">
-      <el-collapse v-model="activeNames">
+      <div style="text-align: center; padding-bottom: 30px; float:right">
+        <el-button @click="showDialog=true" type="primary"><svg-icon style="margin-right:10px" icon-class="documentation" />Add Trading Equipment To Portfolio</el-button>
+      </div>
 
-        <el-collapse-item title="Currency" name="1">
-          <el-table ref="multipleCurrencyTable" :data="currencyTableData" style="width: 100%" @selection-change="handleSelectionChange">
-            <el-table-column type="selection"></el-table-column>
-            <el-table-column label="Equipment Name">
-              <template slot-scope="scope">{{ scope.row.equipments }}</template>
-            </el-table-column>
-          </el-table>
-        </el-collapse-item>
+      <el-table ref="alreadyAddedTable" :data="alreadyAddedTableData" style="width: 100%">
+        <el-table-column label="Equipment Name">
+          <template slot-scope="scope">{{ scope.row.equipmentname }}</template>
+        </el-table-column>
+      </el-table>
 
-        <el-collapse-item title="Crypto-Currency" name="2">
-          <el-table ref="multipleCryptoCurrencyTable" :data="cryptoCurrencyTableData" style="width: 100%" @selection-change="handleSelectionChange">
-            <el-table-column type="selection"></el-table-column>
-            <el-table-column label="Equipment Name">
-              <template slot-scope="scope">{{ scope.row.equipments }}</template>
-            </el-table-column>
-          </el-table>
-        </el-collapse-item>
+      <el-dialog title="Select Trading Equipment" :visible.sync="showDialog">
+        <el-button @click="handleAddEquipmentPortfolio" type="primary" style="">
+          Add To Portfolio
+        </el-button>
+        
+        <p></p>
+        
+        <el-collapse v-model="activeNames">
 
-        <el-collapse-item title="Stock" name="3">
-          <el-table ref="multipleStockTable" :data="stockTableData" style="width: 100%" @selection-change="handleSelectionChange">
-            <el-table-column type="selection"></el-table-column>
-            <el-table-column label="Equipment Name">
-              <template slot-scope="scope">{{ scope.row.equipments }}</template>
-            </el-table-column>
-          </el-table>
-        </el-collapse-item>
+          <el-collapse-item title="Currency" name="1">
+            <el-table ref="multipleCurrencyTable" :data="currencyTableData" style="width: 100%" @selection-change="handleSelectionChange">
+              <el-table-column type="selection"></el-table-column>
+              <el-table-column label="Equipment Name">
+                <template slot-scope="scope">{{ scope.row.equipmentname }}</template>
+              </el-table-column>
+            </el-table>
+          </el-collapse-item>
 
-      </el-collapse>
+          <el-collapse-item title="Crypto-Currency" name="2">
+            <el-table ref="multipleCryptoCurrencyTable" :data="cryptoCurrencyTableData" style="width: 100%" @selection-change="handleSelectionChange">
+              <el-table-column type="selection"></el-table-column>
+              <el-table-column label="Equipment Name">
+                <template slot-scope="scope">{{ scope.row.equipmentname }}</template>
+              </el-table-column>
+            </el-table>
+          </el-collapse-item>
+
+          <el-collapse-item title="Stock" name="3">
+            <el-table ref="multipleStockTable" :data="stockTableData" style="width: 100%" @selection-change="handleSelectionChange">
+              <el-table-column type="selection"></el-table-column>
+              <el-table-column label="Equipment Name">
+                <template slot-scope="scope">{{ scope.row.equipmentname }}</template>
+              </el-table-column>
+            </el-table>
+          </el-collapse-item>
+
+        </el-collapse>
+      </el-dialog>
+
+      
       
     </div>
   </div>
@@ -39,6 +59,7 @@
 <script>
 
 import { getAllCurrencies, getAllCryptoCurrencies, getAllStocks } from '@/api/equipment'
+import equipment from '../../store/modules/equipment'
 
 export default {
   data() {
@@ -46,41 +67,86 @@ export default {
       currencyTableData: [],
       cryptoCurrencyTableData: [],
       stockTableData: [],
-      multipleSelection: []
+      alreadyAddedTableData: [],
+      multipleSelection: [],
+      activeNames: [],
+      showDialog: false,
     }
   },
   async created() {
-    this.currencyTableData = await this.getCurrency()
-    this.cryptoCurrencyTableData = await this.getCryptoCurrency()
-    this.stockTableData = await this.getStock()
+    await this.getCurrency()
+    await this.getCryptoCurrency()
+    await this.getStock()
   },
   methods: {
     async getCurrency() {
       await this.$store.dispatch('equipment/getAllCurrencies').then(response =>{
         var res = this.$store.getters.currencyResult
-        console.log(res)
+        var equip = []
+        for (var i = 0; i < res.equipments.length; i++) {
+          equip.push({
+            "equipmentname": res.equipments[i],
+            "base": res.base
+          })
+        }
+        this.currencyTableData = equip
       }).catch(error => {
         console.log(error)
       })
-      return 
     },
     async getCryptoCurrency() {
       await this.$store.dispatch('equipment/getAllCryptoCurrencies').then(response =>{
         var res = this.$store.getters.cryptoCurrencyResult
-        console.log(res)
+        var equip = []
+        for (var i = 0; i < res.equipments.length; i++) {
+          equip.push({
+            "equipmentname": res.equipments[i],
+            "base": res.base
+          })
+        }
+        this.cryptoCurrencyTableData = equip
       }).catch(error => {
         console.log(error)
       })
-      return 
     },
     async getStock() {
       await this.$store.dispatch('equipment/getAllStocks').then(response =>{
         var res = this.$store.getters.stockResult
-        console.log(res)
+        var equip = []
+        for (var i = 0; i < res.equipments.length; i++) {
+          equip.push({
+            "equipmentname": res.equipments[i],
+            "base": res.base
+          })
+        }
+        this.stockTableData = equip
       }).catch(error => {
         console.log(error)
       })
-      return 
+    },
+    toggleSelection(rows) {
+      if (rows) {
+        rows.forEach(row => {
+          this.$refs.multipleTable.toggleRowSelection(row);
+        });
+      } else {
+        this.$refs.multipleTable.clearSelection();
+      }
+    },
+    handleSelectionChange(val) {
+      this.multipleSelection = val;
+    },
+    handleAddEquipmentPortfolio(){
+      var currencySelections = this.$refs.multipleCurrencyTable.selection
+      var cryptoCurrencySelections = this.$refs.multipleCryptoCurrencyTable.selection
+      var stockSelectinos = this.$refs.multipleStockTable.selection
+      var selectedAll = currencySelections.concat(cryptoCurrencySelections).concat(stockSelectinos)
+      for(var i = 0; i < selectedAll.length; i++) {
+        console.log(selectedAll[i])
+        if(!this.alreadyAddedTableData.includes(selectedAll[i])){
+          this.alreadyAddedTableData.push(selectedAll[i])
+        }
+      }
     }
   }
 }
