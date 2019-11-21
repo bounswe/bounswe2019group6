@@ -22,7 +22,7 @@
         <div class="user-name text-center">
           {{ user.email }}
         </div>
-        <div style='text-align: center' v-if="isSelf">
+        <div style='text-align: center' v-if="!isSelf">
           <el-button 
             @click.native.prevent="takeFollowUnfollowAction()"
             :type="this.isNotFollowing ? 'primary' : this.isFollowing ? 'danger' : 'warning'" 
@@ -73,16 +73,19 @@ export default {
       isNotFollowing : '',
       isPending : '',
       followText : '',
-      isSelf : ''
+      isSelf : true
     }
   },
-  mounted() {
+  created() {
     var tempUser = this.user.username
-    this.isFollowing = tempUser.followingStatus == 'FOLLOWING' ? true : false    
+    console.log(this.user.username)
+    console.log(tempUser)
+    console.log(this.$store.getters.userInfo.username)
+    this.isSelf = tempUser.username == this.$store.getters.userInfo.name ? true : false
+    this.isFollowing = tempUser.followingStatus == 'FOLLOWING' ? true : false
     this.isNotFollowing = tempUser.followingStatus == 'NOT_FOLLOWING' ? true : false
     this.isPending = tempUser.followingStatus == 'PENDING' ? true : false
     this.followText = tempUser.isNotFollowing ? "Follow" : tempUser.isFollowing ? "Unfollow" : 'Requested'
-    this.isSelf = tempUser.username == this.$store.getters.userInfo.name ? true : false  
   },
   methods: {
     takeFollowUnfollowAction() {
