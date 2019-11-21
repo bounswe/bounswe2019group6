@@ -1,8 +1,8 @@
 import request from '@/utils/request'
 
-export function listEquipment() {
+export function listEquipment(equipmentType) {
   return request({
-    url: '/equipment/list',
+    url: '/equipment/' + equipmentType + '/list',
     method: 'get'
   })
 }

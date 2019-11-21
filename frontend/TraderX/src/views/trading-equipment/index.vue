@@ -45,9 +45,7 @@ export default {
     }
   },
   async created() {
-    // equipmentList = ['JPY', 'TRY', ...]
     var equipmentList = await this.getEquipmentList() 
-    // equipmentOpenningValues = [{label="Turkish Lira", key="TRY", data={actualData=[5.6, 4.34, 7.54,...]}}, {label="Japanese Yen", key="JPY", data={actualData=[12.2312, 11.234545, 10.23234, ...]}} ...]
     var equipmentOpenningValues = await this.getEquipmentValues(equipmentList)
     var tempTradingEquipment = this.createTempTE(equipmentList, equipmentOpenningValues)
     this.tradingEquipments = tempTradingEquipment
@@ -57,7 +55,7 @@ export default {
     // Promise for getting equipments list
     async getEquipmentList() {
       try {
-        await this.$store.dispatch('equipment/listEquipment')
+        await this.$store.dispatch('equipment/listEquipment', 'currency')
         var res = this.$store.getters.equipmentQueryResult
         return res.equipments
       } catch (error) {
@@ -77,12 +75,12 @@ export default {
           var res = this.$store.getters.equipmentQueryResult
           equipmentOpenningValues.push({})
           equipmentOpenningValues[equipmentOpenningValues.length-1].key = e
-          equipmentOpenningValues[equipmentOpenningValues.length-1].label = res.name
+          equipmentOpenningValues[equipmentOpenningValues.length-1].label = res.equipment.name
           equipmentOpenningValues[equipmentOpenningValues.length-1].data = {
             actualData: []
           }
           // equipmentOpenningValues.push([])
-          res.valueHistory.forEach(function(val) {
+          res.historicalValues.forEach(function(val) {
             equipmentOpenningValues[equipmentOpenningValues.length-1].data.actualData.push(val.open)
           })
         } catch (error) {

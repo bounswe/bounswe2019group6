@@ -38,7 +38,7 @@ export default {
     // Promise for getting equipments list 
     async getEquipmentList() {
       try {
-        await this.$store.dispatch('equipment/listEquipment')
+        await this.$store.dispatch('equipment/listEquipment', 'currency')
         var res = this.$store.getters.equipmentQueryResult
         return res.equipments
       } catch (error) {
@@ -57,9 +57,9 @@ export default {
           await this.$store.dispatch('equipment/getEquipment', e.toLowerCase())
           var res = this.$store.getters.equipmentQueryResult
           equipmentValues.push({})
-          equipmentValues[equipmentValues.length-1].key = res.code
-          equipmentValues[equipmentValues.length-1].label = res.name
-          equipmentValues[equipmentValues.length-1].currentValue = res.currentValue
+          equipmentValues[equipmentValues.length-1].key = res.equipment.code
+          equipmentValues[equipmentValues.length-1].label = res.equipment.name
+          equipmentValues[equipmentValues.length-1].currentValue = res.equipment.currentValue
           
           equipmentValues[equipmentValues.length-1].data = {
             open: [],
@@ -68,7 +68,7 @@ export default {
             low: []
           }
 
-          res.valueHistory.forEach(function(val) {
+          res.historicalValues.forEach(function(val) {
             equipmentValues[equipmentValues.length-1].data.open.push(val.open)
             equipmentValues[equipmentValues.length-1].data.close.push(val.close)
             equipmentValues[equipmentValues.length-1].data.high.push(val.high)
