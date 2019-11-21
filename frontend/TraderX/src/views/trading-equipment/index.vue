@@ -19,6 +19,7 @@
                     <line-chart :type="t.key" :chart-data="t.data"/>
                   </div>
 
+                  <!-- <el-button class='learn-more-button' @click="learnMoreAboutEquipment(te.label)"><svg-icon style="margin-right:10px" icon-class="chart" />Change the Base</el-button> -->
                   <el-button class='learn-more-button' @click="learnMoreAboutEquipment(te.label)"><svg-icon style="margin-right:10px" icon-class="chart" />Learn More About Equipment</el-button>
                   <el-button class='buy-button' @click="buyEquipment"><svg-icon style="margin-right:10px" icon-class="shopping" />Buy Equipment</el-button>
                 </div>
@@ -77,11 +78,11 @@ export default {
           equipmentOpenningValues[equipmentOpenningValues.length-1].key = e
           equipmentOpenningValues[equipmentOpenningValues.length-1].label = res.equipment.name
           equipmentOpenningValues[equipmentOpenningValues.length-1].data = {
-            actualData: []
+            open: []
           }
           // equipmentOpenningValues.push([])
           res.historicalValues.forEach(function(val) {
-            equipmentOpenningValues[equipmentOpenningValues.length-1].data.actualData.push(val.open)
+            equipmentOpenningValues[equipmentOpenningValues.length-1].data.open.push(val.open)
           })
         } catch (error) {
           console.log(error)
@@ -114,7 +115,7 @@ export default {
         var t;
         for (t of teData) {
           t.data = {
-            actualData: Array.from({length: 100}, () => Math.floor(Math.random() * 100))
+            open: Array.from({length: 100}, () => Math.floor(Math.random() * 100))
           }
         }
       }
