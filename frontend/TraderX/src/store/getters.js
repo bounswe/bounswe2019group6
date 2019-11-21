@@ -9,6 +9,8 @@ const getters = {
   userSearchResult: state => state.search.userSearchResult,
   equipmentQueryResult: state => state.equipment.equipmentQueryResult,
   currencyResult: state => state.equipment.currencyResult,
+  cryptoCurrencyResult: state => state.equipment.cryptoCurrencyResult,
+  stockResult: state => state.equipment.stockResult,
 
   // TODO these are deprecated but we can keep useful ones
   roles: state => state.user.roles,

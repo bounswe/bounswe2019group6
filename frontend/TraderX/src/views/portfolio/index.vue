@@ -38,7 +38,7 @@
 
 <script>
 
-import { getAllCurrencies } from '@/api/equipment'
+import { getAllCurrencies, getAllCryptoCurrencies, getAllStocks } from '@/api/equipment'
 
 export default {
   data() {
@@ -51,12 +51,31 @@ export default {
   },
   async created() {
     this.currencyTableData = await this.getCurrency()
+    this.cryptoCurrencyTableData = await this.getCryptoCurrency()
+    this.stockTableData = await this.getStock()
   },
   methods: {
     async getCurrency() {
       await this.$store.dispatch('equipment/getAllCurrencies').then(response =>{
         var res = this.$store.getters.currencyResult
-        console.log("here")
+        console.log(res)
+      }).catch(error => {
+        console.log(error)
+      })
+      return 
+    },
+    async getCryptoCurrency() {
+      await this.$store.dispatch('equipment/getAllCryptoCurrencies').then(response =>{
+        var res = this.$store.getters.cryptoCurrencyResult
+        console.log(res)
+      }).catch(error => {
+        console.log(error)
+      })
+      return 
+    },
+    async getStock() {
+      await this.$store.dispatch('equipment/getAllStocks').then(response =>{
+        var res = this.$store.getters.stockResult
         console.log(res)
       }).catch(error => {
         console.log(error)
