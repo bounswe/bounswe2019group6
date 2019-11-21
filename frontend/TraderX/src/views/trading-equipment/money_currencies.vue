@@ -120,7 +120,6 @@ export default {
             low: [],
             current: [],
           }
-
           res.historicalValues.forEach(function(val) {
             equipmentValues[equipmentValues.length-1].data.open.push(val.open)
             equipmentValues[equipmentValues.length-1].data.close.push(val.close)
@@ -196,11 +195,20 @@ export default {
       })
     },
 
-    // changeBaseofEquipment(equipmentLabel) {
-    //   this.moneyCurrencies.forEach(function(currency) {
-    //     if (currency.label )
-    //   }, this)
-    // }
+    changeBaseofEquipment(equipmentLabel) {
+      this.moneyCurrencies.forEach(function(currency) {
+        if (currency.label == equipmentLabel) {
+          console.log(currency)
+          for (let i = 0; i < currency.data.open.length; i++) {
+            currency.data.open[i] = 1/currency.data.open[i]
+            currency.data.close[i] = 1/currency.data.close[i]
+            currency.data.low[i] = 1/currency.data.low[i]
+            currency.data.high[i] = 1/currency.data.high[i]
+            currency.data.current[i] = 1/currency.data.current[i]
+          }
+        }
+      }, this)
+    }
   }
 }
 </script>
