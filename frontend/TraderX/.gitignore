@@ -22,5 +22,3 @@ selenium-debug.log
 package-lock.json
 yarn.lock
 
-../../CMPE352/*
-src/components/CoolCard/*

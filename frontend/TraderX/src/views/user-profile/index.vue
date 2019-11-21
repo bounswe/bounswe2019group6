@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container">
+  <div class="app-container" :style=visibility>
     <div v-if="user">
       <el-row :gutter="20">
         <el-col
@@ -63,7 +63,8 @@ export default {
   data() {
     return {
       user: {},
-      activeTab: 'portfolio'
+      activeTab: 'portfolio',
+      visibility: 'visibility: hidden'
     }
   },
   computed: {
@@ -77,7 +78,7 @@ export default {
     // this.$route.path.split('/') = ["", "user", "username", "profile"] 
     getUser(this.$route.path.split('/')[2]).then(response => {
       this.user = response.data
-      console.log(response.data)
+      this.visibility = 'visibility: visible'
     })
   },
   methods: {
