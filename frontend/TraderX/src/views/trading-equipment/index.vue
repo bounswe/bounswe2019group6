@@ -78,11 +78,13 @@ export default {
           equipmentOpenningValues[equipmentOpenningValues.length-1].key = e
           equipmentOpenningValues[equipmentOpenningValues.length-1].label = res.equipment.name
           equipmentOpenningValues[equipmentOpenningValues.length-1].data = {
-            open: []
+            open: [],
+            current: []
           }
           // equipmentOpenningValues.push([])
           res.historicalValues.forEach(function(val) {
             equipmentOpenningValues[equipmentOpenningValues.length-1].data.open.push(val.open)
+            equipmentOpenningValues[equipmentOpenningValues.length-1].data.current.push(res.equipment.currentValue)
           })
         } catch (error) {
           console.log(error)

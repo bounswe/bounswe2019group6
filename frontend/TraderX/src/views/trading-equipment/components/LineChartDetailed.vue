@@ -63,7 +63,7 @@ export default {
       this.chart = echarts.init(this.$el, 'macarons')
       this.setOptions(this.chartData)
     },
-    setOptions({open, close, high, low} = {}) {
+    setOptions({open, close, high, low, current} = {}) {
       this.chart.setOption({
         xAxis: {
           // Since the data we have shows the last 100 days

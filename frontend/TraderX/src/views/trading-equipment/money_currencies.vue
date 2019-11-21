@@ -22,8 +22,7 @@
                   <line-chart-detailed :type="mc.key" :chart-data="mc.data"/>
                 </div>
 
-                <!-- <el-button class='learn-more-button' @click="learnMoreAboutEquipment(te.label)"><svg-icon style="margin-right:10px" icon-class="chart" />Change the Base</el-button> -->
-                <!-- <el-button class='learn-more-button' @click="learnMoreAboutEquipment(te.label)"><svg-icon style="margin-right:10px" icon-class="chart" />Learn More About Equipment</el-button> -->
+                <el-button class='change-base-button' @click="changeBaseofEquipment(mc.label)"><svg-icon style="margin-right:10px" icon-class="chart" />Change the Base</el-button>
                 <el-button class='buy-button' @click="buyEquipment"><svg-icon style="margin-right:10px" icon-class="shopping" />Buy Equipment</el-button>
               </div>
           </el-tab-pane>
@@ -64,6 +63,7 @@ export default {
       //       close: [...],
       //       high: [...],
       //       low: [...],
+      //       current: [...] 
       //     }
       //   }, 
       //   {
@@ -117,7 +117,8 @@ export default {
             open: [],
             close: [],
             high: [],
-            low: []
+            low: [],
+            current: [],
           }
 
           res.historicalValues.forEach(function(val) {
@@ -125,6 +126,7 @@ export default {
             equipmentValues[equipmentValues.length-1].data.close.push(val.close)
             equipmentValues[equipmentValues.length-1].data.high.push(val.high)
             equipmentValues[equipmentValues.length-1].data.low.push(val.low)
+            equipmentValues[equipmentValues.length-1].data.current.push(res.equipment.currentValue)
           })
         } catch (error) {
           console.log(error)
@@ -192,7 +194,13 @@ export default {
         type: 'success',
         duration: 2000
       })
-    }
+    },
+
+    // changeBaseofEquipment(equipmentLabel) {
+    //   this.moneyCurrencies.forEach(function(currency) {
+    //     if (currency.label )
+    //   }, this)
+    // }
   }
 }
 </script>

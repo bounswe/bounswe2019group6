@@ -61,7 +61,7 @@ export default {
       this.chart = echarts.init(this.$el, 'macarons')
       this.setOptions(this.chartData)
     },
-    setOptions({ /*expectedData, */open } = {}) {
+    setOptions({open, close, high, low, current} = {}) {
       this.chart.setOption({
         xAxis: {
           // Since the data we have shows the last 100 days
@@ -96,27 +96,11 @@ export default {
         },
         // With this page only actual data is used
         legend: {
-          data: [/*'expected', */'Openning Value']
+          data: ['Openning Values', 'Current Value']
         },
         series: [
-        // {
-        //   name: 'expected', itemStyle: {
-        //     normal: {
-        //       color: '#FF005A',
-        //       lineStyle: {
-        //         color: '#FF005A',
-        //         width: 2
-        //       }
-        //     }
-        //   },
-        //   smooth: true,
-        //   type: 'line',
-        //   data: expectedData,
-        //   animationDuration: 2800,
-        //   animationEasing: 'cubicInOut'
-        // },
         {
-          name: 'Openning Value',
+          name: 'Openning Values',
           smooth: true,
           type: 'line',
           itemStyle: {
@@ -132,6 +116,26 @@ export default {
             }
           },
           data: open,
+          animationDuration: 2800,
+          animationEasing: 'quadraticOut'
+        }, 
+        {
+          name: 'Current Value',
+          smooth: true,
+          type: 'line',
+          itemStyle: {
+            normal: {
+              color: '#1F8255',
+              lineStyle: {
+                color: '#1F8255',
+                width: 2
+              },
+              areaStyle: {
+                color: '#E6FCF2'
+              }
+            }
+          },
+          data: current,
           animationDuration: 2800,
           animationEasing: 'quadraticOut'
         }]
