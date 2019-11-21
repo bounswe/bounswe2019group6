@@ -4,18 +4,15 @@
       <el-button @click="showDialog=true" type="primary"><svg-icon style="margin-right:10px" icon-class="documentation" />Create Portfolio</el-button>
     </div>
     <div>
-      <CoolCard :cardData="all_portfolios"/>
+      <CoolCard :cardData="all_portfolios" :username="username"/>
     </div>
     <el-dialog title="Create Portfolio" :visible.sync="showDialog">
       <el-form @submit.native.prevent="handleCreatePortfolio" ref="createPortfolioForm" :model="createPortfolioForm">
         <el-form-item prop="Portfolio Name">
           <el-input ref="portfolioName" placeholder="Portfolio Name" v-model="createPortfolioForm.portfolioName" />
         </el-form-item>
-        <el-form-item prop="Portfolio Description">
-          <el-input ref="portfolioDescription" placeholder="Portfolio Description" v-model="createPortfolioForm.portfolioDescription" />
-        </el-form-item>
-        <el-button @click="handleCreatePortfolio">
-          Submit
+        <el-button @click="handleCreatePortfolio" type="primary">
+          Create
         </el-button>
       </el-form>
     </el-dialog>
@@ -27,6 +24,9 @@
 import CoolCard from '@/components/CoolCard'
 
 export default {
+  props: {
+    username: String
+  },
   components: { CoolCard },
   data() {
     return {
@@ -40,12 +40,16 @@ export default {
   },
   methods: {
     handleCreatePortfolio(){
-      this.showDialog = false,
-      this.all_portfolios.push({
-        portfolioName : this.createPortfolioForm.portfolioName,
-        portfolioDescription: this.createPortfolioForm.portfolioDescription
-      })
-      this.$notify({ title: 'Success', message: 'Portfolio is posted', type: 'success', duration: 2000 })
+      if (this.createPortfolioForm.portfolioName == '') {
+        this.$message.error("Portfolio Name Can Not Be Empty")
+      } else {
+        this.showDialog = false,
+        this.all_portfolios.push({
+          portfolioName : this.createPortfolioForm.portfolioName,
+          portfolioDescription: this.createPortfolioForm.portfolioDescription
+        })
+        this.$notify({ title: 'Success', message: 'Portfolio is posted', type: 'success', duration: 2000 })
+      }
     }
   }
 }

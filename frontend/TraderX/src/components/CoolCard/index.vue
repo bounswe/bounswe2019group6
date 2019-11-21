@@ -24,11 +24,12 @@
 
 export default {
   props: {
-    cardData : Array
+    cardData : Array,
+    username: String
   },
   methods: {
     goToPortfolio(portfolioName) {
-      this.$router.push({ path: `/portfolio/${portfolioName}` })
+      this.$router.push({ path: `/portfolio/${this.username}/${portfolioName}` })
     },
   }
 }

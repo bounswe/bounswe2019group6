@@ -1,7 +1,11 @@
 <template>
   <div class="app-container">
     <div style="margin-top: 30px; margin-bottom: 50px; margin-left: 60px; margin-right: 60px">
-      <div style="text-align: center; padding-bottom: 30px; float:right">
+      <div style="float:left">
+        <font size=5>PORTFOLIO NAME : <b>{{ portfolioname }}</b></font>
+      </div>
+
+      <div style="padding-bottom: 30px; float:right">
         <el-button @click="showDialog=true" type="primary"><svg-icon style="margin-right:10px" icon-class="documentation" />Add Trading Equipment To Portfolio</el-button>
       </div>
 
@@ -48,9 +52,7 @@
           </el-collapse-item>
 
         </el-collapse>
-      </el-dialog>
-
-      
+      </el-dialog>   
       
     </div>
   </div>
@@ -71,9 +73,11 @@ export default {
       multipleSelection: [],
       activeNames: [],
       showDialog: false,
+      portfolioname : ""
     }
   },
   async created() {
+    this.portfolioname = this.$route.path.split('/')[2].toUpperCase()
     await this.getCurrency()
     await this.getCryptoCurrency()
     await this.getStock()
@@ -142,11 +146,15 @@ export default {
       var stockSelectinos = this.$refs.multipleStockTable.selection
       var selectedAll = currencySelections.concat(cryptoCurrencySelections).concat(stockSelectinos)
       for(var i = 0; i < selectedAll.length; i++) {
-        console.log(selectedAll[i])
         if(!this.alreadyAddedTableData.includes(selectedAll[i])){
           this.alreadyAddedTableData.push(selectedAll[i])
         }
       }
+      this.showDialog = false
+      this.$refs.multipleCurrencyTable.clearSelection();
+      this.$refs.multipleCryptoCurrencyTable.clearSelection();
+      this.$refs.multipleStockTable.clearSelection();
+      this.activeNames = []
     }
   }
 }

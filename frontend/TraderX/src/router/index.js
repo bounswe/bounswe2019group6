@@ -190,10 +190,9 @@ export const constantRoutes = [
     ]
   },
   {
-    // path: '/user/:username/profile',
-    path: '/portfolio/:portfolioname',
+    path: '/portfolio/:username/:portfolioname',
     component: Layout,
-    redirect: '/portfolio/:portfolioname',
+    redirect: '/portfolio/:username/:portfolioname',
     hidden: true,
     children: [
       {
