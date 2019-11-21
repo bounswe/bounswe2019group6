@@ -77,7 +77,7 @@ export default {
     }
   },
   async created() {
-    this.portfolioname = this.$route.path.split('/')[2].toUpperCase()
+    this.portfolioname = this.$route.path.split('/')[3].toUpperCase()
     await this.getCurrency()
     await this.getCryptoCurrency()
     await this.getStock()

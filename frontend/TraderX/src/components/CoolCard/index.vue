@@ -3,13 +3,13 @@
     <div class="cols">
         <div class="col" ontouchstart="this.classList.toggle('hover');" v-for="portfolio in this.cardData"  v-bind:key="portfolio">
           <div class="container" @click="goToPortfolio(portfolio.portfolioName)">
-            <div class="front" style="background-image: url(https://unsplash.it/502/502/)">
+            <div class="front" style="background-image: url(https://picsum.photos/id/93/502/502)">
               <div class="inner">
                 <p>{{ portfolio.portfolioName }}</p>
                 <!-- <span>Lorem ipsum</span> -->
               </div>
             </div>
-            <div class="back">
+            <div class="back" style="background-image: url(https://picsum.photos/id/93/502/502)">
               <div class="inner">
                 <p>{{ portfolio.portfolioDescription }}</p>
               </div>
