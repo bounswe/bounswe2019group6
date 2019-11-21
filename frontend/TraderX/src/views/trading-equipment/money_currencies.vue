@@ -7,6 +7,13 @@
       </el-card>
     </el-row>
 
+    <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
+      <el-card class='raddar-chart-container'>
+        <p class="te-info-text">Last 20 days' opening values of every currency is as follows:</p>
+        <line-chart-comparison :chart-data="comparisonData"/>
+      </el-card>
+    </el-row>
+
     <el-row :gutter="20" style="padding:16px 16px 0;margin-bottom:32px;">
       <el-card>
         <el-tabs v-model="activeTab">
@@ -36,6 +43,7 @@
 <script>
 import LineChart from './components/LineChart'
 import LineChartDetailed from './components/LineChartDetailed'
+import LineChartComparison from './components/LineChartComparison'
 import RaddarChart from './components/RaddarChart'
 
 // The usual sorting in javascript sorts alphabetically which causes mistake in our code
@@ -46,6 +54,7 @@ const numberSort = function (a,b) {
 export default {
   name: 'DashboardAdmin',
   components: {
+    LineChartComparison,
     LineChartDetailed,
     LineChart,
     RaddarChart,
@@ -72,6 +81,7 @@ export default {
       //   }, ...
       // ]
       moneyCurrencies: [],
+      comparisonData: {moneyCurrencies: []},
       activeTab: 'JPY'
     }
   },
@@ -84,8 +94,8 @@ export default {
     var equipmentValues = await this.getEquipmentValues(equipmentList) 
     this.createRadarChartData(equipmentValues)
     this.moneyCurrencies = equipmentValues
-    activeTab = equipmentValues[0].key
-    console.log(moneyCurrencies)
+    
+    this.comparisonData.moneyCurrencies = this.moneyCurrencies
   },
   methods: {
     // Promise for getting equipments list 
@@ -142,6 +152,7 @@ export default {
           this.createRadarChartData(equipmentValues)
         }, 500)
       } else {
+        this.activeTab = equipmentValues[0].key
         var stabilities = [] // calculate stability of each trading equipment
         var growth = [] // calculate growth rate for each equipment
         var values = []

@@ -41,10 +41,8 @@ export default {
   watch: {
     chartData: {
       deep: true,
-      immediate: true,
       handler(val) {
         this.setOptions(val)
-        this.chart.update()
       }
     }    
   },
