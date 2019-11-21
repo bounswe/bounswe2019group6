@@ -2,7 +2,7 @@
   <div class="wrapper">
     <div class="cols">
         <div class="col" ontouchstart="this.classList.toggle('hover');" v-for="portfolio in this.cardData"  v-bind:key="portfolio">
-          <div class="container">
+          <div class="container" @click="goToPortfolio(portfolio.portfolioName)">
             <div class="front" style="background-image: url(https://unsplash.it/502/502/)">
               <div class="inner">
                 <p>{{ portfolio.portfolioName }}</p>
@@ -26,6 +26,11 @@ export default {
   props: {
     cardData : Array
   },
+  methods: {
+    goToPortfolio(portfolioName) {
+      this.$router.push({ path: `/portfolio/${portfolioName}` })
+    },
+  }
 }
     
 </script>

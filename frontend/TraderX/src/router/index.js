@@ -189,6 +189,21 @@ export const constantRoutes = [
       }
     ]
   },
+  {
+    // path: '/user/:username/profile',
+    path: '/portfolio/:portfolioname',
+    component: Layout,
+    redirect: '/portfolio/:portfolioname',
+    hidden: true,
+    children: [
+      {
+        path: '',
+        component: () => import('@/views/portfolio/index'),
+        name: 'Portfolio',
+        meta: { title: 'Portfolio', noCache: true },
+      }
+    ]
+  },
 
 ]
 

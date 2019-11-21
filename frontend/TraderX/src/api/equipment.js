@@ -13,3 +13,10 @@ export function getEquipment(equipmentName) {
     method: 'get'
   })
 }
+
+export function getAllCurrencies() {
+  return request({
+    url: '/equipment/currency/list',
+    method: 'get'
+  })
+}
