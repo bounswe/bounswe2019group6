@@ -110,9 +110,7 @@ export default {
       }  
     },
 
-    // equipment = ['JPY', 'TRY', ...]
     async getEquipmentValues(equipmentList) {
-      // equipmentValues = [{label="Turkish Lira", key="TRY", data={open=[5.6, 4.34, 7.54,...], close=[..], high=[..], low=[..]}}, {label="Japanese Yen", key="JPY", data={actualData=[12.2312, 11.234545, 10.23234, ...]}} ...]
       var equipmentValues = []
       
       equipmentList.forEach(async function(e) {
