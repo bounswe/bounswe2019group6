@@ -101,8 +101,8 @@ export default {
     // Promise for getting equipments list 
     async getEquipmentList() {
       try {
-        await this.$store.dispatch('equipment/listEquipment', 'currency')
-        var res = this.$store.getters.equipmentQueryResult
+        await this.$store.dispatch('equipment/getAllCurrencies')
+        var res = this.$store.getters.currencyResult
         return res.equipments
       } catch (error) {
         console.log(error)

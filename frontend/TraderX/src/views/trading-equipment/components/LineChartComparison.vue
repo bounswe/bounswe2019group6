@@ -67,7 +67,6 @@ export default {
       var legendData = []
       var seriesData = []
       moneyCurrencies.forEach(function(currency) {
-          console.log(currency)
           legendData.push(currency.label)
           seriesData.push({
             name: currency.label,
