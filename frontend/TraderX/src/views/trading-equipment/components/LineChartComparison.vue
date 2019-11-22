@@ -1,3 +1,5 @@
+// The line chart to be used in the detailed pages
+
 <template>
   <div :class="className" :style="{height:height,width:width}" />
 </template>
@@ -42,7 +44,7 @@ export default {
       handler(val) {
         this.setOptions(val)
       }
-    }
+    }    
   },
   mounted() {
     this.$nextTick(() => {
@@ -61,12 +63,26 @@ export default {
       this.chart = echarts.init(this.$el, 'macarons')
       this.setOptions(this.chartData)
     },
-    setOptions({open, close, high, low, current} = {}) {
+    setOptions({moneyCurrencies}) {
+      var legendData = []
+      var seriesData = []
+      moneyCurrencies.forEach(function(currency) {
+          console.log(currency)
+          legendData.push(currency.label)
+          seriesData.push({
+            name: currency.label,
+            smooth: true,
+            type: 'line',
+            data: currency.data.open.slice(open.length-21, open.length-1),
+            animationDuration: 2800,
+            animationEasing: 'cubicInOut'
+          })
+      })
       this.chart.setOption({
         xAxis: {
           // Since the data we have shows the last 100 days
-          // xAxis should be from day 1 to day 100
-          data: Array.from(Array(100).keys()),
+          // xAxis should be from day 80 to day 100
+          data: Array.from(Array(20).keys()),
           boundaryGap: false,
           axisTick: {
             show: false
@@ -96,49 +112,9 @@ export default {
         },
         // With this page only actual data is used
         legend: {
-          data: ['Openning Values', 'Current Value']
+          data: legendData
         },
-        series: [
-        {
-          name: 'Openning Values',
-          smooth: true,
-          type: 'line',
-          itemStyle: {
-            normal: {
-              color: '#3888fa',
-              lineStyle: {
-                color: '#3888fa',
-                width: 2
-              },
-              areaStyle: {
-                color: '#f3f8ff'
-              }
-            }
-          },
-          data: open,
-          animationDuration: 2800,
-          animationEasing: 'quadraticOut'
-        }, 
-        {
-          name: 'Current Value',
-          smooth: true,
-          type: 'line',
-          itemStyle: {
-            normal: {
-              color: '#1F8255',
-              lineStyle: {
-                color: '#1F8255',
-                width: 2
-              },
-              areaStyle: {
-                color: '#E6FCF2'
-              }
-            }
-          },
-          data: current,
-          animationDuration: 2800,
-          animationEasing: 'quadraticOut'
-        }]
+        series: seriesData
       })
     }
   }

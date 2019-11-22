@@ -13,13 +13,14 @@
           <el-tabs v-model="te.activeTab" >
             <el-tab-pane class='te-tab-pane' v-for="t in te.data" :key="t.key" :label="t.label" :name="t.key" :type="t.key">
                 <div v-if="te.activeTab==t.key">
-                  <p class="te-info-text">Last week's data for {{ t.label }} is as follows:</p>
+                  <p class="te-info-text">Last 100 days' American Dollar / {{ t.label }} is as follows:</p>
                  
                   <div class='chart-wrapper'>
                     <line-chart :type="t.key" :chart-data="t.data"/>
                   </div>
 
-                  <el-button class='learn-more-button' @click="learnMoreAboutEquipment"><svg-icon style="margin-right:10px" icon-class="chart" />Learn More About Equipment</el-button>
+                  <!-- <el-button class='learn-more-button' @click="learnMoreAboutEquipment(te.label)"><svg-icon style="margin-right:10px" icon-class="chart" />Change the Base</el-button> -->
+                  <el-button class='learn-more-button' @click="learnMoreAboutEquipment(te.label)"><svg-icon style="margin-right:10px" icon-class="chart" />Learn More About Equipment</el-button>
                   <el-button class='buy-button' @click="buyEquipment"><svg-icon style="margin-right:10px" icon-class="shopping" />Buy Equipment</el-button>
                 </div>
             </el-tab-pane>
@@ -45,9 +46,7 @@ export default {
     }
   },
   async created() {
-    // equipmentList = ['JPY', 'TRY', ...]
     var equipmentList = await this.getEquipmentList() 
-    // equipmentOpenningValues = [{label="Turkish Lira", key="TRY", data={actualData=[5.6, 4.34, 7.54,...]}}, {label="Japanese Yen", key="JPY", data={actualData=[12.2312, 11.234545, 10.23234, ...]}} ...]
     var equipmentOpenningValues = await this.getEquipmentValues(equipmentList)
     var tempTradingEquipment = this.createTempTE(equipmentList, equipmentOpenningValues)
     this.tradingEquipments = tempTradingEquipment
@@ -57,7 +56,7 @@ export default {
     // Promise for getting equipments list
     async getEquipmentList() {
       try {
-        await this.$store.dispatch('equipment/listEquipment')
+        await this.$store.dispatch('equipment/listEquipment', 'currency')
         var res = this.$store.getters.equipmentQueryResult
         return res.equipments
       } catch (error) {
@@ -77,13 +76,15 @@ export default {
           var res = this.$store.getters.equipmentQueryResult
           equipmentOpenningValues.push({})
           equipmentOpenningValues[equipmentOpenningValues.length-1].key = e
-          equipmentOpenningValues[equipmentOpenningValues.length-1].label = res.name
+          equipmentOpenningValues[equipmentOpenningValues.length-1].label = res.equipment.name
           equipmentOpenningValues[equipmentOpenningValues.length-1].data = {
-            actualData: []
+            open: [],
+            current: []
           }
           // equipmentOpenningValues.push([])
-          res.valueHistory.forEach(function(val) {
-            equipmentOpenningValues[equipmentOpenningValues.length-1].data.actualData.push(val.open)
+          res.historicalValues.forEach(function(val) {
+            equipmentOpenningValues[equipmentOpenningValues.length-1].data.open.push(val.open)
+            equipmentOpenningValues[equipmentOpenningValues.length-1].data.current.push(res.equipment.currentValue)
           })
         } catch (error) {
           console.log(error)
@@ -106,7 +107,7 @@ export default {
 
       var tempTE = [
         { data: [], label: 'Money Currencies'}, // this will be added afterwards
-        { data: bitCoinsArray, label: 'Cryptocurrency', activeTab: bitCoinsArray[0].key},
+        { data: bitCoinsArray, label: 'Cryptocurrencies', activeTab: bitCoinsArray[0].key},
         { data: stocksArray, label: 'Stocks', activeTab: stocksArray[0].key},
       ];
 
@@ -116,30 +117,24 @@ export default {
         var t;
         for (t of teData) {
           t.data = {
-            actualData: Array.from({length: 100}, () => Math.floor(Math.random() * 100))
+            open: Array.from({length: 100}, () => Math.floor(Math.random() * 100))
           }
         }
       }
 
-      var cnt = 1
-      equipmentList.forEach(function(equipmentKey) {
-        if (cnt == 1) {
-          tempTE[0].activeTab = equipmentKey
-        }
-      })
+      tempTE[0].activeTab = equipmentList[0]
 
       tempTE[0].data = equipmentOpenningValues
       return tempTE
 
     }, 
 
-    learnMoreAboutEquipment() {
-      this.$notify({
-        title: 'Success',
-        message: 'Learning More About Equipment',
-        type: 'success',
-        duration: 2000
-      })
+    learnMoreAboutEquipment(equipmentLabel) {
+      if (equipmentLabel == 'Money Currencies') {
+        this.$router.push({ path: '/trading-equipment/money-currencies' })
+      } else {
+        this.$router.push({ path: '/trading-equipment/' +  equipmentLabel.toLowerCase()})
+      }
     },
 
     buyEquipment() {

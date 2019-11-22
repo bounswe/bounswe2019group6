@@ -33,9 +33,9 @@ const actions = {
       })
     })
   },
-  listEquipment({ commit }) {
+  listEquipment({ commit }, equipmentType) {
     return new Promise((resolve, reject) => {
-      listEquipment().then(response => {
+      listEquipment(equipmentType).then(response => {
         const { data } = response
         commit('SET_QUERY_RESULT', data)
         resolve()
