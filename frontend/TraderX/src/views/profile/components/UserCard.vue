@@ -78,9 +78,6 @@ export default {
   },
   created() {
     var tempUser = this.user.username
-    console.log(this.user.username)
-    console.log(tempUser)
-    console.log(this.$store.getters.userInfo.username)
     this.isSelf = tempUser.username == this.$store.getters.userInfo.name ? true : false
     this.isFollowing = tempUser.followingStatus == 'FOLLOWING' ? true : false
     this.isNotFollowing = tempUser.followingStatus == 'NOT_FOLLOWING' ? true : false

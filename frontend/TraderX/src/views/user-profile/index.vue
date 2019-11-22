@@ -22,18 +22,6 @@
                 <portfolio />
               </el-tab-pane>
               <el-tab-pane
-                label="Event"
-                name="events"
-              >
-                <events />
-              </el-tab-pane>
-              <el-tab-pane
-                label="New"
-                name="news"
-              >
-                <news />
-              </el-tab-pane>
-              <el-tab-pane
                 label="Article"
                 name="articles"
               >
@@ -52,14 +40,12 @@
 import { mapGetters } from 'vuex'
 import UserCard from '@/views/profile/components/UserCard'
 import Portfolio from '@/views/profile/components/Portfolio'
-import Events from '@/views/profile/components/Events'
-import News from '@/views/profile/components/News'
 import Articles from '@/views/profile/components/Articles'
 import { getUser } from '@/api/user'
 
 export default {
   name: 'UserProfile',
-  components: { UserCard, Portfolio, Events, News, Articles },
+  components: { UserCard, Portfolio, Articles },
   data() {
     return {
       user: {},
