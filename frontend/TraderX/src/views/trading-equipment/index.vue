@@ -19,7 +19,6 @@
                     <line-chart :type="t.key" :chart-data="t.data"/>
                   </div>
 
-                  <!-- <el-button class='learn-more-button' @click="learnMoreAboutEquipment(te.label)"><svg-icon style="margin-right:10px" icon-class="chart" />Change the Base</el-button> -->
                   <el-button class='learn-more-button' @click="learnMoreAboutEquipment(te.label)"><svg-icon style="margin-right:10px" icon-class="chart" />Learn More About Equipment</el-button>
                   <el-button class='buy-button' @click="buyEquipment"><svg-icon style="margin-right:10px" icon-class="shopping" />Buy Equipment</el-button>
                 </div>
@@ -42,22 +41,74 @@ export default {
   },
   data() {
     return {
-      tradingEquipments : [],
+      // tradingEquipments : [
+      //   {
+      //     label: 'Money Currencies',
+      //     activeTab: 'JPY',
+      //     data: [
+      //       {
+      //         key: 'JPY',
+      //         label: 'Japanese Yen',
+      //         data: {
+      //           open: [...],
+      //           current: [...]
+      //         }
+      //       },
+      //       {
+      //         key: 'EUR',
+      //         label: 'Euro',
+      //         data: {
+      //           open: [...],
+      //           current: [...]
+      //         }
+      //       },
+      //       ...
+      //     ]
+      //   },
+      //   {
+      //     label: 'Cryptocurrencies',
+      //     activeTab: '...',
+      //     data: [
+      //       {
+      //         key: 'BTC',
+      //         label: 'BitCoin',
+      //         data: {
+      //           open: [...],
+      //           current: [...]
+      //         }
+      //       },
+      //       ...
+      //     ]
+      //   },
+      //   ...
+      // ]
+      tradingEquipments : [
+        {label: 'Money Currencies', data: []},
+        {label: 'Cryptocurrencies', data: []},
+        {label: 'Stocks', data: []}
+      ],
     }
   },
   async created() {
-    var equipmentList = await this.getEquipmentList() 
-    var equipmentOpenningValues = await this.getEquipmentValues(equipmentList)
-    var tempTradingEquipment = this.createTempTE(equipmentList, equipmentOpenningValues)
-    this.tradingEquipments = tempTradingEquipment
+    var currencyList = await this.getCurrencyList()
+    this.addKeyToTradingEquipments(currencyList, 0)
+    var cryptoList = await this.getCryptoList()
+    this.addKeyToTradingEquipments(cryptoList, 1)
+    var stocksList = await this.getStocksList()
+    this.addKeyToTradingEquipments(stocksList, 2)
+    var currencyData = await this.getEquipmentData(currencyList)
+    this.addDataToTradingEquipments(currencyData, 0)
+    var cryptoData = await this.getEquipmentData(cryptoList)
+    this.addDataToTradingEquipments(cryptoData, 1)
+    var stocksData = await this.getEquipmentData(stocksList)
+    this.addDataToTradingEquipments(stocksData, 2)
   },
 
   methods: {
-    // Promise for getting equipments list
-    async getEquipmentList() {
+    async getCurrencyList() {
       try {
-        await this.$store.dispatch('equipment/listEquipment', 'currency')
-        var res = this.$store.getters.equipmentQueryResult
+        await this.$store.dispatch('equipment/getAllCurrencies')
+        var res = this.$store.getters.currencyResult
         return res.equipments
       } catch (error) {
         console.log(error)
@@ -65,69 +116,89 @@ export default {
       }  
     },
 
-    // equipment = ['JPY', 'TRY', ...]
-    async getEquipmentValues(equipment) {
-      // equipmentOpenningValues = [{label="Turkish Lira", key="TRY", data={actualData=[5.6, 4.34, 7.54,...]}}, {label="Japanese Yen", key="JPY", data={actualData=[12.2312, 11.234545, 10.23234, ...]}} ...]
-      // This will only have the datas
-      var equipmentOpenningValues = []
-      equipment.forEach(async function(e) {
+    async getCryptoList() {
+      try {
+        await this.$store.dispatch('equipment/getAllCryptoCurrencies')
+        var res = this.$store.getters.cryptoCurrencyResult
+        return res.equipments
+      } catch (error) {
+        console.log(error)
+        return error
+      }  
+    },
+
+    async getStocksList() {
+      try {
+        await this.$store.dispatch('equipment/getAllStocks')
+        var res = this.$store.getters.stockResult
+        return res.equipments
+      } catch (error) {
+        console.log(error)
+        return error
+      }  
+    },
+
+    // equipmentList is a list of the keys of the equipment
+    // equipmentType is 0,1 or 2. 0 indicating Money Currencies, 1 indicating CryptoCurrencies, 2 indicating Stocks
+    addKeyToTradingEquipments(equipmentList, equipmentType) {
+      // Wait until the list is pulled properly
+      if (equipmentList.length == 0) {
+        setTimeout(() => {
+          this.addKeyToTradingEquipments(equipmentList, equipmentType)
+        }, 200)
+      } else {
+        for (let i = 0; i < equipmentList.length; i++) {
+          if (i == 0) {
+            this.tradingEquipments[equipmentType].activeTab = equipmentList[i]
+          }
+          this.tradingEquipments[equipmentType].data.push({
+            key: equipmentList[i]
+          })
+        }
+      }
+    },
+
+    async getEquipmentData(equipmentList) {
+      var equipmentData = []
+      equipmentList.forEach(async function(e) {
         try {
           await this.$store.dispatch('equipment/getEquipment', e.toLowerCase())
           var res = this.$store.getters.equipmentQueryResult
-          equipmentOpenningValues.push({})
-          equipmentOpenningValues[equipmentOpenningValues.length-1].key = e
-          equipmentOpenningValues[equipmentOpenningValues.length-1].label = res.equipment.name
-          equipmentOpenningValues[equipmentOpenningValues.length-1].data = {
+          equipmentData.push({})
+          equipmentData[equipmentData.length-1].key = e
+          equipmentData[equipmentData.length-1].label = res.equipment.name
+          equipmentData[equipmentData.length-1].data = {
             open: [],
             current: []
           }
-          // equipmentOpenningValues.push([])
           res.historicalValues.forEach(function(val) {
-            equipmentOpenningValues[equipmentOpenningValues.length-1].data.open.push(val.open)
-            equipmentOpenningValues[equipmentOpenningValues.length-1].data.current.push(res.equipment.currentValue)
+            equipmentData[equipmentData.length-1].data.open.push(val.open)
+            equipmentData[equipmentData.length-1].data.current.push(res.equipment.currentValue)
           })
         } catch (error) {
           console.log(error)
         }
       }, this)
-      return equipmentOpenningValues
+      return equipmentData
     },
 
-    createTempTE(equipmentList, equipmentOpenningValues) {
-      let bitCoinsArray = [
-        { label: 'Bit Coin', key: 'BC'}
-      ];
-
-      let stocksArray = [
-        { label: 'Google', key: 'Google'},
-        { label: 'Apple', key: 'Apple'},
-        { label: 'Microsoft', key: 'Microsoft'},
-        { label: 'Facebook', key: 'FB'}
-      ]
-
-      var tempTE = [
-        { data: [], label: 'Money Currencies'}, // this will be added afterwards
-        { data: bitCoinsArray, label: 'Cryptocurrencies', activeTab: bitCoinsArray[0].key},
-        { data: stocksArray, label: 'Stocks', activeTab: stocksArray[0].key},
-      ];
-
-      var te;
-      for (te of tempTE) {
-        const teData = te.data;
-        var t;
-        for (t of teData) {
-          t.data = {
-            open: Array.from({length: 100}, () => Math.floor(Math.random() * 100))
-          }
+    addDataToTradingEquipments(equipmentData, equipmentType) {
+      // In order to decrease the latency the data is put to trading equipments as soon as it is pulled
+      // And if it is not pulled properly the method is called again
+      for (let i = 0; i < equipmentData.length; i++) {
+        if (i == 0){
+          this.tradingEquipments[equipmentType].activeTab = equipmentData[i].key
         }
+        this.tradingEquipments[equipmentType].data[i].key = equipmentData[i].key
+        this.tradingEquipments[equipmentType].data[i].label = equipmentData[i].label
+        this.tradingEquipments[equipmentType].data[i].data = equipmentData[i].data
       }
-
-      tempTE[0].activeTab = equipmentList[0]
-
-      tempTE[0].data = equipmentOpenningValues
-      return tempTE
-
-    }, 
+      if (equipmentData.length != this.tradingEquipments[equipmentType].data.length) {
+        setTimeout(() => {
+          this.addDataToTradingEquipments(equipmentData, equipmentType)
+        }, 200)
+      }
+    },
 
     learnMoreAboutEquipment(equipmentLabel) {
       if (equipmentLabel == 'Money Currencies') {
