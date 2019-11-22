@@ -189,7 +189,6 @@ export default {
     changeBaseofEquipment(equipmentLabel) {
       this.equipmentData.forEach(function(currency) {
         if (currency.label == equipmentLabel) {
-          console.log(currency)
           for (let i = 0; i < currency.data.open.length; i++) {
             currency.data.open[i] = 1/currency.data.open[i]
             currency.data.close[i] = 1/currency.data.close[i]
