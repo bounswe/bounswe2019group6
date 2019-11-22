@@ -17,19 +17,19 @@
     <el-row :gutter="20" style="padding:16px 16px 0;margin-bottom:32px;">
       <el-card>
         <el-tabs v-model="activeTab">
-          <el-tab-pane class='te-tab-pane' v-for="mc in moneyCurrencies" :key="mc.key" :label="mc.label" :name="mc.key" :type="mc.key">
-              <div v-if="activeTab==mc.key">
-                <p class="te-info-text">Last 100 days' American Dollar / {{ mc.label }} with openning values is as follows:</p>
+          <el-tab-pane class='te-tab-pane' v-for="ed in equipmentData" :key="ed.key" :label="ed.label" :name="ed.key" :type="ed.key">
+              <div v-if="activeTab==ed.key">
+                <p class="te-info-text">Last 100 days' American Dollar / {{ ed.label }} with openning values is as follows:</p>
                 <div class='chart-wrapper'>
-                  <line-chart :type="mc.key" :chart-data="mc.data"/>
+                  <line-chart :type="ed.key" :chart-data="ed.data"/>
                 </div>
 
-                <p class="te-info-text">Last 20 days' American Dollar / {{ mc.label }} with openning, closing, highest and lowest values is as follows:</p>
+                <p class="te-info-text">Last 20 days' American Dollar / {{ ed.label }} with openning, closing, highest and lowest values is as follows:</p>
                 <div class='chart-wrapper'>
-                  <line-chart-detailed :type="mc.key" :chart-data="mc.data"/>
+                  <line-chart-detailed :type="ed.key" :chart-data="ed.data"/>
                 </div>
 
-                <el-button class='change-base-button' @click="changeBaseofEquipment(mc.label)"><svg-icon style="margin-right:10px" icon-class="chart" />Change the Base</el-button>
+                <el-button class='change-base-button' @click="changeBaseofEquipment(ed.label)"><svg-icon style="margin-right:10px" icon-class="chart" />Change the Base</el-button>
                 <el-button class='buy-button' @click="buyEquipment"><svg-icon style="margin-right:10px" icon-class="shopping" />Buy Equipment</el-button>
               </div>
           </el-tab-pane>
@@ -62,40 +62,22 @@ export default {
   data() {
     return {
       chartData: {},
-      // moneyCurrencies is expected to be: 
-      // [
-      //   {
-      //     label: Euro,
-      //     key: EUR,
-      //     data: {
-      //       open: [...],
-      //       close: [...],
-      //       high: [...],
-      //       low: [...],
-      //       current: [...] 
-      //     }
-      //   }, 
-      //   {
-      //     label: Japanese Yen,
-      //     key: JPY
-      //   }, ...
-      // ]
-      moneyCurrencies: [],
-      comparisonData: {moneyCurrencies: []},
+      equipmentData: [],
+      comparisonData: {equipmentData: []},
       activeTab: 'JPY'
     }
   },
   async created() {
     var equipmentList = await this.getEquipmentList()
-    // Fill the moneyCurrencies with equipment list
+    // Fill the equipmentData with equipment list
     equipmentList.forEach(function(equipmentKey) {
-      this.moneyCurrencies.push({key: equipmentKey})
+      this.equipmentData.push({key: equipmentKey})
     }, this)
     var equipmentValues = await this.getEquipmentValues(equipmentList) 
     this.createRadarChartData(equipmentValues)
-    this.moneyCurrencies = equipmentValues
+    this.equipmentData = equipmentValues
     
-    this.comparisonData.moneyCurrencies = this.moneyCurrencies
+    this.comparisonData.equipmentData = this.equipmentData
   },
   methods: {
     // Promise for getting equipments list 
@@ -205,7 +187,7 @@ export default {
     },
 
     changeBaseofEquipment(equipmentLabel) {
-      this.moneyCurrencies.forEach(function(currency) {
+      this.equipmentData.forEach(function(currency) {
         if (currency.label == equipmentLabel) {
           for (let i = 0; i < currency.data.open.length; i++) {
             currency.data.open[i] = 1/currency.data.open[i]
