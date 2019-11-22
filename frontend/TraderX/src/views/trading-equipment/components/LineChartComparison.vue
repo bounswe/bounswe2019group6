@@ -63,16 +63,16 @@ export default {
       this.chart = echarts.init(this.$el, 'macarons')
       this.setOptions(this.chartData)
     },
-    setOptions({moneyCurrencies}) {
+    setOptions({equipmentData}) {
       var legendData = []
       var seriesData = []
-      moneyCurrencies.forEach(function(currency) {
-          legendData.push(currency.label)
+      equipmentData.forEach(function(equipment) {
+          legendData.push(equipment.label)
           seriesData.push({
-            name: currency.label,
+            name: equipment.label,
             smooth: true,
             type: 'line',
-            data: currency.data.open.slice(open.length-21, open.length-1),
+            data: equipment.data.open.slice(open.length-21, open.length-1),
             animationDuration: 2800,
             animationEasing: 'cubicInOut'
           })
