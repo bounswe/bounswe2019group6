@@ -6,6 +6,7 @@ import cmpe451.group6.authorization.dto.EditProfileDTO;
 import cmpe451.group6.authorization.dto.PrivateProfileDTO;
 import cmpe451.group6.authorization.dto.TokenWrapperDTO;
 import cmpe451.group6.authorization.dto.UserResponseDTO;
+import cmpe451.group6.authorization.model.RegistrationStatus;
 import cmpe451.group6.authorization.model.Role;
 import cmpe451.group6.rest.comment.service.EquipmentCommentService;
 import cmpe451.group6.rest.follow.model.FollowStatus;
@@ -127,8 +128,8 @@ public class UserService {
     ListIterator iterator = userList.listIterator();
     while(iterator.hasNext()) {
       User usr = (User) iterator.next();
-      if (usr.getUsername().equals(senderUsername)) {
-        // ignore self
+      if (usr.getUsername().equals(senderUsername) || usr.getRegistrationStatus() == RegistrationStatus.PENDING) {
+        // ignore self and not enabled users
         iterator.remove();
         continue;
       }

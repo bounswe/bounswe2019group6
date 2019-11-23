@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -48,22 +49,22 @@ public class EquipmentService {
         List<EquipmentHistoryDTO> hist = history.stream().map(h ->
                 (modelMapper.map(h,EquipmentHistoryDTO.class))).collect(Collectors.toList());
 
-        return new EquipmentResponseDTO(equipment,hist);
+        return new EquipmentResponseDTO(modelMapper.map(equipment,EquipmentResponseDTO.EquipmentDTO.class),hist);
     }
 
     public EquipmentMetaWrapper getCurrencies(){
-        return new EquipmentMetaWrapper(concatenate(EquipmentConfig.CURRENCIES_BATCH_1,
-                EquipmentConfig.CURRENCIES_BATCH_2),EquipmentConfig.BASE_CURRENCY_CODE);
+        return rearrangeResponse(concatenate(EquipmentConfig.CURRENCIES_BATCH_1,
+                EquipmentConfig.CURRENCIES_BATCH_2));
     }
 
     public EquipmentMetaWrapper getCryptoCurrencies(){
-        return new EquipmentMetaWrapper(concatenate(EquipmentConfig.CRYPTO_CURRENCIES_BATCH_1,
-                EquipmentConfig.CRYPTO_CURRENCIES_BATCH_2),EquipmentConfig.BASE_CURRENCY_CODE);
+        return rearrangeResponse(concatenate(EquipmentConfig.CRYPTO_CURRENCIES_BATCH_1,
+                EquipmentConfig.CRYPTO_CURRENCIES_BATCH_2));
     }
 
     public EquipmentMetaWrapper getStocks(){
-        return new EquipmentMetaWrapper(concatenate(EquipmentConfig.STOCKS_BATCH_1,
-                EquipmentConfig.STOCKS_BATCH_2),EquipmentConfig.BASE_CURRENCY_CODE);
+        return rearrangeResponse(concatenate(EquipmentConfig.STOCKS_BATCH_1,
+                EquipmentConfig.STOCKS_BATCH_2));
     }
 
     public void forceInit(String code, String type){
@@ -98,6 +99,22 @@ public class EquipmentService {
         if(type.equals("CRYPTO_CURRENCY")) return EquipmentType.CRYPTO_CURRENCY;
         if(type.equals("STOCK")) return EquipmentType.STOCK;
         throw new CustomException("Invalid Equipment type: " + type, HttpStatus.NOT_ACCEPTABLE);
+    }
+
+    private EquipmentMetaWrapper rearrangeResponse(String[] equipments){
+
+        List<EquipmentMetaWrapper.EquipmentMeta> metaList = new ArrayList<>();
+        for (String code: equipments) {
+            Equipment current = equipmentRepository.findByCode(code);
+            if (current == null) continue;
+            double currentVal = current.getCurrentValue();
+            double currentStock = current.getCurrentStock();
+            EquipmentMetaWrapper.EquipmentInfo info = new EquipmentMetaWrapper.EquipmentInfo(currentVal,currentStock);
+            EquipmentMetaWrapper.EquipmentMeta meta = new EquipmentMetaWrapper.EquipmentMeta(code,info);
+            metaList.add(meta);
+        }
+
+        return new EquipmentMetaWrapper(metaList,EquipmentConfig.BASE_CURRENCY_CODE);
     }
 
 }
