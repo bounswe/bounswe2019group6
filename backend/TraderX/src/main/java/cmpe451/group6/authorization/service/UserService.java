@@ -21,6 +21,8 @@ import cmpe451.group6.authorization.model.User;
 import cmpe451.group6.authorization.repository.UserRepository;
 import cmpe451.group6.authorization.security.JwtTokenProvider;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -71,6 +73,32 @@ public class UserService {
     user.setIsPrivate(false);
     userRepository.save(user);
     return "Profile has been set as public";
+  }
+
+  public String setBasic(String username){
+    User user = userRepository.findByUsername(username);
+    if (user.getRoles().get(0) != Role.ROLE_TRADER){
+      throw new CustomException("User is already basic",HttpStatus.NOT_ACCEPTABLE);
+    }
+    user.setRoles(new ArrayList<Role>(Arrays.asList(Role.ROLE_BASIC)));
+    user.setIBAN(null);
+    userRepository.save(user);
+    return "Role has been changed";
+  }
+
+  public String setTrader(String username, String iban){
+    User user = userRepository.findByUsername(username);
+    if (user.getRoles().get(0) != Role.ROLE_BASIC){
+      throw new CustomException("User is already trader",HttpStatus.NOT_ACCEPTABLE);
+    }
+    if (!iban.matches(User.IBANRegex)){
+      throw new CustomException("Invalid IBAN number.",HttpStatus.PRECONDITION_FAILED);
+    }
+    user.setRoles(new ArrayList<Role>(Arrays.asList(Role.ROLE_TRADER)));
+    user.setIBAN(iban);
+    userRepository.save(user);
+    return "Role has been changed";
+
   }
 
   public String editProfile(EditProfileDTO editProfileDTO, String username){
