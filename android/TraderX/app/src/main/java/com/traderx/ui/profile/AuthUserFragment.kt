@@ -21,6 +21,7 @@ import com.traderx.R
 import com.traderx.api.ApiService
 import com.traderx.api.ErrorHandler
 import com.traderx.api.RequestService
+import com.traderx.db.User
 import com.traderx.util.Injection
 import com.traderx.util.TokenUtility
 import com.traderx.viewmodel.AuthUserViewModel
@@ -32,6 +33,7 @@ class AuthUserFragment : Fragment() {
 
     private lateinit var authUserViewModel: AuthUserViewModel
 
+    private lateinit var user: User
     private lateinit var userName: TextView
     private lateinit var email: TextView
     private lateinit var role: TextView
@@ -59,13 +61,17 @@ class AuthUserFragment : Fragment() {
 
         root.findViewById<LinearLayout>(R.id.followers_list_action)?.let {
             it.setOnClickListener {
-                findNavController().navigate(AuthUserFragmentDirections.actionNavigationAuthUserToNavigationFollowers())
+                if(isClickable()) {
+                    findNavController().navigate(AuthUserFragmentDirections.actionNavigationAuthUserToNavigationFollowers(user.username))
+                }
             }
         }
 
         root.findViewById<LinearLayout>(R.id.followings_list_action)?.let {
             it.setOnClickListener {
-                findNavController().navigate(AuthUserFragmentDirections.actionNavigationAuthUserToNavigationFollowings())
+                if(isClickable()) {
+                    findNavController().navigate(AuthUserFragmentDirections.actionNavigationAuthUserToNavigationFollowings(user.username))
+                }
             }
         }
 
@@ -102,6 +108,7 @@ class AuthUserFragment : Fragment() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe({
+                    user = it
                     userName.text = it.username
                     email.text = it.email
                     role.text = it.localizedRole(context)
@@ -118,6 +125,10 @@ class AuthUserFragment : Fragment() {
         super.onStop()
 
         disposable.clear()
+    }
+
+    private fun isClickable(): Boolean {
+        return ::user.isInitialized
     }
 
     private fun showMenu(anchor: View) {

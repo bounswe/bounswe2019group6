@@ -18,21 +18,31 @@ import com.traderx.util.FragmentTitleListeners
 import com.traderx.util.Helper
 import com.traderx.util.Injection
 import com.traderx.viewmodel.AuthUserViewModel
+import com.traderx.viewmodel.UserViewModel
 import io.reactivex.disposables.CompositeDisposable
 
 class FollowingsFragment : Fragment() {
 
-    private lateinit var userViewModel: AuthUserViewModel
+    private lateinit var username: String
+    private lateinit var userViewModel: UserViewModel
     private lateinit var recyclerView: RecyclerView
     private val disposable = CompositeDisposable()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        arguments?.let {
+            username = it.getString(ARG_USERNAME) as String
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val userViewModelFactory = Injection.provideAuthUserViewModelFactory(context as Context)
+        val userViewModelFactory = Injection.provideUserViewModelFactory(context as Context)
         userViewModel =
-            ViewModelProvider(this, userViewModelFactory).get(AuthUserViewModel::class.java)
+            ViewModelProvider(this, userViewModelFactory).get(UserViewModel::class.java)
 
         val root = inflater.inflate(R.layout.fragment_followings, container, false)
 
@@ -42,8 +52,8 @@ class FollowingsFragment : Fragment() {
         }
 
         disposable.add(
-            userViewModel.followings(context as Context)
-                .compose(Helper.applySchedulers<List<FollowerResponse>>())
+            userViewModel.followings(username)
+                .compose(Helper.applySingleSchedulers<List<FollowerResponse>>())
                 .subscribe({
                     recyclerView.adapter = FollowersRecyclerViewAdapter(it) { username ->
                         FollowingsFragmentDirections.actionNavigationFollowingsToNavigationUser(
@@ -63,5 +73,9 @@ class FollowingsFragment : Fragment() {
         if(context is FragmentTitleListeners) {
             context.showFragmentTitle(getString(R.string.following_users))
         }
+    }
+
+    companion object {
+        private const val ARG_USERNAME = "username"
     }
 }

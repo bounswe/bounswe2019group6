@@ -46,13 +46,6 @@ class AuthUserViewModel(
         return networkSource.updateUser(if(status) "private" else "public")
     }
 
-    fun followers(context: Context): Single<List<FollowerResponse>> {
-        return user(context).flatMap{ networkSource.followersList(it.username) }
-    }
-
-    fun followings(context: Context): Single<List<FollowerResponse>> {
-        return user(context).flatMap { networkSource.followingsList(it.username) }
-    }
 
     fun pendingFollowRequests(context: Context): Single<List<FollowerResponse>> {
         return user(context).flatMap { networkSource.pendingFollowRequests(it.username) }
