@@ -9,8 +9,10 @@ import java.util.List;
 
 public interface FollowRepository extends JpaRepository<FollowDAO, Integer> {
 
+    @Query("SELECT f FROM FollowDAO f WHERE f.follower.username=?1 AND f.followStatus=1")
     List<FollowDAO> findByFollower_username(String username);
 
+    @Query("SELECT f FROM FollowDAO f WHERE f.followee.username=?1 AND f.followStatus=1")
     List<FollowDAO> findByFollowee_username(String username);
 
     List<FollowDAO> findByFollowee_UsernameAndFollowStatus(String username, FollowStatus followStatus);
