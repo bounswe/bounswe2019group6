@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import com.traderx.R
+import com.traderx.viewmodel.TraderEquipmentViewModel
 
 class TraderEquipmentFragment : Fragment() {
 

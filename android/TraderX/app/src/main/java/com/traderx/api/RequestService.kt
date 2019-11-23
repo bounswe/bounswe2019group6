@@ -1,6 +1,7 @@
 package com.traderx.api
 
 import com.traderx.AppConfig
+import com.traderx.api.request.ForgotPasswordRequest
 import com.traderx.api.request.LoginRequest
 import com.traderx.api.request.SignUpRequest
 import com.traderx.api.response.SuccessResponse
@@ -27,6 +28,7 @@ object ApiUri {
     const val ARTICLE: String = "$API_URI/article/{articleId}"
     const val ARTICLES: String = "$API_URI/test"
     const val INSERT_ARTICLE: String = "$API_URI/article"
+    const val USER_FORGOT_PASSWORD: String = "$API_URI/password/forgot"
 }
 
 interface RequestService {
@@ -38,6 +40,9 @@ interface RequestService {
 
     @POST(ApiUri.USER_SIGNUP)
     fun register(@Body signUpRequest: SignUpRequest): Single<SuccessResponse>
+
+    @POST(ApiUri.USER_FORGOT_PASSWORD)
+    fun forgotpassword(@Query("email") email: String): Single<SuccessResponse>
 
     @GET(ApiUri.USERS_GET_ALL)
     fun usersGetAll(): Single<List<UserAll>>

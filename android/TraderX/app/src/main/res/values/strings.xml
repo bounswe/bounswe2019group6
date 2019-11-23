@@ -43,7 +43,7 @@
     <string name="accept_terms">Accept Conditions</string>
     <string name="trader_account">Trader Account</string>
     <string name="signup_iban">IBAN (for trader user)</string>
-    <string name="back">Back</string>
+    <string name="title_forgot_password">Reset Password</string>
     <string name="reset_password">Reset Password</string>
 
     <string name="role">Role</string>
