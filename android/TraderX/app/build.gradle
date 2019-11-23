@@ -67,8 +67,6 @@ dependencies {
 
     //Room
     implementation deps.room.runtime
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.recyclerview:recyclerview:1.0.0'
     kapt deps.room.compiler
     implementation deps.room.rxjava2
 
@@ -90,6 +88,7 @@ dependencies {
     implementation 'de.hdodenhof:circleimageview:3.0.1'
     implementation 'com.github.razir.progressbutton:progressbutton:1.0.3'
     implementation 'com.facebook.shimmer:shimmer:0.5.0'
+    implementation 'com.github.lecho:hellocharts-library:1.5.8'
 
     testImplementation 'junit:junit:4.12'
     testImplementation deps.test.hamcrest

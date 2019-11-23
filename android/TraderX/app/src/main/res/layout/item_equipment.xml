@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="19.3dp"
+    android:layout_marginTop="10dp"
+    android:layout_marginRight="19.3dp"
+    android:layout_marginBottom="9dp"
+    android:background="@color/white"
+    android:baselineAligned="false"
+    android:orientation="horizontal"
+    android:padding="19.2dp">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/code"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/txt_color"
+            android:textSize="17.3sp"
+            android:text="Code"/>
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal">
+
+            <!--                <ImageView-->
+            <!--                    android:id="@+id/icon"-->
+            <!--                    android:layout_width="19dp"-->
+            <!--                    android:layout_height="19dp"-->
+            <!--                    android:src="@drawable/ic_btc"/>-->
+
+
+            <TextView
+                android:id="@+id/base"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="5dp"
+                android:textColor="#6e7f8d"
+                android:textSize="12sp"
+                android:text="Base"/>
+        </LinearLayout>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <!--                <TextView-->
+            <!--                    android:id="@+id/percentage"-->
+            <!--                    android:layout_width="wrap_content"-->
+            <!--                    android:layout_height="wrap_content"-->
+            <!--                    android:text="20%"-->
+            <!--                    android:gravity="center"-->
+            <!--                    android:layout_gravity="center"-->
+            <!--                    android:textSize="10sp"-->
+            <!--                    android:textColor="#17b978"/>-->
+
+
+            <!--                <ImageView-->
+            <!--                    android:id="@+id/arrow"-->
+            <!--                    android:layout_width="14dp"-->
+            <!--                    android:layout_height="14dp"-->
+            <!--                    android:src="@drawable/ic_arrowup"-->
+            <!--                    android:layout_gravity="center"-->
+            <!--                    android:layout_marginRight="8dp"-->
+            <!--                    android:layout_marginLeft="7dp"/>-->
+
+
+            <TextView
+                android:id="@+id/value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="$5,291.20"
+                android:textColor="@color/txt_color"
+                android:textSize="17.3sp" />
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/stock"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginTop="8dp"
+            android:gravity="right"
+            android:text="0.592 BTC"
+            android:textColor="@color/light_gray"
+            android:textSize="10sp" />
+    </LinearLayout>
+
+
+</LinearLayout>
+

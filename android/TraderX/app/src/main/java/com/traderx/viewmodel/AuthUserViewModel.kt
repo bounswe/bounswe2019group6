@@ -41,9 +41,9 @@ class AuthUserViewModel(
         return dataSource.deleteUser()
     }
 
-    fun updateUser(user: User): Completable {
-        return networkSource.updateUser(if (user.isPrivate) "private" else "public")
-            .andThen { updateUserLocal(user) }
+    fun updateUser(status: Boolean): Completable {
+        userUpdated = false
+        return networkSource.updateUser(if(status) "private" else "public")
     }
 
     fun followers(context: Context): Single<List<FollowerResponse>> {
