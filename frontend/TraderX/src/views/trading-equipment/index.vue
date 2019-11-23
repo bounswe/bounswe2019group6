@@ -2,13 +2,13 @@
 
   <div class="trading-eqipment-list-container">
     <el-row class='row' v-for="te in tradingEquipments" v-bind:key="te.label" :gutter="20" style="padding:16px 16px 0;margin-bottom:32px;">
-      <el-col class='te-type-column' :span="4" :xs="24">
+      <el-col class='te-type-column' :span="5" :xs="25">
         <el-card class='te-type-container'>
           <h1 class='te-type-text'>{{ te.label }}</h1>
         </el-card>
       </el-col>
 
-      <el-col :span="20" :xs="24" >
+      <el-col :span="20" :xs="25" >
         <el-card>
           <el-tabs v-model="te.activeTab" >
             <el-tab-pane class='te-tab-pane' v-for="t in te.data" :key="t.key" :label="t.label" :name="t.key" :type="t.key">
@@ -250,7 +250,7 @@ $light_blue: #0c96e5;
 
   .te-type-text {
     color: $dark_gray;
-    font-size: 40px;
+    font-size: 1.5vw;
     margin-top: 10px;
     margin-bottom: 10px;
     text-align: center;
