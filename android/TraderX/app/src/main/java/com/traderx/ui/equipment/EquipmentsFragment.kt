@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.traderx.R
 import com.traderx.api.ErrorHandler
+import com.traderx.api.response.EquipmentsResponse
 import com.traderx.enum.EquipmentType
 import com.traderx.ui.search.UserSearchSkeletonRecyclerViewAdapter
 import com.traderx.util.FragmentTitleEmitters
@@ -40,10 +41,10 @@ class EquipmentsFragment : Fragment(), FragmentTitleEmitters {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        setFragmentTitle(context, getString(R.string.title_trader_equipment))
+        setFragmentTitle(context, findFragmentTitle(equipmentType ?: EquipmentType.CURRENCY))
 
         val equipmentViewModelFactory =
-            Injection.provideTraderEquipmentViewModelFactory(context as Context)
+            Injection.provideEquipmentViewModelFactory(context as Context)
 
         equipmentViewModel = ViewModelProvider(this, equipmentViewModelFactory)
             .get(EquipmentViewModel::class.java)
@@ -65,9 +66,9 @@ class EquipmentsFragment : Fragment(), FragmentTitleEmitters {
 
         disposable.add(
             source
-                .compose(Helper.applyFlowableSchedulers<List<String>>())
+                .compose(Helper.applyFlowableSchedulers<EquipmentsResponse>())
                 .subscribe({
-                    recyclerView.adapter = EquipmentRecyclerViewAdapter(it)
+                    recyclerView.adapter = EquipmentRecyclerViewAdapter(it.equipments, it.base, context as Context)
                 },
                     { ErrorHandler.handleError(it, context as Context) })
         )
@@ -75,8 +76,16 @@ class EquipmentsFragment : Fragment(), FragmentTitleEmitters {
         return root
     }
 
+    private fun findFragmentTitle(equipmentType: EquipmentType): String {
+        return when (equipmentType) {
+            EquipmentType.CURRENCY -> getString(R.string.currencies)
+            EquipmentType.CRYPTO_CURRENCY -> getString(R.string.crypto_currencies)
+            EquipmentType.STOCK -> getString(R.string.stocks)
+        }
+    }
+
     override fun setFragmentTitle(context: Context?, title: String?) {
-        if(context is FragmentTitleListeners) {
+        if (context is FragmentTitleListeners) {
             context.showFragmentTitle(title)
         }
     }

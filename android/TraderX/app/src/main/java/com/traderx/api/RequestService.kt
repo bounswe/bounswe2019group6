@@ -2,10 +2,7 @@ package com.traderx.api
 
 import com.traderx.api.request.LoginRequest
 import com.traderx.api.request.SignUpRequest
-import com.traderx.api.response.EquipmentResponse
-import com.traderx.api.response.FollowerResponse
-import com.traderx.api.response.SuccessResponse
-import com.traderx.api.response.TokenResponse
+import com.traderx.api.response.*
 import com.traderx.db.Article
 import com.traderx.db.Equipment
 import com.traderx.db.User
@@ -64,14 +61,17 @@ interface RequestService {
     fun deleteArticle(articleId: Int): Completable
 
     @GET(ApiEndpoint.EQUIPMENT)
-    fun getEquipment(@Path("name") name: String): Single<Equipment>
+    fun getEquipment(@Path("name") code: String): Single<EquipmentResponse>
 
     @GET(ApiEndpoint.EQUIPMENT_CURRENCY_LIST)
-    fun getCurrencyEquipments(): Single<EquipmentResponse>
+    fun getCurrencyEquipments(): Single<EquipmentsResponse>
 
     @GET(ApiEndpoint.EQUIPMENT_CRYPTO_CURRENCY_LIST)
-    fun getCryptoCurrencyEquipments(): Single<EquipmentResponse>
+    fun getCryptoCurrencyEquipments(): Single<EquipmentsResponse>
 
     @GET(ApiEndpoint.EQUIPMENT_STOCK_LIST)
-    fun getStockEquipments(): Single<EquipmentResponse>
+    fun getStockEquipments(): Single<EquipmentsResponse>
+
+    @GET(ApiEndpoint.COMMENT_EQUIPMENT)
+    fun getEquipmentComments(@Path("code") code: String): Single<List<CommentResponse>>
 }
