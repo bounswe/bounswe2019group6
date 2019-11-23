@@ -81,7 +81,6 @@ public class CommentController {
 
     @GetMapping(value = "/equipment/{code}")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_BASIC') or hasRole('ROLE_TRADER')")
     @ApiOperation(value = "Find equipment comments", response = CommentResponseDTO.class)
     @ApiResponses(value = {
             @ApiResponse(code = 412, message = "No such an equipment found")})
