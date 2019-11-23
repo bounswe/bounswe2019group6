@@ -1,62 +1,60 @@
 <template>
-  <div>    
-    <el-button @click="createPortfolio"><svg-icon style="margin-right:10px" icon-class="documentation" />Create Portfolio</el-button>
-    <el-card class="box-card">
-      <div slot="header" class="clearfix">
-        <span>Portfolio 1</span>
-        <!-- <el-button style="float: right; padding: 3px 0" type="text">Hide</el-button> -->
-      </div>
-      <div v-for="o in 4" :key="o" class="text item">
-        {{'Trading Equipment ' + o }}
-      </div>
-    </el-card>
-    <el-card class="box-card">
-      <div slot="header" class="clearfix">
-        <span>Portfolio 2</span>
-        <!-- <el-button style="float: right; padding: 3px 0" type="text">Hide</el-button> -->
-      </div>
-      <div v-for="o in 2" :key="o" class="text item">
-        {{'Trading Equipment ' + o }}
-      </div>
-    </el-card>
+  <div>
+    <div style="text-align: center">
+      <el-button @click="showDialog=true" type="primary"><svg-icon style="margin-right:10px" icon-class="documentation" />Create Portfolio</el-button>
+    </div>
+    <div>
+      <CoolCard :cardData="all_portfolios" :username="username"/>
+    </div>
+    <el-dialog title="Create Portfolio" :visible.sync="showDialog">
+      <el-form @submit.native.prevent="handleCreatePortfolio" ref="createPortfolioForm" :model="createPortfolioForm">
+        <el-form-item prop="Portfolio Name">
+          <el-input ref="portfolioName" placeholder="Portfolio Name" v-model="createPortfolioForm.portfolioName" />
+        </el-form-item>
+        <el-button @click="handleCreatePortfolio" type="primary">
+          Create
+        </el-button>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+
+import CoolCard from '@/components/CoolCard'
+
 export default {
+  props: {
+    username: String
+  },
+  components: { CoolCard },
+  data() {
+    return {
+      showDialog: false,
+      all_portfolios: [],
+      createPortfolioForm: {
+        portfolioName: '',
+        portfolioDescription: ''
+      },
+    }
+  },
   methods: {
-    createPortfolio(){
-      this.$notify({
-              title: 'Success',
-              message: 'Portfolio is posted',
-              type: 'success',
-              duration: 2000
-            })
+    handleCreatePortfolio(){
+      if (this.createPortfolioForm.portfolioName == '') {
+        this.$message.error("Portfolio Name Can Not Be Empty")
+      } else {
+        this.showDialog = false,
+        this.all_portfolios.push({
+          portfolioName : this.createPortfolioForm.portfolioName,
+          portfolioDescription: this.createPortfolioForm.portfolioDescription
+        })
+        this.$notify({ title: 'Success', message: 'Portfolio is posted', type: 'success', duration: 2000 })
+      }
     }
   }
 }
 </script>
 
-<style>
-  .text {
-    font-size: 14px;
-  }
+<style scoped>
 
-  .item {
-    margin-bottom: 18px;
-  }
-
-  .clearfix:before,
-  .clearfix:after {
-    display: table;
-    content: "";
-  }
-  .clearfix:after {
-    clear: both
-  }
-
-  .box-card {
-    width: 480px;
-    margin-top: 15px;
-  }
 </style>

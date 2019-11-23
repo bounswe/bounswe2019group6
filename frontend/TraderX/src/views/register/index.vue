@@ -130,9 +130,6 @@
             v-if="isTrader"
             prop="iban"
           >
-            <span class="svg-container">
-              <svg-icon icon-class="money" />
-            </span>
             <el-input
               ref="iban"
               v-model="signupForm.iban"
@@ -352,7 +349,7 @@ export default {
           return false
         }
       })
-    }, 
+    },
     redirectLogin() {
       this.$router.push({ path: '/login'})
     },
@@ -449,7 +446,7 @@ export default {
       color: $dark_gray;
       border: 0;
       border-radius: 50px;
-      cursor: pointer;     
+      cursor: pointer;
       outline: none;
     }
 
@@ -471,7 +468,7 @@ $light_gray:#eee;
       position: relative;
       width: 520px;
       max-width: 100%;
-      padding: 160px 35px 0;
+      padding: 40px 35px 0;
       margin: 0 auto;
       overflow: hidden;
     }

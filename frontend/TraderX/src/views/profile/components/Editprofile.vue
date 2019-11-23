@@ -1,106 +1,119 @@
 <template>
-  <el-form
-    ref="form"
-    :model="form"
-    label-width="120px"
-  >
-    <el-form-item label="Username">
-      <el-input v-model="form.username" />
-    </el-form-item>
-    <el-form-item label="New Password">
-      <el-input
-        v-model="form.newpassword"
-        show-password
-      />
-    </el-form-item>
-    <el-form-item label="IBAN">
-      <el-input v-model="form.newiban" />
-    </el-form-item>
-    <el-form-item label="Location">
-      <el-input v-model="form.newlocation" />
-    </el-form-item>
-    <el-form-item label="">
-      <el-switch
-        v-model="form.privatepublic"
-        active-color="#13ce66"
-        inactive-color="#ff4949"
-        style="float: left"
-        active-text="Public"
-        inactive-text="Private"
-      />
-    </el-form-item>
-    <el-form-item label="">
-      <el-switch
-        v-model="form.traderbasic"
-        active-color="#13ce66"
-        inactive-color="#ff4949"
-        style="float: left"
-        active-text="Trader"
-        inactive-text="Basic"
-      />
-    </el-form-item>
-    <el-form-item>
-      <el-button
-        type="primary"
-        @click="onSubmit"
-      >
-        Update
-      </el-button>
-    </el-form-item>
-  </el-form>
+  <div>
+    <el-collapse v-model="activeNames">
+      <el-collapse-item title="Password" name="1">
+        <el-input placeholder="Please enter new password" v-model="passwordinput">
+          <el-button slot="append" @click="updatePassword(passwordinput)">Update</el-button>
+        </el-input>
+      </el-collapse-item>
+      <el-collapse-item title="IBAN" name="2" v-if="ibanshow">
+        <el-input placeholder="Please enter new IBAN" v-model="newibaninput">
+          <el-button slot="append" @click="updateIban(newibaninput)">Update</el-button>
+        </el-input>
+      </el-collapse-item>
+      <el-collapse-item title="Privacy" name="3">
+        <el-switch v-model="privatepublic" active-color="#13ce66" inactive-color="#ff4949" style="float: left" active-text="Public" inactive-text="Private"/>
+        <el-button @click="updatePrivacy(privatepublic)" style="margin-left: 50px; margin-bottom: 10px">Update</el-button>
+      </el-collapse-item>
+      <el-collapse-item title="Role" name="4">
+        <el-switch v-model="istrader" active-color="#13ce66" inactive-color="#ff4949" style="float: left" active-text="Trader" inactive-text="Basic"/>
+        <el-input placeholder="Please enter an IBAN" v-if="seen" v-model="traderibaninput" style="padding-top: 20px">
+          <el-button slot="append" @click="updateRole(traderibaninput)">Update</el-button>
+        </el-input>
+      </el-collapse-item>
+    </el-collapse>
+  </div>
 </template>
-
 <script>
+  import { getToken } from '@/utils/auth' // get token from cookie
+
   export default {
     props: {
-      user: {
-        type: Object,
-        default: () => {
-          return {
-            name: '',
-            email: '',
-            avatar: '',
-            roles: ''
-          }
-        }
+      user: Object
+    },
+    created() {
+      if(this.istrader) {
+        this.seen = false
+        this.ibanshow = true
+      } else {
+        this.seen = true
+        this.ibanshow = false
       }
     },
     data() {
       return {
-        form: {
-          username: '',
-          newpassword: '',
-          newlocation: '',
-          newiban: '',
-          privatepublic: false,
-          traderbasic: false,
-        }
-      }
+        activeNames: [''],
+        usernameinput: '',
+        passwordinput: '',
+        newibaninput: '',
+        traderibaninput: '',
+        privatepublic: !this.user.isPrivate,
+        istrader: this.user.roles[0] == 'ROLE_TRADER' ? true : false,
+        seen: false,
+        ibanshow: false
+      };
     },
     methods: {
-      onSubmit() {
-        if(this.$data.form.username == '' && this.$data.form.newpassword == '' && this.$data.form.newiban == '' && this.$data.form.newlocation == '') {
-          this.$notify({
-            message: 'All contents are empty',
-            type: 'error'
+      updatePassword(pass) {
+        var temp = {
+              "token": getToken(),
+              "newPassword": pass
+          }
+        console.log(temp)
+        this.$store.dispatch('user/updatePassword', temp).then(() => {
+              this.$message.success('Your Password Is Changed Successfully!')
+              this.passwordinput = ""
+           }).catch(error => {
+            console.log("errorrr in password change")
+            console.log(error)
           })
-          return
-        }
-        if (this.$store.state.user.name == this.$data.form.username) {
-          this.$notify({
-            message: 'Selected username is the same as current username',
-            type: 'error'
+      },
+      updateIban(iban) {
+        if(!this.istrader){
+          this.$message.error('Your Are Not A Trader!')
+        } else {
+          this.$store.dispatch('user/changeIBAN', {
+              "newIBAN": iban.toString(),
+              "newLatitude": "123",
+              "newLongitude": "123"
+          }).then(() => {
+              this.$message.success('Your IBAN Is Changed Successfully!')
+              this.user.iban = iban
+          }).catch(error => {
+            console.log("errorrr in iban change")
+            console.log(error)
           })
-          return
         }
-        // if (this.$store.state.user.iban.length != 26) {
-        //   this.$notify({
-        //     message: 'IBAN number cannot be this size',
-        //     type: 'error'
-        //   })
-        //   return
-        // }
-        console.log(this.form)
+      },
+      updateRole(iban){
+        console.log(iban)
+      },
+      updatePrivacy(isPrivate){
+        if(isPrivate){
+          if (this.user.isPrivate){
+              this.$store.dispatch('user/setProfilePublic').then(response => {
+                this.$message.success('Your Profile Is Public Now!')
+                this.user.isPrivate = false
+            }).catch(error => {
+              console.log("errorrr in profile change")
+              console.log(error)
+            })
+          } else {
+            this.$message.error('Your Profile Is Public Already!')
+          }
+        } else {
+          if (!this.user.isPrivate){
+            this.$store.dispatch('user/setProfilePrivate').then(response => {
+              this.$message.success('Your Profile Is Private Now!')
+              this.user.isPrivate = true
+            }).catch(error => {
+              console.log("errorrr in profile change")
+              console.log(error)
+            })
+          } else {
+            this.$message.error('Your Profile Is Private Already!')
+          }
+        }
       }
     }
   }

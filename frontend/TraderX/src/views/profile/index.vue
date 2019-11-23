@@ -1,6 +1,5 @@
 <template>
   <div class="app-container">
-    <github-corner class="github-corner" />
     <div v-if="user">
       <el-row :gutter="20">
         <el-col
@@ -20,25 +19,7 @@
                 label="Portfolio"
                 name="portfolio"
               >
-                <portfolio />
-              </el-tab-pane>
-              <el-tab-pane
-                label="Explore"
-                name="explore"
-              >
-                <explore />
-              </el-tab-pane>
-              <el-tab-pane
-                label="Event"
-                name="events"
-              >
-                <events />
-              </el-tab-pane>
-              <el-tab-pane
-                label="New"
-                name="news"
-              >
-                <news />
+                <portfolio :username="this.user.username"/>
               </el-tab-pane>
               <el-tab-pane
                 label="Article"
@@ -50,7 +31,7 @@
                 label="EditProfile"
                 name="editprofile"
               >
-                <editprofile />
+                <editprofile :user="this.user"/>
               </el-tab-pane>
             </el-tabs>
           </el-card>
@@ -64,19 +45,16 @@
 import { mapGetters } from 'vuex'
 import UserCard from './components/UserCard'
 import Portfolio from './components/Portfolio'
-import Explore from './components/Explore'
-import Events from './components/Events'
-import News from './components/News'
 import Articles from './components/Articles'
 import Editprofile from './components/Editprofile'
-import GithubCorner from '@/components/GithubCorner'
+import PrivateAccount from './components/PrivateAccount'
 
 export default {
   name: 'Profile',
-  components: { UserCard, Portfolio, Explore, Events, News, Articles, Editprofile, GithubCorner },
+  components: { UserCard, Portfolio, Articles, Editprofile, PrivateAccount },
   data() {
     return {
-      user: {},
+      user: Object,
       activeTab: 'portfolio'
     }
   },
@@ -87,18 +65,20 @@ export default {
       'roles'
     ])
   },
-  created() {
-    this.getUser()
+  async created() {
+    await this.getUserInfo()
   },
   methods: {
-    getUser() {
-      this.user = {
-        name: this.name,
-        roles: this.roles.join(' | '),
-        email: 'admin@test.com',
-        avatar: this.avatar
-      }
-    }
+    async getUserInfo() {
+      await this.$store.dispatch('user/getInfo').then(response =>{
+        this.user = this.$store.getters.userInfo
+      }).catch(error => {
+        console.log(error)
+      })
+    },
+      
+  },
+  mounted() {
   }
 }
 </script>

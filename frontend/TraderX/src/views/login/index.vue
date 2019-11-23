@@ -62,6 +62,10 @@
           </el-form-item>
         </el-tooltip>
 
+        <el-link :underline="false" @click="showDialog=true">
+          Forgot password?
+        </el-link>
+
         <el-button
           :loading="loading"
           type="primary"
@@ -95,38 +99,52 @@
         </div>
       </el-form>
 
-      <el-dialog
-        title="Or connect with"
-        :visible.sync="showDialog"
-      >
-        Can not be simulated on local, so please combine you own business simulation! ! !
-        <br>
-        <br>
-        <br>
-        <social-sign />
+      <el-dialog title="Password Reset" :visible.sync="showDialog">
+        <p style="margin-bottom: 20px; margin-top: -10px;">
+          Enter your email address and click Submit. You will get an email including a link to reset your password.
+        </p>
+        <el-form
+          @submit.native.prevent="handlePasswordReset"
+          ref="passwordResetForm"
+          :rules="passwordResetRules"
+          :model="passwordResetForm"
+        >
+          <el-form-item prop="email">
+            <el-input ref="email" placeholder="Email" v-model="passwordResetForm.email" />
+          </el-form-item>
+          <el-button @click="handlePasswordReset">
+            Submit
+          </el-button>
+        </el-form>
       </el-dialog>
     </div>
   </body>
 </template>
 
 <script>
-import { validUsername } from '@/utils/validate'
-import SocialSign from './components/SocialSignin'
+import { validUsername, validEmail } from '@/utils/validate'
+import { Message } from 'element-ui'
 
 export default {
   name: 'Login',
-  components: { SocialSign },
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!validUsername(value)) {
-        callback(new Error('Please enter a valid user name'))
+        callback(new Error('Please enter a valid username'))
       } else {
         callback()
       }
     }
     const validatePassword = (rule, value, callback) => {
       if (value.length < 6) {
-        callback(new Error('The password can not be less than 6 digits'))
+        callback(new Error('The password can not be less than 6 characters'))
+      } else {
+        callback()
+      }
+    }
+    const validateEmail = (rule, value, callback) => {
+      if (!validEmail(value)) {
+        callback(new Error('Please enter a valid email'))
       } else {
         callback()
       }
@@ -139,6 +157,12 @@ export default {
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
         password: [{ required: true, trigger: 'blur', validator: validatePassword }]
+      },
+      passwordResetForm: {
+        email: ''
+      },
+      passwordResetRules: {
+        email: [{ required: true, trigger: 'blur', validator: validateEmail }]
       },
       passwordType: 'password',
       capsTooltip: false,
@@ -226,6 +250,20 @@ export default {
     },
     redirectHome() {
       this.$router.push({ path: '/home'})
+    },
+    handlePasswordReset() {
+      this.$refs.passwordResetForm.validate(valid => {
+        if (valid) {
+          this.$store.dispatch('user/resetPassword', this.passwordResetForm)
+            .then(() => {
+              Message.success('Password reset link sent to your email address')
+              this.showDialog = false
+            }).catch(() => {
+          })
+        } else {
+          return false
+        }
+      })
     }
   }
 }
@@ -258,6 +296,12 @@ body {
 
 /* reset element-ui css */
 .login-container {
+  .el-link {
+    margin-top: -20px;
+    margin-bottom: 20px;
+    float: right;
+  }
+
   .el-input {
     display: inline-block;
     height: 47px;
@@ -360,8 +404,6 @@ $light_gray:#eee;
       font-weight: bold;
     }
   }
-
-  
 
   .show-pwd {
     position: absolute;
