@@ -53,7 +53,7 @@ public class TransactionService {
         User user = userRepository.findByUsername(username);
         if (user == null) {
             throw new CustomException("There is no user named " + username + ".", HttpStatus.NOT_ACCEPTABLE);
-        } else if ( followService.isPermitted(username,requesterName) ) {
+        } else if ( followService.isPermitted(username,requesterName) && !username.equals(requesterName)) {
             throw new CustomException("The requested user's profile is private and requester is not following!",
                     HttpStatus.NOT_ACCEPTABLE);
         } else {
@@ -91,7 +91,7 @@ public class TransactionService {
         User user = userRepository.findByUsername(username);
         if (user == null) {
             throw new CustomException("There is no user named " + username + ".", HttpStatus.NOT_ACCEPTABLE);
-        } else if (followService.isPermitted(username, requesterName)) {
+        } else if (followService.isPermitted(username, requesterName) && !username.equals(requesterName)) {
             throw new CustomException("The requested user's profile is private and requester is not following!",
                     HttpStatus.NOT_ACCEPTABLE);
         } else {
