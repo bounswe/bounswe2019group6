@@ -1,14 +1,6 @@
 package cmpe451.group6.rest.equipment.dto;
 
-import cmpe451.group6.rest.equipment.model.Equipment;
 import cmpe451.group6.rest.equipment.model.EquipmentType;
-import cmpe451.group6.rest.equipment.model.HistoricalValue;
-import org.modelmapper.ModelMapper;
-
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import java.util.Date;
 import java.util.List;
 

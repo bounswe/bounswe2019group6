@@ -26,8 +26,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
-// TODO: Interface for user to supply new password when resent link is sent. (Frontend related.)
-
 @SpringBootApplication
 @EnableScheduling
 public class Group6BackendService implements CommandLineRunner {
