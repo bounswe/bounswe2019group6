@@ -29,7 +29,6 @@ public class AlertController {
 
     @PostMapping("/set")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_TRADER')")
     @ApiOperation(value = "Set alert to sell/buy for specified equipment" +
             " when specified limit for the equipment is exceeded", response = StringResponseWrapper.class)
     @ApiResponses(value = {
@@ -42,7 +41,6 @@ public class AlertController {
 
     @GetMapping("/get")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_TRADER')")
     @ApiOperation(value = "Get all alerts of the requester.", response = AlertResponseDTO.class, responseContainer = "List")
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = GlobalExceptionHandlerController.GENERIC_ERROR_RESPONSE),
@@ -53,7 +51,6 @@ public class AlertController {
 
     @DeleteMapping("/remove")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_TRADER')")
     @ApiOperation(value = "Remove specified alert of the requester.", response = StringResponseWrapper.class)
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = GlobalExceptionHandlerController.GENERIC_ERROR_RESPONSE),
@@ -64,7 +61,6 @@ public class AlertController {
 
     @PostMapping("/edit")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_TRADER')")
     @ApiOperation(value = "Edit specified alert of the requester.", response = StringResponseWrapper.class)
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = GlobalExceptionHandlerController.GENERIC_ERROR_RESPONSE),
