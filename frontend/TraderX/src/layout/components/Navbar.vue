@@ -29,7 +29,7 @@
       >
         <div class="avatar-wrapper">
           <img
-            :src="randomImage"
+            src="https://www.sackettwaconia.com/wp-content/uploads/default-profile.png"
             class="user-avatar"
           >
           <i class="el-icon-caret-bottom" />
@@ -62,7 +62,6 @@ import ErrorLog from '@/components/ErrorLog'
 import Screenfull from '@/components/Screenfull'
 import SizeSelect from '@/components/SizeSelect'
 import Search from '@/components/HeaderSearch'
-import { randomImage } from '@/utils'
 
 export default {
   components: {
@@ -79,7 +78,6 @@ export default {
       'avatar',
       'device'
     ]),
-    randomImage
   },
   methods: {
     toggleSideBar() {

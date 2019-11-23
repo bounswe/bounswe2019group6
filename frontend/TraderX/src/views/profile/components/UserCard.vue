@@ -9,10 +9,7 @@
     <div class="user-profile">
       <div class="box-center">
         <pan-thumb
-          :image="randomImage"
-          :height="'100px'"
-          :width="'100px'"
-          :hoverable="false"
+          image="https://www.sackettwaconia.com/wp-content/uploads/default-profile.png"
         />
       </div>
       <div class="box-center">
@@ -59,7 +56,6 @@
 
 <script>
 import PanThumb from '@/components/PanThumb'
-import { randomImage } from '@/utils'
 import { getUser } from '@/api/user'
 
 export default {
@@ -132,9 +128,6 @@ export default {
       }
     },
   },
-  computed: {
-    randomImage
-  }
 }
 </script>
 
