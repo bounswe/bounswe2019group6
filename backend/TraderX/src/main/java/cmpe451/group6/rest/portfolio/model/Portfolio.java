@@ -19,19 +19,13 @@ public class Portfolio {
     @JoinColumn(name = "user", referencedColumnName = "username", nullable = false)
     private User user;
 
-    // @ManyToOne
-    // @JoinColumn(name = "equipment", referencedColumnName = "code", nullable = false)
-    // private Equipment equipment;
-
     @Column(name = "portfolioName", nullable = false)
     private String portfolioName;
 
     private List<Equipment> equipmentList;
 
-
     @Column(nullable = false, name = "createdAt", updatable = false, columnDefinition = " datetime default NOW() ")
     private Date createdAt;
-
 
     @PrePersist
     public void addTimestamp() {
@@ -57,7 +51,6 @@ public class Portfolio {
     public void setEquipmentsList(List<Equipment> equipmentsList) {
         this.equipmentsList = equipmentsList;
     }
-
 
     public Date getCreatedAt() {
         return createdAt;
