@@ -13,4 +13,7 @@ public interface AssetRepository extends JpaRepository<Asset, Integer> {
     @Query("SELECT a FROM Asset a WHERE a.user.username=?1 AND a.equipment.code=?2")
     Asset getAsset(String user, String equipment);
 
+    @Query("SELECT a FROM Asset a WHERE a.user.username=?1")
+    List<Asset> findByUser_username(String user);
+
 }

@@ -90,7 +90,7 @@ public class InvestmentController {
         return investmentService.numberOfInvestmentsByUser(util.unwrapUsername(req));
     }
 
-    @PostMapping(value = "/count/byTransactionType")
+    @GetMapping(value = "/count/byTransactionType")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_TRADER')")
     @ApiOperation(value = " Returns number of investments made by the user by specified transaction type (DEPOSIT or WITHDRAW) ", response = Integer.class)
@@ -126,6 +126,17 @@ public class InvestmentController {
     public boolean sellAsset(@ApiParam("Amount to Withdraw") @RequestParam float amount,
                              HttpServletRequest req) {
         return investmentService.withdraw(util.unwrapUsername(req), amount);
+    }
+
+    @GetMapping(value = "/profit/{username}")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_TRADER') or hasRole('ROLE_BASIC') ")
+    @ApiOperation(value = " Returns profit/loss of the user as percentage. Negative values stands for loss. ", response = Integer.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE) })
+    public float profitLossByUser(@ApiParam( "Username" ) @RequestParam String username,
+                                                           HttpServletRequest req) {
+        return investmentService.profitLossByUser(util.unwrapUsername(req), username);
     }
 
 }

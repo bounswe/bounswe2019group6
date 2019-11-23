@@ -5,9 +5,11 @@ import cmpe451.group6.rest.asset.model.Asset;
 import cmpe451.group6.rest.asset.repository.AssetRepository;
 import cmpe451.group6.rest.equipment.configuration.EquipmentConfig;
 import cmpe451.group6.rest.equipment.repository.EquipmentRepository;
+import cmpe451.group6.rest.follow.service.FollowService;
 import cmpe451.group6.rest.investment.model.Investment;
 import cmpe451.group6.rest.investment.model.InvestmentType;
 import cmpe451.group6.rest.investment.repository.InvestmentRepository;
+import cmpe451.group6.rest.transaction.model.Transaction;
 import cmpe451.group6.rest.transaction.repository.TransactionRepository;
 import cmpe451.group6.authorization.model.User;
 import cmpe451.group6.authorization.repository.UserRepository;
@@ -39,6 +41,9 @@ public class InvestmentService {
     private EquipmentRepository equipmentRepository;
 
     @Autowired
+    private FollowService followService;
+
+    @Autowired
     private ModelMapper modelMapper;
 
     //for admin user
@@ -50,12 +55,12 @@ public class InvestmentService {
     }
 
     //for admin user
-    public int numberOfInvestments(){
+    public int numberOfInvestments() {
         return investmentRepository.countAll();
     }
 
     //for admin user
-    public List<Investment> getInvestmentByDateBetween(Date start, Date end){
+    public List<Investment> getInvestmentByDateBetween(Date start, Date end) {
         List<Investment> investments = new ArrayList<Investment>();
         investmentRepository.findByDateBetween(start, end)
                 .forEach(item -> investments.add(modelMapper.map(item, Investment.class)));
@@ -67,9 +72,8 @@ public class InvestmentService {
         User user = userRepository.findByUsername(requesterName);
         if (user == null) {
             throw new CustomException("There is no user named " + requesterName + ".", HttpStatus.NOT_ACCEPTABLE);
-        }
-        else if(!investmentRepository.existsByUser_username(requesterName)){
-            throw new CustomException("The user named "+ requesterName + " did not make any investment.", HttpStatus.PRECONDITION_FAILED);
+        } else if (!investmentRepository.existsByUser_username(requesterName)) {
+            throw new CustomException("The user named " + requesterName + " did not make any investment.", HttpStatus.PRECONDITION_FAILED);
         } else {
             List<Investment> investments = investmentRepository.findByUser_username(requesterName);
             return investments;
@@ -80,10 +84,9 @@ public class InvestmentService {
         User user = userRepository.findByUsername(requesterName);
         if (user == null) {
             throw new CustomException("There is no user named " + requesterName + ".", HttpStatus.NOT_ACCEPTABLE);
-        }
-        else if(!investmentRepository.existsByUser_username(requesterName)){
-            throw new CustomException("The user named "+ requesterName + " did not make any investment.", HttpStatus.PRECONDITION_FAILED);
-        }else {
+        } else if (!investmentRepository.existsByUser_username(requesterName)) {
+            throw new CustomException("The user named " + requesterName + " did not make any investment.", HttpStatus.PRECONDITION_FAILED);
+        } else {
             List<Investment> investments = new ArrayList<Investment>();
             investmentRepository.findByUser_usernameAndInvestmentType_name(requesterName, investmentType)
                     .forEach(item -> investments.add(modelMapper.map(item, Investment.class)));
@@ -95,10 +98,9 @@ public class InvestmentService {
         User user = userRepository.findByUsername(requesterName);
         if (user == null) {
             throw new CustomException("There is no user named " + requesterName + ".", HttpStatus.NOT_ACCEPTABLE);
-        }
-        else if(!investmentRepository.existsByUser_username(requesterName)){
-            throw new CustomException("The user named "+ requesterName + " did not make any investment.", HttpStatus.PRECONDITION_FAILED);
-        }else {
+        } else if (!investmentRepository.existsByUser_username(requesterName)) {
+            throw new CustomException("The user named " + requesterName + " did not make any investment.", HttpStatus.PRECONDITION_FAILED);
+        } else {
             List<Investment> investments = new ArrayList<Investment>();
             investmentRepository.findByUser_usernameAndDateBetween(requesterName, start, end)
                     .forEach(item -> investments.add(modelMapper.map(item, Investment.class)));
@@ -117,7 +119,7 @@ public class InvestmentService {
     }
 
     public int numberOfInvestmentsByUserAndInvestmentType(String requesterName, String investmentType) {
-        if(!investmentRepository.existsByUser_username(requesterName)){
+        if (!investmentRepository.existsByUser_username(requesterName)) {
             throw new CustomException("The user did not make any investment.", HttpStatus.PRECONDITION_FAILED);
         }
 
@@ -130,7 +132,7 @@ public class InvestmentService {
             throw new CustomException("There is no user named " + requesterName + ".", HttpStatus.NOT_ACCEPTABLE);
         }
 
-        if( amount < 0 ){
+        if (amount < 0) {
             throw new CustomException("The amount of deposit cannot be negative value", HttpStatus.PRECONDITION_FAILED);
         }
 
@@ -173,8 +175,8 @@ public class InvestmentService {
                     HttpStatus.NOT_ACCEPTABLE);
         }
 
-        if( amount < 0 ){
-            throw new CustomException("The amount of withdraw cannot be negative",HttpStatus.PRECONDITION_FAILED);
+        if (amount < 0) {
+            throw new CustomException("The amount of withdraw cannot be negative", HttpStatus.PRECONDITION_FAILED);
         }
 
         float usersMoney = asset.getAmount();
@@ -204,4 +206,41 @@ public class InvestmentService {
         return true;
     }
 
+    public float profitLossByUser(String requesterName, String username) {
+
+        User user = userRepository.findByUsername(username);
+        if (user == null) {
+            throw new CustomException("There is no user named " + username + ".", HttpStatus.NOT_ACCEPTABLE);
+        } else if (followService.isPermitted(username, requesterName) && !username.equals(requesterName)) {
+            throw new CustomException("The requested user's profile is private and requester is not following!",
+                    HttpStatus.NOT_ACCEPTABLE);
+        } else {
+            List<Investment> deposits = getInvestmentsByUsernameAndInvestmentType(username, InvestmentType.DEPOSIT.getTransactionType());
+            List<Investment> withdraws = getInvestmentsByUsernameAndInvestmentType(username, InvestmentType.WITHDRAW.getTransactionType());
+
+            //calculating total deposits
+            float dep = 0;
+            for (Investment i:deposits) {
+                dep += i.getAmount();
+            }
+
+            //calculating total withdraws
+            float wit = 0;
+            for (Investment i:withdraws){
+                wit += i.getAmount();
+            }
+
+            List<Asset> assets = assetRepository.findByUser_username(username);
+
+            float moneyInSystem = 0;
+
+            for (Asset a:assets) {
+                moneyInSystem += a.getAmount()*equipmentRepository.findByCode(a.getEquipment().getCode()).getCurrentValue();
+            }
+
+            return ( 100 * (moneyInSystem + wit) / dep) - 100;
+
+        }
+
+    }
 }
