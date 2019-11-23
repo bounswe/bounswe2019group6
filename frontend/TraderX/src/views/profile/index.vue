@@ -47,10 +47,11 @@ import UserCard from './components/UserCard'
 import Portfolio from './components/Portfolio'
 import Articles from './components/Articles'
 import Editprofile from './components/Editprofile'
+import PrivateAccount from './components/PrivateAccount'
 
 export default {
   name: 'Profile',
-  components: { UserCard, Portfolio, Articles, Editprofile },
+  components: { UserCard, Portfolio, Articles, Editprofile, PrivateAccount },
   data() {
     return {
       user: Object,

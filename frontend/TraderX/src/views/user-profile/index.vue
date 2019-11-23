@@ -12,6 +12,17 @@
         <el-col
           :span="18"
           :xs="24"
+          :style=infoTabDisplay
+        >
+         
+          <PrivateAccount />
+         
+        </el-col>
+
+        <el-col
+          :span="18"
+          :xs="24"
+          :style=privacyDisplay
         >
           <el-card>
             <el-tabs v-model="activeTab">
@@ -41,16 +52,19 @@ import { mapGetters } from 'vuex'
 import UserCard from '@/views/profile/components/UserCard'
 import Portfolio from '@/views/profile/components/Portfolio'
 import Articles from '@/views/profile/components/Articles'
+import PrivateAccount from '@/views/profile/components/PrivateAccount'
 import { getUser } from '@/api/user'
 
 export default {
   name: 'UserProfile',
-  components: { UserCard, Portfolio, Articles },
+  components: { UserCard, Portfolio, Articles, PrivateAccount },
   data() {
     return {
       user: {},
       activeTab: 'portfolio',
-      visibility: 'visibility: hidden'
+      visibility: 'visibility: hidden',
+      privacyDisplay: 'display: none',
+      infoTabDisplay: 'display: none'
     }
   },
   computed: {
@@ -61,10 +75,11 @@ export default {
     ])
   },
   created() {
-    // this.$route.path.split('/') = ["", "user", "username", "profile"] 
     getUser(this.$route.path.split('/')[2]).then(response => {
       this.user = response.data
       this.visibility = 'visibility: visible'
+      this.privacyDisplay = this.user.isPrivate ? 'display: none': 'display: block'
+      this.infoTabDisplay = this.user.isPrivate ? 'display: block': 'display: none'
     })
   },
   methods: {

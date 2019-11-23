@@ -40,16 +40,16 @@
           <div class="user-stats">
             <p><b>Follower:</b> {{ user.followersCount }}</p>
             <p><b>Following:</b> {{ user.followingsCount }}</p>
-            <p><b>Articles:</b> {{ user.articlesCount }}</p>
-            <p><b>Comments:</b> {{ user.commentsCount }}</p>
+            <p :style=hidePrivateFields><b>Articles:</b> {{ user.articlesCount }}</p>
+            <p :style=hidePrivateFields><b>Comments:</b> {{ user.commentsCount }}</p>
           </div>
           <div class="user-type">
             <p><b>User Type:</b> {{ user.roles[0] }}</p>
           </div>
-          <p><b>IBAN:</b> {{ user.iban }}</p>
+          <a :style=showIban><p :style=hidePrivateFields><b>IBAN:</b> {{ user.iban }}</p></a>
           
-          <p><b>Latitude:</b> {{ user.latitude }}</p>
-          <p><b>Longitude:</b> {{ user.longitude }}</p>
+          <p :style=hidePrivateFields><b>Latitude:</b> {{ user.latitude }}</p>
+          <p :style=hidePrivateFields><b>Longitude:</b> {{ user.longitude }}</p>
           <p><b>Current Status:</b> {{ user.isPrivate ? "Private" : !user.isPrivate ? 'Public': "" }}</p>
         </div>
       </div>
@@ -73,16 +73,28 @@ export default {
       isNotFollowing : '',
       isPending : '',
       followText : '',
-      isSelf : true
+      isSelf : true,
+      hidePrivateFields: 'display: none',
+      showIban: 'display: block'
     }
   },
-  created() {
-    var tempUser = this.user.username
-    this.isSelf = tempUser.username == this.$store.getters.userInfo.name ? true : false
-    this.isFollowing = tempUser.followingStatus == 'FOLLOWING' ? true : false
-    this.isNotFollowing = tempUser.followingStatus == 'NOT_FOLLOWING' ? true : false
-    this.isPending = tempUser.followingStatus == 'PENDING' ? true : false
-    this.followText = tempUser.isNotFollowing ? "Follow" : tempUser.isFollowing ? "Unfollow" : 'Requested'
+  async created() {
+    if ((this.$route.path.split('/')[1]) == 'profile') {
+      this.isSelf = true
+      this.hidePrivateFields = 'display: block'
+    } else {
+      this.isSelf = false
+      await getUser((this.$route.path.split('/')[2])).then(response => {
+        this.user = response.data
+        console.log(this.user.iban, this.user.iban==null)
+        this.hidePrivateFields = this.user.isPrivate ? 'display: none' : 'display: block'
+        this.showIban = this.user.iban==null ? 'display: none' : 'display: block'
+        this.isFollowing = this.user.followingStatus == 'FOLLOWING' ? true : false
+        this.isNotFollowing = this.user.followingStatus == 'NOT_FOLLOWING' ? true : false
+        this.isPending = this.user.followingStatus == 'PENDING' ? true : false
+        this.followText = this.isNotFollowing ? "Follow" : this.isFollowing ? "Unfollow" : 'Requested'
+      })
+    }
   },
   methods: {
     takeFollowUnfollowAction() {
