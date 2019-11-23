@@ -14,7 +14,7 @@ public interface InvestmentRepository extends JpaRepository<Investment, Integer>
     List<Investment> findByUser_username(String username);
 
     @Query("SELECT i FROM Investment i WHERE i.user.username = ?1 AND i.investmentType = ?2")
-    List<Investment> findByUser_usernameAndInvestmentType_name(String username, String name);
+    List<Investment> findByUser_usernameAndInvestmentType_name(String username, InvestmentType name);
 
     List<Investment> findAll();
 
@@ -23,7 +23,7 @@ public interface InvestmentRepository extends JpaRepository<Investment, Integer>
     int countByUser_username(String username);
 
     @Query("SELECT COUNT(i) FROM Investment i WHERE i.user.username = ?1 AND i.investmentType = ?2")
-    int countByUser_usernameAndInvestmentType_name(String username, String name);
+    int countByUser_usernameAndInvestmentType_name(String username, InvestmentType name);
 
     @Query("SELECT COUNT(i) FROM Investment i ")
     int countAll();

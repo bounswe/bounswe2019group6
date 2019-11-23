@@ -15,6 +15,7 @@ import cmpe451.group6.authorization.model.User;
 import cmpe451.group6.authorization.repository.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -80,7 +81,7 @@ public class InvestmentService {
         }
     }
 
-    public List<Investment> getInvestmentsByUsernameAndInvestmentType(String requesterName, String investmentType) {
+    public List<Investment> getInvestmentsByUsernameAndInvestmentType(String requesterName, InvestmentType investmentType) {
         User user = userRepository.findByUsername(requesterName);
         if (user == null) {
             throw new CustomException("There is no user named " + requesterName + ".", HttpStatus.NOT_ACCEPTABLE);
@@ -118,7 +119,7 @@ public class InvestmentService {
         }
     }
 
-    public int numberOfInvestmentsByUserAndInvestmentType(String requesterName, String investmentType) {
+    public int numberOfInvestmentsByUserAndInvestmentType(String requesterName, InvestmentType investmentType) {
         if (!investmentRepository.existsByUser_username(requesterName)) {
             throw new CustomException("The user did not make any investment.", HttpStatus.PRECONDITION_FAILED);
         }
@@ -215,8 +216,8 @@ public class InvestmentService {
             throw new CustomException("The requested user's profile is private and requester is not following!",
                     HttpStatus.NOT_ACCEPTABLE);
         } else {
-            List<Investment> deposits = getInvestmentsByUsernameAndInvestmentType(username, InvestmentType.DEPOSIT.getTransactionType());
-            List<Investment> withdraws = getInvestmentsByUsernameAndInvestmentType(username, InvestmentType.WITHDRAW.getTransactionType());
+            List<Investment> deposits = getInvestmentsByUsernameAndInvestmentType(username, InvestmentType.DEPOSIT);
+            List<Investment> withdraws = getInvestmentsByUsernameAndInvestmentType(username, InvestmentType.WITHDRAW);
 
             //calculating total deposits
             float dep = 0;
@@ -242,5 +243,12 @@ public class InvestmentService {
 
         }
 
+    }
+
+    public InvestmentType toInvestmentType(String name){
+        if(name.equalsIgnoreCase("deposit")) return InvestmentType.DEPOSIT;
+        if(name.equalsIgnoreCase("withdraw")) return InvestmentType.WITHDRAW;
+
+        throw new CustomException("DEPOSIT OR WITHDRAW", HttpStatus.NOT_ACCEPTABLE);
     }
 }

@@ -66,7 +66,7 @@ public class InvestmentController {
     @ApiResponses(value = { @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE) })
     public List<Investment> getInvestmentsByInvestmentType(@ApiParam("Investment Type (DEPOSIT or WITHDRAW)") @RequestParam String investmentType,
                                                                 HttpServletRequest req) {
-        return investmentService.getInvestmentsByUsernameAndInvestmentType(util.unwrapUsername(req), investmentType);
+        return investmentService.getInvestmentsByUsernameAndInvestmentType(util.unwrapUsername(req), investmentService.toInvestmentType(investmentType));
     }
 
     @GetMapping(value = "/byDate")
@@ -98,7 +98,7 @@ public class InvestmentController {
             @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE) })
     public int numberOfInvestmentsByUserAndTransactionType(@ApiParam("Transaction Type (DEPOSIT or WITHDRAW)") @RequestParam String investmentType,
                         HttpServletRequest req) {
-        return investmentService.numberOfInvestmentsByUserAndInvestmentType(util.unwrapUsername(req), investmentType);
+        return investmentService.numberOfInvestmentsByUserAndInvestmentType(util.unwrapUsername(req), investmentService.toInvestmentType(investmentType));
     }
 
     @PostMapping(value = "/deposit")
@@ -134,7 +134,7 @@ public class InvestmentController {
     @ApiOperation(value = " Returns profit/loss of the user as percentage. Negative values stands for loss. ", response = Integer.class)
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE) })
-    public float profitLossByUser(@ApiParam( "Username" ) @RequestParam String username,
+    public float profitLossByUser(@ApiParam( "Username" ) @PathVariable String username,
                                                            HttpServletRequest req) {
         return investmentService.profitLossByUser(util.unwrapUsername(req), username);
     }
