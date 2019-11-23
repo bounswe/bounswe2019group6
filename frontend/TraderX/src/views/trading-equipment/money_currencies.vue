@@ -4,6 +4,11 @@
     <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
       <el-card class='raddar-chart-container'>
         <raddar-chart :chart-data="chartData"/>
+        <div>
+          <p  class="te-info-text">Categories are calculated as follows;</p>
+          <p  class="te-info-text"><b>Stabilitity:</b> 1 / [ sum( | average - ith data | / average ) / 100 ] --> i:[0,100]</p>
+          <p  class="te-info-text"><b>Growth:</b> sum( ith data - (i+1)th data ) / 100 --> i:[0,99]</p>
+        </div>
       </el-card>
     </el-row>
 
@@ -168,14 +173,14 @@ export default {
           let stability = Math.abs(valueAverage - equipmentValues[i].data.open[0]) / equipmentValues[i].data.open.length
           let growthRate = 0
           for (let j = 0; j < equipmentValues[i].data.open.length-1; j++) {
-            stability += Math.abs(valueAverage - equipmentValues[i].data.open[j+1]) / equipmentValues[i].data.open.length
+            stability += (Math.abs(valueAverage - equipmentValues[i].data.open[j+1]) / valueAverage) / equipmentValues[i].data.open.length
             growthRate += (1/equipmentValues[i].data.open[j] - 1/equipmentValues[i].data.open[j+1]) / equipmentValues[i].data.open.length
           }
-          stabilities.push(stability)
+          stabilities.push(1/stability)
           growth.push(growthRate)
           values.push(1/equipmentValues[i].currentValue)
           legendData.push(equipmentValues[i].label)
-          graphData.push({value: [stability, growthRate, 1/equipmentValues[i].currentValue], name: equipmentValues[i].label})
+          graphData.push({value: [1/stability, growthRate, 1/equipmentValues[i].currentValue], name: equipmentValues[i].label})
         }
         stabilities.sort(numberSort)
         growth.sort(numberSort)
