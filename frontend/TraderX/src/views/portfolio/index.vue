@@ -11,7 +11,16 @@
 
       <el-table ref="alreadyAddedTable" :data="alreadyAddedTableData" style="width: 100%">
         <el-table-column label="Equipment Name">
-          <template slot-scope="scope">{{ scope.row.equipmentname }}</template>
+          <template slot-scope="scope">{{ scope.row.equipmentName }}</template>
+        </el-table-column>
+        <el-table-column label="Current Value">
+          <template slot-scope="scope">{{ scope.row.currentValue }}</template>
+        </el-table-column>
+        <el-table-column label="Current Stock">
+          <template slot-scope="scope">{{ scope.row.currentStock }}</template>
+        </el-table-column>
+        <el-table-column label="">
+          <template slot-scope="scope"><el-button size="mini" type="danger" @click="handleDeleteEquipmentPortfolio(scope.row)">Delete</el-button></template>
         </el-table-column>
       </el-table>
 
@@ -28,7 +37,13 @@
             <el-table ref="multipleCurrencyTable" :data="currencyTableData" style="width: 100%" @selection-change="handleSelectionChange">
               <el-table-column type="selection"></el-table-column>
               <el-table-column label="Equipment Name">
-                <template slot-scope="scope">{{ scope.row.equipmentname }}</template>
+                <template slot-scope="scope">{{ scope.row.equipmentName }}</template>
+              </el-table-column>
+              <el-table-column label="Current Value">
+                <template slot-scope="scope">{{ scope.row.currentValue }}</template>
+              </el-table-column>
+              <el-table-column label="Current Stock">
+                <template slot-scope="scope">{{ scope.row.currentStock }}</template>
               </el-table-column>
             </el-table>
           </el-collapse-item>
@@ -37,7 +52,13 @@
             <el-table ref="multipleCryptoCurrencyTable" :data="cryptoCurrencyTableData" style="width: 100%" @selection-change="handleSelectionChange">
               <el-table-column type="selection"></el-table-column>
               <el-table-column label="Equipment Name">
-                <template slot-scope="scope">{{ scope.row.equipmentname }}</template>
+                <template slot-scope="scope">{{ scope.row.equipmentName }}</template>
+              </el-table-column>
+              <el-table-column label="Current Value">
+                <template slot-scope="scope">{{ scope.row.currentValue }}</template>
+              </el-table-column>
+              <el-table-column label="Current Stock">
+                <template slot-scope="scope">{{ scope.row.currentStock }}</template>
               </el-table-column>
             </el-table>
           </el-collapse-item>
@@ -46,7 +67,13 @@
             <el-table ref="multipleStockTable" :data="stockTableData" style="width: 100%" @selection-change="handleSelectionChange">
               <el-table-column type="selection"></el-table-column>
               <el-table-column label="Equipment Name">
-                <template slot-scope="scope">{{ scope.row.equipmentname }}</template>
+                <template slot-scope="scope">{{ scope.row.equipmentName }}</template>
+              </el-table-column>
+              <el-table-column label="Current Value">
+                <template slot-scope="scope">{{ scope.row.currentValue }}</template>
+              </el-table-column>
+              <el-table-column label="Current Stock">
+                <template slot-scope="scope">{{ scope.row.currentStock }}</template>
               </el-table-column>
             </el-table>
           </el-collapse-item>
@@ -89,8 +116,9 @@ export default {
         var equip = []
         for (var i = 0; i < res.equipments.length; i++) {
           equip.push({
-            "equipmentname": res.equipments[i],
-            "base": res.base
+            "equipmentName": res.equipments[i].code,
+            "currentValue": res.equipments[i].data.currentValue,
+            "currentStock": res.equipments[i].data.currentStock
           })
         }
         this.currencyTableData = equip
@@ -104,8 +132,9 @@ export default {
         var equip = []
         for (var i = 0; i < res.equipments.length; i++) {
           equip.push({
-            "equipmentname": res.equipments[i],
-            "base": res.base
+            "equipmentName": res.equipments[i].code,
+            "currentValue": res.equipments[i].data.currentValue,
+            "currentStock": res.equipments[i].data.currentStock
           })
         }
         this.cryptoCurrencyTableData = equip
@@ -119,8 +148,9 @@ export default {
         var equip = []
         for (var i = 0; i < res.equipments.length; i++) {
           equip.push({
-            "equipmentname": res.equipments[i],
-            "base": res.base
+            "equipmentName": res.equipments[i].code,
+            "currentValue": res.equipments[i].data.currentValue,
+            "currentStock": res.equipments[i].data.currentStock
           })
         }
         this.stockTableData = equip
@@ -155,7 +185,11 @@ export default {
       this.$refs.multipleCryptoCurrencyTable.clearSelection();
       this.$refs.multipleStockTable.clearSelection();
       this.activeNames = []
+    },
+    handleDeleteEquipmentPortfolio(elem) {
+      this.alreadyAddedTableData = this.alreadyAddedTableData.filter(item => item !== elem)
     }
+
   }
 }
 </script>
