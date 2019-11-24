@@ -6,6 +6,7 @@ import cmpe451.group6.rest.equipment.configuration.EquipmentConfig;
 import cmpe451.group6.rest.equipment.dto.EquipmentHistoryDTO;
 import cmpe451.group6.rest.equipment.dto.EquipmentMetaWrapper;
 import cmpe451.group6.rest.equipment.dto.EquipmentResponseDTO;
+import cmpe451.group6.rest.equipment.dto.PortfolioResponseDTO;
 import cmpe451.group6.rest.portfolio.dto.PortfolioEquipmentDTO;
 import cmpe451.group6.rest.equipment.model.HistoricalValue;
 import cmpe451.group6.rest.equipment.model.Equipment;
@@ -112,15 +113,104 @@ public class PortfolioService {
     }
 
     /**
+     * Adds the specified equipment to the specified portfolio
+     * 
+     * @param username
+     * @param portfolioName
+     * @param code
+     * @return status message
+     */
+    public String addToPortfolio(String username, String portfolioName, String code) {
+
+        User user = userRepository.findByUsername(username);
+        if (user == null) {
+            throw new CustomException("There is no user named " + username + ".", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        Portfolio targetPortfolio = PortfolioRepository.getPortfolioOfUser(username, portfolioName);
+
+        if (targetPortfolio == null) {
+            throw new CustomException("Portfolio with the name " + portfolioName + " does not exist",
+                    HttpStatus.PRECONDITION_FAILED);
+        }
+
+        Equipment equipment = equipmentRepository.findByCode(code);
+        if (equipment == null) {
+            throw new CustomException("There is no equipment with code " + code + ".", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        List<Equipment> equipmentsList = targetPortfolio.getEquipmentsList();
+
+        if (equipmentsList.contains(equipment)) {
+            throw new CustomException("The equipment with code " + code + " is already in the portfolio.",
+                    HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        equipmentsList.add(equipment);
+
+        targetPortfolio.setEquipmentsList(equipmentsList);
+
+        portfolioRepository.save(targetPortfolio);
+
+        return ("The equipment with code " + code + " is succesfully added to the portfolio: " + portfolioName);
+
+    }
+
+    /**
+     * Discards the specified equipment from the specified portfolio
+     * 
+     * @param username
+     * @param portfolioName
+     * @param code
+     * @return status message
+     */
+    public String deleteFromPortfolio(String username, String portfolioName, String code) {
+
+        User user = userRepository.findByUsername(username);
+        if (user == null) {
+            throw new CustomException("There is no user named " + username + ".", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        Portfolio targetPortfolio = PortfolioRepository.getPortfolioOfUser(username, portfolioName);
+
+        if (targetPortfolio == null) {
+            throw new CustomException("Portfolio with the name " + portfolioName + " does not exist",
+                    HttpStatus.PRECONDITION_FAILED);
+        }
+
+        Equipment equipment = equipmentRepository.findByCode(code);
+        if (equipment == null) {
+            throw new CustomException("There is no equipment with code " + code + ".", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        List<Equipment> equipmentsList = targetPortfolio.getEquipmentsList();
+
+        if (!equipmentsList.contains(equipment)) {
+            throw new CustomException("The equipment with code " + code + " is not in the portfolio already.",
+                    HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        equipmentsList.remove(equipment);
+
+        targetPortfolio.setEquipmentsList(equipmentsList);
+
+        portfolioRepository.save(targetPortfolio);
+
+        return ("The equipment with code " + code + " is succesfully deleted from the portfolio: " + portfolioName);
+
+    }
+
+    /**
      * Returns a list consisting of PortfolioEquipmentDTO's; which has String code,
      * double currentValue, currentStock, dailyChange, predictionRate, Date
      * lastUpdated, in the specified portfolio of specified user
      * 
      * @param username
      * @param portfolioName
-     * @return list consisting of PortfolioEquipmentDTO's
+     * @return class containing "equipmentsInPortfolio "list consisting of
+     *         PortfolioEquipmentDTO's
      */
-    public List<PortfolioEquipmentDTO> getPortfolio(String username, String portfolioName) {
+    public PortfolioResponseDTO getPortfolio(String username, String portfolioName) {
 
         User user = userRepository.findByUsername(username);
         if (user == null) {
@@ -152,7 +242,7 @@ public class PortfolioService {
                     predictionRate));
         }
 
-        return portfolioDtoList;
+        return new PortfolioResponseDTO(portfolioDtoList);
 
     }
 
