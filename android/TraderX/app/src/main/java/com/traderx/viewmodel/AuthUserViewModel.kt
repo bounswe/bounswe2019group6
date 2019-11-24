@@ -3,6 +3,7 @@ package com.traderx.viewmodel
 import android.content.Context
 import com.traderx.api.ErrorHandler
 import com.traderx.api.RequestService
+import com.traderx.api.response.AssetResponse
 import com.traderx.api.response.FollowerResponse
 import com.traderx.api.response.SuccessResponse
 import com.traderx.db.User
@@ -89,6 +90,10 @@ class AuthUserViewModel(
         refreshUser()
 
         return networkSource.becomeTrader("trader", iban)
+    }
+
+    fun getAssetAmount(code: String): Single<AssetResponse> {
+        return networkSource.getAssetAmount(code)
     }
 
     private fun fetchUser(): Single<User> {

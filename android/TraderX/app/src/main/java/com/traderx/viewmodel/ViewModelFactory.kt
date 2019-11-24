@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.traderx.api.RequestService
 import com.traderx.db.ArticleDao
 import com.traderx.db.EquipmentDao
+import com.traderx.db.TransactionDao
 import com.traderx.db.UserDao
 
 class ViewModelFactory(private val dataSource: Any, private val networkSource: RequestService) :
@@ -22,6 +23,10 @@ class ViewModelFactory(private val dataSource: Any, private val networkSource: R
                 networkSource
             ) as T
             modelClass.isAssignableFrom(EquipmentViewModel::class.java) && dataSource is EquipmentDao -> EquipmentViewModel(
+                dataSource,
+                networkSource
+            ) as T
+            modelClass.isAssignableFrom(TransactionViewModel::class.java) && dataSource is TransactionDao -> TransactionViewModel(
                 dataSource,
                 networkSource
             ) as T
