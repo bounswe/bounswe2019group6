@@ -3,11 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.alert.AlertsFragment">
-
+    tools:context=".ui.transaction.TransactionsFragment">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/alert_list"
+        android:id="@+id/transaction_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </FrameLayout>

@@ -2,10 +2,7 @@ package com.traderx.util
 
 import android.content.Context
 import com.traderx.api.ApiService
-import com.traderx.db.AppDatabase
-import com.traderx.db.ArticleDao
-import com.traderx.db.EquipmentDao
-import com.traderx.db.UserDao
+import com.traderx.db.*
 import com.traderx.viewmodel.ViewModelFactory
 
 object Injection {
@@ -38,6 +35,13 @@ object Injection {
         return ViewModelFactory(dataSource, networkSource)
     }
 
+    fun provideTransactionViewModelFactory(context: Context): ViewModelFactory {
+        val dataSource = provideTransactionDao(context)
+        val networkSource = ApiService.getInstance(context)
+
+        return ViewModelFactory(dataSource, networkSource)
+    }
+
     private fun provideUserDao(context: Context): UserDao {
         return AppDatabase.getInstance(context).userDao()
     }
@@ -48,5 +52,9 @@ object Injection {
 
     private fun provideEquipmentDao(context: Context): EquipmentDao {
         return AppDatabase.getInstance(context).equipmentDao()
+    }
+
+    private fun provideTransactionDao(context: Context): TransactionDao {
+        return AppDatabase.getInstance(context).transactionDao()
     }
 }

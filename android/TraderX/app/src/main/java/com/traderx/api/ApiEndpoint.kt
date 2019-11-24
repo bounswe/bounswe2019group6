@@ -32,4 +32,12 @@ object ApiEndpoint {
     const val EQUIPMENT_STOCK_LIST: String = "$EQUIPMENT_URI/stock/list"
     const val COMMENT_URI: String = "$API_URI/comment"
     const val COMMENT_EQUIPMENT: String = "$COMMENT_URI/equipment/{code}"
+    const val TRANSACTION_URI: String = "$API_URI/transaction"
+    const val TRANSACTION_BUY: String = "$TRANSACTION_URI/buy"
+    const val TRANSACTIONS: String = "$TRANSACTION_URI/user/{username}"
+    const val ASSET_URI: String = "$API_URI/asset"
+    const val ASSET_AMOUNT: String = "$ASSET_URI/{code}"
+    const val ALERT_URI: String = "$API_URI/alert"
+    const val ALERT_ALL: String = "$ALERT_URI/get"
+    const val ALERT_CREATE: String = "$ALERT_URI/set"
 }
