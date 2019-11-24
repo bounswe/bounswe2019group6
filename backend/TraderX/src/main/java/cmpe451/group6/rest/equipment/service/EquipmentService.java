@@ -52,7 +52,7 @@ public class EquipmentService {
      */
     public static double getDailyChange(String code) {
 
-        EquipmentResponseDTO equipment = getEquipment(code);
+        EquipmentResponseDTO equipment = equipmentService.getEquipment(code);
 
         List<EquipmentHistoryDTO> hist = equipment.getHistoricalValues();
 
