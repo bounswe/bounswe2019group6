@@ -6,10 +6,13 @@ import cmpe451.group6.rest.equipment.configuration.EquipmentConfig;
 import cmpe451.group6.rest.equipment.dto.EquipmentHistoryDTO;
 import cmpe451.group6.rest.equipment.dto.EquipmentMetaWrapper;
 import cmpe451.group6.rest.equipment.dto.EquipmentResponseDTO;
+import cmpe451.group6.rest.portfolio.dto.PortfolioEquipmentDTO;
 import cmpe451.group6.rest.equipment.model.HistoricalValue;
 import cmpe451.group6.rest.equipment.model.Equipment;
 import cmpe451.group6.rest.equipment.repository.EquipmentRepository;
 import cmpe451.group6.rest.equipment.repository.HistoricalValueRepository;
+import cmpe451.group6.rest.equipment.service.EquipmentService;
+import cmpe451.group6.rest.portfolio.dto.PortfolioEquipmentDTO;
 import cmpe451.group6.rest.portfolio.repository.PortfolioRepository;
 
 import org.modelmapper.ModelMapper;
@@ -82,7 +85,7 @@ public class PortfolioService {
     }
 
     /**
-     * Deletes prtfolio, belonging to given username and with the given
+     * Deletes portfolio, belonging to given username and with the given
      * portfolioName
      * 
      * @param requesterName
@@ -105,6 +108,51 @@ public class PortfolioService {
 
         PortfolioRepository.delete(portfolioToDelete);
         return ("Portfolio " + portfolioName + " is succesfully deleted");
+
+    }
+
+    /**
+     * Returns a list consisting of PortfolioEquipmentDTO's; which has String code,
+     * double currentValue, currentStock, dailyChange, predictionRate, Date
+     * lastUpdated, in the specified portfolio of specified user
+     * 
+     * @param username
+     * @param portfolioName
+     * @return list consisting of PortfolioEquipmentDTO's
+     */
+    public List<PortfolioEquipmentDTO> getPortfolio(String username, String portfolioName) {
+
+        User user = userRepository.findByUsername(username);
+        if (user == null) {
+            throw new CustomException("There is no user named " + username + ".", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        Portfolio portfolioToGet = PortfolioRepository.getPortfolioOfUser(username, portfolioName);
+
+        if (portfolioToGet == null) {
+            throw new CustomException("Portfolio with the name " + portfolioName + " does not exist",
+                    HttpStatus.PRECONDITION_FAILED);
+        }
+
+        List<PortfolioEquipmentDTO> portfolioDtoList = new ArrayList<PortfolioEquipmentDTO>();
+
+        String code;
+        double currentValue, currentStock, dailyChange, predictionRate;
+        Date lastUpdated;
+        for (Equipment equipment : portfolioToGet.getEquipmentsList()) {
+
+            code = equipment.getCode();
+            currentValue = equipment.getCurrentValue();
+            currentStock = equipment.getCurrentStock();
+            dailyChange = EquipmentService.getDailyChange(code);
+            predictionRate = equipment.getPredictionRate();
+            lastUpdated = equipment.getLastUpdated();
+
+            portfolioDtoList.add(new PortfolioEquipmentDTO(code, currentValue, dailyChange, lastUpdated, currentStock,
+                    predictionRate));
+        }
+
+        return portfolioDtoList;
 
     }
 
@@ -133,8 +181,7 @@ public class PortfolioService {
      * @param requesterName
      * @return list of portfolios that specified user has
      */
-    public List<Portfolio> getPortfoliosOfUserWithDate(Date start, Date end, String username,
-            String requesterName) {
+    public List<Portfolio> getPortfoliosOfUserWithDate(Date start, Date end, String username, String requesterName) {
 
         User user = userRepository.findByUsername(username);
         User requester = userRepository.findByUsername(requesterName);

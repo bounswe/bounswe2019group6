@@ -50,7 +50,7 @@ public class EquipmentService {
      * @param code
      * @return change ratio (in percent)
      */
-    public Double getDailyChange(String code) {
+    public static double getDailyChange(String code) {
 
         EquipmentResponseDTO equipment = getEquipment(code);
 

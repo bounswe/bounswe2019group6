@@ -31,8 +31,8 @@ public class EquipmentController {
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Gets the change ratio current/yesterday(%) of specified equipment", response = Double.class)
     @ApiResponses(value = { @ApiResponse(code = 417, message = "No such an equipment found.") })
-    public Double getDailyChange(@ApiParam("Equipment Name") @PathVariable String name) {
-        return equipmentService.getDailyChange(name);
+    public double getDailyChange(@ApiParam("Equipment Name") @PathVariable String name) {
+        return EquipmentService.getDailyChange(name);
     }
 
     @GetMapping(value = "/list")
