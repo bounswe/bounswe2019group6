@@ -109,7 +109,7 @@ public class InvestmentController {
             @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE),
             @ApiResponse(code = 406, message = "There is no user found."),
             @ApiResponse(code = 412, message = "The amount of deposit is not valid.")})
-    public boolean deposit(@ApiParam("Amount to Deposit") @RequestParam float amount,
+    public boolean deposit(@ApiParam("Amount to Deposit") @RequestParam double amount,
                              HttpServletRequest req) {
         return investmentService.deposit(util.unwrapUsername(req), amount);
     }
@@ -123,7 +123,7 @@ public class InvestmentController {
             @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE),
             @ApiResponse(code = 406, message = "There is no user found."),
             @ApiResponse(code = 412, message = "The amount of withdraw is not valid.")})
-    public boolean sellAsset(@ApiParam("Amount to Withdraw") @RequestParam float amount,
+    public boolean sellAsset(@ApiParam("Amount to Withdraw") @RequestParam double amount,
                              HttpServletRequest req) {
         return investmentService.withdraw(util.unwrapUsername(req), amount);
     }
@@ -134,7 +134,7 @@ public class InvestmentController {
     @ApiOperation(value = " Returns profit/loss of the user as percentage. Negative values stands for loss. ", response = Integer.class)
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE) })
-    public float profitLossByUser(@ApiParam( "Username" ) @PathVariable String username,
+    public double profitLossByUser(@ApiParam( "Username" ) @PathVariable String username,
                                                            HttpServletRequest req) {
         return investmentService.profitLossByUser(util.unwrapUsername(req), username);
     }

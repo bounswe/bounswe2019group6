@@ -24,7 +24,7 @@ public class Investment implements Serializable {
     private Date createdAt;
 
     @Column(name = "amount", nullable = false)
-    private float amount;
+    private double amount;
 
     @PrePersist
     public void addTimestamp() {
@@ -39,9 +39,9 @@ public class Investment implements Serializable {
         this.user = user;
     }
 
-    public float getAmount(){ return amount; }
+    public double getAmount(){ return amount; }
 
-    public void setAmount(float amount){
+    public void setAmount(double amount){
         this.amount=amount;
     }
 

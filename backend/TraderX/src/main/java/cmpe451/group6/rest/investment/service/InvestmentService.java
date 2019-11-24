@@ -127,7 +127,7 @@ public class InvestmentService {
         return investmentRepository.countByUser_usernameAndInvestmentType_name(requesterName, investmentType);
     }
 
-    public boolean deposit(String requesterName, float amount) {
+    public boolean deposit(String requesterName, double amount) {
         User user = userRepository.findByUsername(requesterName);
         if (user == null) {
             throw new CustomException("There is no user named " + requesterName + ".", HttpStatus.NOT_ACCEPTABLE);
@@ -164,7 +164,7 @@ public class InvestmentService {
         return true;
     }
 
-    public boolean withdraw(String requesterName, float amount) {
+    public boolean withdraw(String requesterName, double amount) {
         User user = userRepository.findByUsername(requesterName);
         if (user == null) {
             throw new CustomException("There is no user named " + requesterName + ".", HttpStatus.NOT_ACCEPTABLE);
@@ -180,7 +180,7 @@ public class InvestmentService {
             throw new CustomException("The amount of withdraw cannot be negative", HttpStatus.PRECONDITION_FAILED);
         }
 
-        float usersMoney = asset.getAmount();
+        double usersMoney = asset.getAmount();
         if (usersMoney < amount) {
             throw new CustomException(
                     "The user doesn't have enough money in the system to withdraw " + amount + " amount.",
@@ -207,7 +207,7 @@ public class InvestmentService {
         return true;
     }
 
-    public float profitLossByUser(String requesterName, String username) {
+    public double profitLossByUser(String requesterName, String username) {
 
         User user = userRepository.findByUsername(username);
         if (user == null) {
@@ -220,24 +220,28 @@ public class InvestmentService {
             List<Investment> withdraws = getInvestmentsByUsernameAndInvestmentType(username, InvestmentType.WITHDRAW);
 
             //calculating total deposits
-            float dep = 0;
+            double dep = 0;
             for (Investment i:deposits) {
                 dep += i.getAmount();
             }
 
             //calculating total withdraws
-            float wit = 0;
+            double wit = 0;
             for (Investment i:withdraws){
                 wit += i.getAmount();
             }
 
             List<Asset> assets = assetRepository.findByUser_username(username);
 
-            float moneyInSystem = 0;
+            double moneyInSystem = 0;
 
             for (Asset a:assets) {
                 moneyInSystem += a.getAmount()*equipmentRepository.findByCode(a.getEquipment().getCode()).getCurrentValue();
             }
+
+            System.out.println("Total deposits: "+dep);
+            System.out.println("Total withdraws: "+wit);
+            System.out.println("moneyInTheSystem: "+moneyInSystem);
 
             return ( 100 * (moneyInSystem + wit) / dep) - 100;
 

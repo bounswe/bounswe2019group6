@@ -106,7 +106,7 @@ public class TransactionService {
         return TransactionRepository.countByEquipment_code(code);
     }
 
-    public boolean buyAsset(String requesterName, String code, float amount) {
+    public boolean buyAsset(String requesterName, String code, double amount) {
         User user = userRepository.findByUsername(requesterName);
         if (user == null) {
             throw new CustomException("There is no user named " + requesterName + ".", HttpStatus.NOT_ACCEPTABLE);
@@ -125,8 +125,8 @@ public class TransactionService {
             throw new CustomException("The amount of investment cannot be negative value", HttpStatus.PRECONDITION_FAILED);
         }
 
-        float neededMoney = (float) (amount * equipment.getCurrentValue());
-        float usersMoney = asset.getAmount();
+        double neededMoney = (double) (amount * equipment.getCurrentValue());
+        double usersMoney = asset.getAmount();
         if (neededMoney > usersMoney) {
             throw new CustomException("The user doesn't have enough money to buy " + amount + " " + code + ".",
                     HttpStatus.PRECONDITION_FAILED);
@@ -160,7 +160,7 @@ public class TransactionService {
         return true;
     }
 
-    public boolean sellAsset(String requesterName, String code, float amount) {
+    public boolean sellAsset(String requesterName, String code, double amount) {
         User user = userRepository.findByUsername(requesterName);
         if (user == null) {
             throw new CustomException("There is no user named " + requesterName + ".", HttpStatus.NOT_ACCEPTABLE);
@@ -188,8 +188,8 @@ public class TransactionService {
 
         // CAN SELL
         Asset a = assetRepository.getAsset(requesterName, EquipmentConfig.BASE_CURRENCY_CODE);
-        float usersMoney = a.getAmount();
-        float newMoney = (float) (amount * equipment.getCurrentValue());
+        double usersMoney = a.getAmount();
+        double newMoney = (double) (amount * equipment.getCurrentValue());
 
         // set new money
         Asset temp = assetRepository.getAsset(requesterName, EquipmentConfig.BASE_CURRENCY_CODE);
@@ -202,7 +202,7 @@ public class TransactionService {
 
         } else {
             // set remaining asset
-            float oldAmount = asset.getAmount();
+            double oldAmount = asset.getAmount();
             asset.setAmount(oldAmount - amount);
             assetRepository.save(asset);
         }

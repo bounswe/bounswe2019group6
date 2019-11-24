@@ -24,7 +24,7 @@ public class Asset {
     private Equipment equipment;
 
     @Column(name = "amount", nullable = false)
-    private float amount;
+    private double amount;
 
     public User getUser() {
         return user;
@@ -42,11 +42,11 @@ public class Asset {
         this.equipment = equipmentCode;
     }
 
-    public float getAmount() {
+    public double getAmount() {
         return amount;
     }
 
-    public void setAmount(float amount) {
+    public void setAmount(double amount) {
         this.amount = amount;
     }
 

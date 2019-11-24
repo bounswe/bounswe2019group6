@@ -98,7 +98,7 @@ public class TransactionController {
             @ApiResponse(code = 406, message = "There is no user or equipment found."),
             @ApiResponse(code = 412, message = "User does not have enough money for the transaction.")})
     public boolean buyAsset(@ApiParam("Code of asset") @RequestParam String code,
-            @ApiParam("Amount wanted to buy") @RequestParam float amount, HttpServletRequest req) {
+            @ApiParam("Amount wanted to buy") @RequestParam double amount, HttpServletRequest req) {
         return transactionService.buyAsset(util.unwrapUsername(req), code, amount);
     }
 
@@ -111,7 +111,7 @@ public class TransactionController {
             @ApiResponse(code = 406, message = "There is no user or equipment found."),
             @ApiResponse(code = 412, message = "User does not have enough asset for the transaction.")})
     public boolean sellAsset(@ApiParam("Code of asset") @RequestParam String code,
-            @ApiParam("Amount wanted to sell") @RequestParam float amount, HttpServletRequest req) {
+            @ApiParam("Amount wanted to sell") @RequestParam double amount, HttpServletRequest req) {
         return transactionService.sellAsset(util.unwrapUsername(req), code, amount);
     }
 
