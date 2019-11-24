@@ -23,6 +23,7 @@ import com.traderx.db.User
 import com.traderx.enum.FollowingStatus
 import com.traderx.util.Helper
 import com.traderx.util.Injection
+import com.traderx.viewmodel.AuthUserViewModel
 import com.traderx.viewmodel.UserViewModel
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -31,6 +32,7 @@ import io.reactivex.disposables.CompositeDisposable
 class UserFragment : Fragment() {
 
     private lateinit var userViewModel: UserViewModel
+    private lateinit var authUserViewModel: AuthUserViewModel
 
     private var username: String? = null
     private lateinit var user: User
@@ -57,6 +59,9 @@ class UserFragment : Fragment() {
         val userViewModelFactory = Injection.provideUserViewModelFactory(context as Context)
         userViewModel =
             ViewModelProvider(this, userViewModelFactory).get(UserViewModel::class.java)
+        val authUserViewModelFactory = Injection.provideAuthUserViewModelFactory(context as Context)
+        authUserViewModel =
+            ViewModelProvider(this, authUserViewModelFactory).get(AuthUserViewModel::class.java)
 
         // Inflate the layout for this fragment
         val root = inflater.inflate(R.layout.fragment_user, container, false)
@@ -113,9 +118,9 @@ class UserFragment : Fragment() {
 
         val request: Single<SuccessResponse> =
             if (status == FollowingStatus.FOLLOWING.value || status == FollowingStatus.PENDING.value)
-                userViewModel.unfollowUser(username ?: "")
+                authUserViewModel.unfollowUser(username ?: "")
             else
-                userViewModel.followUser(username ?: "")
+                authUserViewModel.followUser(username ?: "")
 
         disposable.add(
             request.flatMap { fetchUser().doOnSuccess { updateUser(it) } }

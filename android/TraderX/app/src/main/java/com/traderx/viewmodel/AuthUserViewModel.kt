@@ -4,6 +4,7 @@ import android.content.Context
 import com.traderx.api.ErrorHandler
 import com.traderx.api.RequestService
 import com.traderx.api.response.FollowerResponse
+import com.traderx.api.response.SuccessResponse
 import com.traderx.db.User
 import com.traderx.db.UserDao
 import io.reactivex.Completable
@@ -17,6 +18,10 @@ class AuthUserViewModel(
 
     companion object {
         private var userUpdated = false
+
+        fun refreshUser() {
+            userUpdated = false
+        }
     }
 
 
@@ -43,12 +48,47 @@ class AuthUserViewModel(
 
     fun updateUser(status: Boolean): Completable {
         userUpdated = false
-        return networkSource.updateUser(if(status) "private" else "public")
+        return networkSource.updateUser(if (status) "private" else "public")
     }
 
+    fun followUser(username: String): Single<SuccessResponse> {
+        refreshUser()
 
-    fun pendingFollowRequests(context: Context): Single<List<FollowerResponse>> {
+        return networkSource.followUser(username)
+    }
+
+    fun unfollowUser(username: String): Single<SuccessResponse> {
+        refreshUser()
+
+        return networkSource.unfollowUser(username)
+    }
+
+    fun removeFollower(username: String): Single<SuccessResponse> {
+        refreshUser()
+
+        return networkSource.removeFollower(username)
+    }
+
+    fun pendingFollowRequests(context: Context): Single<ArrayList<FollowerResponse>> {
         return user(context).flatMap { networkSource.pendingFollowRequests(it.username) }
+    }
+
+    fun acceptFollowRequest(username: String): Completable {
+        refreshUser()
+
+        return networkSource.acceptFollowRequest(username)
+    }
+
+    fun declineFollowRequest(username: String): Completable {
+        refreshUser()
+
+        return networkSource.declineFollowRequest(username)
+    }
+
+    fun becomeTrader(iban: String): Completable {
+        refreshUser()
+
+        return networkSource.becomeTrader("trader", iban)
     }
 
     private fun fetchUser(): Single<User> {
@@ -60,7 +100,7 @@ class AuthUserViewModel(
     }
 
     private fun updateUserLocal(user: User): Completable {
-        userUpdated = true
+        refreshUser()
 
         return dataSource.insertUser(user)
     }

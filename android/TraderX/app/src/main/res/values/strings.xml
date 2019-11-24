@@ -18,6 +18,8 @@
     <string name="password_again">Repeat Password</string>
 
     <!--    Words-->
+    <string name="ok">Ok</string>
+    <string name="cancel">Cancel</string>
     <string name="login">Login</string>
     <string name="signout">Sign Out</string>
     <string name="signup">Sign Up</string>
@@ -44,6 +46,10 @@
     <string name="save">Save</string>
     <string name="buy">Buy</string>
 
+    <!--    Actions-->
+    <string name="become_trader">Become a Trader</string>
+    <string name="enter_iban_for_trader">Enter Your IBAN to Become Trader</string>
+
     <!--    Symbols-->
     <string name="try_value">₺ %1$s</string>
     <string name="eur_value">€ %1$s</string>
@@ -54,7 +60,10 @@
     <string name="follow_success">You are following %1$s now</string>
     <string name="cancel_request">Cancel Request</string>
     <string name="request_canceled">Follow request for %1$s is canceled</string>
+    <string name="remove_follower">%1$s is not following you now</string>
     <string name="unfollowed">%1$s is unfollowed</string>
+    <string name="accept_pending_request">%1$s is now following you</string>
+    <string name="decline_pending_request">You declined %1$s follow request</string>
 
     <string name="not_available">Not Available</string>
     <string name="connecting">Connecting</string>
