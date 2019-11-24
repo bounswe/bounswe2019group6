@@ -31,7 +31,7 @@ interface RequestService {
     fun signout(): Single<SuccessResponse>
 
     @POST(ApiEndpoint.BECOME_TRADER)
-    fun becomeTrader(@Path("role") role: String , @Query("iban") iban: String): Completable
+    fun becomeTrader(@Path("role") role: String, @Query("iban") iban: String): Completable
 
     @POST(ApiEndpoint.FOLLOW_USER)
     fun followUser(@Query("username") username: String): Single<SuccessResponse>
@@ -86,4 +86,13 @@ interface RequestService {
 
     @GET(ApiEndpoint.COMMENT_EQUIPMENT)
     fun getEquipmentComments(@Path("code") code: String): Single<List<CommentResponse>>
+
+    @POST(ApiEndpoint.TRANSACTION_BUY)
+    fun postTransactionBuy(@Query("code") code: String, @Query("amount") amount: Double): Completable
+
+    @GET(ApiEndpoint.TRANSACTIONS)
+    fun getTransactions(@Path("username") username: String): Single<List<TransactionsResponse>>
+
+    @GET(ApiEndpoint.ASSET_AMOUNT)
+    fun getAssetAmount(@Path("code") code: String): Single<AssetResponse>
 }
