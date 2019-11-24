@@ -7,20 +7,19 @@ import cmpe451.group6.rest.equipment.configuration.EquipmentConfig;
 import cmpe451.group6.rest.equipment.model.Equipment;
 import cmpe451.group6.rest.equipment.repository.EquipmentRepository;
 import cmpe451.group6.rest.follow.service.FollowService;
+import cmpe451.group6.helpers.CustomModelMapper;
 import cmpe451.group6.rest.transaction.dto.TransactionDTO;
+import cmpe451.group6.rest.transaction.dto.TransactionWithUserDTO;
 import cmpe451.group6.rest.transaction.model.Transaction;
 import cmpe451.group6.rest.transaction.model.TransactionType;
 import cmpe451.group6.rest.transaction.repository.TransactionRepository;
 import cmpe451.group6.authorization.model.User;
 import cmpe451.group6.authorization.repository.UserRepository;
-import cmpe451.group6.rest.follow.model.FollowStatus;
 import cmpe451.group6.rest.follow.repository.FollowRepository;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import javax.swing.event.HyperlinkEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Date;
@@ -47,9 +46,9 @@ public class TransactionService {
     private FollowService followService;
 
     @Autowired
-    private ModelMapper modelMapper;
+    private CustomModelMapper modelMapper;
 
-    public List<Transaction> getTransactionsByUser(String username, String requesterName) {
+    public List<TransactionWithUserDTO> getTransactionsByUser(String username, String requesterName) {
         User user = userRepository.findByUsername(username);
         if (user == null) {
             throw new CustomException("There is no user named " + username + ".", HttpStatus.NOT_ACCEPTABLE);
@@ -57,8 +56,10 @@ public class TransactionService {
             throw new CustomException("The requested user's profile is private and requester is not following!",
                     HttpStatus.NOT_ACCEPTABLE);
         } else {
-            List<Transaction> transactions = TransactionRepository.findByUser_username(username);
-            return transactions;
+            List<TransactionWithUserDTO> transactionWithUserDTOS = new ArrayList<TransactionWithUserDTO>();
+            TransactionRepository.findByUser_username(username)
+                    .forEach(item -> transactionWithUserDTOS.add(modelMapper.map(item, TransactionWithUserDTO.class)));
+            return transactionWithUserDTOS;
         }
     }
 

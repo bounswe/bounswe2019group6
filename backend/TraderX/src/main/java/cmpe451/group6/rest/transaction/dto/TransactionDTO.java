@@ -1,27 +1,27 @@
 package cmpe451.group6.rest.transaction.dto;
-
 import java.util.Date;
 
+import cmpe451.group6.rest.equipment.model.Equipment;
 import cmpe451.group6.rest.transaction.model.TransactionType;
 import io.swagger.annotations.ApiModelProperty;
 
 public class TransactionDTO {
 
     @ApiModelProperty(position = 0, required = true)
-    private String equipment;
+    private Equipment equipmentCode;
     @ApiModelProperty(position = 1, required = true)
     private TransactionType transactionType;
     @ApiModelProperty(position = 2, required = true)
-    private Date createdAt;
+    private String createdAt;
     @ApiModelProperty(position = 3, required = true)
     private double amount;
 
     public String getEquipment() {
-        return equipment;
+        return equipmentCode.getCode();
     }
 
-    public void setEquipment(String equipment) {
-        this.equipment = equipment;
+    public void setEquipment(Equipment equipment) {
+        this.equipmentCode = equipment;
     }
 
     public TransactionType getTransactionType() {
@@ -32,11 +32,11 @@ public class TransactionDTO {
         this.transactionType = type;
     }
 
-    public Date getCreatedAt() {
+    public String getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Date createdAt) {
+    public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
     }
 

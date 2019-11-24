@@ -2,6 +2,7 @@ package cmpe451.group6.rest.transaction.controller;
 
 import cmpe451.group6.Util;
 import cmpe451.group6.rest.transaction.dto.TransactionDTO;
+import cmpe451.group6.rest.transaction.dto.TransactionWithUserDTO;
 import cmpe451.group6.rest.transaction.model.Transaction;
 import cmpe451.group6.rest.transaction.service.TransactionService;
 import io.swagger.annotations.*;
@@ -30,9 +31,9 @@ public class TransactionController {
     @GetMapping(value = "/user/{username}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_BASIC') or hasRole('ROLE_TRADER')")
-    @ApiOperation(value = "Gets transactions of an user", response = Transaction.class)
+    @ApiOperation(value = "Gets transactions of an user", response = TransactionWithUserDTO.class)
     @ApiResponses(value = { @ApiResponse(code = 406, message = "No such an equipment found.") })
-    public List<Transaction> getTransactionsByUser(@ApiParam("User Name") @PathVariable String username,
+    public List<TransactionWithUserDTO> getTransactionsByUser(@ApiParam("User Name") @PathVariable String username,
             HttpServletRequest req) {
         return transactionService.getTransactionsByUser(username, util.unwrapUsername(req));
     }
