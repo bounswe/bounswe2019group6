@@ -9,6 +9,8 @@
     <string name="title_trader_equipment">Trader Equipments</string>
     <string name="title_profile">Profile</string>
     <string name="title_user_edit">Edit Profile</string>
+    <string name="title_transaction">Transaction</string>
+    <string name="title_my_transactions">My Transactions</string>
     <string name="welcome_back">Welcome Back</string>
     <!--    Fields-->
     <string name="username">Username</string>
@@ -45,6 +47,8 @@
     <string name="stocks">Stocks</string>
     <string name="save">Save</string>
     <string name="buy">Buy</string>
+    <string name="equipment">Equipment</string>
+    <string name="amount">Amount</string>
 
     <!--    Actions-->
     <string name="become_trader">Become a Trader</string>
@@ -55,6 +59,10 @@
     <string name="eur_value">€ %1$s</string>
     <string name="usd_value">$ %1$s</string>
 
+    <!--    Transaction-->
+    <string name="min_transaction_error">You should specify an amount bigger than 0</string>
+    <string name="not_enough_deposit">You do not have enough deposit to buy</string>
+    <string name="transaction_succes">Transaction is successfully completed</string>
     <!--    Follow-->
     <string name="follow_requested">Follow request is sent to %1$s.</string>
     <string name="follow_success">You are following %1$s now</string>

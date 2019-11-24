@@ -26,6 +26,28 @@
         <argument
             android:name="equipment_name"
             app:argType="string" />
+        <action
+            android:id="@+id/action_navigation_equipment_to_navigation_transaction"
+            app:destination="@id/navigation_transaction" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_transactions"
+        android:name="com.traderx.ui.transaction.TransactionsFragment"
+        android:label="@string/title_my_transactions"
+        tools:layout="@layout/fragment_transactions"/>
+
+    <fragment
+        android:id="@+id/navigation_transaction"
+        android:name="com.traderx.ui.transaction.TransactionFragment"
+        android:label="@string/title_transaction"
+        tools:layout="@layout/fragment_transaction">
+        <argument
+            android:name="equipment_code"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_navigation_transaction_to_navigation_transactions"
+            app:destination="@id/navigation_transactions" />
     </fragment>
 
     <fragment
@@ -79,7 +101,7 @@
 
     <fragment
         android:id="@+id/navigation_pending_follow_requests"
-        android:name="com.traderx.ui.profile.PendingFollowRequestsFragment"
+        android:name="com.traderx.ui.profile.PendingRequestsFragment"
         android:label="@string/pending"
         tools:layout="@layout/fragment_pending_follow_requests">
         <action
@@ -132,6 +154,9 @@
         <action
             android:id="@+id/action_navigation_auth_user_to_navigation_pending_follow_requests"
             app:destination="@id/navigation_pending_follow_requests" />
+        <action
+            android:id="@+id/action_navigation_auth_user_to_navigation_transactions"
+            app:destination="@id/navigation_transactions" />
     </fragment>
 
     <fragment
