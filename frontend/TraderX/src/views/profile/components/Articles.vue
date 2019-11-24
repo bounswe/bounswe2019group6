@@ -1,6 +1,7 @@
 <template>
   <div class="createPost-container">
     <el-form
+      v-if="isSelf"
       ref="postForm"
       :model="postForm"
       class="form-container"
@@ -96,6 +97,9 @@
         </el-form-item> -->
       </div>
     </el-form>
+    <div style="text-align: center" v-else>
+      <h2>This user has no article to show</h2>
+    </div>
   </div>
 </template>
 
@@ -133,7 +137,8 @@ export default {
       postForm: Object.assign({}, defaultForm),
       loading: false,
       userListOptions: [],
-      tempRoute: {}
+      tempRoute: {},
+      isSelf: this.$route.path.split('/')[1] == 'profile' ? true : false
     }
   },
   computed: {

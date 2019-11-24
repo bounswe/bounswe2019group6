@@ -1,7 +1,10 @@
 <template>
   <div>
-    <div style="text-align: center">
+    <div style="text-align: center" v-if="isSelf">
       <el-button @click="showDialog=true" type="primary"><svg-icon style="margin-right:10px" icon-class="documentation" />Create Portfolio</el-button>
+    </div>
+    <div style="text-align: center" v-else>
+      <h2>This user has no portfolio to show</h2>
     </div>
     <div>
       <CoolCard :cardData="all_portfolios" :username="username"/>
@@ -36,6 +39,7 @@ export default {
         portfolioName: '',
         portfolioDescription: ''
       },
+      isSelf: this.$route.path.split('/')[1] == 'profile' ? true : false
     }
   },
   methods: {

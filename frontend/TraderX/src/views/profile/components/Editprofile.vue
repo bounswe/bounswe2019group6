@@ -21,6 +21,16 @@
           <el-button slot="append" @click="updateRole(traderibaninput)">Update</el-button>
         </el-input>
       </el-collapse-item>
+      <el-collapse-item title="Load Money" name="2" v-if="!istrader">
+        <el-input placeholder="Please enter some money amount" v-model="loadmoneyinput" class="input-with-select">
+          <el-select style="width: 100px" v-model="selectedFilter" slot="prepend" placeholder="Select">
+            <el-option label="TR" value="1"></el-option>
+            <el-option label="USD" value="2"></el-option>
+            <el-option label="EUR" value="3"></el-option>
+          </el-select>
+          <el-button @click="loadMoney(loadmoneyinput)" slot="append">Load</el-button>
+        </el-input>
+      </el-collapse-item>
     </el-collapse>
   </div>
 </template>
@@ -50,7 +60,8 @@
         privatepublic: !this.user.isPrivate,
         istrader: this.user.roles[0] == 'ROLE_TRADER' ? true : false,
         seen: false,
-        ibanshow: false
+        ibanshow: false,
+        selectedFilter: "1"
       };
     },
     methods: {
@@ -59,7 +70,6 @@
               "token": getToken(),
               "newPassword": pass
           }
-        console.log(temp)
         this.$store.dispatch('user/updatePassword', temp).then(() => {
               this.$message.success('Your Password Is Changed Successfully!')
               this.passwordinput = ""
@@ -86,7 +96,8 @@
         }
       },
       updateRole(iban){
-        console.log(iban)
+      },
+      loadMoney(moneyamount) {
       },
       updatePrivacy(isPrivate){
         if(isPrivate){

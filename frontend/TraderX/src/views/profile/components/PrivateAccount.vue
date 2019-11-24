@@ -1,6 +1,6 @@
 <template>
   <div>
-    <img id="privateid" src="https://o0o0sm3y25-flywheel.netdna-ssl.com/wp-content/uploads/2018/09/img_20170429_050104.png">
+    <img src="https://o0o0sm3y25-flywheel.netdna-ssl.com/wp-content/uploads/2018/09/img_20170429_050104.png">
   </div>
 </template>
 
@@ -12,7 +12,7 @@ export default {
 
 <style scoped>
   img {
-    width: 90%;
-    height: 90%;
+    width: 97%;
+    height: 97%;
   }
 </style>

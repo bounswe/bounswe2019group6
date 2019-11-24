@@ -13,6 +13,9 @@
         <el-table-column label="Equipment Name">
           <template slot-scope="scope">{{ scope.row.equipmentName }}</template>
         </el-table-column>
+        <el-table-column label="Equipment Type">
+          <template slot-scope="scope">{{ scope.row.equipmentType }}</template>
+        </el-table-column>
         <el-table-column label="Current Value">
           <template slot-scope="scope">{{ scope.row.currentValue }}</template>
         </el-table-column>
@@ -118,7 +121,8 @@ export default {
           equip.push({
             "equipmentName": res.equipments[i].code,
             "currentValue": res.equipments[i].data.currentValue,
-            "currentStock": res.equipments[i].data.currentStock
+            "currentStock": res.equipments[i].data.currentStock,
+            "equipmentType": "Currency"
           })
         }
         this.currencyTableData = equip
@@ -134,7 +138,8 @@ export default {
           equip.push({
             "equipmentName": res.equipments[i].code,
             "currentValue": res.equipments[i].data.currentValue,
-            "currentStock": res.equipments[i].data.currentStock
+            "currentStock": res.equipments[i].data.currentStock,
+            "equipmentType": "Crypto Currency"
           })
         }
         this.cryptoCurrencyTableData = equip
@@ -150,7 +155,8 @@ export default {
           equip.push({
             "equipmentName": res.equipments[i].code,
             "currentValue": res.equipments[i].data.currentValue,
-            "currentStock": res.equipments[i].data.currentStock
+            "currentStock": res.equipments[i].data.currentStock,
+            "equipmentType": "Stock"
           })
         }
         this.stockTableData = equip
