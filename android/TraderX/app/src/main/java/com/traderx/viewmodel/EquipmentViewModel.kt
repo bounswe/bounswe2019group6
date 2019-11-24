@@ -4,11 +4,9 @@ import com.traderx.api.RequestService
 import com.traderx.api.response.CommentResponse
 import com.traderx.api.response.EquipmentResponse
 import com.traderx.api.response.EquipmentsResponse
-import com.traderx.db.Equipment
 import com.traderx.db.EquipmentDao
 import io.reactivex.Flowable
 import io.reactivex.Single
-import io.reactivex.disposables.Disposable
 
 class EquipmentViewModel(
     private val dataSource: EquipmentDao,

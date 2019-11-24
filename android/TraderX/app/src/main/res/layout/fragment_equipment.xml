@@ -40,6 +40,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="@color/txt_color"
+                            android:text="@string/equipment"
                             android:textSize="17.3sp" />
 
 
@@ -98,16 +99,6 @@
                                 android:gravity="center"
                                 android:textColor="#17b978"
                                 android:textSize="12sp" />
-
-
-                            <!--                    <ImageView-->
-                            <!--                        android:id="@+id/arrow"-->
-                            <!--                        android:layout_width="10dp"-->
-                            <!--                        android:layout_height="10dp"-->
-                            <!--                        android:layout_gravity="center"-->
-                            <!--                        android:layout_marginLeft="7dp"-->
-                            <!--                        android:src="@drawable/ic_arrowup" />-->
-
 
                         </LinearLayout>
                     </LinearLayout>
