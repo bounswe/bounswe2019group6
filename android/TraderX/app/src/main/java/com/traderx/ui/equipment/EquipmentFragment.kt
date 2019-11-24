@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.traderx.R
 import com.traderx.api.ErrorHandler
 import com.traderx.api.response.CommentResponse
@@ -29,7 +30,6 @@ import lecho.lib.hellocharts.view.LineChartView
 class EquipmentFragment : Fragment(), FragmentTitleEmitters {
     private var equipmentCode: String? = null
     private lateinit var equipmentViewModel: EquipmentViewModel
-
     private lateinit var commentsRecyclerView: RecyclerView
 
     private lateinit var code: TextView
@@ -71,6 +71,12 @@ class EquipmentFragment : Fragment(), FragmentTitleEmitters {
         stock = root.findViewById(R.id.stock)
         prediction = root.findViewById(R.id.prediction)
         equipmentType = root.findViewById(R.id.equipment_type)
+
+        root.findViewById<FloatingActionButton>(R.id.alert_action)?.let {
+            it.setOnClickListener {
+
+            }
+        }
 
         val viewManager = LinearLayoutManager(context as Context)
         commentsRecyclerView = root.findViewById<RecyclerView>(R.id.comment_list).apply {
