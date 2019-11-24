@@ -44,7 +44,7 @@ public class TransactionService {
     private AssetRepository assetRepository;
 
     @Autowired
-    private PortfolioRepository portfolioRepository;    
+    private PortfolioRepository portfolioRepository;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -84,8 +84,7 @@ public class TransactionService {
         return transactionDTOs;
     }
 
-    // CHANGED// CHANGED// CHANGED// CHANGED// CHANGED// CHANGED// CHANGED
-    public List<TransactionDTO> getTransactionByDateBetweenOfUser(Date start, Date end, User username,
+    public List<TransactionDTO> getTransactionByDateBetweenOfUser(Date start, Date end, String username,
             String requesterName) {
 
         User user = userRepository.findByUsername(username);
@@ -103,8 +102,6 @@ public class TransactionService {
         }
 
     }
-
-    // CHANGED// CHANGED// CHANGED// CHANGED// CHANGED// CHANGED// CHANGED
 
     public int numberOfTransactions() {
         return TransactionRepository.countAll();

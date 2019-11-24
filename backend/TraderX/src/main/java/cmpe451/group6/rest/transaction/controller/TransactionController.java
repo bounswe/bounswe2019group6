@@ -62,7 +62,6 @@ public class TransactionController {
         return transactionService.getTransactionByDateBetween(start, end);
     }
 
-    // CHANGED CHANGED CHANGED CHANGED
 
     @GetMapping(value = "/byDate/{username}")
     @ResponseStatus(HttpStatus.OK)
@@ -73,7 +72,6 @@ public class TransactionController {
         return transactionService.getTransactionByDateBetween(start, end, username, util.unwrapUsername(req));
     }
 
-    // CHANGED CHANGED CHANGED CHANGED
 
     @GetMapping(value = "/count/all")
     @ResponseStatus(HttpStatus.OK)
