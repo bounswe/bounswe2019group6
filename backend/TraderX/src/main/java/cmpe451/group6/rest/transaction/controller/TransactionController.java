@@ -67,9 +67,9 @@ public class TransactionController {
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Returns transactions of a specific user in between start date and end date (no auth required)", response = TransactionDTO.class)
     @ApiResponses(value = { @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE) })
-    public List<TransactionDTO> getTransactionsByDateBetween(@ApiParam("Start Date") @RequestParam Date start,
+    public List<TransactionDTO> getTransactionByDateBetweenOfUser(@ApiParam("Start Date") @RequestParam Date start,
             @ApiParam("End Date") @RequestParam Date end,@ApiParam("User Name") @PathVariable String username, HttpServletRequest req) {
-        return transactionService.getTransactionByDateBetween(start, end, username, util.unwrapUsername(req));
+        return transactionService.getTransactionByDateBetweenOfUser(start, end, username, util.unwrapUsername(req));
     }
 
 

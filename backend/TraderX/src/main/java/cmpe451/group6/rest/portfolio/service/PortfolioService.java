@@ -1,20 +1,27 @@
 package cmpe451.group6.rest.portfolio.service;
 
 import cmpe451.group6.authorization.exception.CustomException;
+import cmpe451.group6.authorization.repository.UserRepository;
 import cmpe451.group6.authorization.model.User;
 import cmpe451.group6.rest.equipment.configuration.EquipmentConfig;
 import cmpe451.group6.rest.equipment.dto.EquipmentHistoryDTO;
 import cmpe451.group6.rest.equipment.dto.EquipmentMetaWrapper;
 import cmpe451.group6.rest.equipment.dto.EquipmentResponseDTO;
-import cmpe451.group6.rest.equipment.dto.PortfolioResponseDTO;
+import cmpe451.group6.rest.portfolio.dto.PortfolioResponseDTO;
 import cmpe451.group6.rest.portfolio.dto.PortfolioEquipmentDTO;
 import cmpe451.group6.rest.equipment.model.HistoricalValue;
 import cmpe451.group6.rest.equipment.model.Equipment;
+import cmpe451.group6.rest.portfolio.model.Portfolio;
 import cmpe451.group6.rest.equipment.repository.EquipmentRepository;
 import cmpe451.group6.rest.equipment.repository.HistoricalValueRepository;
 import cmpe451.group6.rest.equipment.service.EquipmentService;
-import cmpe451.group6.rest.portfolio.dto.PortfolioEquipmentDTO;
 import cmpe451.group6.rest.portfolio.repository.PortfolioRepository;
+import cmpe451.group6.rest.transaction.repository.TransactionRepository;
+import cmpe451.group6.rest.follow.repository.FollowRepository;
+import cmpe451.group6.rest.follow.service.FollowService;;
+import cmpe451.group6.rest.asset.model.Asset;
+import cmpe451.group6.rest.asset.repository.AssetRepository;
+
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,14 +29,19 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.Date;
 
 @Service
 public class PortfolioService {
 
     @Autowired
     PortfolioRepository portfolioRepository;
+    
+    @Autowired
+    PortfolioService portfolioService;
 
     @Autowired
     HistoricalValueRepository historicalValueRepository;
@@ -45,6 +57,9 @@ public class PortfolioService {
 
     @Autowired
     private FollowRepository followRepository;
+
+    @Autowired
+    private FollowService followService;
 
     @Autowired
     private EquipmentRepository equipmentRepository;
@@ -65,10 +80,10 @@ public class PortfolioService {
         User user = userRepository.findByUsername(requesterName);
         if (user == null) {
             throw new CustomException("There is no user named " + requesterName + ".", HttpStatus.NOT_ACCEPTABLE);
-        } else if (PortfolioRepository.getPortfolioOfUser(requesterName, portfolioName) != null) {
+        } else if (portfolioRepository.getPortfolioOfUser(requesterName, portfolioName) != null) {
             throw new CustomException("You already have a portfolio with the name " + portfolioName,
                     HttpStatus.PRECONDITION_FAILED);
-        } else if (PortfolioRepository.countByUser_username(requesterName) >= 10) {
+        } else if (portfolioRepository.countByUser_username(requesterName) >= 10) {
             throw new CustomException("You can not have more than 10 portfolios ", HttpStatus.PRECONDITION_FAILED);
         }
 
@@ -100,14 +115,14 @@ public class PortfolioService {
             throw new CustomException("There is no user named " + requesterName + ".", HttpStatus.NOT_ACCEPTABLE);
         }
 
-        Portfolio portfolioToDelete = PortfolioRepository.getPortfolioOfUser(requesterName, portfolioName);
+        Portfolio portfolioToDelete = portfolioRepository.getPortfolioOfUser(requesterName, portfolioName);
 
         if (portfolioToDelete == null) {
             throw new CustomException("Portfolio with the name " + portfolioName + " does not exist",
                     HttpStatus.PRECONDITION_FAILED);
         }
 
-        PortfolioRepository.delete(portfolioToDelete);
+        portfolioRepository.delete(portfolioToDelete);
         return ("Portfolio " + portfolioName + " is succesfully deleted");
 
     }
@@ -127,7 +142,7 @@ public class PortfolioService {
             throw new CustomException("There is no user named " + username + ".", HttpStatus.NOT_ACCEPTABLE);
         }
 
-        Portfolio targetPortfolio = PortfolioRepository.getPortfolioOfUser(username, portfolioName);
+        Portfolio targetPortfolio = portfolioRepository.getPortfolioOfUser(username, portfolioName);
 
         if (targetPortfolio == null) {
             throw new CustomException("Portfolio with the name " + portfolioName + " does not exist",
@@ -171,7 +186,7 @@ public class PortfolioService {
             throw new CustomException("There is no user named " + username + ".", HttpStatus.NOT_ACCEPTABLE);
         }
 
-        Portfolio targetPortfolio = PortfolioRepository.getPortfolioOfUser(username, portfolioName);
+        Portfolio targetPortfolio = portfolioRepository.getPortfolioOfUser(username, portfolioName);
 
         if (targetPortfolio == null) {
             throw new CustomException("Portfolio with the name " + portfolioName + " does not exist",
@@ -217,7 +232,7 @@ public class PortfolioService {
             throw new CustomException("There is no user named " + username + ".", HttpStatus.NOT_ACCEPTABLE);
         }
 
-        Portfolio portfolioToGet = PortfolioRepository.getPortfolioOfUser(username, portfolioName);
+        Portfolio portfolioToGet = portfolioRepository.getPortfolioOfUser(username, portfolioName);
 
         if (portfolioToGet == null) {
             throw new CustomException("Portfolio with the name " + portfolioName + " does not exist",
@@ -257,7 +272,7 @@ public class PortfolioService {
 
         List<Portfolio> portfolioList = new ArrayList<Portfolio>();
 
-        PortfolioRepository.getAllPortfoliosByDate(start, end).forEach(item -> portfolioList.add(item));
+        portfolioRepository.getAllPortfoliosByDate(start, end).forEach(item -> portfolioList.add(item));
 
         return portfolioList;
     }
@@ -287,7 +302,7 @@ public class PortfolioService {
 
             List<Portfolio> portfolioList = new ArrayList<Portfolio>();
 
-            PortfolioRepository.getPortfoliosOfUserByDate(start, end, username)
+            portfolioRepository.getPortfoliosOfUserByDate(start, end, username)
                     .forEach(item -> portfolioList.add(item));
 
             return portfolioList;

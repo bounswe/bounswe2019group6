@@ -15,6 +15,7 @@ import cmpe451.group6.rest.transaction.repository.TransactionRepository;
 import cmpe451.group6.authorization.model.User;
 import cmpe451.group6.authorization.repository.UserRepository;
 import cmpe451.group6.rest.follow.model.FollowStatus;
+import cmpe451.group6.rest.follow.service.FollowService;
 import cmpe451.group6.rest.follow.repository.FollowRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,9 @@ public class TransactionService {
 
     @Autowired
     private FollowRepository followRepository;
+
+    @Autowired
+    private FollowService followService;
 
     @Autowired
     private EquipmentRepository equipmentRepository;

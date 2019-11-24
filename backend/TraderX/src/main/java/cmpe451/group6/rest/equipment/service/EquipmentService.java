@@ -24,6 +24,7 @@ public class EquipmentService {
     @Autowired
     EquipmentRepository equipmentRepository;
 
+
     @Autowired
     HistoricalValueRepository historicalValueRepository;
 
@@ -52,7 +53,9 @@ public class EquipmentService {
      */
     public static double getDailyChange(String code) {
 
-        EquipmentResponseDTO equipment = equipmentService.getEquipment(code);
+        EquipmentService a = new EquipmentService();
+
+        EquipmentResponseDTO equipment = a.getEquipment(code);
 
         List<EquipmentHistoryDTO> hist = equipment.getHistoricalValues();
 

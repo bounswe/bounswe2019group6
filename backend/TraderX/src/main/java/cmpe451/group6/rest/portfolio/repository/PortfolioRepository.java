@@ -5,6 +5,8 @@ import cmpe451.group6.rest.transaction.model.Transaction;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import javax.transaction.Transactional;
+
 import java.util.Date;
 import java.util.List;
 

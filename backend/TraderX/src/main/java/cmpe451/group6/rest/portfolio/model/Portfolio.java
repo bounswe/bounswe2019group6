@@ -8,6 +8,7 @@ import cmpe451.group6.rest.transaction.model.TransactionType;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 public class Portfolio {
@@ -22,7 +23,8 @@ public class Portfolio {
     @Column(name = "portfolioName", nullable = false)
     private String portfolioName;
 
-    private List<Equipment> equipmentList;
+    
+    private List<Equipment> equipmentsList;
 
     @Column(nullable = false, name = "createdAt", updatable = false, columnDefinition = " datetime default NOW() ")
     private Date createdAt;

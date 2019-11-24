@@ -1,7 +1,7 @@
 package cmpe451.group6.rest.portfolio.dto;
 
 import cmpe451.group6.rest.equipment.model.Equipment;
-import cmpe451.group6.rest.equipment.model.Portfolio;
+import cmpe451.group6.rest.portfolio.model.Portfolio;
 
 import java.util.List;
 
