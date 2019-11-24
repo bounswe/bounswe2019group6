@@ -53,8 +53,6 @@ public class AssetService {
             throw new CustomException("The user has no asset of code: " + code + ".",HttpStatus.PRECONDITION_FAILED);
         }
 
-        System.out.println(asset.getAmount());
-
         return asset;
     }
 }
