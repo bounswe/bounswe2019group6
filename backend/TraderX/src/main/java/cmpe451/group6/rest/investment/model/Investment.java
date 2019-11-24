@@ -1,6 +1,5 @@
-package cmpe451.group6.rest.transaction.model;
+package cmpe451.group6.rest.investment.model;
 
-import cmpe451.group6.rest.equipment.model.Equipment;
 import cmpe451.group6.authorization.model.User;
 
 import javax.persistence.*;
@@ -8,7 +7,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Entity
-public class Transaction implements Serializable {
+public class Investment implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,12 +17,8 @@ public class Transaction implements Serializable {
     @JoinColumn(name = "user", referencedColumnName = "username", nullable = false)
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "equipment", referencedColumnName = "code", nullable = false)
-    private Equipment equipment;
-
     @Column(nullable = false)
-    private TransactionType transactionType;
+    private InvestmentType investmentType;
 
     @Column(nullable = false, name = "createdAt", updatable = false, columnDefinition = " datetime default NOW() ")
     private Date createdAt;
@@ -44,20 +39,18 @@ public class Transaction implements Serializable {
         this.user = user;
     }
 
-    public Equipment getEquipment() {
-        return equipment;
+    public double getAmount(){ return amount; }
+
+    public void setAmount(double amount){
+        this.amount=amount;
     }
 
-    public void setEquipment(Equipment equipmentCode) {
-        this.equipment = equipmentCode;
+    public InvestmentType getTransactionType() {
+        return investmentType;
     }
 
-    public TransactionType getTransactionType() {
-        return transactionType;
-    }
-
-    public void setTransactionType(TransactionType transactionType) {
-        this.transactionType = transactionType;
+    public void setInvestmentType(InvestmentType investmentType) {
+        this.investmentType = investmentType;
     }
 
     public Date getDate() {

@@ -14,7 +14,7 @@ public class TransactionDTO {
     @ApiModelProperty(position = 2, required = true)
     private Date createdAt;
     @ApiModelProperty(position = 3, required = true)
-    private float amount;
+    private double amount;
 
     public String getEquipment() {
         return equipment;
@@ -40,11 +40,11 @@ public class TransactionDTO {
         this.createdAt = createdAt;
     }
 
-    public float getCount() {
+    public double getCount() {
         return amount;
     }
 
-    public void setCount(float amount) {
+    public void setCount(double amount) {
         this.amount = amount;
     }
 

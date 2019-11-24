@@ -147,7 +147,7 @@ public class FollowService {
         } else {
             List<UsernameWrapper> followerList = new ArrayList<UsernameWrapper>();
             followRepository.findByFollowee_UsernameAndFollowStatus(username,FollowStatus.PENDING)
-                    .forEach(item -> followerList.add(modelMapper.map(item.getFollowee(), UsernameWrapper.class)));
+                    .forEach(item -> followerList.add(modelMapper.map(item.getFollower(), UsernameWrapper.class)));
             return followerList;
         }
     }
