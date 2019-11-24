@@ -30,20 +30,32 @@ interface RequestService {
     @POST(ApiEndpoint.USER_SIGNOUT)
     fun signout(): Single<SuccessResponse>
 
+    @POST(ApiEndpoint.BECOME_TRADER)
+    fun becomeTrader(@Path("role") role: String , @Query("iban") iban: String): Completable
+
     @POST(ApiEndpoint.FOLLOW_USER)
     fun followUser(@Query("username") username: String): Single<SuccessResponse>
 
     @POST(ApiEndpoint.UNFOLLOW_USER)
     fun unfollowUser(@Query("username") username: String): Single<SuccessResponse>
 
+    @POST(ApiEndpoint.FOLLOW_REMOVE)
+    fun removeFollower(@Query("username") username: String): Single<SuccessResponse>
+
     @GET(ApiEndpoint.FOLLOWERS_LIST)
-    fun followersList(@Query("username") username: String): Single<List<FollowerResponse>>
+    fun followersList(@Query("username") username: String): Single<ArrayList<FollowerResponse>>
 
     @GET(ApiEndpoint.FOLLOWINGS_LIST)
-    fun followingsList(@Query("username") username: String): Single<List<FollowerResponse>>
+    fun followingsList(@Query("username") username: String): Single<ArrayList<FollowerResponse>>
+
+    @POST(ApiEndpoint.FOLLOW_ACCEPT)
+    fun acceptFollowRequest(@Query("username") username: String): Completable
+
+    @POST(ApiEndpoint.FOLLOW_DECLINE)
+    fun declineFollowRequest(@Query("username") username: String): Completable
 
     @GET(ApiEndpoint.PENDING_FOLLOW_REQUESTS)
-    fun pendingFollowRequests(@Query("username") username: String): Single<List<FollowerResponse>>
+    fun pendingFollowRequests(@Query("username") username: String): Single<ArrayList<FollowerResponse>>
 
     @POST(ApiEndpoint.UPDATE_USER)
     fun updateUser(@Path("status") status: String): Completable

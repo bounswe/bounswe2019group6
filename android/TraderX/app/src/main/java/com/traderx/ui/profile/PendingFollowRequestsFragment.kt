@@ -44,7 +44,7 @@ class PendingFollowRequestsFragment : Fragment() {
 
         disposable.add(
             userViewModel.pendingFollowRequests(context as Context)
-                .compose(Helper.applySchedulers<List<FollowerResponse>>())
+                .compose(Helper.applySingleSchedulers<List<FollowerResponse>>())
                 .subscribe({
                     recyclerView.adapter = FollowersRecyclerViewAdapter(it) {
                         PendingFollowRequestsFragmentDirections.actionNavigationPendingFollowRequestsToNavigationUser(it)

@@ -6,9 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import com.facebook.shimmer.ShimmerFrameLayout
 import com.github.razir.progressbutton.hideProgress
 import com.github.razir.progressbutton.isProgressActive
 import com.github.razir.progressbutton.showProgress
@@ -20,6 +23,7 @@ import com.traderx.db.User
 import com.traderx.enum.FollowingStatus
 import com.traderx.util.Helper
 import com.traderx.util.Injection
+import com.traderx.viewmodel.AuthUserViewModel
 import com.traderx.viewmodel.UserViewModel
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -28,6 +32,7 @@ import io.reactivex.disposables.CompositeDisposable
 class UserFragment : Fragment() {
 
     private lateinit var userViewModel: UserViewModel
+    private lateinit var authUserViewModel: AuthUserViewModel
 
     private var username: String? = null
     private lateinit var user: User
@@ -37,6 +42,7 @@ class UserFragment : Fragment() {
     private lateinit var followingCount: TextView
     private lateinit var profilePrivate: TextView
     private lateinit var followButton: Button
+    private lateinit var shimmerFrame: ShimmerFrameLayout
     private val disposable = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,6 +59,9 @@ class UserFragment : Fragment() {
         val userViewModelFactory = Injection.provideUserViewModelFactory(context as Context)
         userViewModel =
             ViewModelProvider(this, userViewModelFactory).get(UserViewModel::class.java)
+        val authUserViewModelFactory = Injection.provideAuthUserViewModelFactory(context as Context)
+        authUserViewModel =
+            ViewModelProvider(this, authUserViewModelFactory).get(AuthUserViewModel::class.java)
 
         // Inflate the layout for this fragment
         val root = inflater.inflate(R.layout.fragment_user, container, false)
@@ -64,12 +73,32 @@ class UserFragment : Fragment() {
         followingCount = root.findViewById(R.id.profile_following)
         followButton = root.findViewById<Button>(R.id.follow_button).also { button ->
             button.setOnClickListener {
-                followUser(button)
+                if (isClickable()) {
+                    followUser(button)
+                }
+            }
+        }
+        shimmerFrame = root.findViewById(R.id.shimmer_frame)
+
+        root.findViewById<LinearLayout>(R.id.followers_list_action)?.let {
+            it.setOnClickListener {
+                if(isClickable() && canSeeDetails()) {
+                    findNavController().navigate(UserFragmentDirections.actionNavigationUserToNavigationFollowers(user.username))
+                }
+            }
+        }
+
+        root.findViewById<LinearLayout>(R.id.followings_list_action)?.let {
+            it.setOnClickListener {
+                if(isClickable() && canSeeDetails()) {
+                    findNavController().navigate(UserFragmentDirections.actionNavigationUserToNavigationFollowings(user.username))
+                }
             }
         }
 
         disposable.add(
             fetchUser().subscribe({
+                shimmerFrame.hideShimmer()
                 updateUser(it)
             }, { ErrorHandler.handleError(it, context as Context) })
         )
@@ -89,9 +118,9 @@ class UserFragment : Fragment() {
 
         val request: Single<SuccessResponse> =
             if (status == FollowingStatus.FOLLOWING.value || status == FollowingStatus.PENDING.value)
-                userViewModel.unfollowUser(username ?: "")
+                authUserViewModel.unfollowUser(username ?: "")
             else
-                userViewModel.followUser(username ?: "")
+                authUserViewModel.followUser(username ?: "")
 
         disposable.add(
             request.flatMap { fetchUser().doOnSuccess { updateUser(it) } }
@@ -117,9 +146,13 @@ class UserFragment : Fragment() {
         disposable.clear()
     }
 
+    private fun isClickable(): Boolean {
+        return ::user.isInitialized
+    }
+
     private fun fetchUser(): Single<User> {
         return userViewModel.userProfile(username ?: "")
-            .compose(Helper.applySchedulers<User>())
+            .compose(Helper.applySingleSchedulers<User>())
     }
 
     private fun updateUser(user: User) {
@@ -135,12 +168,14 @@ class UserFragment : Fragment() {
     }
 
     private fun getButtonTextId(status: String): Int {
-        return when(status) {
+        return when (status) {
             FollowingStatus.PENDING.value -> R.string.cancel_request
             FollowingStatus.FOLLOWING.value -> R.string.unfollow
             else -> R.string.follow
         }
     }
+
+    private fun canSeeDetails(): Boolean = !user.isPrivate || user.followingStatus == FollowingStatus.FOLLOWING.value
 
     private fun getActionMessage(status: String, isPrivate: Boolean): String {
 
@@ -155,7 +190,6 @@ class UserFragment : Fragment() {
     }
 
     companion object {
-
         private const val ARG_USERNAME = "username"
     }
 }

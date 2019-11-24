@@ -59,6 +59,9 @@
         <action
             android:id="@+id/action_navigation_followers_to_navigation_user"
             app:destination="@id/navigation_user" />
+        <argument
+            android:name="username"
+            app:argType="string" />
     </fragment>
 
     <fragment
@@ -69,6 +72,9 @@
         <action
             android:id="@+id/action_navigation_followings_to_navigation_user"
             app:destination="@id/navigation_user" />
+        <argument
+            android:name="username"
+            app:argType="string" />
     </fragment>
 
     <fragment
@@ -138,6 +144,12 @@
             android:defaultValue="@null"
             app:argType="string"
             app:nullable="true" />
+        <action
+            android:id="@+id/action_navigation_user_to_navigation_followings"
+            app:destination="@id/navigation_followings" />
+        <action
+            android:id="@+id/action_navigation_user_to_navigation_followers"
+            app:destination="@id/navigation_followers" />
     </fragment>
 
     <fragment

@@ -82,7 +82,7 @@ class EquipmentFragment : Fragment(), FragmentTitleEmitters {
 
         disposable.add(
             equipmentViewModel.getEquipment(equipmentCode ?: "")
-                .compose(Helper.applySchedulers<EquipmentResponse>())
+                .compose(Helper.applySingleSchedulers<EquipmentResponse>())
                 .subscribe({
                     updateView(it)
                 }, {
@@ -92,7 +92,7 @@ class EquipmentFragment : Fragment(), FragmentTitleEmitters {
 
         disposable.add(
             equipmentViewModel.getComments(equipmentCode ?: "")
-                .compose(Helper.applySchedulers<List<CommentResponse>>())
+                .compose(Helper.applySingleSchedulers<List<CommentResponse>>())
                 .subscribe({
                     commentsRecyclerView.swapAdapter(CommentRecyclerViewAdapter(it), true)
                 }, {
