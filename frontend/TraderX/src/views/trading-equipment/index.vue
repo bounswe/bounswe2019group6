@@ -152,7 +152,7 @@ export default {
             this.tradingEquipments[equipmentType].activeTab = equipmentList[i]
           }
           this.tradingEquipments[equipmentType].data.push({
-            key: equipmentList[i]
+            key: equipmentList[i].code
           })
         }
       }
@@ -162,10 +162,10 @@ export default {
       var equipmentData = []
       equipmentList.forEach(async function(e) {
         try {
-          await this.$store.dispatch('equipment/getEquipment', e.toLowerCase())
+          await this.$store.dispatch('equipment/getEquipment', e.code.toLowerCase())
           var res = this.$store.getters.equipmentQueryResult
           equipmentData.push({})
-          equipmentData[equipmentData.length-1].key = e
+          equipmentData[equipmentData.length-1].key = e.code
           equipmentData[equipmentData.length-1].label = res.equipment.name
           equipmentData[equipmentData.length-1].data = {
             open: [],

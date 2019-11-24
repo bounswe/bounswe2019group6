@@ -76,7 +76,7 @@ export default {
     var equipmentList = await this.getEquipmentList()
     // Fill the equipmentData with equipment list
     equipmentList.forEach(function(equipmentKey) {
-      this.equipmentData.push({key: equipmentKey})
+      this.equipmentData.push({key: equipmentKey.code})
     }, this)
     var equipmentValues = await this.getEquipmentValues(equipmentList) 
     this.createRadarChartData(equipmentValues)
@@ -102,7 +102,7 @@ export default {
       
       equipmentList.forEach(async function(e) {
         try {
-          await this.$store.dispatch('equipment/getEquipment', e.toLowerCase())
+          await this.$store.dispatch('equipment/getEquipment', e.code.toLowerCase())
           var res = this.$store.getters.equipmentQueryResult
           equipmentValues.push({})
           equipmentValues[equipmentValues.length-1].key = res.equipment.code
