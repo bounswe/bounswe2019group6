@@ -235,44 +235,46 @@
             </LinearLayout>
         </LinearLayout>
 
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/become_trader_action"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="19.3dp"
-        android:layout_marginRight="19.3dp"
-        android:layout_marginBottom="19.3dp"
-        android:background="@color/white"
-        android:backgroundTint="#4CAF50"
-        android:orientation="vertical"
-        android:visibility="gone">
 
         <LinearLayout
+            android:id="@+id/become_trader_action"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="19.2dp">
-
+            android:layout_marginLeft="19.3dp"
+            android:layout_marginRight="19.3dp"
+            android:layout_marginBottom="19.3dp"
+            android:background="@color/white"
+            android:backgroundTint="#4CAF50"
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                android:orientation="horizontal"
+                android:padding="19.2dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
+
+                <LinearLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="@string/become_trader"
-                    android:textColor="@color/white"
-                    android:textSize="17.3sp" />
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/become_trader"
+                        android:textColor="@color/white"
+                        android:textSize="17.3sp" />
+
+                </LinearLayout>
 
             </LinearLayout>
-
         </LinearLayout>
+
     </LinearLayout>
+
 
 
 </FrameLayout>
