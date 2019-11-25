@@ -31,7 +31,7 @@
                 label="EditProfile"
                 name="editprofile"
               >
-                <editprofile :user="this.user" v-if="this.user.username"/>
+                <editprofile :user="user" v-if="this.user.username"/>
               </el-tab-pane>
             </el-tabs>
           </el-card>

@@ -34,3 +34,11 @@ export function getAllStocks() {
     method: 'get'
   })
 }
+
+export function depositMoney(amount) {
+  return request({
+    url: '/investment/deposit',
+    method: 'post',
+    params: amount,
+  })
+}

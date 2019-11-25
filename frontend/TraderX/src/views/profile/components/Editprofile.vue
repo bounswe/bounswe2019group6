@@ -24,9 +24,9 @@
       <el-collapse-item title="Load Money" name="5" v-if="istraderloadmoney">
         <el-input placeholder="Please enter some money amount" v-model="loadmoneyinput" class="input-with-select">
           <el-select style="width: 100px" v-model="selectedFilter" slot="prepend" placeholder="Select">
-            <el-option label="TR" value="1"></el-option>
-            <el-option label="USD" value="2"></el-option>
-            <el-option label="EUR" value="3"></el-option>
+            <el-option label="TRY" value="TRY"></el-option>
+            <!-- <el-option label="USD" value="USD"></el-option>
+            <el-option label="EUR" value="EUR"></el-option> -->
           </el-select>
           <el-button @click="loadMoney(loadmoneyinput)" slot="append">Load</el-button>
         </el-input>
@@ -37,6 +37,7 @@
 <script>
   import { getToken } from '@/utils/auth' // get token from cookie
   import { becomeBasic, becomeTrader } from '@/api/user'
+  import { depositMoney } from '@/api/equipment'
 
   export default {
     props: {
@@ -64,7 +65,7 @@
         istraderloadmoney: this.user.roles[0] == 'ROLE_TRADER' ? true : false,
         traderibanseen: false,
         ibanshow: false,
-        selectedFilter: "1"
+        selectedFilter: "TRY"
       };
     },
     methods: {
@@ -99,7 +100,6 @@
         }
       },
       updateRole(iban){
-        console.log(this.istraderswitch)
         if (!this.istraderswitch && this.user.roles[0] == 'ROLE_BASIC') {
           this.$message.error('Your Are Already Basic User!')
         } else if (this.istraderswitch && this.user.roles[0] == 'ROLE_TRADER'){
@@ -129,14 +129,20 @@
         }
       },
       loadMoney(moneyamount) {
+        this.$store.dispatch('equipment/depositMoney', { "amount" : moneyamount }).then(response => {
+          this.$message.success('Money Is Deposited!')
+        }).catch(error => {
+          console.log("errorrr in money deposit")
+          console.log(error)
+        })
 
       },
       updatePrivacy(isPrivate){
         if(isPrivate){
           if (this.user.isPrivate){
-              this.$store.dispatch('user/setProfilePublic').then(response => {
-                this.$message.success('Your Profile Is Public Now!')
-                this.user.isPrivate = false
+            this.$store.dispatch('user/setProfilePublic').then(response => {
+              this.$message.success('Your Profile Is Public Now!')
+              this.user.isPrivate = false
             }).catch(error => {
               console.log("errorrr in profile change")
               console.log(error)
