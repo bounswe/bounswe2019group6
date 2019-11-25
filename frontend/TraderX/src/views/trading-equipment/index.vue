@@ -90,8 +90,6 @@ export default {
 
   methods: {
     buyEquipment() {
-      console.log(this.buyamountinput)
-      console.log(this.select)
       this.$store.dispatch('equipment/buyEquipment', {'code' : this.select, "amount" : this.buyamountinput}).then(response => {
         this.$message.success('Equipment Is Bought Successfully!')
       }).catch(err => {

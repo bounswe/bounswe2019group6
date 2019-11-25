@@ -35,12 +35,24 @@
                 </div>
 
                 <el-button class='change-base-button' @click="changeBaseofEquipment(ed.label)"><svg-icon style="margin-right:10px" icon-class="chart" />Change the Base</el-button>
-                <el-button class='buy-button' @click="buyEquipment"><svg-icon style="margin-right:10px" icon-class="shopping" />Buy Equipment</el-button>
+                <el-button class='buy-button' @click="showDialog=true"><svg-icon style="margin-right:10px" icon-class="shopping" />Buy Equipment</el-button>
               </div>
           </el-tab-pane>
         </el-tabs>
       </el-card>
     </el-row>
+
+    <el-dialog title="Select Trading Equipment" :visible.sync="showDialog">
+      <el-input placeholder="Please enter an amount" v-model="buyamountinput" class="input-with-select">
+        <el-select style="width:120px" v-model="select" slot="prepend" placeholder="Select">
+          <div>
+            <el-option v-for="(item, index) in this.equipmentData" :key="index" :label="item.key" :value="item.key"></el-option>
+          </div>
+        </el-select>
+        <el-button slot="append" @click="buyEquipment()">Buy</el-button>
+      </el-input>  
+    </el-dialog>
+
   </div>
    
 </template>
@@ -50,6 +62,7 @@ import LineChart from './components/LineChart'
 import LineChartDetailed from './components/LineChartDetailed'
 import LineChartComparison from './components/LineChartComparison'
 import RaddarChart from './components/RaddarChart'
+import { buyEquipment } from '@/api/equipment'
 
 // The usual sorting in javascript sorts alphabetically which causes mistake in our code
 const numberSort = function (a,b) {
@@ -67,6 +80,9 @@ export default {
   data() {
     return {
       chartData: {},
+      showDialog: false,
+      buyamountinput: '',
+      select: '',
       // equipmentData is expected to be: 
       // [
       //   {
@@ -101,6 +117,7 @@ export default {
     this.equipmentData = equipmentValues
     
     this.comparisonData.equipmentData = this.equipmentData
+    console.log(this.equipmentData)
   },
   methods: {
     // Promise for getting equipments list 
@@ -203,11 +220,10 @@ export default {
     },
 
     buyEquipment() {
-      this.$notify({
-        title: 'Success',
-        message: 'Equipment Bought',
-        type: 'success',
-        duration: 2000
+      this.$store.dispatch('equipment/buyEquipment', {'code' : this.select, "amount" : this.buyamountinput}).then(response => {
+        this.$message.success('Equipment Is Bought Successfully!')
+      }).catch(err => {
+        console.log(err)
       })
     },
 
