@@ -42,3 +42,11 @@ export function depositMoney(amount) {
     params: amount,
   })
 }
+
+export function buyEquipment(query) {
+  return request({
+    url: '/transaction/buy',
+    method: 'post',
+    params: query,
+  })
+}

@@ -88,7 +88,17 @@ const actions = {
       })
     })
   },
-  
+  buyEquipment({ commit }, code, amount) {
+    return new Promise((resolve, reject) => {
+      buyEquipment(code, amount).then(response => {
+        const { data } = response
+        commit('SET_QUERY_RESULT', data)
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
 }
 
 export default {
