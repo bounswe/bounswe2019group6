@@ -43,8 +43,7 @@ interface RequestService {
     @POST(ApiUri.USER_FORGOT_PASSWORD)
     fun forgotpassword(@Query("email") email: String): Single<SuccessResponse>
 
-    @GET(ApiUri.USERS_GET_ALL)
-    fun usersGetAll(): Single<List<UserAll>>
+
     @GET(ApiEndpoint.USERS_ALL)
     fun allUsers(): Single<List<User>>
 

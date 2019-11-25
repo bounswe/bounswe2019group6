@@ -92,7 +92,6 @@ class ForgotPasswordActivity: AppCompatActivity() {
         when {
             !ForgotPasswordValidator.validateEmail(email.text.toString()) ->{
                 setWarning(getString(R.string.email_not_valid))
-                println("warning removing")
             }
         }
 
@@ -110,7 +109,7 @@ class ForgotPasswordActivity: AppCompatActivity() {
                     button.hideProgress(R.string.reset_password) //?????????????????????????????????
                 }
                 .subscribe({
-                    Toast.makeText(this,"Reset mail sent", Toast.LENGTH_SHORT )
+                    Toast.makeText(this,"Reset mail sent", Toast.LENGTH_SHORT ).show()
                 }, {
 
                     if (!ErrorHandler.handleConnectException(it, this) && it is HttpException) {
