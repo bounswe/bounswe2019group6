@@ -57,8 +57,7 @@ public class User implements Serializable {
   @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
   private Set<Asset> assets;
 
-  @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
-  private Set<Portfolio> portfolios;
+
 
 
   //   ^               # start-of-string
@@ -208,11 +207,4 @@ public class User implements Serializable {
     this.assets = assets;
   }
 
-  public Set<Portfolio> getPortfolios() {
-    return portfolios;
-  }
-
-  public void setPortfolios(Set<Portfolio> portfolios) {
-    this.portfolios = portfolios;
-  }
 }

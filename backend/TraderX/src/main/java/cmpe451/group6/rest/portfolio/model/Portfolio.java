@@ -7,6 +7,7 @@ import cmpe451.group6.rest.transaction.model.TransactionType;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -20,14 +21,18 @@ public class Portfolio {
     @JoinColumn(name = "user", referencedColumnName = "username", nullable = false)
     private User user;
 
-    @Column(name = "portfolioName", nullable = false)
+    @Column(nullable = false)
     private String portfolioName;
 
-    
-    private List<Equipment> equipmentsList;
+    @OneToMany
+    private List<Equipment> equipmentsList = new ArrayList<>();
 
     @Column(nullable = false, name = "createdAt", updatable = false, columnDefinition = " datetime default NOW() ")
     private Date createdAt;
+
+
+    public Portfolio() {
+    }
 
     @PrePersist
     public void addTimestamp() {

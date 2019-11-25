@@ -48,9 +48,6 @@ public class Equipment implements Serializable {
     @OneToMany(mappedBy = "equipment",cascade = CascadeType.ALL)
     private Set<Asset> assets;
 
-    @OneToMany(mappedBy = "equipment",cascade = CascadeType.ALL)
-    private Set<Portfolio> portfolios;
-
     public String getCode() {
         return code;
     }
@@ -131,11 +128,4 @@ public class Equipment implements Serializable {
         this.assets = assets;
     }
 
-    public Set<Portfolio> getPortfolios() {
-        return portfolios;
-    }
-
-    public void setPortfolios(Set<Portfolio> portfolios) {
-        this.portfolios = portfolios;
-    }
 }
