@@ -38,17 +38,17 @@ public class EquipmentService {
     @Autowired
     private ModelMapper modelMapper;
 
-    public EquipmentResponseDTO getEquipment(String code) {
+    public EquipmentResponseDTO getEquipment(String code){
         Equipment equipment = equipmentRepository.findByCode(code);
-        if (equipment == null) {
+        if(equipment == null){
             throw new CustomException("No such an equipment found", HttpStatus.BAD_REQUEST);
         }
         List<HistoricalValue> history = historicalValueRepository.findAllByEquipment_Code(code);
         history.sort((o1, o2) -> o1.getTimestamp().compareTo(o2.getTimestamp()));
-        List<EquipmentHistoryDTO> hist = history.stream().map(h -> (modelMapper.map(h, EquipmentHistoryDTO.class)))
-                .collect(Collectors.toList());
+        List<EquipmentHistoryDTO> hist = history.stream().map(h ->
+                (modelMapper.map(h,EquipmentHistoryDTO.class))).collect(Collectors.toList());
 
-        return new EquipmentResponseDTO(equipment, hist);
+        return new EquipmentResponseDTO(modelMapper.map(equipment,EquipmentResponseDTO.EquipmentDTO.class),hist);
     }
 
     /**
