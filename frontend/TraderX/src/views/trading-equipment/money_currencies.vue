@@ -117,7 +117,6 @@ export default {
     this.equipmentData = equipmentValues
     
     this.comparisonData.equipmentData = this.equipmentData
-    console.log(this.equipmentData)
   },
   methods: {
     // Promise for getting equipments list 
