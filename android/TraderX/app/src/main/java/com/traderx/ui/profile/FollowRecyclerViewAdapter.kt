@@ -16,7 +16,8 @@ import kotlinx.android.synthetic.main.item_follow.view.*
 class FollowRecyclerViewAdapter(
     private var followers: ArrayList<FollowerResponse>,
     private val unfollowAction: (username: String, () -> Unit) -> Unit,
-    private val actionNavDirection: (username: String ) -> NavDirections
+    private val actionNavDirection: (username: String ) -> NavDirections,
+    private val authUser: Boolean
 ) : RecyclerView.Adapter<FollowRecyclerViewAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -34,10 +35,14 @@ class FollowRecyclerViewAdapter(
             }
         }
 
-        holder.unfollowAction.setOnClickListener {
-            unfollowAction(followers[position].username) {
-                followers.removeAt(position)
-                notifyItemRemoved(position)
+        if(!authUser) {
+            holder.unfollowAction.visibility = View.GONE
+        } else {
+            holder.unfollowAction.setOnClickListener {
+                unfollowAction(followers[position].username) {
+                    followers.removeAt(position)
+                    notifyItemRemoved(position)
+                }
             }
         }
     }

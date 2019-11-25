@@ -106,6 +106,10 @@
         <argument
             android:name="username"
             app:argType="string" />
+        <argument
+            android:name="is_auth_user"
+            app:argType="boolean"
+            android:defaultValue="false" />
     </fragment>
 
     <fragment
@@ -119,6 +123,10 @@
         <argument
             android:name="username"
             app:argType="string" />
+        <argument
+            android:name="is_auth_user"
+            app:argType="boolean"
+            android:defaultValue="false" />
     </fragment>
 
     <fragment
