@@ -13,12 +13,12 @@
       </el-collapse-item>
       <el-collapse-item title="Privacy" name="3">
         <el-switch v-model="privatepublic" active-color="#13ce66" inactive-color="#ff4949" style="float: left" active-text="Public" inactive-text="Private"/>
-        <el-button @click="updatePrivacy(privatepublic)" style="margin-left: 50px; margin-bottom: 10px">Update</el-button>
+        <el-button @click="updatePrivacy(privatepublic)" style="margin-left: 50px; margin-bottom: 10px" type="primary">Update</el-button>
       </el-collapse-item>
       <el-collapse-item title="Role" name="4">
-        <el-switch v-model="istrader" active-color="#13ce66" inactive-color="#ff4949" style="float: left" active-text="Trader" inactive-text="Basic"/>
-        <el-input placeholder="Please enter an IBAN" v-if="seen" v-model="traderibaninput" style="padding-top: 20px">
-          <el-button slot="append" @click="updateRole(traderibaninput)">Update</el-button>
+        <el-switch v-model="istraderswitch" active-color="#13ce66" inactive-color="#ff4949" style="float: left" active-text="Trader" inactive-text="Basic"/>
+        <el-button @click="updateRole(traderibaninput)" style="margin-left: 60px" type="primary">Update</el-button>
+        <el-input placeholder="Please enter an IBAN" v-if="traderibanseen" v-model="traderibaninput" style="padding-top: 20px">
         </el-input>
       </el-collapse-item>
       <el-collapse-item title="Load Money" name="5" v-if="istraderloadmoney">
@@ -43,11 +43,11 @@
       user: Object
     },
     created() {
-      if(this.istrader) {
-        this.seen = false
+      if(this.istraderswitch) {
+        this.traderibanseen = false
         this.ibanshow = true
       } else {
-        this.seen = true
+        this.traderibanseen = true
         this.ibanshow = false
       }
     },
@@ -60,9 +60,9 @@
         traderibaninput: '',
         loadmoneyinput: '',
         privatepublic: !this.user.isPrivate,
-        istrader: this.user.roles[0] == 'ROLE_TRADER' ? true : false,
+        istraderswitch: this.user.roles[0] == 'ROLE_TRADER' ? true : false,
         istraderloadmoney: this.user.roles[0] == 'ROLE_TRADER' ? true : false,
-        seen: false,
+        traderibanseen: false,
         ibanshow: false,
         selectedFilter: "1"
       };
@@ -82,7 +82,7 @@
           })
       },
       updateIban(iban) {
-        if(!this.istrader){
+        if(!this.istraderswitch){
           this.$message.error('Your Are Not A Trader!')
         } else {
           this.$store.dispatch('user/changeIBAN', {
@@ -99,15 +99,29 @@
         }
       },
       updateRole(iban){
-        console.log(this.istrader)
-        if (!this.istrader){
+        console.log(this.istraderswitch)
+        if (!this.istraderswitch && this.user.roles[0] == 'ROLE_BASIC') {
+          this.$message.error('Your Are Already Basic User!')
+        } else if (this.istraderswitch && this.user.roles[0] == 'ROLE_TRADER'){
+          this.$message.error('Your Are Already Trader!')
+        } else if (!this.istraderswitch && this.user.roles[0] == 'ROLE_TRADER'){
           this.$store.dispatch('user/becomeBasic').then(response => {
+            this.istraderloadmoney = false
+            this.traderibanseen = true
+            this.traderibaninput = ""
+            this.user.roles = ['ROLE_BASIC']
+            this.user.iban = null
             this.$message.success('Your Are A Basic User Now!')
           }).catch(err => {
             console.log(err)
           })
-        } else {
+        } else if (this.istraderswitch && this.user.roles[0] == 'ROLE_BASIC' ) {
           this.$store.dispatch('user/becomeTrader', {'iban' : iban}).then(response => {
+            this.istraderloadmoney = true
+            this.traderibanseen = false
+            this.traderibaninput = ""
+            this.user.roles = ['ROLE_TRADER']
+            this.user.iban = iban
             this.$message.success('Your Are A Trader Now!')
           }).catch(err => {
             console.log(err)
@@ -115,6 +129,7 @@
         }
       },
       loadMoney(moneyamount) {
+
       },
       updatePrivacy(isPrivate){
         if(isPrivate){

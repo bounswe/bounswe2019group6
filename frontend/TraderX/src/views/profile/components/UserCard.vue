@@ -81,6 +81,7 @@ export default {
     } else {
       this.isSelf = false
       await getUser((this.$route.path.split('/')[2])).then(response => {
+        // TODO changing this.user creates a bug in here
         this.user = response.data
         this.hidePrivateFields = this.user.isPrivate ? 'display: none' : 'display: block'
         this.showIban = this.user.iban==null ? 'display: none' : 'display: block'
