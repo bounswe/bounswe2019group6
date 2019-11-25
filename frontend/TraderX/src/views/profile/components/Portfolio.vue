@@ -74,7 +74,23 @@ export default {
         // })
       }
     }
+  },
+  handleDeletePortfolio(){
+    if (this.deletePortfolioForm.portfolioName == '') {
+      this.$message.error("Portfolio Name Can Not Be Empty")
+    } else {
+      // this.$store.dispatch('equipment/createPortfolio', { "username": this.$store.getters.userInfo.username, "portfolioname": this.createPortfolioForm.portfolioName }).then(() => {
+        this.showCreateDialog = false,
+        this.all_portfolios = this.all_portfolios.filter(portfolio => portfolio.portfolioName != this.deletePortfolioForm.portfolioName);
+        
+        this.$notify({ title: 'Success', message: 'Portfolio is deleted', type: 'success', duration: 2000 }) 
+      // }).catch(error => {
+      //   console.log("errorrr in iban change")
+      //   console.log(error)
+      // })
+    }
   }
+  
 }
 </script>
 

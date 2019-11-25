@@ -59,9 +59,41 @@ export function sellEquipment(query) {
   })
 }
 
-export function getAssetInfo(equipmentName) {
+export function getAssetInfo() {
   return request({
-    url: '/asset/'+equipmentName,
+    url: '/asset/all',
     method: 'get',
+  })
+}
+
+export function createPortfolio(query) {
+  return request({
+    url: '/portfolio/create',
+    method: 'post',
+    params: query,
+  })
+}
+
+export function deletePortfolio(query) {
+  return request({
+    url: '/portfolio/delete',
+    method: 'post',
+    params: query,
+  })
+}
+
+export function addEquipmentToPortfolio(query) {
+  return request({
+    url: '/portfolio/add',
+    method: 'post',
+    params: query,
+  })
+}
+
+export function deleteEquipmentFromPortfolio(query) {
+  return request({
+    url: '/portfolio/delete',
+    method: 'post',
+    params: query,
   })
 }

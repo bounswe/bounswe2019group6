@@ -1,4 +1,5 @@
-import { getEquipment, listEquipment, getAllCurrencies, getAllCryptoCurrencies, getAllStocks, depositMoney, buyEquipment, sellEquipment, getAssetInfo} from '@/api/equipment'
+import { getEquipment, listEquipment, getAllCurrencies, getAllCryptoCurrencies, getAllStocks, depositMoney, 
+        buyEquipment, sellEquipment, getAssetInfo, createPortfolio, deletePortfolio, addEquipmentToPortfolio, deleteEquipmentFromPortfolio} from '@/api/equipment'
 
 const state = {
   equipmentQueryResult : {
@@ -110,9 +111,53 @@ const actions = {
       })
     })
   },
-  getAssetInfo({ commit }, equipmentName) {
+  getAssetInfo({ commit }) {
     return new Promise((resolve, reject) => {
-      getAssetInfo(equipmentName).then(response => {
+      getAssetInfo().then(response => {
+        const { data } = response
+        commit('SET_QUERY_RESULT', data)
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  createPortfolio({ commit }, username, portfolioname) {
+    return new Promise((resolve, reject) => {
+      createPortfolio(username, portfolioname).then(response => {
+        const { data } = response
+        commit('SET_QUERY_RESULT', data)
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  deletePortfolio({ commit }, username, portfolioname) {
+    return new Promise((resolve, reject) => {
+      deletePortfolio(username, portfolioname).then(response => {
+        const { data } = response
+        commit('SET_QUERY_RESULT', data)
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  addEquipmentToPortfolio({ commit }, username, portfolioname, equipmentname) {
+    return new Promise((resolve, reject) => {
+      addEquipmentToPortfolio(username, portfolioname, equipmentname).then(response => {
+        const { data } = response
+        commit('SET_QUERY_RESULT', data)
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  deleteEquipmentFromPortfolio({ commit }, username, portfolioname, equipmentname) {
+    return new Promise((resolve, reject) => {
+      deleteEquipmentFromPortfolio(username, portfolioname, equipmentname).then(response => {
         const { data } = response
         commit('SET_QUERY_RESULT', data)
         resolve()
