@@ -32,7 +32,7 @@ public class EquipmentController {
     @ApiOperation(value = "Gets the change ratio current/yesterday(%) of specified equipment", response = Double.class)
     @ApiResponses(value = { @ApiResponse(code = 417, message = "No such an equipment found.") })
     public double getDailyChange(@ApiParam("Equipment Name") @PathVariable String name) {
-        return EquipmentService.getDailyChange(name);
+        return equipmentService.getDailyChange(name);
     }
 
     @GetMapping(value = "/list")

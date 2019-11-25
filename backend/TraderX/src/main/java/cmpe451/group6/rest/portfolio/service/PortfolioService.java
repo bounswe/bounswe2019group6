@@ -3,35 +3,22 @@ package cmpe451.group6.rest.portfolio.service;
 import cmpe451.group6.authorization.exception.CustomException;
 import cmpe451.group6.authorization.repository.UserRepository;
 import cmpe451.group6.authorization.model.User;
-import cmpe451.group6.rest.equipment.configuration.EquipmentConfig;
-import cmpe451.group6.rest.equipment.dto.EquipmentHistoryDTO;
-import cmpe451.group6.rest.equipment.dto.EquipmentMetaWrapper;
-import cmpe451.group6.rest.equipment.dto.EquipmentResponseDTO;
 import cmpe451.group6.rest.portfolio.dto.PortfolioResponseDTO;
 import cmpe451.group6.rest.portfolio.dto.PortfolioEquipmentDTO;
-import cmpe451.group6.rest.equipment.model.HistoricalValue;
 import cmpe451.group6.rest.equipment.model.Equipment;
 import cmpe451.group6.rest.portfolio.model.Portfolio;
 import cmpe451.group6.rest.equipment.repository.EquipmentRepository;
 import cmpe451.group6.rest.equipment.repository.HistoricalValueRepository;
 import cmpe451.group6.rest.equipment.service.EquipmentService;
 import cmpe451.group6.rest.portfolio.repository.PortfolioRepository;
-import cmpe451.group6.rest.transaction.repository.TransactionRepository;
-import cmpe451.group6.rest.follow.repository.FollowRepository;
 import cmpe451.group6.rest.follow.service.FollowService;;
-import cmpe451.group6.rest.asset.model.Asset;
-import cmpe451.group6.rest.asset.repository.AssetRepository;
 
-
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.Date;
 
 @Service
@@ -39,6 +26,9 @@ public class PortfolioService {
 
     @Autowired
     PortfolioRepository portfolioRepository;
+
+    @Autowired
+    EquipmentService equipmentService;
     
     @Autowired
     PortfolioService portfolioService;
@@ -47,25 +37,13 @@ public class PortfolioService {
     HistoricalValueRepository historicalValueRepository;
 
     @Autowired
-    private ModelMapper modelMapper;
-
-    @Autowired
-    private TransactionRepository TransactionRepository;
-
-    @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private FollowRepository followRepository;
 
     @Autowired
     private FollowService followService;
 
     @Autowired
     private EquipmentRepository equipmentRepository;
-
-    @Autowired
-    private AssetRepository assetRepository;
 
     /**
      * Creates portfolio, belonging to given username and with the given
@@ -249,7 +227,7 @@ public class PortfolioService {
             code = equipment.getCode();
             currentValue = equipment.getCurrentValue();
             currentStock = equipment.getCurrentStock();
-            dailyChange = EquipmentService.getDailyChange(code);
+            dailyChange = equipmentService.getDailyChange(code);
             predictionRate = equipment.getPredictionRate();
             lastUpdated = equipment.getLastUpdated();
 

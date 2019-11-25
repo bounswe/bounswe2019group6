@@ -24,7 +24,6 @@ public class EquipmentService {
     @Autowired
     EquipmentRepository equipmentRepository;
 
-
     @Autowired
     HistoricalValueRepository historicalValueRepository;
 
@@ -51,18 +50,16 @@ public class EquipmentService {
      * @param code
      * @return change ratio (in percent)
      */
-    public static double getDailyChange(String code) {
+    public double getDailyChange(String code) {
 
-        EquipmentService a = new EquipmentService();
-
-        EquipmentResponseDTO equipment = a.getEquipment(code);
+        EquipmentResponseDTO equipment = this.getEquipment(code);
 
         List<EquipmentHistoryDTO> hist = equipment.getHistoricalValues();
 
         int histSize = hist.size();
 
-        double currentVal = hist.get(histSize - 1).getClose();
-        double prevVal = hist.get(histSize - 2).getClose();
+        double currentVal = equipment.getEquipment().getCurrentValue();
+        double prevVal = hist.get(histSize - 1).getClose();
 
         return ((currentVal - prevVal) * 100.0 / prevVal);
 
