@@ -64,7 +64,12 @@ public class EquipmentService {
 
         List<EquipmentHistoryDTO> hist = equipment.getHistoricalValues();
 
+        if (hist.isEmpty()) {
+            throw new CustomException("historical values not initialized", HttpStatus.NOT_ACCEPTABLE);
+        }
+
         int histSize = hist.size();
+        
 
         double currentVal = equipment.getEquipment().getCurrentValue();
         double prevVal = hist.get(histSize - 1).getClose();
