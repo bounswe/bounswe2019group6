@@ -51,6 +51,14 @@ export function buyEquipment(query) {
   })
 }
 
+export function sellEquipment(query) {
+  return request({
+    url: '/transaction/sell',
+    method: 'post',
+    params: query,
+  })
+}
+
 export function getAssetInfo(equipmentName) {
   return request({
     url: '/asset/'+equipmentName,

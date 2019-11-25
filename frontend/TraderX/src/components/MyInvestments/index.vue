@@ -1,15 +1,24 @@
 <template>
   <div>
     <el-table :data="tableData" stripe style="width: 100%">
-      <el-table-column prop="code" label="Code" width="180"> </el-table-column>
-      <el-table-column prop="amount" label="Amount" width="180"> </el-table-column>
+      <el-table-column prop="code" label="Code"> </el-table-column>
+      <el-table-column prop="amount" label="Amount"> </el-table-column>
     </el-table>
+    
+    <el-input placeholder="Please enter the amount" v-model="sellamount" class="input-with-select" style="padding-top: 50px">
+      <el-select style="width: 120px" v-model="sellectedAsset" slot="prepend" placeholder="Select">
+        <el-option v-for="(item, index) in this.tableData" :key="index" :label="item.code" :value="item.code"></el-option>
+      </el-select>
+      <el-button slot="append" @click="handleSellEquipment">Sell</el-button>
+    </el-input>
+
   </div>
 </template>
 
 <script>
 
 import { getAssetInfo } from '@/api/equipment'
+import { sellEquipment } from '@/api/equipment'
 
 export default {
   name: 'MyInvestments',
@@ -19,7 +28,9 @@ export default {
       currencyList: [],
       cryptoList: [],
       stocksList: [],
-      tableData: []
+      tableData: [],
+      sellamount: '',
+      sellectedAsset: '',
     }
   },
   async created() {
@@ -41,6 +52,18 @@ export default {
     }   
   },
   methods: {
+    handleSellEquipment() {
+      this.$store.dispatch('equipment/sellEquipment', {'code' : this.sellectedAsset, "amount" : this.sellamount}).then(response => {
+        for(var i = 0; i < this.tableData.length; i++) {
+          if (this.tableData[i].code == this.sellectedAsset) {
+            this.tableData[i].amount -= this.sellamount
+          }
+        }
+        // this.$message.success('Equipment Is Bought Successfully!')
+      }).catch(err => {
+        console.log(err)
+      })
+    },
     getAssetAmount(equipmentName){
       this.$store.dispatch('equipment/getAssetInfo', equipmentName).then(response => {
         this.tableData.push({
