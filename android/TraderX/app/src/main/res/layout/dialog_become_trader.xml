@@ -19,13 +19,6 @@
             android:textColor="#FFFFFF" />
     </LinearLayout>
 
-    <ProgressBar
-        android:id="@+id/progress"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone" />
-
     <com.google.android.material.textfield.TextInputLayout
         style="@style/StyledTilEditText"
         android:layout_width="match_parent"

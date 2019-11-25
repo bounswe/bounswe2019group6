@@ -79,7 +79,7 @@
 
     <fragment
         android:id="@+id/navigation_pending_follow_requests"
-        android:name="com.traderx.ui.profile.PendingFollowRequestsFragment"
+        android:name="com.traderx.ui.profile.PendingRequestsFragment"
         android:label="@string/pending"
         tools:layout="@layout/fragment_pending_follow_requests">
         <action
