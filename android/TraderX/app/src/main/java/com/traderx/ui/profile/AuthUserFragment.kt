@@ -69,7 +69,8 @@ class AuthUserFragment : Fragment() {
                 if (isClickable()) {
                     findNavController().navigate(
                         AuthUserFragmentDirections.actionNavigationAuthUserToNavigationFollowers(
-                            user.username
+                            user.username,
+                            true
                         )
                     )
                 }
@@ -81,7 +82,8 @@ class AuthUserFragment : Fragment() {
                 if (isClickable()) {
                     findNavController().navigate(
                         AuthUserFragmentDirections.actionNavigationAuthUserToNavigationFollowings(
-                            user.username
+                            user.username,
+                            true
                         )
                     )
                 }

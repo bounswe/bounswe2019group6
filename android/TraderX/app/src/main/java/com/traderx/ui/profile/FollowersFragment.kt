@@ -25,6 +25,7 @@ import io.reactivex.disposables.CompositeDisposable
 
 class FollowersFragment : Fragment(), FragmentTitleEmitters {
     private lateinit var username: String
+    private var isAuthUser: Boolean = false
     private lateinit var userViewModel: UserViewModel
     private lateinit var authUserViewModel: AuthUserViewModel
     private lateinit var recyclerView: RecyclerView
@@ -36,6 +37,7 @@ class FollowersFragment : Fragment(), FragmentTitleEmitters {
 
         arguments?.let {
             username = it.getString(ARG_USERNAME) as String
+            isAuthUser = it.getBoolean(ARG_IS_AUTH_USER) as Boolean
         }
     }
 
@@ -69,7 +71,8 @@ class FollowersFragment : Fragment(), FragmentTitleEmitters {
                             FollowersFragmentDirections.actionNavigationFollowersToNavigationUser(
                                 username
                             )
-                        })
+                        },
+                        isAuthUser)
                 },
                     { ErrorHandler.handleError(it, context as Context) })
         )
@@ -111,5 +114,6 @@ class FollowersFragment : Fragment(), FragmentTitleEmitters {
 
     companion object {
         private const val ARG_USERNAME = "username"
+        private const val ARG_IS_AUTH_USER = "is_auth_user"
     }
 }
