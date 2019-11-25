@@ -57,9 +57,12 @@ export default {
         for(var i = 0; i < this.tableData.length; i++) {
           if (this.tableData[i].code == this.sellectedAsset) {
             this.tableData[i].amount -= this.sellamount
+            if (this.tableData[i].amount == 0){
+              this.tableData.splice(i,1)
+            }
           }
         }
-        // this.$message.success('Equipment Is Bought Successfully!')
+        this.$message.success('Equipment Is Sold Successfully!')
       }).catch(err => {
         console.log(err)
       })
