@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 
+import java.util.List;
+
 import static cmpe451.group6.authorization.exception.GlobalExceptionHandlerController.GENERIC_ERROR_RESPONSE;
 
 @RestController
@@ -30,7 +32,7 @@ public class AssetController {
     @Autowired
     private ModelMapper modelMapper;
 
-    @GetMapping(value = "/{code}")
+    @GetMapping(value = "/code/{code}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_TRADER') or hasRole('ROLE_BASIC') ")
     @ApiOperation(value = " Returns asset of the user of given code.", response = AssetDTO.class)
@@ -38,7 +40,17 @@ public class AssetController {
             @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE) })
     public AssetDTO getAssetByCode(@ApiParam( "Code of the equipment" ) @PathVariable String code,
                                    HttpServletRequest req) {
-        return modelMapper.map(assetService.getAssetByCode(util.unwrapUsername(req), code),AssetDTO.class);
+        return assetService.getAssetByCode(util.unwrapUsername(req), code);
+    }
+
+    @GetMapping(value = "/all")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_TRADER') or hasRole('ROLE_BASIC') ")
+    @ApiOperation(value = " Returns all assets of the user", response = AssetDTO.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE) })
+    public List<AssetDTO> getAssetByUser( HttpServletRequest req ) {
+        return assetService.getAssetByUser(util.unwrapUsername(req));
     }
 
 }

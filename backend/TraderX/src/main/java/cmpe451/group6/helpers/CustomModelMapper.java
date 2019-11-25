@@ -1,5 +1,7 @@
 package cmpe451.group6.helpers;
 
+import cmpe451.group6.rest.asset.dto.AssetDTO;
+import cmpe451.group6.rest.asset.model.Asset;
 import cmpe451.group6.rest.transaction.dto.TransactionDTO;
 import cmpe451.group6.rest.transaction.dto.TransactionWithUserDTO;
 import cmpe451.group6.rest.transaction.model.Transaction;
@@ -27,10 +29,19 @@ public class CustomModelMapper extends ModelMapper {
         }
     };
 
+    //custom mapper for AssetDTO
+    PropertyMap<Asset, AssetDTO> customMapAssetDTO = new PropertyMap<Asset, AssetDTO>() {
+        @Override
+        protected void configure() {
+            map().setCode(source.getEquipment().getCode());
+            map().setUser(source.getUser().getUsername());
+        }
+    };
 
     public CustomModelMapper(){
         super();
         this.addMappings(customMapTransactionDTO);
         this.addMappings(customMapTransactionWithUserDTO);
+        this.addMappings(customMapAssetDTO);
     }
 }

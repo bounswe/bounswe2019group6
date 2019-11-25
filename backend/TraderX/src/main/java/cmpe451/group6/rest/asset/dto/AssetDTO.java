@@ -11,13 +11,36 @@ import java.io.Serializable;
 public class AssetDTO implements Serializable {
 
     @ApiModelProperty(position = 0, required = true)
+    private String user;
+
+    @ApiModelProperty(position = 1, required = true)
+    private String code;
+
+    @ApiModelProperty(position = 2, required = true)
     private double amount;
 
     public AssetDTO() {
     }
 
-    public AssetDTO(double amount) {
+    public AssetDTO(String user, double amount) {
         this.amount = amount;
+        this.user = user;
+    }
+
+    public String getCode(){
+        return code;
+    }
+
+    public void setCode(String code){
+        this.code = code;
+    }
+
+    public String getUser(){
+        return user;
+    }
+
+    public void setUser(String user){
+        this.user = user;
     }
 
     public double getAmount() {

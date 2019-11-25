@@ -1,6 +1,8 @@
 package cmpe451.group6.rest.asset.service;
 
 import cmpe451.group6.authorization.exception.CustomException;
+import cmpe451.group6.helpers.CustomModelMapper;
+import cmpe451.group6.rest.asset.dto.AssetDTO;
 import cmpe451.group6.rest.asset.model.Asset;
 import cmpe451.group6.rest.asset.repository.AssetRepository;
 import cmpe451.group6.rest.equipment.configuration.EquipmentConfig;
@@ -31,7 +33,7 @@ public class AssetService {
     private AssetRepository assetRepository;
 
     @Autowired
-    private ModelMapper modelMapper;
+    private CustomModelMapper modelMapper;
 
     @Autowired
     private UserRepository userRepository;
@@ -39,7 +41,7 @@ public class AssetService {
     @Autowired
     private EquipmentRepository equipmentRepository;
 
-    public Asset getAssetByCode(String username, String code) {
+    public AssetDTO getAssetByCode(String username, String code) {
         User user = userRepository.findByUsername(username);
         if (user == null) {
             throw new CustomException("There is no user named " + username + ".", HttpStatus.NOT_ACCEPTABLE);
@@ -53,6 +55,22 @@ public class AssetService {
             throw new CustomException("The user has no asset of code: " + code + ".",HttpStatus.PRECONDITION_FAILED);
         }
 
-        return asset;
+        return modelMapper.map(asset, AssetDTO.class);
     }
+
+    public List<AssetDTO> getAssetByUser(String username){
+        User user = userRepository.findByUsername(username);
+        if( user == null ) {
+            throw new CustomException("There is no user name " + username + ".", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        List<AssetDTO> assetDTOs = new ArrayList<AssetDTO>();
+
+        assetRepository.findByUser_username(username).
+                forEach(item -> assetDTOs.add(modelMapper.map(item, AssetDTO.class)));
+
+        return assetDTOs;
+
+    }
+
 }
