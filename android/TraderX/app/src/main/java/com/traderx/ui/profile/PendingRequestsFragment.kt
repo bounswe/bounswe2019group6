@@ -53,9 +53,9 @@ class PendingRequestsFragment : Fragment(), FragmentTitleEmitters {
                     recyclerView.adapter = PendingRequestRecyclerViewAdapter(it,
                         { username, onComplete -> acceptRequest(username, onComplete) },
                         { username, onComplete -> declineRequest(username, onComplete) },
-                        {
+                        { username ->
                             PendingRequestsFragmentDirections.actionNavigationPendingFollowRequestsToNavigationUser(
-                                it
+                                username
                             )
                         }
                     )

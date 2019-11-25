@@ -2,7 +2,6 @@ package com.traderx.ui.profile
 
 
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -14,6 +13,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.github.razir.progressbutton.hideProgress
+import com.github.razir.progressbutton.isProgressActive
 import com.traderx.MainActivity
 import com.traderx.R
 import com.traderx.api.ApiService
@@ -96,6 +97,12 @@ class AuthUserFragment : Fragment() {
         root.findViewById<LinearLayout>(R.id.my_transactions_action)?.let {
             it.setOnClickListener {
                 findNavController().navigate(AuthUserFragmentDirections.actionNavigationAuthUserToNavigationTransactions())
+            }
+        }
+
+        root.findViewById<LinearLayout>(R.id.my_alerts_action)?.let {
+            it.setOnClickListener {
+                findNavController().navigate(AuthUserFragmentDirections.actionNavigationAuthUserToNavigationAlerts())
             }
         }
 
@@ -196,7 +203,6 @@ class AuthUserFragment : Fragment() {
         builder.setView(view)
         val warningLayout = view.findViewById<LinearLayout>(R.id.warning_layout)
         val warning = view.findViewById<TextView>(R.id.warning)
-        val progress = view.findViewById<ProgressBar>(R.id.progress)
         val iban = view.findViewById<EditText>(R.id.iban)
         val okButton = view.findViewById<Button>(R.id.ok_action)
 
@@ -206,24 +212,26 @@ class AuthUserFragment : Fragment() {
         alertDialog.show()
 
         okButton.setOnClickListener {
-            if (!SignUpValidator.validateIban(iban.text.toString())) {
-                warningLayout.visibility = View.VISIBLE
-                warning.text = getString(R.string.trader_iban_not_valid)
-            } else {
-                warningLayout.visibility = View.GONE
+            if (!okButton.isProgressActive()) {
+                if (!SignUpValidator.validateIban(iban.text.toString())) {
+                    warningLayout.visibility = View.VISIBLE
+                    warning.text = getString(R.string.trader_iban_not_valid)
+                } else {
 
-                progress.visibility = View.VISIBLE
+                    warningLayout.visibility = View.GONE
 
-                disposable.add(
-                    authUserViewModel.becomeTrader(iban.text.toString())
-                        .compose(Helper.applyCompletableSchedulers())
-                        .subscribe({
-                            alertDialog.dismiss()
-                        }, {
-                            progress.visibility = View.GONE
-                            ErrorHandler.handleError(it, context as Context)
-                        })
-                )
+                    disposable.add(
+                        authUserViewModel.becomeTrader(iban.text.toString())
+                            .compose(Helper.applyCompletableSchedulers())
+                            .subscribe({
+                                alertDialog.dismiss()
+                                becomeTraderLayout.visibility = View.GONE
+                                okButton.hideProgress(R.string.ok)
+                            }, {
+                                ErrorHandler.handleError(it, context as Context)
+                            })
+                    )
+                }
             }
         }
     }
