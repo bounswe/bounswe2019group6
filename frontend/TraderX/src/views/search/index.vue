@@ -140,7 +140,7 @@ export default {
           temp.push({
             'name': user.username,
             'privacy' : user.isPrivate ? "Private" : 'Public',
-            'role' : user.roles[0],
+            'role' : user.roles[0] == "ROLE_TRADER" ? "Trader" : "Basic",
             'followText' : followText,
             'isFollowing' : isFollowing,
             'isNotFollowing' : isNotFollowing,

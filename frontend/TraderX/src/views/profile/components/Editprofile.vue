@@ -21,7 +21,7 @@
           <el-button slot="append" @click="updateRole(traderibaninput)">Update</el-button>
         </el-input>
       </el-collapse-item>
-      <el-collapse-item title="Load Money" name="2" v-if="!istrader">
+      <el-collapse-item title="Load Money" name="5" v-if="istraderloadmoney">
         <el-input placeholder="Please enter some money amount" v-model="loadmoneyinput" class="input-with-select">
           <el-select style="width: 100px" v-model="selectedFilter" slot="prepend" placeholder="Select">
             <el-option label="TR" value="1"></el-option>
@@ -36,6 +36,7 @@
 </template>
 <script>
   import { getToken } from '@/utils/auth' // get token from cookie
+  import { becomeBasic, becomeTrader } from '@/api/user'
 
   export default {
     props: {
@@ -57,8 +58,10 @@
         passwordinput: '',
         newibaninput: '',
         traderibaninput: '',
+        loadmoneyinput: '',
         privatepublic: !this.user.isPrivate,
         istrader: this.user.roles[0] == 'ROLE_TRADER' ? true : false,
+        istraderloadmoney: this.user.roles[0] == 'ROLE_TRADER' ? true : false,
         seen: false,
         ibanshow: false,
         selectedFilter: "1"
@@ -96,6 +99,20 @@
         }
       },
       updateRole(iban){
+        console.log(this.istrader)
+        if (!this.istrader){
+          this.$store.dispatch('user/becomeBasic').then(response => {
+            this.$message.success('Your Are A Basic User Now!')
+          }).catch(err => {
+            console.log(err)
+          })
+        } else {
+          this.$store.dispatch('user/becomeTrader', {'iban' : iban}).then(response => {
+            this.$message.success('Your Are A Trader Now!')
+          }).catch(err => {
+            console.log(err)
+          })
+        }
       },
       loadMoney(moneyamount) {
       },

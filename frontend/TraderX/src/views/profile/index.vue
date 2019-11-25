@@ -31,7 +31,7 @@
                 label="EditProfile"
                 name="editprofile"
               >
-                <editprofile :user="this.user"/>
+                <editprofile :user="this.user" v-if="this.user.username"/>
               </el-tab-pane>
             </el-tabs>
           </el-card>
@@ -54,7 +54,7 @@ export default {
   components: { UserCard, Portfolio, Articles, Editprofile, PrivateAccount },
   data() {
     return {
-      user: Object,
+      user: {},
       activeTab: 'portfolio'
     }
   },

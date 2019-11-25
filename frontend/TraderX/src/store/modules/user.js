@@ -1,5 +1,5 @@
 import { login, getInfo, logout, register, confirm, resetPassword, renew, unfollowUser,
-   followUser, setProfilePublic, setProfilePrivate, changeIBAN, updatePassword } from '@/api/user'
+   followUser, setProfilePublic, setProfilePrivate, changeIBAN, updatePassword, becomeBasic, becomeTrader } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
 
@@ -228,6 +228,26 @@ const actions = {
   updatePassword({ commit }, password) {
     return new Promise((resolve, reject) => {
       updatePassword(password).then(() => {
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+
+  becomeBasic({ commit }) {
+    return new Promise((resolve, reject) => {
+      becomeBasic().then(() => {
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+
+  becomeTrader({ commit }, iban) {
+    return new Promise((resolve, reject) => {
+      becomeTrader(iban).then(() => {
         resolve()
       }).catch(error => {
         reject(error)
