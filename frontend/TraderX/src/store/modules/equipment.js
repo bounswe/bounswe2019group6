@@ -1,4 +1,4 @@
-import { getEquipment, listEquipment, getAllCurrencies, getAllCryptoCurrencies, getAllStocks, depositMoney, buyEquipment} from '@/api/equipment'
+import { getEquipment, listEquipment, getAllCurrencies, getAllCryptoCurrencies, getAllStocks, depositMoney, buyEquipment, getAssetInfo} from '@/api/equipment'
 
 const state = {
   equipmentQueryResult : {
@@ -91,6 +91,17 @@ const actions = {
   buyEquipment({ commit }, code, amount) {
     return new Promise((resolve, reject) => {
       buyEquipment(code, amount).then(response => {
+        const { data } = response
+        commit('SET_QUERY_RESULT', data)
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  getAssetInfo({ commit }, equipmentName) {
+    return new Promise((resolve, reject) => {
+      getAssetInfo(equipmentName).then(response => {
         const { data } = response
         commit('SET_QUERY_RESULT', data)
         resolve()

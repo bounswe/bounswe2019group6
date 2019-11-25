@@ -50,3 +50,10 @@ export function buyEquipment(query) {
     params: query,
   })
 }
+
+export function getAssetInfo(equipmentName) {
+  return request({
+    url: '/asset/'+equipmentName,
+    method: 'get',
+  })
+}
