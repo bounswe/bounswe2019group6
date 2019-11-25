@@ -50,7 +50,7 @@ class AlertsFragment : Fragment(), FragmentTitleEmitters {
             equipmentViewModel.getAlerts()
                 .compose(Helper.applySingleSchedulers<ArrayList<AlertResponse>>())
                 .subscribe({
-                    recyclerView.adapter = AlertRecyclerViewAdapter(it)
+                    recyclerView.adapter = AlertRecyclerViewAdapter(it, context)
                 }, {
                     ErrorHandler.handleError(it, context)
                 })

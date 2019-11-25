@@ -150,8 +150,8 @@ class AlertFragment : Fragment(), FragmentTitleEmitters {
                     code = equipmentCode ?: "",
                     amount = parseDouble(amount.text.toString()),
                     limit = parseDouble(limit.text.toString()),
-                    transactionType = transactionType.value,
-                    alertType = alertType.value
+                    transactionType = transactionType.request,
+                    alertType = alertType.request
                 )
             ).compose(Helper.applyCompletableSchedulers())
                 .doOnComplete {

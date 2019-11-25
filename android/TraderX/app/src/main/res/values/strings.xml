@@ -71,6 +71,7 @@
 
     <!--    Alert-->
     <string name="amount_or_limit_empty">Amount or Limit is empty</string>
+    <string name="alert_phrase">%1$s when %2$s %3$s$ than %4$s</string>
 
     <!--    Transaction-->
     <string name="min_transaction_error">You should specify an amount bigger than 0</string>

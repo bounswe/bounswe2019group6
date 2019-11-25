@@ -179,6 +179,9 @@
         <action
             android:id="@+id/action_navigation_auth_user_to_navigation_transactions"
             app:destination="@id/navigation_transactions" />
+        <action
+            android:id="@+id/action_navigation_auth_user_to_navigation_alerts"
+            app:destination="@id/navigation_alerts" />
     </fragment>
 
     <fragment
