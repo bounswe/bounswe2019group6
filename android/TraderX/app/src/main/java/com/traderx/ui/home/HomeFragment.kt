@@ -24,6 +24,12 @@ class HomeFragment : Fragment() {
             }
         }
 
+        root.findViewById<LinearLayout>(R.id.home_equipment_action)?.let {
+            it.setOnClickListener {
+                findNavController().navigate(HomeFragmentDirections.actionNavigationHomeToNavigationEquipmentTypes())
+            }
+        }
+
         return root
     }
 }

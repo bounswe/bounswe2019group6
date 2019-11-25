@@ -51,6 +51,6 @@
         android:layout_marginRight="16dp"
         app:layoutManager="LinearLayoutManager"
         tools:context=".ui.search.UserSearchFragment"
-        tools:listitem="@layout/item_user_search" />
+        tools:listitem="@layout/item_user" />
 
 </LinearLayout>

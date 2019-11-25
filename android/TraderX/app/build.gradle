@@ -88,6 +88,7 @@ dependencies {
     implementation 'de.hdodenhof:circleimageview:3.0.1'
     implementation 'com.github.razir.progressbutton:progressbutton:1.0.3'
     implementation 'com.facebook.shimmer:shimmer:0.5.0'
+    implementation 'com.github.lecho:hellocharts-library:1.5.8'
 
     testImplementation 'junit:junit:4.12'
     testImplementation deps.test.hamcrest

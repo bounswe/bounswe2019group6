@@ -45,16 +45,16 @@ class ArticlesFragment : Fragment() {
             layoutManager = viewManager
         }
 
-        disposable.add(
-            articleViewModel.getArticles()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe({
-                    recyclerView.swapAdapter(ArticleRecyclerViewAdapter(it), false)
-                }, {
-                    ErrorHandler.handleError(it, context as Context)
-                })
-        )
+//        disposable.add(
+//            articleViewModel.getArticles()
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribeOn(Schedulers.io())
+//                .subscribe({
+//                    recyclerView.swapAdapter(ArticleRecyclerViewAdapter(it), false)
+//                }, {
+//                    ErrorHandler.handleError(it, context as Context)
+//                })
+//        )
 
         return root
     }
