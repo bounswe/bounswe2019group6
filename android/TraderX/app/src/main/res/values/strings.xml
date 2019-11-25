@@ -46,18 +46,32 @@
     <string name="crypto_currencies">Crypto Currencies</string>
     <string name="stocks">Stocks</string>
     <string name="save">Save</string>
+    <string name="create">Create</string>
     <string name="buy">Buy</string>
+    <string name="sell">Sell</string>
+    <string name="above">Above</string>
+    <string name="below">Below</string>
     <string name="equipment">Equipment</string>
+    <string name="alert">Alert</string>
+    <string name="my_alerts">My Alerts</string>
+    <string name="limit">Limit</string>
+    <string name="transaction_type">Transaction Type</string>
+    <string name="alert_type">Alert Type</string>
     <string name="amount">Amount</string>
 
     <!--    Actions-->
     <string name="become_trader">Become a Trader</string>
     <string name="enter_iban_for_trader">Enter Your IBAN to Become Trader</string>
+    <string name="alert_create_success">Alert is created successfully</string>
 
     <!--    Symbols-->
     <string name="try_value">₺ %1$s</string>
     <string name="eur_value">€ %1$s</string>
     <string name="usd_value">$ %1$s</string>
+
+    <!--    Alert-->
+    <string name="amount_or_limit_empty">Amount or Limit is empty</string>
+    <string name="alert_phrase">%1$s when %2$s %3$s$ than %4$s</string>
 
     <!--    Transaction-->
     <string name="min_transaction_error">You should specify an amount bigger than 0</string>

@@ -3,6 +3,7 @@ package com.traderx.ui.transaction
 
 import android.content.Context
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -68,15 +69,13 @@ class TransactionFragment : Fragment(), FragmentTitleEmitters {
 
         setFragmentTitle(context, getString(R.string.title_transaction))
 
-        val equipmentViewModelFactory =
-            Injection.provideEquipmentViewModelFactory(context)
-        equipmentViewModel = ViewModelProvider(this, equipmentViewModelFactory)
-            .get(EquipmentViewModel::class.java)
+        equipmentViewModel =
+            ViewModelProvider(this, Injection.provideEquipmentViewModelFactory(context))
+                .get(EquipmentViewModel::class.java)
 
-        val transactionViewModelFactory = Injection.provideTransactionViewModelFactory(context)
         transactionViewModel = ViewModelProvider(
             this,
-            transactionViewModelFactory
+            Injection.provideTransactionViewModelFactory(context)
         ).get(TransactionViewModel::class.java)
 
         val authUserViewModelFactory = Injection.provideAuthUserViewModelFactory(context)
@@ -116,16 +115,20 @@ class TransactionFragment : Fragment(), FragmentTitleEmitters {
                         toUsd = 1 / toUsd
                     }
 
-                    amountInUsd.setOnFocusChangeListener { _, focus ->
-                        if (!focus) {
+                    amountInUsd.setOnKeyListener { _, _, event ->
+                        if (event.action == KeyEvent.ACTION_UP) {
                             applyRatio(amountInUsd, amount, 1 / toUsd)
                         }
+
+                        false
                     }
 
-                    amount.setOnFocusChangeListener { _, focus ->
-                        if (!focus) {
+                    amount.setOnKeyListener { _, _, event ->
+                        if (event.action == KeyEvent.ACTION_UP) {
                             applyRatio(amount, amountInUsd, toUsd)
                         }
+
+                        false
                     }
                 }, {
                     ErrorHandler.handleError(it, context)
@@ -156,21 +159,21 @@ class TransactionFragment : Fragment(), FragmentTitleEmitters {
 
     private fun getAmount(): Double {
         val text = amount.text.toString()
-        return if (text.isEmpty()) -1.0 else  parseDouble(text)
+        return if (text.isEmpty()) -1.0 else parseDouble(text)
     }
 
     private fun getAmountInUsd(): Double {
         val text = amountInUsd.text.toString()
-        return if (text.isEmpty()) -1.0 else  parseDouble(text)
+        return if (text.isEmpty()) -1.0 else parseDouble(text)
     }
 
     private fun getDeposit(): Double {
         val text = deposit.text.toString()
-        return if (text.isEmpty()) -1.0 else  parseDouble(text)
+        return if (text.isEmpty()) -1.0 else parseDouble(text)
     }
 
     private fun buyEquipment(button: Button) {
-        if(getAmount() <= 0) {
+        if (getAmount() <= 0) {
             showError(getString(R.string.min_transaction_error))
             return
         } else if (getAmountInUsd() > getDeposit()) {
@@ -178,7 +181,7 @@ class TransactionFragment : Fragment(), FragmentTitleEmitters {
             return
         }
 
-        if(button.isProgressActive()) {
+        if (button.isProgressActive()) {
             return
         }
 
@@ -190,7 +193,7 @@ class TransactionFragment : Fragment(), FragmentTitleEmitters {
 
             )
                 .compose(Helper.applyCompletableSchedulers())
-                .doOnComplete {
+                .doFinally {
                     button.hideProgress(R.string.buy)
                 }
                 .subscribe({
@@ -202,13 +205,18 @@ class TransactionFragment : Fragment(), FragmentTitleEmitters {
 
                     findNavController().navigate(TransactionFragmentDirections.actionNavigationTransactionToNavigationTransactions())
                 }, {
+                    if(it is HttpException && it.code() == 412) {
+                        showError(getString(R.string.not_enough_deposit))
+                    }
                     ErrorHandler.handleError(it, context as Context)
                 })
         )
     }
 
     private fun applyRatio(input: EditText, output: EditText, ratio: Double) {
-        output.setText((parseDouble(input.text.toString()) * ratio).toString())
+        val amount = if (input.text.isEmpty()) 0.0 else parseDouble(input.text.toString())
+
+        output.setText((amount * ratio).toString())
     }
 
     private fun clearError() {

@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.traderx.R
 import com.traderx.api.ErrorHandler
 import com.traderx.api.response.CommentResponse
@@ -31,7 +32,6 @@ import lecho.lib.hellocharts.view.LineChartView
 class EquipmentFragment : Fragment(), FragmentTitleEmitters {
     private var equipmentCode: String? = null
     private lateinit var equipmentViewModel: EquipmentViewModel
-
     private lateinit var commentsRecyclerView: RecyclerView
 
     private lateinit var code: TextView
@@ -77,6 +77,12 @@ class EquipmentFragment : Fragment(), FragmentTitleEmitters {
         root.findViewById<Button>(R.id.buy_action)?.let {
             it.setOnClickListener {
                 findNavController().navigate(EquipmentFragmentDirections.actionNavigationEquipmentToNavigationTransaction(equipmentCode ?: ""))
+            }
+        }
+
+        root.findViewById<FloatingActionButton>(R.id.alert_action)?.let {
+            it.setOnClickListener {
+                findNavController().navigate(EquipmentFragmentDirections.actionNavigationEquipmentToNavigationAlert(equipmentCode ?: ""))
             }
         }
 

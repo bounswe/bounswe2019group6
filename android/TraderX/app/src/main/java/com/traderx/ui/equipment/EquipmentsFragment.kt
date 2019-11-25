@@ -68,7 +68,7 @@ class EquipmentsFragment : Fragment(), FragmentTitleEmitters {
             source
                 .compose(Helper.applyFlowableSchedulers<EquipmentsResponse>())
                 .subscribe({
-                    recyclerView.adapter = EquipmentRecyclerViewAdapter(it.equipments, it.base, context as Context)
+                    recyclerView.adapter = EquipmentRecyclerViewAdapter(it.equipments, it.base, equipmentType ?: EquipmentType.STOCK, context as Context)
                 },
                     { ErrorHandler.handleError(it, context as Context) })
         )
