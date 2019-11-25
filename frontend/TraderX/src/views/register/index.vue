@@ -150,7 +150,7 @@
           {{ this.signupText }}
         </el-button>
 
-        <div id="my-signup2"></div>
+        <div id="my-signup2" :style="visibility"></div>
         <div v-if="googleSignedIn">
           <el-button @click="googleSignout">Sign out from Google</el-button>
         </div>
@@ -261,7 +261,8 @@ export default {
         longitude: '',
         email: '',
         isPrivate: false,
-        googleToken: null
+        googleToken: null,
+        visibility: 'visibility: hidden',
       },
       isTrader: false,
       signupRules: {
@@ -392,26 +393,28 @@ export default {
         this.signupForm.password = null;
 
         document.getElementById("my-signup2").setAttribute('hidden', true);
+        this.visibility = 'visibility: hidden'
         this.googleSignedIn = true;
         this.signupText = "Register with Google";
     },
     googleSignout() {
-        var auth2 = gapi.auth2.getAuthInstance();
-        var __this = this;
+      var auth2 = gapi.auth2.getAuthInstance();
+      var __this = this;
 
-        auth2.signOut().then(function () {
-            console.log('User signed out.');
+      auth2.signOut().then(function () {
+          console.log('User signed out.');
 
-            // FIX this does not show back
-            document.getElementById('my-signup2').removeAttribute('hidden');
+          // FIX this does not show back
+          // document.getElementById('my-signup2').removeAttribute('hidden');
+          __this.visibility = 'visibility: block'
 
-            __this.signupForm.googleToken = null;
-            __this.signupForm.email = '';
-            __this.signupForm.password = '';
+          __this.signupForm.googleToken = null;
+          __this.signupForm.email = '';
+          __this.signupForm.password = '';
 
-            __this.googleSignedIn = false;
-            __this.signupText = "Register";
-        });
+          __this.googleSignedIn = false;
+          __this.signupText = "Register";
+      });
     }
   }
 }
