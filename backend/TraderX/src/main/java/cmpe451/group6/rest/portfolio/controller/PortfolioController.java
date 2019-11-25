@@ -35,7 +35,7 @@ public class PortfolioController {
     @ApiOperation(value = "Create a portfolio", response = StringResponseWrapper.class)
     @ApiResponses(value = { @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE) })
     public StringResponseWrapper createPortfolio(HttpServletRequest req,
-            @ApiParam("Portfolio Name") @PathVariable String portfolioName) {
+            @ApiParam("Portfolio Name") @RequestParam String portfolioName) {
         return new StringResponseWrapper(portfolioService.createPortfolio(util.unwrapUsername(req), portfolioName));
     }
 
@@ -45,7 +45,7 @@ public class PortfolioController {
     @ApiOperation(value = "Delete a portfolio", response = StringResponseWrapper.class)
     @ApiResponses(value = { @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE) })
     public StringResponseWrapper deletePortfolio(HttpServletRequest req,
-            @ApiParam("Portfolio Name") @PathVariable String portfolioName) {
+            @ApiParam("Portfolio Name") @RequestParam String portfolioName) {
         return new StringResponseWrapper(portfolioService.deletePortfolio(util.unwrapUsername(req), portfolioName));
     }
 
@@ -55,8 +55,8 @@ public class PortfolioController {
     @ApiOperation(value = "Add an equipment to a portfolio", response = StringResponseWrapper.class)
     @ApiResponses(value = { @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE) })
     public StringResponseWrapper addToPortfolio(HttpServletRequest req,
-            @ApiParam("Portfolio Name") @PathVariable String portfolioName,
-            @ApiParam("Equipment code") @PathVariable String code) {
+            @ApiParam("Portfolio Name") @RequestParam String portfolioName,
+            @ApiParam("Equipment code") @RequestParam String code) {
         return new StringResponseWrapper(
                 portfolioService.addToPortfolio(util.unwrapUsername(req), portfolioName, code));
     }
@@ -67,8 +67,8 @@ public class PortfolioController {
     @ApiOperation(value = "Delete an equipment from a portfolio", response = StringResponseWrapper.class)
     @ApiResponses(value = { @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE) })
     public StringResponseWrapper deleteFromPortfolio(HttpServletRequest req,
-            @ApiParam("Portfolio Name") @PathVariable String portfolioName,
-            @ApiParam("Equipment code") @PathVariable String code) {
+            @ApiParam("Portfolio Name") @RequestParam String portfolioName,
+            @ApiParam("Equipment code") @RequestParam String code) {
         return new StringResponseWrapper(
                 portfolioService.deleteFromPortfolio(util.unwrapUsername(req), portfolioName, code));
     }
@@ -79,7 +79,7 @@ public class PortfolioController {
     @ApiOperation(value = "Get a portfolio of requester", response = StringResponseWrapper.class)
     @ApiResponses(value = { @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE) })
     public PortfolioResponseDTO getPortfolio(HttpServletRequest req,
-            @ApiParam("Portfolio Name") @PathVariable String portfolioName) {
+            @ApiParam("Portfolio Name") @RequestParam String portfolioName) {
         return portfolioService.getPortfolio(util.unwrapUsername(req), portfolioName);
     }
   
