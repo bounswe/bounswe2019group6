@@ -1,6 +1,5 @@
 package cmpe451.group6.rest.equipment.service;
 
-
 import cmpe451.group6.authorization.exception.CustomException;
 import cmpe451.group6.rest.equipment.configuration.EquipmentConfig;
 import cmpe451.group6.rest.equipment.dto.EquipmentHistoryDTO;
@@ -50,6 +49,32 @@ public class EquipmentService {
                 (modelMapper.map(h,EquipmentHistoryDTO.class))).collect(Collectors.toList());
 
         return new EquipmentResponseDTO(modelMapper.map(equipment,EquipmentResponseDTO.EquipmentDTO.class),hist);
+    }
+
+    /**
+     * Calculates the change ratio of the specified currency, respected to current
+     * value and yesterday's closing
+     * 
+     * @param code
+     * @return change ratio (in percent)
+     */
+    public double getDailyChange(String code) {
+
+        EquipmentResponseDTO equipment = this.getEquipment(code);
+
+        List<EquipmentHistoryDTO> hist = equipment.getHistoricalValues();
+
+        if (hist.isEmpty()) {
+            throw new CustomException("historical values not initialized", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        int histSize = hist.size();
+        
+
+        double currentVal = equipment.getEquipment().getCurrentValue();
+        double prevVal = hist.get(histSize - 1).getClose();
+
+        return ((currentVal - prevVal) * 100.0 / prevVal);
     }
 
     public EquipmentMetaWrapper getCurrencies(){

@@ -1,6 +1,8 @@
 package cmpe451.group6.rest.transaction.service;
 
 import cmpe451.group6.authorization.exception.CustomException;
+import cmpe451.group6.rest.portfolio.model.Portfolio;
+import cmpe451.group6.rest.portfolio.repository.PortfolioRepository;
 import cmpe451.group6.rest.asset.model.Asset;
 import cmpe451.group6.rest.asset.repository.AssetRepository;
 import cmpe451.group6.rest.equipment.configuration.EquipmentConfig;
@@ -15,6 +17,8 @@ import cmpe451.group6.rest.transaction.model.TransactionType;
 import cmpe451.group6.rest.transaction.repository.TransactionRepository;
 import cmpe451.group6.authorization.model.User;
 import cmpe451.group6.authorization.repository.UserRepository;
+import cmpe451.group6.rest.follow.model.FollowStatus;
+import cmpe451.group6.rest.follow.service.FollowService;
 import cmpe451.group6.rest.follow.repository.FollowRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,13 +41,13 @@ public class TransactionService {
     private FollowRepository followRepository;
 
     @Autowired
+    private FollowService followService;
+
+    @Autowired
     private EquipmentRepository equipmentRepository;
 
     @Autowired
     private AssetRepository assetRepository;
-
-    @Autowired
-    private FollowService followService;
 
     @Autowired
     private CustomModelMapper modelMapper;
@@ -82,6 +86,25 @@ public class TransactionService {
         TransactionRepository.findByDateBetween(start, end)
                 .forEach(item -> transactionDTOs.add(modelMapper.map(item, TransactionDTO.class)));
         return transactionDTOs;
+    }
+
+    public List<TransactionDTO> getTransactionByDateBetweenOfUser(Date start, Date end, String username,
+            String requesterName) {
+
+        User user = userRepository.findByUsername(username);
+        if (user == null) {
+            throw new CustomException("There is no user named " + username + ".", HttpStatus.NOT_ACCEPTABLE);
+        } else if (!followService.isPermitted(username, requesterName)) {
+            throw new CustomException("The requested user's profile is private and requester is not following!",
+                    HttpStatus.NOT_ACCEPTABLE);
+        } else {
+            List<TransactionDTO> transactionDTOs = new ArrayList<TransactionDTO>();
+            TransactionRepository.findByDateBetweenOfUser(start, end, username)
+                    .forEach(item -> transactionDTOs.add(modelMapper.map(item, TransactionDTO.class)));
+            return transactionDTOs;
+
+        }
+
     }
 
     public int numberOfTransactions() {

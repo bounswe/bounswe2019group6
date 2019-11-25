@@ -61,6 +61,8 @@ public class User implements Serializable {
   private Set<Investment> investments;
 
 
+
+
   //   ^               # start-of-string
   // (?=.*[0-9])       # a digit must occur at least once
   // (?=.*[a-z])       # a lower case letter must occur at least once
@@ -207,4 +209,5 @@ public class User implements Serializable {
   public void setAssets(Set<Asset> assets) {
     this.assets = assets;
   }
+
 }
