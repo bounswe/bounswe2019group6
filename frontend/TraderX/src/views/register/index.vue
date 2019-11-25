@@ -356,8 +356,6 @@ export default {
         this.signupForm.iban = null
       }
 
-      console.log(this.signupForm)
-
       this.$refs.signupForm.validate(valid => {
         if (valid) {
           this.loading = true
