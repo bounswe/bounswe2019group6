@@ -52,7 +52,7 @@ public class LoginService {
 
         boolean isGoogleLogin = loginInfoDTO.getGoogleToken() != null;
 
-        if(user.getGoogleToken() == null){
+        if(user.getGoogleToken() == null && isGoogleLogin){
             throw new CustomException("User is not registered via Google", HttpStatus.NOT_ACCEPTABLE);
         }
 
