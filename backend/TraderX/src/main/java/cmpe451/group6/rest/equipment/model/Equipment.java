@@ -1,7 +1,6 @@
 package cmpe451.group6.rest.equipment.model;
 
 
-import cmpe451.group6.rest.portfolio.model.Portfolio;
 import cmpe451.group6.rest.asset.model.Asset;
 import cmpe451.group6.rest.transaction.model.Transaction;
 
