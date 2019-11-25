@@ -15,7 +15,7 @@
           </h3>
         </div>
 
-        <el-form-item prop="email">
+        <el-form-item v-if="!googleSignedIn" prop="email">
           <span class="svg-container">
             <svg-icon icon-class="email" />
           </span>
@@ -51,7 +51,7 @@
           placement="right"
           manual
         >
-          <el-form-item prop="password">
+          <el-form-item v-if="!googleSignedIn" prop="password">
             <span class="svg-container">
               <svg-icon icon-class="password" />
             </span>
@@ -147,10 +147,13 @@
           style="width:100%;margin-bottom:30px;"
           @click.native.prevent="handleSignup"
         >
-          Register
+          {{ this.signupText }}
         </el-button>
 
-        <div id="my-signin2"></div>
+        <div id="my-signup2"></div>
+        <div v-if="googleSignedIn">
+          <el-button @click="googleSignout">Sign out from Google</el-button>
+        </div>
 
         <div style="margin-top: -39px; float: right">
           <el-button
@@ -247,14 +250,18 @@ export default {
       }
     }
     return {
+      googleSignedIn: false,
+      signupText: 'Register',
       signupForm: {
+        appSecret: '878451092423-3ksgjtr0q19lrn9e6rdijdh0iddhl9pp.apps.googleusercontent.com',
         username: '',
         password: '',
         iban: '',
         latitude: '',
         longitude: '',
         email: '',
-        isPrivate: false
+        isPrivate: false,
+        googleToken: null
       },
       isTrader: false,
       signupRules: {
@@ -287,14 +294,17 @@ export default {
   },
   created() {
 
+    var __this = this
+
     gapi.load('auth2', function(){
         gapi.auth2.init({
             client_id: '878451092423-3ksgjtr0q19lrn9e6rdijdh0iddhl9pp.apps.googleusercontent.com'
         }).then(() => {
-            gapi.signin2.render('my-signin2', {
+            gapi.signin2.render('my-signup2', {
                 height: 39,
                 theme: 'light',
-                longtitle: true
+                longtitle: true,
+                onsuccess: __this.onSignIn
             })
         })
     })
@@ -346,6 +356,8 @@ export default {
         this.signupForm.iban = null
       }
 
+      console.log(this.signupForm)
+
       this.$refs.signupForm.validate(valid => {
         if (valid) {
           this.loading = true
@@ -368,6 +380,40 @@ export default {
     },
     redirectHome() {
       this.$router.push({ path: '/home'})
+    },
+    onSignIn(googleUser) {
+        var profile = googleUser.getBasicProfile()
+
+        console.log('Logged in.');
+        console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+        console.log('Name: ' + profile.getName());
+        console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+
+        this.signupForm.email = profile.getEmail();
+        this.signupForm.googleToken = profile.getId();
+        this.signupForm.password = null;
+
+        document.getElementById("my-signup2").setAttribute('hidden', true);
+        this.googleSignedIn = true;
+        this.signupText = "Register with Google";
+    },
+    googleSignout() {
+        var auth2 = gapi.auth2.getAuthInstance();
+        var __this = this;
+
+        auth2.signOut().then(function () {
+            console.log('User signed out.');
+
+            // FIX this does not show back
+            document.getElementById('my-signup2').removeAttribute('hidden');
+
+            __this.signupForm.googleToken = null;
+            __this.signupForm.email = '';
+            __this.signupForm.password = '';
+
+            __this.googleSignedIn = false;
+            __this.signupText = "Register";
+        });
     }
   }
 }

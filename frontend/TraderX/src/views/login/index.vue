@@ -36,7 +36,7 @@
           placement="right"
           manual
         >
-          <el-form-item prop="password">
+          <el-form-item v-if="!googleSignedIn" prop="password">
             <span class="svg-container">
               <svg-icon icon-class="password" />
             </span>
@@ -72,10 +72,13 @@
           style="width:100%;margin-bottom:30px;"
           @click.native.prevent="handleLogin"
         >
-          Login
+          {{ this.loginText }}
         </el-button>
 
         <div id="my-signin2"></div>
+        <div v-if="googleSignedIn">
+          <el-button @click="googleSignout">Sign out from Google</el-button>
+        </div>
 
         <div style="margin-top: -39px; float: right;">
           <el-button
@@ -126,15 +129,6 @@
 import { validUsername, validEmail } from '@/utils/validate'
 import { Message } from 'element-ui'
 
-function handleSuccess(googleUser) {
-    const profile = googleUser.getBasicProfile();
-    console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-    console.log('Name: ' + profile.getName());
-    console.log('Image URL: ' + profile.getImageUrl());
-    console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
-
-}
-
 export default {
   name: 'Login',
   data() {
@@ -160,9 +154,13 @@ export default {
       }
     }
     return {
+      loginText: 'Login',
+      appSecret: '878451092423-3ksgjtr0q19lrn9e6rdijdh0iddhl9pp.apps.googleusercontent.com',
+      googleSignedIn: false,
       loginForm: {
         username: '',
-        password: ''
+        password: '',
+        googleToken: null
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
@@ -199,15 +197,17 @@ export default {
   },
   mounted() {
     /* eslint-disable */
+    var __this = this
+
     gapi.load('auth2', function(){
         gapi.auth2.init({
-            client_id: '878451092423-3ksgjtr0q19lrn9e6rdijdh0iddhl9pp.apps.googleusercontent.com'
+            client_id: __this.appSecret
         }).then(() => {
             gapi.signin2.render('my-signin2', {
                 height: 39,
                 theme: 'light',
                 longtitle: false,
-                onsuccess: handleSuccess
+                onsuccess: __this.onSignIn
             })
         })
     })
@@ -289,15 +289,39 @@ export default {
       })
     },
     onSignIn(googleUser) {
-      var profile = googleUser.getBasicProfile();
+      var profile = googleUser.getBasicProfile()
+
+      console.log('Logged in.');
       console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
       console.log('Name: ' + profile.getName());
-      console.log('Image URL: ' + profile.getImageUrl());
       console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
-    }
 
+      this.loginForm.googleToken = profile.getId()
+      this.loginForm.password = null
+
+      document.getElementById("my-signin2").setAttribute('hidden', true)
+      this.googleSignedIn = true
+      this.loginText = "Login with Google"
+    },
+
+    googleSignout() {
+        var auth2 = gapi.auth2.getAuthInstance()
+        var __this = this
+
+        auth2.signOut().then(function () {
+            console.log('User signed out.')
+
+            __this.loginForm.googleToken = null
+            __this.loginForm.password = ''
+
+            __this.googleSignedIn = false
+            __this.loginText = "Login"
+            document.getElementById('my-signin2').removeAttribute('hidden')
+        });
+    }
+  }
 }
-}
+
 </script>
 
 <style lang="scss">
