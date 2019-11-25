@@ -36,6 +36,14 @@ public class Transaction implements Serializable {
         createdAt = new Date();
     }
 
+    public double getAmount(){
+        return amount;
+    }
+
+    public void setAmount(double amount){
+        this.amount = amount;
+    }
+
     public User getUser() {
         return user;
     }

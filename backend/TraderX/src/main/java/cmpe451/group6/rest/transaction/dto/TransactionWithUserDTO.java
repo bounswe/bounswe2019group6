@@ -50,11 +50,11 @@ public class TransactionWithUserDTO {
         this.createdAt = createdAt;
     }
 
-    public double getCount() {
+    public double getAmount() {
         return amount;
     }
 
-    public void setCount(double amount) {
+    public void setAmount(double amount) {
         this.amount = amount;
     }
 
