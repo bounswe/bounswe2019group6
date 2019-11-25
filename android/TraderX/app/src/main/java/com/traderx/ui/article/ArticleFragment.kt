@@ -11,14 +11,14 @@ import androidx.lifecycle.ViewModelProvider
 import com.traderx.R
 import com.traderx.db.Article
 import com.traderx.util.Injection
-import com.traderx.viewmodel.ArticleViewModel
+import com.traderx.viewmodel.TraderEquipmentViewModel
 
 class ArticleFragment : Fragment() {
     companion object {
         private const val ARTICLE_ID = "articleId"
     }
 
-    private lateinit var articleViewModel: ArticleViewModel
+    private lateinit var articleViewModel: TraderEquipmentViewModel
 
     private var articleId: Int? = null
     private var article: Article? = null
@@ -30,7 +30,7 @@ class ArticleFragment : Fragment() {
         }
 
         val articleViewModelProvider = Injection.provideArticleUserViewModelFactory(context as Context)
-        articleViewModel = ViewModelProvider(this, articleViewModelProvider).get(ArticleViewModel::class.java)
+        articleViewModel = ViewModelProvider(this, articleViewModelProvider).get(TraderEquipmentViewModel::class.java)
     }
 
     override fun onCreateView(

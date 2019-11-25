@@ -18,7 +18,7 @@ class ViewModelFactory(private val dataSource: Any, private val networkSource: R
                 networkSource
             ) as T
             modelClass.isAssignableFrom(UserViewModel::class.java) -> UserViewModel(networkSource) as T
-            modelClass.isAssignableFrom(ArticleViewModel::class.java) && dataSource is ArticleDao -> ArticleViewModel(
+            modelClass.isAssignableFrom(TraderEquipmentViewModel::class.java) && dataSource is ArticleDao -> TraderEquipmentViewModel(
                 dataSource,
                 networkSource
             ) as T
