@@ -3,6 +3,7 @@ package com.traderx.ui.transaction
 
 import android.content.Context
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -116,16 +117,20 @@ class TransactionFragment : Fragment(), FragmentTitleEmitters {
                         toUsd = 1 / toUsd
                     }
 
-                    amountInUsd.setOnFocusChangeListener { _, focus ->
-                        if (!focus) {
+                    amountInUsd.setOnKeyListener { _, _, event ->
+                        if (event.action == KeyEvent.ACTION_UP) {
                             applyRatio(amountInUsd, amount, 1 / toUsd)
                         }
+
+                        false
                     }
 
-                    amount.setOnFocusChangeListener { _, focus ->
-                        if (!focus) {
+                    amount.setOnKeyListener { _, _, event ->
+                        if (event.action == KeyEvent.ACTION_UP) {
                             applyRatio(amount, amountInUsd, toUsd)
                         }
+
+                        false
                     }
                 }, {
                     ErrorHandler.handleError(it, context)
@@ -156,21 +161,21 @@ class TransactionFragment : Fragment(), FragmentTitleEmitters {
 
     private fun getAmount(): Double {
         val text = amount.text.toString()
-        return if (text.isEmpty()) -1.0 else  parseDouble(text)
+        return if (text.isEmpty()) -1.0 else parseDouble(text)
     }
 
     private fun getAmountInUsd(): Double {
         val text = amountInUsd.text.toString()
-        return if (text.isEmpty()) -1.0 else  parseDouble(text)
+        return if (text.isEmpty()) -1.0 else parseDouble(text)
     }
 
     private fun getDeposit(): Double {
         val text = deposit.text.toString()
-        return if (text.isEmpty()) -1.0 else  parseDouble(text)
+        return if (text.isEmpty()) -1.0 else parseDouble(text)
     }
 
     private fun buyEquipment(button: Button) {
-        if(getAmount() <= 0) {
+        if (getAmount() <= 0) {
             showError(getString(R.string.min_transaction_error))
             return
         } else if (getAmountInUsd() > getDeposit()) {
@@ -178,7 +183,7 @@ class TransactionFragment : Fragment(), FragmentTitleEmitters {
             return
         }
 
-        if(button.isProgressActive()) {
+        if (button.isProgressActive()) {
             return
         }
 
@@ -208,7 +213,9 @@ class TransactionFragment : Fragment(), FragmentTitleEmitters {
     }
 
     private fun applyRatio(input: EditText, output: EditText, ratio: Double) {
-        output.setText((parseDouble(input.text.toString()) * ratio).toString())
+        val amount = if(input.text.isEmpty()) 0.0 else parseDouble(input.text.toString())
+
+        output.setText((amount * ratio).toString())
     }
 
     private fun clearError() {

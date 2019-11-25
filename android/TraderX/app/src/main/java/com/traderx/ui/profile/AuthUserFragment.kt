@@ -100,6 +100,12 @@ class AuthUserFragment : Fragment() {
             }
         }
 
+        root.findViewById<LinearLayout>(R.id.my_alerts_action)?.let {
+            it.setOnClickListener {
+                findNavController().navigate(AuthUserFragmentDirections.actionNavigationAuthUserToNavigationAlerts())
+            }
+        }
+
         root.findViewById<ImageView>(R.id.action_menu)?.let { imageView ->
             imageView.setOnClickListener {
                 showMenu(it as View)

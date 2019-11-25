@@ -29,6 +29,28 @@
         <action
             android:id="@+id/action_navigation_equipment_to_navigation_transaction"
             app:destination="@id/navigation_transaction" />
+        <action
+            android:id="@+id/action_navigation_equipment_to_navigation_alert"
+            app:destination="@id/navigation_alert" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_alerts"
+        android:name="com.traderx.ui.alert.AlertsFragment"
+        android:label="@string/alert"
+        tools:layout="@layout/fragment_alerts"/>
+
+    <fragment
+        android:id="@+id/navigation_alert"
+        android:name="com.traderx.ui.alert.AlertFragment"
+        android:label="@string/alert"
+        tools:layout="@layout/fragment_alert">
+        <argument
+            android:name="equipment_code"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_navigation_alert_to_navigation_alerts"
+            app:destination="@id/navigation_alerts" />
     </fragment>
 
     <fragment
@@ -157,6 +179,9 @@
         <action
             android:id="@+id/action_navigation_auth_user_to_navigation_transactions"
             app:destination="@id/navigation_transactions" />
+        <action
+            android:id="@+id/action_navigation_auth_user_to_navigation_alerts"
+            app:destination="@id/navigation_alerts" />
     </fragment>
 
     <fragment

@@ -1,10 +1,10 @@
 package com.traderx.api
 
+import com.traderx.api.request.AlertRequest
 import com.traderx.api.request.LoginRequest
 import com.traderx.api.request.SignUpRequest
 import com.traderx.api.response.*
 import com.traderx.db.Article
-import com.traderx.db.Equipment
 import com.traderx.db.User
 import io.reactivex.Completable
 import io.reactivex.Single
@@ -95,4 +95,10 @@ interface RequestService {
 
     @GET(ApiEndpoint.ASSET_AMOUNT)
     fun getAssetAmount(@Path("code") code: String): Single<AssetResponse>
+
+    @GET(ApiEndpoint.ALERT_ALL)
+    fun getAlerts(): Single<ArrayList<AlertResponse>>
+
+    @POST(ApiEndpoint.ALERT_CREATE)
+    fun createAlert(@Body alert: AlertRequest): Completable
 }
