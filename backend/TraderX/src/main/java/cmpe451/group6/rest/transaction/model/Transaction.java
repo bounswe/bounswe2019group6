@@ -29,11 +29,19 @@ public class Transaction implements Serializable {
     private Date createdAt;
 
     @Column(name = "amount", nullable = false)
-    private float amount;
+    private double amount;
 
     @PrePersist
     public void addTimestamp() {
         createdAt = new Date();
+    }
+
+    public double getAmount(){
+        return amount;
+    }
+
+    public void setAmount(double amount){
+        this.amount = amount;
     }
 
     public User getUser() {

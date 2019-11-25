@@ -86,9 +86,14 @@ public class EquipmentCommentService {
             throw new CustomException("No such equipment found", HttpStatus.PRECONDITION_FAILED);
         }
         List<EquipmentComment> response = commentRepository.findTop50ByEquipment_Code(equipmentCode);
-        return convertToDto(response.stream().filter(c ->
-                followService.isPermitted(c.getAuthor().getUsername(),claimerUsername))
-                .collect(Collectors.toList()));
+        return convertToDto(response.stream().filter(c -> {
+                    if(claimerUsername != null) {
+                        return followService.isPermitted(c.getAuthor().getUsername(),claimerUsername);
+                    } else { // guest request. Show only not private profiles.
+                        return !userRepository.findByUsername(c.getAuthor().getUsername()).getIsPrivate();
+                    }
+                }
+             ).collect(Collectors.toList()));
     }
 
     public List<CommentResponseDTO>  findUserComments(String username,String claimerUsername){

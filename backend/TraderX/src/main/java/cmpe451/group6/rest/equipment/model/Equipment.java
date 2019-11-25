@@ -39,14 +39,26 @@ public class Equipment implements Serializable {
     private double predictionRate;
 
 
+    @Column(nullable = false)
+    private EquipmentType equipmentType;
+
     public Equipment() {
     }
+
 
     @OneToMany(mappedBy = "equipment",cascade = CascadeType.ALL)
     private Set<Transaction> transactions;
 
     @OneToMany(mappedBy = "equipment",cascade = CascadeType.ALL)
     private Set<Asset> assets;
+  
+    public EquipmentType getEquipmentType() {
+        return equipmentType;
+    }
+
+    public void setEquipmentType(EquipmentType equipmentType) {
+        this.equipmentType = equipmentType;
+    }
 
     public String getCode() {
         return code;

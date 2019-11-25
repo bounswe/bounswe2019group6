@@ -105,6 +105,27 @@ public class UserController {
     return new StringResponseWrapper(userService.setPublic(util.unwrapUsername(req)));
   }
 
+  @PostMapping("/set_profile/basic")
+  @ResponseStatus(HttpStatus.OK)
+  @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_BASIC') or hasRole('ROLE_TRADER')")
+  @ApiOperation(value = "Make senders profile basic.", response = String.class)
+  @ApiResponses(value = {
+          @ApiResponse(code = 406, message = "User is already basic")})
+  public StringResponseWrapper makeBasic(HttpServletRequest req) {
+    return new StringResponseWrapper(userService.setBasic(util.unwrapUsername(req)));
+  }
+
+  @PostMapping("/set_profile/trader")
+  @ResponseStatus(HttpStatus.OK)
+  @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_BASIC') or hasRole('ROLE_TRADER')")
+  @ApiOperation(value = "Make senders profile trader.", response = String.class)
+  @ApiResponses(value = {
+          @ApiResponse(code = 406, message = "User is already trader."),
+          @ApiResponse(code = 412, message = "Invalid IBAN")})
+  public StringResponseWrapper makeTrader(@RequestParam String iban, HttpServletRequest req) {
+    return new StringResponseWrapper(userService.setTrader(util.unwrapUsername(req),iban));
+  }
+
   @GetMapping("/getAll")
   @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_BASIC') or hasRole('ROLE_TRADER')")
   @ResponseStatus(HttpStatus.OK)

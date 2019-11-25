@@ -8,7 +8,10 @@ import cmpe451.group6.rest.asset.repository.AssetRepository;
 import cmpe451.group6.rest.equipment.configuration.EquipmentConfig;
 import cmpe451.group6.rest.equipment.model.Equipment;
 import cmpe451.group6.rest.equipment.repository.EquipmentRepository;
+import cmpe451.group6.rest.follow.service.FollowService;
+import cmpe451.group6.helpers.CustomModelMapper;
 import cmpe451.group6.rest.transaction.dto.TransactionDTO;
+import cmpe451.group6.rest.transaction.dto.TransactionWithUserDTO;
 import cmpe451.group6.rest.transaction.model.Transaction;
 import cmpe451.group6.rest.transaction.model.TransactionType;
 import cmpe451.group6.rest.transaction.repository.TransactionRepository;
@@ -17,7 +20,6 @@ import cmpe451.group6.authorization.repository.UserRepository;
 import cmpe451.group6.rest.follow.model.FollowStatus;
 import cmpe451.group6.rest.follow.service.FollowService;
 import cmpe451.group6.rest.follow.repository.FollowRepository;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -48,22 +50,20 @@ public class TransactionService {
     private AssetRepository assetRepository;
 
     @Autowired
-    private PortfolioRepository portfolioRepository;
+    private CustomModelMapper modelMapper;
 
-    @Autowired
-    private ModelMapper modelMapper;
-
-    public List<Transaction> getTransactionsByUser(String username, String requesterName) {
+    public List<TransactionWithUserDTO> getTransactionsByUser(String username, String requesterName) {
         User user = userRepository.findByUsername(username);
         if (user == null) {
             throw new CustomException("There is no user named " + username + ".", HttpStatus.NOT_ACCEPTABLE);
-        } else if (user.getIsPrivate() && (followRepository.getFollowDAO(requesterName, username) == null
-                || followRepository.getFollowDAO(requesterName, username).getFollowStatus() != FollowStatus.APPROVED)) {
+        } else if ( followService.isPermitted(username,requesterName) && !username.equals(requesterName)) {
             throw new CustomException("The requested user's profile is private and requester is not following!",
                     HttpStatus.NOT_ACCEPTABLE);
         } else {
-            List<Transaction> transactions = TransactionRepository.findByUser_username(username);
-            return transactions;
+            List<TransactionWithUserDTO> transactionWithUserDTOS = new ArrayList<TransactionWithUserDTO>();
+            TransactionRepository.findByUser_username(username)
+                    .forEach(item -> transactionWithUserDTOS.add(modelMapper.map(item, TransactionWithUserDTO.class)));
+            return transactionWithUserDTOS;
         }
     }
 
@@ -115,8 +115,7 @@ public class TransactionService {
         User user = userRepository.findByUsername(username);
         if (user == null) {
             throw new CustomException("There is no user named " + username + ".", HttpStatus.NOT_ACCEPTABLE);
-        } else if (user.getIsPrivate() && (followRepository.getFollowDAO(requesterName, username) == null
-                || followRepository.getFollowDAO(requesterName, username).getFollowStatus() != FollowStatus.APPROVED)) {
+        } else if (followService.isPermitted(username, requesterName) && !username.equals(requesterName)) {
             throw new CustomException("The requested user's profile is private and requester is not following!",
                     HttpStatus.NOT_ACCEPTABLE);
         } else {
@@ -125,10 +124,13 @@ public class TransactionService {
     }
 
     public int numberOfTransactionByCode(String code) {
+        if(!equipmentRepository.existsByCode(code)){
+            throw new CustomException("No such equipment found", HttpStatus.PRECONDITION_FAILED);
+        }
         return TransactionRepository.countByEquipment_code(code);
     }
 
-    public boolean buyAsset(String requesterName, String code, float amount) {
+    public boolean buyAsset(String requesterName, String code, double amount) {
         User user = userRepository.findByUsername(requesterName);
         if (user == null) {
             throw new CustomException("There is no user named " + requesterName + ".", HttpStatus.NOT_ACCEPTABLE);
@@ -140,14 +142,18 @@ public class TransactionService {
 
         Asset asset = assetRepository.getAsset(requesterName, EquipmentConfig.BASE_CURRENCY_CODE);
         if (asset == null) {
-            throw new CustomException("The user has no money in application.", HttpStatus.NOT_ACCEPTABLE);
+            throw new CustomException("The user has no money in application.", HttpStatus.PRECONDITION_FAILED);
         }
 
-        float neededMoney = (float) (amount * equipment.getCurrentValue());
-        float usersMoney = asset.getAmount();
+        if( amount < 0 ){
+            throw new CustomException("The amount of investment cannot be negative value", HttpStatus.PRECONDITION_FAILED);
+        }
+
+        double neededMoney = (double) (amount * equipment.getCurrentValue());
+        double usersMoney = asset.getAmount();
         if (neededMoney > usersMoney) {
             throw new CustomException("The user doesn't have enough money to buy " + amount + " " + code + ".",
-                    HttpStatus.NOT_ACCEPTABLE);
+                    HttpStatus.PRECONDITION_FAILED);
         }
 
         // CAN BUY
@@ -174,11 +180,12 @@ public class TransactionService {
         newTransaction.setUser(user);
         newTransaction.setEquipment(equipment);
         newTransaction.setTransactionType(TransactionType.BUY);
+        newTransaction.setAmount(amount);
         TransactionRepository.save(newTransaction);
         return true;
     }
 
-    public boolean sellAsset(String requesterName, String code, float amount) {
+    public boolean sellAsset(String requesterName, String code, double amount) {
         User user = userRepository.findByUsername(requesterName);
         if (user == null) {
             throw new CustomException("There is no user named " + requesterName + ".", HttpStatus.NOT_ACCEPTABLE);
@@ -194,6 +201,10 @@ public class TransactionService {
                     HttpStatus.NOT_ACCEPTABLE);
         }
 
+        if( amount < 0 ){
+            throw new CustomException("The amount of investment cannot be negative",HttpStatus.PRECONDITION_FAILED);
+        }
+
         if (asset.getAmount() < amount) {
             throw new CustomException(
                     "The user doesn't have enough asset with code " + code + " to sell " + amount + " amount",
@@ -202,8 +213,8 @@ public class TransactionService {
 
         // CAN SELL
         Asset a = assetRepository.getAsset(requesterName, EquipmentConfig.BASE_CURRENCY_CODE);
-        float usersMoney = a.getAmount();
-        float newMoney = (float) (amount * equipment.getCurrentValue());
+        double usersMoney = a.getAmount();
+        double newMoney = (double) (amount * equipment.getCurrentValue());
 
         // set new money
         Asset temp = assetRepository.getAsset(requesterName, EquipmentConfig.BASE_CURRENCY_CODE);
@@ -216,7 +227,7 @@ public class TransactionService {
 
         } else {
             // set remaining asset
-            float oldAmount = asset.getAmount();
+            double oldAmount = asset.getAmount();
             asset.setAmount(oldAmount - amount);
             assetRepository.save(asset);
         }

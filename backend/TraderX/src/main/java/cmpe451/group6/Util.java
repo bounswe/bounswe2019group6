@@ -13,6 +13,7 @@ public class Util {
     JwtTokenProvider jwtTokenProvider;
 
     public String unwrapUsername(HttpServletRequest req){
-        return jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req));
+        String token = jwtTokenProvider.resolveToken(req);
+        return token == null ? null : jwtTokenProvider.getUsername(token);
     }
 }

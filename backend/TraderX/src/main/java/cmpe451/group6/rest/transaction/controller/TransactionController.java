@@ -2,6 +2,7 @@ package cmpe451.group6.rest.transaction.controller;
 
 import cmpe451.group6.Util;
 import cmpe451.group6.rest.transaction.dto.TransactionDTO;
+import cmpe451.group6.rest.transaction.dto.TransactionWithUserDTO;
 import cmpe451.group6.rest.transaction.model.Transaction;
 import cmpe451.group6.rest.transaction.service.TransactionService;
 import io.swagger.annotations.*;
@@ -27,21 +28,21 @@ public class TransactionController {
     @Autowired
     private Util util;
 
-    @GetMapping(value = "/{username}")
+    @GetMapping(value = "/user/{username}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_BASIC') or hasRole('ROLE_TRADER')")
-    @ApiOperation(value = "Gets transactions of an user", response = Transaction.class)
-    @ApiResponses(value = { @ApiResponse(code = 417, message = "No such an equipment found.") })
-    public List<Transaction> getTransactionsByUser(@ApiParam("User Name") @PathVariable String username,
+    @ApiOperation(value = "Gets transactions of an user", response = TransactionWithUserDTO.class)
+    @ApiResponses(value = { @ApiResponse(code = 406, message = "No such an equipment found.") })
+    public List<TransactionWithUserDTO> getTransactionsByUser(@ApiParam("User Name") @PathVariable String username,
             HttpServletRequest req) {
         return transactionService.getTransactionsByUser(username, util.unwrapUsername(req));
     }
 
-    @GetMapping(value = "/{code}")
+    @GetMapping(value = "/equipment/{code}")
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Returns transactions on specified equipment code (no auth required)", response = TransactionDTO.class)
     @ApiResponses(value = { @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE) })
-    public List<TransactionDTO> getTransactionsByCode(@ApiParam("User Name") @PathVariable String code) {
+    public List<TransactionDTO> getTransactionsByCode(@ApiParam("Code of Equipment") @PathVariable String code) {
         return transactionService.getTransactionsByCode(code);
     }
 
@@ -55,10 +56,10 @@ public class TransactionController {
 
     @GetMapping(value = "/byDate")
     @ResponseStatus(HttpStatus.OK)
-    @ApiOperation(value = "Returns transactions in between start date and end date (no auth required)", response = TransactionDTO.class)
+    @ApiOperation(value = "Returns transactions in between start date (yyyy-MM-dd HH:mm:ss) and end date (yyyy-MM-dd HH:mm:ss) (no auth required)", response = TransactionDTO.class)
     @ApiResponses(value = { @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE) })
-    public List<TransactionDTO> getTransactionsByDateBetween(@ApiParam("Start Date") @RequestParam Date start,
-            @ApiParam("End Date") @RequestParam Date end) {
+    public List<TransactionDTO> getTransactionsByDateBetween(@ApiParam("Start Date (yyyy-MM-dd HH:mm:ss)") @RequestParam Date start,
+            @ApiParam("End Date (yyyy-MM-dd HH:mm:ss)") @RequestParam Date end) {
         return transactionService.getTransactionByDateBetween(start, end);
     }
 
@@ -81,20 +82,22 @@ public class TransactionController {
         return transactionService.numberOfTransactions();
     }
 
-    @GetMapping(value = "/count/{username}")
+    @GetMapping(value = "/count/user/{username}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_BASIC') or hasRole('ROLE_TRADER')")
     @ApiOperation(value = "Returns number of all transactions made by specific user ", response = Integer.class)
-    @ApiResponses(value = { @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE) })
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE),
+            @ApiResponse(code = 406, message = "No such a user found or profile of the user is private and not following") } )
     public int countAllTransactions(@ApiParam("User Name") @PathVariable String username, HttpServletRequest req) {
         return transactionService.numberOfTransactionByUser(username, util.unwrapUsername(req));
     }
 
-    @GetMapping(value = "/count/{code}")
+    @GetMapping(value = "/count/equipment/{code}")
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Returns number of all transactions made by specific user (no auth required) ", response = Integer.class)
     @ApiResponses(value = { @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE) })
-    public int countAllTransactions(@ApiParam("Code of asset") @PathVariable String code) {
+    public int countAllTransactions(@ApiParam("Code of Equipment") @PathVariable String code) {
         return transactionService.numberOfTransactionByCode(code);
     }
 
@@ -102,9 +105,12 @@ public class TransactionController {
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_TRADER')")
     @ApiOperation(value = " Buy asset ", response = Boolean.class)
-    @ApiResponses(value = { @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE) })
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE),
+            @ApiResponse(code = 406, message = "There is no user or equipment found."),
+            @ApiResponse(code = 412, message = "User does not have enough money for the transaction.")})
     public boolean buyAsset(@ApiParam("Code of asset") @RequestParam String code,
-            @ApiParam("Amount wanted to buy") @RequestParam float amount, HttpServletRequest req) {
+            @ApiParam("Amount wanted to buy") @RequestParam double amount, HttpServletRequest req) {
         return transactionService.buyAsset(util.unwrapUsername(req), code, amount);
     }
 
@@ -112,9 +118,12 @@ public class TransactionController {
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_TRADER')")
     @ApiOperation(value = " Sell asset ", response = Boolean.class)
-    @ApiResponses(value = { @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE) })
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE),
+            @ApiResponse(code = 406, message = "There is no user or equipment found."),
+            @ApiResponse(code = 412, message = "User does not have enough asset for the transaction.")})
     public boolean sellAsset(@ApiParam("Code of asset") @RequestParam String code,
-            @ApiParam("Amount wanted to sell") @RequestParam float amount, HttpServletRequest req) {
+            @ApiParam("Amount wanted to sell") @RequestParam double amount, HttpServletRequest req) {
         return transactionService.sellAsset(util.unwrapUsername(req), code, amount);
     }
 
