@@ -90,40 +90,7 @@ public class Group6BackendService implements CommandLineRunner {
     admin.setIsPrivate(true);
     signupService.internal_signup(admin);
 
-    User trader = new User();
-    trader.setUsername("trader");
-    trader.setPassword("trader");
-    trader.setEmail("trader@email.com");
-    trader.setLatitude("46.123");
-    trader.setIBAN("TR123456789012345678");
-    trader.setLongitude("46.123");
-    trader.setRegistrationStatus(RegistrationStatus.ENABLED);
-    trader.setRoles(new ArrayList<Role>(Arrays.asList(Role.ROLE_TRADER)));
-    trader.setIsPrivate(true);
-    signupService.internal_signup(trader);
-
-    User basic = new User();
-    basic.setUsername("basic");
-    basic.setPassword("basic");
-    basic.setEmail("basic@email.com");
-    basic.setLatitude("46.123");
-    basic.setLongitude("46.123");
-    basic.setRegistrationStatus(RegistrationStatus.ENABLED);
-    basic.setRoles(new ArrayList<Role>(Arrays.asList(Role.ROLE_BASIC)));
-    basic.setIsPrivate(false);
-    signupService.internal_signup(basic);
-
-    followService.followUser("basic",adminUsername);
-    followService.followUser("trader",adminUsername);
-    followService.answerRequest("trader",adminUsername,true);
-    followService.followUser("trader","basic");
-    followService.answerRequest("trader","basic",true);
-    followService.followUser("basic","trader");
-
     equipmentUpdateService.initializeEquipments();
-
-    commentService.postEquipmentComment("trader","trader comment","USD");
-    commentService.postEquipmentComment("basic","basic comment","USD");
 
   }
 
