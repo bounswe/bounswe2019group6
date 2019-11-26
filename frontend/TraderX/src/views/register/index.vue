@@ -15,7 +15,7 @@
           </h3>
         </div>
 
-        <el-form-item prop="email">
+        <el-form-item v-if="!googleSignedIn" prop="email">
           <span class="svg-container">
             <svg-icon icon-class="email" />
           </span>
@@ -51,7 +51,7 @@
           placement="right"
           manual
         >
-          <el-form-item prop="password">
+          <el-form-item v-if="!googleSignedIn" prop="password">
             <span class="svg-container">
               <svg-icon icon-class="password" />
             </span>
@@ -77,37 +77,9 @@
           </el-form-item>
         </el-tooltip>
 
-        <el-form-item prop="latitude">
-          <span class="svg-container">
-            <svg-icon icon-class="international" />
-          </span>
-          <el-input
-            ref="latitude"
-            v-model="signupForm.latitude"
-            placeholder="Latitude"
-            name="latitude"
-            type="text"
-            tabindex="4"
-            autocomplete="on"
-          />
-        </el-form-item>
+        <div id="my-map"></div>
 
-        <el-form-item prop="longitude">
-          <span class="svg-container">
-            <svg-icon icon-class="international" />
-          </span>
-          <el-input
-            ref="longitude"
-            v-model="signupForm.longitude"
-            placeholder="Longitude"
-            name="longitude"
-            type="text"
-            tabindex="5"
-            autocomplete="on"
-          />
-        </el-form-item>
-
-        <div style="margin-bottom: 22px; margin-left: 10px;">
+        <div style="margin-bottom: 22px; margin-left: 10px; margin-top: 20px">
           <el-checkbox v-model="signupForm.isPrivate">
             Make your profile private!
           </el-checkbox>
@@ -147,10 +119,17 @@
           style="width:100%;margin-bottom:30px;"
           @click.native.prevent="handleSignup"
         >
-          Register
+          {{ this.signupText }}
         </el-button>
 
-        <div>
+        <div v-if="!googleSignedIn">
+          <div id="my-signup2"></div>
+        </div>
+        <div v-if="googleSignedIn">
+          <el-button @click="googleSignout">Sign out from Google</el-button>
+        </div>
+
+        <div style="margin-top: -39px; float: right">
           <el-button
             class="thirdparty-button"
             type="primary"
@@ -160,7 +139,6 @@
           </el-button>
 
           <el-button
-            style="float: right"
             class="thirdparty-button"
             type="primary"
             @click="redirectLogin"
@@ -202,7 +180,9 @@
 </template>
 
 <script>
-import { validUsername, validPassword, validIBAN, validLocation, validEmail } from '@/utils/validate'
+    /* eslint-disable no-unused-vars */
+
+    import { validUsername, validPassword, validIBAN, validLocation, validEmail } from '@/utils/validate'
 import SocialSign from './components/SocialSignin'
 import { Message } from 'element-ui'
 
@@ -231,13 +211,6 @@ export default {
         callback()
       }
     }
-    const validateLocation = (rule, value, callback) => {
-      if (!validLocation(value)) {
-        callback(new Error('Please enter a valid location'))
-      } else {
-        callback()
-      }
-    }
     const validateEmail = (rule, value, callback) => {
       if (!validEmail(value)) {
         callback(new Error('Please enter a valid email'))
@@ -246,22 +219,24 @@ export default {
       }
     }
     return {
+      googleSignedIn: false,
+      signupText: 'Register',
       signupForm: {
+        appSecret: 'secret-key',
         username: '',
         password: '',
         iban: '',
-        latitude: '',
-        longitude: '',
+        latitude: '41.08',
+        longitude: '29.04',
         email: '',
-        isPrivate: false
+        isPrivate: false,
+        googleToken: null,
       },
       isTrader: false,
       signupRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
         password: [{ required: true, trigger: 'blur', validator: validatePassword }],
         iban: [{ required: true, trigger: 'blur', validator: validateIBAN }],
-        latitude: [{ required: true, trigger: 'blur', validator: validateLocation }],
-        longitude: [{ required: true, trigger: 'blur', validator: validateLocation }],
         email: [{ required: true, trigger: 'blur', validator: validateEmail }]
       },
       passwordType: 'password',
@@ -288,6 +263,34 @@ export default {
     // window.addEventListener('storage', this.afterQRScan)
   },
   mounted() {
+    var __this = this
+
+    gapi.load('auth2', function(){
+        gapi.auth2.init({
+            client_id: '878451092423-3ksgjtr0q19lrn9e6rdijdh0iddhl9pp.apps.googleusercontent.com'
+        }).then(() => {
+            gapi.signin2.render('my-signup2', {
+                height: 39,
+                theme: 'light',
+                longtitle: false,
+                onsuccess: __this.onSignIn
+            })
+        })
+    })
+
+    var map = new google.maps.Map(document.getElementById('my-map'), { zoom: 10, center: {lat: 41.08601780144125, lng: 29.04396883028835} })
+    var marker = new google.maps.Marker({
+        position: {lat: 41.08601780144125, lng: 29.04396883028835},
+        map: map
+    })
+
+    map.addListener('click', function(e) {
+        // FIX stop rounding after backend fixes it
+        __this.signupForm.latitude = Number(e.latLng.lat()).toFixed(2)
+        __this.signupForm.longitude = Number(e.latLng.lng()).toFixed(2)
+        marker.setPosition(e.latLng)
+    })
+
     if (this.signupForm.email === '') {
       this.$refs.email.focus()
     } else if (this.signupForm.username === '') {
@@ -355,6 +358,44 @@ export default {
     },
     redirectHome() {
       this.$router.push({ path: '/home'})
+    },
+    onSignIn(googleUser) {
+        var profile = googleUser.getBasicProfile()
+
+        // DEBUG
+        // console.log('Logged in.');
+        // console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+        // console.log('Name: ' + profile.getName());
+        // console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+
+        this.signupForm.email = profile.getEmail();
+        this.signupForm.googleToken = profile.getId();
+        this.signupForm.password = null;
+
+        // document.getElementById("my-signup2").setAttribute('hidden', true);
+        // this.visibility = 'visibility: hidden'
+        this.googleSignedIn = true;
+        this.signupText = "Register with Google";
+    },
+    googleSignout() {
+      var auth2 = gapi.auth2.getAuthInstance();
+      var __this = this;
+
+      auth2.signOut().then(function () {
+          // DEBUG
+          // console.log('User signed out.');
+
+          // FIX this does not show back
+          // document.getElementById('my-signup2').removeAttribute('hidden');
+          // __this.visibility = 'visibility: block'
+
+          __this.signupForm.googleToken = null;
+          __this.signupForm.email = '';
+          __this.signupForm.password = '';
+
+          __this.googleSignedIn = false;
+          __this.signupText = "Register";
+      });
     }
   }
 }
@@ -455,7 +496,7 @@ $light_gray:#eee;
       position: relative;
       width: 520px;
       max-width: 100%;
-      padding: 40px 35px 0;
+      padding: 40px 35px 10px;
       margin: 0 auto;
       overflow: hidden;
     }
@@ -507,5 +548,11 @@ $light_gray:#eee;
         display: none;
       }
     }
+  }
+
+  #my-map {
+    width: 100%;
+    height: 400px;
+    background-color: grey;
   }
 </style>
