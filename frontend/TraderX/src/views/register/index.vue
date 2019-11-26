@@ -226,8 +226,8 @@ export default {
         username: '',
         password: '',
         iban: '',
-        latitude: '',
-        longitude: '',
+        latitude: '41.08',
+        longitude: '29.04',
         email: '',
         isPrivate: false,
         googleToken: null,
@@ -285,8 +285,9 @@ export default {
     })
 
     map.addListener('click', function(e) {
-        __this.signupForm.latitude = e.latLng.lat()
-        __this.signupForm.longitude = e.latLng.lng()
+        // FIX stop rounding after backend fixes it
+        __this.signupForm.latitude = Number(e.latLng.lat()).toFixed(2)
+        __this.signupForm.longitude = Number(e.latLng.lng()).toFixed(2)
         marker.setPosition(e.latLng)
     })
 
