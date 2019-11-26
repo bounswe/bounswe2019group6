@@ -62,7 +62,7 @@
           </el-form-item>
         </el-tooltip>
 
-        <el-link :underline="false" @click="showDialog=true">
+        <el-link v-if="!googleSignedIn" :underline="false" @click="showDialog=true">
           Forgot password?
         </el-link>
 
@@ -160,7 +160,6 @@ export default {
       loginForm: {
         username: '',
         password: '',
-        googleToken: null
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
@@ -244,6 +243,9 @@ export default {
       })
     },
     handleLogin() {
+      // DEBUG
+      // console.log(this.loginForm)
+
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
@@ -291,13 +293,14 @@ export default {
     onSignIn(googleUser) {
       var profile = googleUser.getBasicProfile()
 
-      console.log('Logged in.');
-      console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-      console.log('Name: ' + profile.getName());
-      console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+      // DEBUG
+      // console.log('Logged in.');
+      // console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+      // console.log('Name: ' + profile.getName());
+      // console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
 
+      delete this.loginForm.password
       this.loginForm.googleToken = profile.getId()
-      this.loginForm.password = null
 
       document.getElementById("my-signin2").setAttribute('hidden', true)
       this.googleSignedIn = true
@@ -309,9 +312,10 @@ export default {
         var __this = this
 
         auth2.signOut().then(function () {
-            console.log('User signed out.')
+            // DEBUG
+            // console.log('User signed out.')
 
-            __this.loginForm.googleToken = null
+            delete __this.loginForm.googleToken
             __this.loginForm.password = ''
 
             __this.googleSignedIn = false
