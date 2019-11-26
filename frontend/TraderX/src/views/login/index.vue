@@ -272,9 +272,6 @@ export default {
 <style lang="scss">
 /* 修复input 背景不协调 和光标变色 */
 /* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
-
-/*$bg:#283443;
-$light_gray:#fff;*/
 $cursor: #424646;
 $bg:#2d3a4b;
 $dark_gray: #424646;
@@ -294,7 +291,6 @@ body {
   background-size: cover;
 }
 
-/* reset element-ui css */
 .login-container {
   .el-link {
     margin-top: -20px;
@@ -318,17 +314,14 @@ body {
       caret-color: $cursor;
 
       &:-webkit-autofill {
-        box-shadow: 0 0 0px 1000px $bg inset !important;
+        box-shadow: 0 0 0px 1000px $light_gray inset !important;
         -webkit-text-fill-color: $cursor !important;
       }
     }
   }
 
   .el-button {
-    /*padding: 15px 32px;
-    text-align: center;*/
     transition-duration: 0.4s;
-    // margin: 16px;
     text-decoration: none;
     font-size: 15px;
     cursor: pointer;
@@ -361,7 +354,6 @@ $light_gray:#eee;
 .login-container {
   min-height: 100%;
   width: 100%;
-  // background-color: $bg;
   overflow: hidden;
 
   .login-form {

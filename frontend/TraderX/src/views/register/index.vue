@@ -363,9 +363,6 @@ export default {
 <style lang="scss">
   /* 修复input 背景不协调 和光标变色 */
   /* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
-/*
-  $bg:#283443;
-  $light_gray:#fff;*/
   $cursor: #424646;
   $bg:#2d3a4b;
   $dark_gray: #424646;
@@ -385,7 +382,6 @@ export default {
     background-size: cover;
   }
 
-  /* reset element-ui css */
   .sign-up-container {
     .el-input {
       display: inline-block;
@@ -403,17 +399,14 @@ export default {
         caret-color: $cursor;
 
         &:-webkit-autofill {
-          box-shadow: 0 0 0px 1000px $bg inset !important;
+          box-shadow: 0 0 0px 1000px $light_gray inset !important;
           -webkit-text-fill-color: $cursor !important;
         }
       }
     }
 
     .el-button {
-      /*padding: 15px 32px;
-      text-align: center;*/
       transition-duration: 0.4s;
-      /*margin: 16px;*/
       text-decoration: none;
       font-size: 15px;
       cursor: pointer;
@@ -438,11 +431,6 @@ export default {
 
 
     .el-radio {
-      /*-webkit-appearance: none;
-      -moz-appearance: none;
-      appearance: none;
-      display: inline-block;*/
-      /*background-color: #f1f1f1;*/
       color: $dark_gray;
       border: 0;
       border-radius: 50px;
@@ -461,7 +449,6 @@ $light_gray:#eee;
   .sign-up-container {
     min-height: 100%;
     width: 100%;
-    /*background-color: $bg;*/
     overflow: hidden;
 
     .sign-up-form {
@@ -514,12 +501,6 @@ $light_gray:#eee;
       cursor: pointer;
       user-select: none;
     }
-
-    /*.thirdparty-button {
-      position: absolute;
-      right: 0;
-      bottom: 6px;
-    }*/
 
     @media only screen and (max-width: 470px) {
       .thirdparty-button {
