@@ -24,7 +24,7 @@
       <el-collapse-item title="Load Money" name="5" v-if="istraderloadmoney">
         <el-input placeholder="Please enter some money amount" v-model="loadmoneyinput" class="input-with-select">
           <el-select style="width: 100px" v-model="selectedFilter" slot="prepend" placeholder="Select">
-            <el-option label="TRY" value="TRY"></el-option>
+            <el-option label="USD" value="TRY"></el-option>
             <!-- <el-option label="USD" value="USD"></el-option>
             <el-option label="EUR" value="EUR"></el-option> -->
           </el-select>
