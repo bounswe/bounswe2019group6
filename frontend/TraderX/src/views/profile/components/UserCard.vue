@@ -41,7 +41,7 @@
             <p :style=hidePrivateFields><b>Comments:</b> {{ user.commentsCount }}</p>
           </div>
           <div class="user-type">
-            <p><b>User Type:</b> {{ user.roles[0] }}</p>
+            <p><b>User Type:</b> {{ user.roles[0] == "ROLE_TRADER" ? "Trader" : "Basic" }}</p>
           </div>
           <a :style=showIban><p :style=hidePrivateFields><b>IBAN:</b> {{ user.iban }}</p></a>
           
@@ -81,8 +81,8 @@ export default {
     } else {
       this.isSelf = false
       await getUser((this.$route.path.split('/')[2])).then(response => {
+        // TODO changing this.user creates a bug in here
         this.user = response.data
-        console.log(this.user.iban, this.user.iban==null)
         this.hidePrivateFields = this.user.isPrivate ? 'display: none' : 'display: block'
         this.showIban = this.user.iban==null ? 'display: none' : 'display: block'
         this.isFollowing = this.user.followingStatus == 'FOLLOWING' ? true : false

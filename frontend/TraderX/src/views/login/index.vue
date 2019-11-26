@@ -11,7 +11,7 @@
       >
         <div class="title-container">
           <h3 class="title">
-            Login Form
+            Login
           </h3>
         </div>
 
@@ -36,7 +36,7 @@
           placement="right"
           manual
         >
-          <el-form-item prop="password">
+          <el-form-item v-if="!googleSignedIn" prop="password">
             <span class="svg-container">
               <svg-icon icon-class="password" />
             </span>
@@ -62,7 +62,7 @@
           </el-form-item>
         </el-tooltip>
 
-        <el-link :underline="false" @click="showDialog=true">
+        <el-link v-if="!googleSignedIn" :underline="false" @click="showDialog=true">
           Forgot password?
         </el-link>
 
@@ -72,10 +72,15 @@
           style="width:100%;margin-bottom:30px;"
           @click.native.prevent="handleLogin"
         >
-          Login
+          {{ this.loginText }}
         </el-button>
 
-        <div>
+        <div id="my-signin2"></div>
+        <div v-if="googleSignedIn">
+          <el-button @click="googleSignout">Sign out from Google</el-button>
+        </div>
+
+        <div style="margin-top: -39px; float: right;">
           <el-button
             class="thirdparty-button"
             type="primary"
@@ -85,7 +90,6 @@
           </el-button>
 
           <el-button
-            style="float: right"
             class="thirdparty-button"
             type="primary"
             @click="redirectRegister"
@@ -150,9 +154,12 @@ export default {
       }
     }
     return {
+      loginText: 'Login',
+      appSecret: '878451092423-3ksgjtr0q19lrn9e6rdijdh0iddhl9pp.apps.googleusercontent.com',
+      googleSignedIn: false,
       loginForm: {
         username: '',
-        password: ''
+        password: '',
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
@@ -188,6 +195,21 @@ export default {
     // window.addEventListener('storage', this.afterQRScan)
   },
   mounted() {
+    /* eslint-disable */
+    var __this = this
+
+    gapi.load('auth2', function(){
+        gapi.auth2.init({
+            client_id: __this.appSecret
+        }).then(() => {
+            gapi.signin2.render('my-signin2', {
+                height: 39,
+                theme: 'light',
+                longtitle: false,
+                onsuccess: __this.onSignIn
+            })
+        })
+    })
     if (this.loginForm.username === '') {
       this.$refs.username.focus()
     } else if (this.loginForm.password === '') {
@@ -221,6 +243,9 @@ export default {
       })
     },
     handleLogin() {
+      // DEBUG
+      // console.log(this.loginForm)
+
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
@@ -264,17 +289,48 @@ export default {
           return false
         }
       })
+    },
+    onSignIn(googleUser) {
+      var profile = googleUser.getBasicProfile()
+
+      // DEBUG
+      // console.log('Logged in.');
+      // console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+      // console.log('Name: ' + profile.getName());
+      // console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+
+      delete this.loginForm.password
+      this.loginForm.googleToken = profile.getId()
+
+      document.getElementById("my-signin2").setAttribute('hidden', true)
+      this.googleSignedIn = true
+      this.loginText = "Login with Google"
+    },
+
+    googleSignout() {
+        var auth2 = gapi.auth2.getAuthInstance()
+        var __this = this
+
+        auth2.signOut().then(function () {
+            // DEBUG
+            // console.log('User signed out.')
+
+            delete __this.loginForm.googleToken
+            __this.loginForm.password = ''
+
+            __this.googleSignedIn = false
+            __this.loginText = "Login"
+            document.getElementById('my-signin2').removeAttribute('hidden')
+        });
     }
   }
 }
+
 </script>
 
 <style lang="scss">
 /* 修复input 背景不协调 和光标变色 */
 /* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
-
-/*$bg:#283443;
-$light_gray:#fff;*/
 $cursor: #424646;
 $bg:#2d3a4b;
 $dark_gray: #424646;
@@ -294,7 +350,6 @@ body {
   background-size: cover;
 }
 
-/* reset element-ui css */
 .login-container {
   .el-link {
     margin-top: -20px;
@@ -318,17 +373,14 @@ body {
       caret-color: $cursor;
 
       &:-webkit-autofill {
-        box-shadow: 0 0 0px 1000px $bg inset !important;
+        box-shadow: 0 0 0px 1000px $light_gray inset !important;
         -webkit-text-fill-color: $cursor !important;
       }
     }
   }
 
   .el-button {
-    /*padding: 15px 32px;
-    text-align: center;*/
     transition-duration: 0.4s;
-    // margin: 16px;
     text-decoration: none;
     font-size: 15px;
     cursor: pointer;
@@ -361,14 +413,13 @@ $light_gray:#eee;
 .login-container {
   min-height: 100%;
   width: 100%;
-  // background-color: $bg;
   overflow: hidden;
 
   .login-form {
     position: relative;
     width: 520px;
     max-width: 100%;
-    padding: 160px 35px 0;
+    padding: 160px 35px 10px;
     margin: 0 auto;
     overflow: hidden;
   }

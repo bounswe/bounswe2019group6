@@ -34,3 +34,66 @@ export function getAllStocks() {
     method: 'get'
   })
 }
+
+export function depositMoney(amount) {
+  return request({
+    url: '/investment/deposit',
+    method: 'post',
+    params: amount,
+  })
+}
+
+export function buyEquipment(query) {
+  return request({
+    url: '/transaction/buy',
+    method: 'post',
+    params: query,
+  })
+}
+
+export function sellEquipment(query) {
+  return request({
+    url: '/transaction/sell',
+    method: 'post',
+    params: query,
+  })
+}
+
+export function getAssetInfo() {
+  return request({
+    url: '/asset/all',
+    method: 'get',
+  })
+}
+
+export function createPortfolio(query) {
+  return request({
+    url: '/portfolio/create',
+    method: 'post',
+    params: query,
+  })
+}
+
+export function deletePortfolio(query) {
+  return request({
+    url: '/portfolio/delete',
+    method: 'post',
+    params: query,
+  })
+}
+
+export function addEquipmentToPortfolio(query) {
+  return request({
+    url: '/portfolio/add',
+    method: 'post',
+    params: query,
+  })
+}
+
+export function deleteEquipmentFromPortfolio(query) {
+  return request({
+    url: '/portfolio/delete',
+    method: 'post',
+    params: query,
+  })
+}

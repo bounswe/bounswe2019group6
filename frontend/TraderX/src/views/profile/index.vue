@@ -16,6 +16,12 @@
           <el-card>
             <el-tabs v-model="activeTab">
               <el-tab-pane
+                label="My Investments"
+                name="myinvestments"
+              >
+                <my-investments/>
+              </el-tab-pane>
+              <el-tab-pane
                 label="Portfolio"
                 name="portfolio"
               >
@@ -31,7 +37,7 @@
                 label="EditProfile"
                 name="editprofile"
               >
-                <editprofile :user="this.user"/>
+                <editprofile :user="user" v-if="this.user.username"/>
               </el-tab-pane>
             </el-tabs>
           </el-card>
@@ -48,14 +54,15 @@ import Portfolio from './components/Portfolio'
 import Articles from './components/Articles'
 import Editprofile from './components/Editprofile'
 import PrivateAccount from './components/PrivateAccount'
+import MyInvestments from '@/components/MyInvestments'
 
 export default {
   name: 'Profile',
-  components: { UserCard, Portfolio, Articles, Editprofile, PrivateAccount },
+  components: { UserCard, Portfolio, Articles, Editprofile, PrivateAccount, MyInvestments },
   data() {
     return {
-      user: Object,
-      activeTab: 'portfolio'
+      user: {},
+      activeTab: 'myinvestments'
     }
   },
   computed: {

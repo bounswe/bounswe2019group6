@@ -1,5 +1,5 @@
 import { login, getInfo, logout, register, confirm, resetPassword, renew, unfollowUser,
-   followUser, setProfilePublic, setProfilePrivate, changeIBAN, updatePassword } from '@/api/user'
+   followUser, setProfilePublic, setProfilePrivate, changeIBAN, updatePassword, becomeBasic, becomeTrader } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
 
@@ -47,9 +47,9 @@ const mutations = {
 const actions = {
   // user login
   login({ commit }, userInfo) {
-    const { username, password } = userInfo
+    const { username, password, googleToken } = userInfo
     return new Promise((resolve, reject) => {
-      login({ username: username.trim(), password: password }).then(response => {
+      login({ username: username.trim(), password: password, googleToken: googleToken }).then(response => {
         const { data } = response
         commit('SET_TOKEN', data.token)
         setToken(data.token)
@@ -228,6 +228,26 @@ const actions = {
   updatePassword({ commit }, password) {
     return new Promise((resolve, reject) => {
       updatePassword(password).then(() => {
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+
+  becomeBasic({ commit }) {
+    return new Promise((resolve, reject) => {
+      becomeBasic().then(() => {
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+
+  becomeTrader({ commit }, iban) {
+    return new Promise((resolve, reject) => {
+      becomeTrader(iban).then(() => {
         resolve()
       }).catch(error => {
         reject(error)

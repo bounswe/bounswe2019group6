@@ -1,6 +1,8 @@
 <template>
-  <div>
-    <img id="privateid" src="https://o0o0sm3y25-flywheel.netdna-ssl.com/wp-content/uploads/2018/09/img_20170429_050104.png">
+  <div> 
+    <img src="https://lh3.googleusercontent.com/tUAni5F7a9bJmYw35qNlZm77UEbWy0ubAqua6bqFPKXd8QRMTAX7uchOP-S-1ITk2w">
+    <h1>This Account Is Private</h1>
+    <h2>Please Follow To See Their Prtfolios and Articles</h2>
   </div>
 </template>
 
@@ -11,8 +13,17 @@ export default {
 </script>
 
 <style scoped>
+  
   img {
-    width: 90%;
-    height: 90%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 25%;
   }
+  h1, h2 {
+    text-align: center;
+    display: block;
+    width: 100%;
+  }
+  
 </style>

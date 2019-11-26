@@ -107,3 +107,18 @@ export function updatePassword(password) {
     data: password
   })
 }
+
+export function becomeBasic() {
+  return request({
+    url: '/users/set_profile/basic',
+    method: 'post',
+  })
+}
+
+export function becomeTrader(iban) {
+  return request({
+    url: '/users/set_profile/trader',
+    method: 'post',
+    params: iban
+  })
+}
