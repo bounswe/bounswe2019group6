@@ -106,6 +106,7 @@
           this.$message.error('Your Are Already Trader!')
         } else if (!this.istraderswitch && this.user.roles[0] == 'ROLE_TRADER'){
           this.$store.dispatch('user/becomeBasic').then(response => {
+            this.ibanshow = false
             this.istraderloadmoney = false
             this.traderibanseen = true
             this.traderibaninput = ""
@@ -117,6 +118,7 @@
           })
         } else if (this.istraderswitch && this.user.roles[0] == 'ROLE_BASIC' ) {
           this.$store.dispatch('user/becomeTrader', {'iban' : iban}).then(response => {
+            this.ibanshow = true
             this.istraderloadmoney = true
             this.traderibanseen = false
             this.traderibaninput = ""
