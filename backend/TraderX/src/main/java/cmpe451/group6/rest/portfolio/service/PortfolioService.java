@@ -29,7 +29,7 @@ public class PortfolioService {
 
     @Autowired
     EquipmentService equipmentService;
-    
+
     @Autowired
     PortfolioService portfolioService;
 
@@ -286,6 +286,26 @@ public class PortfolioService {
             return portfolioList;
 
         }
+
+    }
+
+    /**
+     * Returns a list consisting of names of portfolios of "requester"
+     * 
+     * @param requesterName
+     * @return List of Strings
+     */
+    public List<String> getSelfPortfolios(String requesterName) {
+
+        List<String> portfolioNames = new ArrayList<String>();
+
+
+        for (Portfolio portfolio : portfolioRepository.findByUser_username(requesterName)) {
+
+            portfolioNames.add(portfolio.getPortfolioName());
+        }
+
+        return portfolioNames;
 
     }
 

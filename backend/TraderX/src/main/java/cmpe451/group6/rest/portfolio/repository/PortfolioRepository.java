@@ -25,4 +25,7 @@ public interface PortfolioRepository extends JpaRepository<Portfolio, Integer> {
     @Query("SELECT p FROM Portfolio p WHERE p.user.username=?1 AND p.portfolioName=?2")
     Portfolio getPortfolioOfUser(String username, String portfolioName);
 
+    @Query("SELECT a FROM Portfolio a WHERE a.user.username=?1")
+    List<Portfolio> findByUser_username(String user);
+
 }

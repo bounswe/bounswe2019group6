@@ -83,5 +83,14 @@ public class PortfolioController {
         return portfolioService.getPortfolio(util.unwrapUsername(req), portfolioName);
     }
   
+    @GetMapping(value = "/getSelfPortfolios")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_BASIC') or hasRole('ROLE_TRADER')")
+    @ApiOperation(value = "Get all portfolios of requester", response = StringResponseWrapper.class)
+    @ApiResponses(value = { @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE) })
+    public List<String> getSelfPortfolios(HttpServletRequest req) {
+        return portfolioService.getSelfPortfolios(util.unwrapUsername(req));
+    }
+      
 
 }
