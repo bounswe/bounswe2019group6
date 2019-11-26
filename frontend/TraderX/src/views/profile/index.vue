@@ -16,16 +16,16 @@
           <el-card>
             <el-tabs v-model="activeTab">
               <el-tab-pane
-                label="Portfolio"
-                name="portfolio"
-              >
-                <portfolio :username="this.user.username"/>
-              </el-tab-pane>
-              <el-tab-pane
                 label="My Investments"
                 name="myinvestments"
               >
                 <my-investments/>
+              </el-tab-pane>
+              <el-tab-pane
+                label="Portfolio"
+                name="portfolio"
+              >
+                <portfolio :username="this.user.username"/>
               </el-tab-pane>
               <el-tab-pane
                 label="Article"
@@ -62,7 +62,7 @@ export default {
   data() {
     return {
       user: {},
-      activeTab: 'portfolio'
+      activeTab: 'myinvestments'
     }
   },
   computed: {

@@ -8,6 +8,7 @@
         class="sign-up-form"
         autocomplete="on"
         label-position="left"
+        style="padding-bottom: 100px"
       >
         <div class="title-container">
           <h3 class="title">
@@ -421,9 +422,11 @@ export default {
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
+    background-attachment: fixed;
   }
 
   .sign-up-container {
+
     .el-input {
       display: inline-block;
       height: 40px;

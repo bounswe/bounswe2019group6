@@ -12,7 +12,7 @@
         <el-col
           :span="18"
           :xs="24"
-          :style=infoTabDisplay
+          :style=privacyDisplay
         >
          
           <PrivateAccount />
@@ -22,7 +22,7 @@
         <el-col
           :span="18"
           :xs="24"
-          :style=privacyDisplay
+          :style=infoTabDisplay
         >
           <el-card>
             <el-tabs v-model="activeTab">
@@ -78,8 +78,8 @@ export default {
     getUser(this.$route.path.split('/')[2]).then(response => {
       this.user = response.data
       this.visibility = 'visibility: visible'
-      this.privacyDisplay = this.user.isPrivate ? 'display: none': 'display: block'
-      this.infoTabDisplay = this.user.isPrivate ? 'display: block': 'display: none'
+      this.privacyDisplay = this.user.isPrivate && this.user.followingStatus != 'FOLLOWING' ? 'display: block': 'display: none'
+      this.infoTabDisplay = !this.user.isPrivate || this.user.followingStatus == 'FOLLOWING'  ? 'display: block': 'display: none'
     })
   },
   methods: {
