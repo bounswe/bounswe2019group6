@@ -10,15 +10,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.traderx.R
-import com.traderx.api.ErrorHandler
 import com.traderx.util.Injection
-import com.traderx.viewmodel.TraderEquipmentViewModel
-import io.reactivex.android.schedulers.AndroidSchedulers
+import com.traderx.viewmodel.ArticleViewModel
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 
 class ArticlesFragment : Fragment() {
-    private lateinit var articleViewModel: TraderEquipmentViewModel
+    private lateinit var articleViewModel: ArticleViewModel
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewManager: LinearLayoutManager
@@ -31,7 +28,7 @@ class ArticlesFragment : Fragment() {
         val articleViewModelProvider =
             Injection.provideArticleUserViewModelFactory(context as Context)
         articleViewModel =
-            ViewModelProvider(this, articleViewModelProvider).get(TraderEquipmentViewModel::class.java)
+            ViewModelProvider(this, articleViewModelProvider).get(ArticleViewModel::class.java)
     }
 
     override fun onCreateView(

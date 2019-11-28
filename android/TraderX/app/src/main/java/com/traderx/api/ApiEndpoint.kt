@@ -40,4 +40,5 @@ object ApiEndpoint {
     const val ALERT_URI: String = "$API_URI/alert"
     const val ALERT_ALL: String = "$ALERT_URI/get"
     const val ALERT_CREATE: String = "$ALERT_URI/set"
+    const val USER_FORGOT_PASSWORD: String = "$API_URI/password/forgot"
 }
