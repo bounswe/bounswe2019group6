@@ -108,6 +108,14 @@ class AuthUserFragment : Fragment() {
             }
         }
 
+        root.findViewById<LinearLayout>(R.id.my_portfolio_action)?.let {
+            it.setOnClickListener {
+                //findNavController().navigate(AuthUserFragmentDirections.actionNavigationAuthUserToNavigationAlerts())
+                Toast.makeText(root.context,"Portfolio is not available right now", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+
         root.findViewById<ImageView>(R.id.action_menu)?.let { imageView ->
             imageView.setOnClickListener {
                 showMenu(it as View)

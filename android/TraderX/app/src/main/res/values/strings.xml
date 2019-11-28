@@ -6,11 +6,13 @@
     <string name="title_login">Login into Your Account</string>
     <string name="title_news">News</string>
     <string name="title_home">Home</string>
-    <string name="title_trader_equipment">Trader Equipments</string>
+    <string name="title_trader_equipment">Equipments</string>
     <string name="title_profile">Profile</string>
     <string name="title_user_edit">Edit Profile</string>
     <string name="title_transaction">Transaction</string>
     <string name="title_my_transactions">My Transactions</string>
+    <string name="title_my_portfolio">My Portfolio</string>
+
     <string name="welcome_back">Welcome Back</string>
     <!--    Fields-->
     <string name="username">Username</string>
