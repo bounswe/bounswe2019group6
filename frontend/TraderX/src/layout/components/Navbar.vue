@@ -14,28 +14,13 @@
 
     <div class="right-menu">
       <template v-if="device!=='mobile'">
-        <search
+        <!-- <search
           id="header-search"
           class="right-menu-item"
-        />
+        /> 
 
         <error-log class="errLog-container right-menu-item hover-effect" />
-
-        <screenfull
-          id="screenfull"
-          class="right-menu-item hover-effect"
-        />
-
-        <el-tooltip
-          content="Global Size"
-          effect="dark"
-          placement="bottom"
-        >
-          <size-select
-            id="size-select"
-            class="right-menu-item hover-effect"
-          />
-        </el-tooltip>
+        -->
       </template>
 
       <el-dropdown
@@ -44,7 +29,7 @@
       >
         <div class="avatar-wrapper">
           <img
-            :src="randomImage"
+            src="https://www.sackettwaconia.com/wp-content/uploads/default-profile.png"
             class="user-avatar"
           >
           <i class="el-icon-caret-bottom" />
@@ -56,18 +41,7 @@
           <router-link to="/">
             <el-dropdown-item>Dashboard</el-dropdown-item>
           </router-link>
-          <a
-            target="_blank"
-            href="https://github.com/PanJiaChen/vue-element-admin/"
-          >
-            <el-dropdown-item>Github</el-dropdown-item>
-          </a>
-          <a
-            target="_blank"
-            href="https://panjiachen.github.io/vue-element-admin-site/#/"
-          >
-            <el-dropdown-item>Docs</el-dropdown-item>
-          </a>
+          
           <el-dropdown-item divided>
             <span
               style="display:block;"
@@ -88,7 +62,6 @@ import ErrorLog from '@/components/ErrorLog'
 import Screenfull from '@/components/Screenfull'
 import SizeSelect from '@/components/SizeSelect'
 import Search from '@/components/HeaderSearch'
-import { randomImage } from '@/utils'
 
 export default {
   components: {
@@ -105,7 +78,6 @@ export default {
       'avatar',
       'device'
     ]),
-    randomImage
   },
   methods: {
     toggleSideBar() {

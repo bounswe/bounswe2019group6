@@ -26,14 +26,35 @@
     <string name="general_true">Yes</string>
     <string name="search">Search</string>
     <string name="follow">Follow</string>
+    <string name="unfollow">Unfollow</string>
     <string name="pending">Pending</string>
     <string name="article">Article</string>
     <string name="keywords">Keywords</string>
     <string name="title">Title</string>
+    <string name="followers">Followers</string>
+    <string name="following">Following</string>
+    <string name="following_users">Following Users</string>
+    <string name="pending_following_requests">Pending Following Requests</string>
+    <string name="profile">Profile</string>
+    <string name="sprivate">Private</string>
+    <string name="spublic">Public</string>
+    <string name="currencies">Currencies</string>
+    <string name="crypto_currencies">Crypto Currencies</string>
+    <string name="stocks">Stocks</string>
+    <string name="save">Save</string>
+    <string name="buy">Buy</string>
+
+    <!--    Symbols-->
+    <string name="try_value">₺ %1$s</string>
+    <string name="eur_value">€ %1$s</string>
+    <string name="usd_value">$ %1$s</string>
 
     <!--    Follow-->
-    <string name="follow_requested">Following request sent to %1$s.</string>
+    <string name="follow_requested">Follow request is sent to %1$s.</string>
     <string name="follow_success">You are following %1$s now</string>
+    <string name="cancel_request">Cancel Request</string>
+    <string name="request_canceled">Follow request for %1$s is canceled</string>
+    <string name="unfollowed">%1$s is unfollowed</string>
 
     <string name="not_available">Not Available</string>
     <string name="connecting">Connecting</string>

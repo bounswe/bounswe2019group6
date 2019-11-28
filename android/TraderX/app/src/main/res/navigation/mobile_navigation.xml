@@ -9,17 +9,83 @@
         android:id="@+id/navigation_home"
         android:name="com.traderx.ui.home.HomeFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_news" >
+        tools:layout="@layout/fragment_news">
         <action
             android:id="@+id/action_navigation_home_to_navigation_articles"
             app:destination="@id/navigation_articles" />
+        <action
+            android:id="@+id/action_navigation_home_to_navigation_equipment_types"
+            app:destination="@id/navigation_equipment_types" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_equipment"
+        android:name="com.traderx.ui.equipment.EquipmentFragment"
+        android:label="@string/title_trader_equipment"
+        tools:layout="@layout/fragment_equipment">
+        <argument
+            android:name="equipment_name"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_equipments"
+        android:name="com.traderx.ui.equipment.EquipmentsFragment"
+        android:label="@string/title_trader_equipment"
+        tools:layout="@layout/fragment_equipments">
+        <action
+            android:id="@+id/action_navigation_equipments_to_navigation_equipment"
+            app:destination="@id/navigation_equipment" />
+        <argument
+            android:name="equipment_type"
+            app:argType="com.traderx.enum.EquipmentType" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_equipment_types"
+        android:name="com.traderx.ui.equipment.EquipmentTypesFragment"
+        android:label="@string/title_trader_equipment"
+        tools:layout="@layout/fragment_equipment_types">
+        <action
+            android:id="@+id/action_navigation_equipment_types_to_navigation_equipments"
+            app:destination="@id/navigation_equipments" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_followers"
+        android:name="com.traderx.ui.profile.FollowersFragment"
+        android:label="@string/followers"
+        tools:layout="@layout/fragment_followers">
+        <action
+            android:id="@+id/action_navigation_followers_to_navigation_user"
+            app:destination="@id/navigation_user" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_followings"
+        android:name="com.traderx.ui.profile.FollowingsFragment"
+        android:label="@string/following"
+        tools:layout="@layout/fragment_followings">
+        <action
+            android:id="@+id/action_navigation_followings_to_navigation_user"
+            app:destination="@id/navigation_user" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_pending_follow_requests"
+        android:name="com.traderx.ui.profile.PendingFollowRequestsFragment"
+        android:label="@string/pending"
+        tools:layout="@layout/fragment_pending_follow_requests">
+        <action
+            android:id="@+id/action_navigation_pending_follow_requests_to_navigation_user"
+            app:destination="@id/navigation_user" />
     </fragment>
 
     <fragment
         android:id="@+id/navigation_articles"
         android:name="com.traderx.ui.article.ArticlesFragment"
         android:label="@string/article"
-        tools:layout="@layout/fragment_articles"/>
+        tools:layout="@layout/fragment_articles" />
 
     <fragment
         android:id="@+id/navigation_article"
@@ -28,22 +94,16 @@
         tools:layout="@layout/fragment_article" />
 
     <fragment
-        android:id="@+id/navigation_trader_equipment"
-        android:name="com.traderx.ui.traderequipment.TraderEquipmentFragment"
-        android:label="@string/title_trader_equipment"
-        tools:layout="@layout/fragment_trader_equipment" />
-
-    <fragment
         android:id="@+id/navigation_article_create"
         android:name="com.traderx.ui.article.ArticleCreateFragment"
         android:label="@string/article"
-        tools:layout="@layout/fragment_article_create"/>
+        tools:layout="@layout/fragment_article_create" />
 
     <fragment
         android:id="@+id/navigation_user_search"
         android:name="com.traderx.ui.search.UserSearchFragment"
         android:label="@string/search"
-        tools:layout="@layout/fragment_user_search">
+        tools:layout="@layout/fragment_search">
         <action
             android:id="@+id/action_navigation_user_search_to_navigation_user"
             app:destination="@id/navigation_user" />
@@ -53,10 +113,19 @@
         android:id="@+id/navigation_auth_user"
         android:name="com.traderx.ui.profile.AuthUserFragment"
         android:label="@string/title_profile"
-        tools:layout="@layout/fragment_auth_user" >
+        tools:layout="@layout/fragment_auth_user">
         <action
             android:id="@+id/action_navigation_auth_user_to_navigation_user_edit"
             app:destination="@id/navigation_user_edit" />
+        <action
+            android:id="@+id/action_navigation_auth_user_to_navigation_followers"
+            app:destination="@id/navigation_followers" />
+        <action
+            android:id="@+id/action_navigation_auth_user_to_navigation_followings"
+            app:destination="@id/navigation_followings" />
+        <action
+            android:id="@+id/action_navigation_auth_user_to_navigation_pending_follow_requests"
+            app:destination="@id/navigation_pending_follow_requests" />
     </fragment>
 
     <fragment

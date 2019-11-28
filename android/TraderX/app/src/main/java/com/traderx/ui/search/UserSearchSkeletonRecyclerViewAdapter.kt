@@ -11,7 +11,7 @@ class UserSearchSkeletonRecyclerViewAdapter(
 ): RecyclerView.Adapter<UserSearchSkeletonRecyclerViewAdapter.ViewHolder>(){
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_search_skeleton, parent, false)
+            .inflate(R.layout.item_user_skeleton, parent, false)
         return ViewHolder(view)
     }
 

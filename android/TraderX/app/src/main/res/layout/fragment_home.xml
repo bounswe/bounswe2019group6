@@ -9,29 +9,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="28.7dp"
-            android:background="@color/white"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/title_home"
-                android:textSize="17.3sp"
-                android:textColor="@color/txt_color"/>
-
-
-<!--            <ImageView-->
-<!--                android:layout_width="20dp"-->
-<!--                android:layout_height="20dp"-->
-<!--                android:src="@drawable/ic_plus2"/>-->
-
-        </LinearLayout>
-
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -55,7 +32,6 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/article"
@@ -74,12 +50,6 @@
 
             </LinearLayout>
 
-<!--            <lecho.lib.hellocharts.view.LineChartView-->
-<!--                android:id="@+id/chart"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="100dp" >-->
-<!--            </lecho.lib.hellocharts.view.LineChartView>-->
-
         </LinearLayout>
 
         <LinearLayout
@@ -92,12 +62,11 @@
             android:orientation="vertical">
 
             <LinearLayout
+                android:id="@+id/home_equipment_action"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="19.2dp"
                 android:orientation="horizontal"
-                >
-
+                android:padding="19.2dp">
 
                 <LinearLayout
                     android:layout_weight="1"
@@ -106,105 +75,25 @@
                     android:orientation="vertical">
 
                     <TextView
-
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:text="@string/title_trader_equipment"
                         android:textColor="@color/txt_color"
-                        android:textSize="17.3sp"
-                        android:text="Ethereum"/>
+                        android:textSize="17.3sp" />
 
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:orientation="horizontal">
-
-<!--                        <ImageView-->
-<!--                            android:layout_width="19dp"-->
-<!--                            android:layout_height="19dp"-->
-<!--                            android:src="@drawable/ic_etherium"/>-->
-
-
-                        <TextView
-
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="ETH"
-                            android:layout_marginLeft="5dp"
-                            android:textSize="10sp"
-                            android:textColor="#6e7f8d"
-                            android:layout_gravity="center"/>
-                    </LinearLayout>
                 </LinearLayout>
+
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="right"
-                        android:textColor="@color/txt_color"
-                        android:textSize="17.3sp"
-                        android:text="$689.42"/>
-
-
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-
-                        android:gravity="right"
-                        android:layout_gravity="right"
-                        android:orientation="horizontal">
-
-
-                        <TextView
-
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="(0.3%) $21.67"
-                            android:gravity="center"
-                            android:layout_gravity="center"
-                            android:textSize="10sp"
-
-                            android:textColor="#17b978"/>
-
-
-<!--                        <ImageView-->
-
-<!--                            android:layout_width="10dp"-->
-<!--                            android:layout_height="10dp"-->
-<!--                            android:src="@drawable/ic_arrowup"-->
-<!--                            android:layout_gravity="center"-->
-<!--                            android:layout_marginLeft="7dp"-->
-<!--                            />-->
-
-
-
-                    </LinearLayout>
-                </LinearLayout>
+                    android:orientation="vertical" />
 
 
             </LinearLayout>
 
-<!--            <lecho.lib.hellocharts.view.LineChartView-->
-<!--                android:id="@+id/chart1"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="100dp" >-->
-<!--            </lecho.lib.hellocharts.view.LineChartView>-->
-
         </LinearLayout>
-
-        <Button
-            android:id="@+id/home_create_article"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Create Article" />
 
     </LinearLayout>
 
