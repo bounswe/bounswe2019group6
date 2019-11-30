@@ -11,7 +11,7 @@ import cmpe451.group6.rest.equipment.repository.EquipmentRepository;
 import cmpe451.group6.rest.equipment.repository.HistoricalValueRepository;
 import cmpe451.group6.rest.equipment.service.EquipmentService;
 import cmpe451.group6.rest.portfolio.repository.PortfolioRepository;
-import cmpe451.group6.rest.follow.service.FollowService;;
+import cmpe451.group6.rest.follow.service.FollowService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -297,15 +297,14 @@ public class PortfolioService {
      */
     public List<String> getSelfPortfolios(String requesterName) {
 
-        List<String> portfolioNames = new ArrayList<String>();
+        User requester = userRepository.findByUsername(requesterName);
 
-
-        for (Portfolio portfolio : portfolioRepository.findByUser_username(requesterName)) {
-
-            portfolioNames.add(portfolio.getPortfolioName());
+        if (requester == null) {
+            throw new CustomException("The requester named " + requesterName + " does not exist.",
+                    HttpStatus.NOT_ACCEPTABLE);
         }
 
-        return portfolioNames;
+        return portfolioRepository.getPortfolioNamesOfUser(requesterName);
 
     }
 
