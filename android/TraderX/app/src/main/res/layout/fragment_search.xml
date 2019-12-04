@@ -26,7 +26,7 @@
                 android:paddingTop="10dp"
                 android:textColor="@color/black"
                 android:textCursorDrawable="@drawable/color_cursor"
-                android:textSize="14sp"></EditText>
+                android:textSize="14sp"/>
 
             <ImageButton
                 android:id="@+id/search_button"

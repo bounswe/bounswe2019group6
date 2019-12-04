@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/txt_color"
             android:textSize="17.3sp"
-            android:text="Code" />
+            android:text="@string/code" />
 
 
         <LinearLayout
@@ -40,7 +40,7 @@
                 android:layout_marginStart="5dp"
                 android:textColor="#6e7f8d"
                 android:textSize="12sp"
-                android:text="Base" />
+                android:text="@string/base" />
         </LinearLayout>
     </LinearLayout>
 
@@ -69,9 +69,9 @@
             android:id="@+id/stock"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="right"
+            android:layout_gravity="end"
             android:layout_marginTop="8dp"
-            android:gravity="right"
+            android:gravity="end"
             android:text="0.592 BTC"
             android:textColor="@color/light_gray"
             android:textSize="10sp" />
