@@ -141,5 +141,22 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="equipment_type">Equipment Type</string>
+    <string name="stock">Stock</string>
+    <string name="prediction_rate">Prediction Rate</string>
+    <string name="history_last_30_days">History - Last 30 days</string>
+    <string name="comments">Comments</string>
+    <string name="dont_have_account">Don’t have an account?</string>
+    <string name="or">or</string>
+    <string name="your_deposit">Your Deposit</string>
+    <string name="value">Value</string>
+    <string name="btc">BTC</string>
+    <string name="usd">USD</string>
+    <string name="amount_in_usd">Amount in USD</string>
+    <string name="base">Base</string>
+    <string name="code">Code</string>
+    <string name="my_trades">My Trades</string>
+    <string name="date">Date</string>
+    <string name="type">Type</string>
 
 </resources>

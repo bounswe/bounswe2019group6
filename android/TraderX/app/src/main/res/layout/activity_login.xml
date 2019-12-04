@@ -149,14 +149,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="Don’t have an account?"
+                android:text="@string/dont_have_account"
                 android:textSize="17.3sp" />
 
             <TextView
                 android:id="@+id/login_signup_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
                 android:gravity="center"
                 android:text="@string/signup"
                 android:textColor="#006dff"
@@ -173,14 +173,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="or"
+                android:text="@string/or"
                 android:textSize="17.3sp" />
 
             <TextView
                 android:id="@+id/login_forgot_pass_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
                 android:gravity="center"
                 android:text="@string/forgot_pass"
                 android:textColor="#006dff"

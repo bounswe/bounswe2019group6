@@ -24,14 +24,14 @@
                 android:layout_height="wrap_content"
                 android:textSize="14sp"
                 android:textColor="#3b3b3b"
-                android:text="My Trades" />
+                android:text="@string/my_trades" />
 
             <ImageView
                 android:id="@+id/arrow"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:src="@drawable/ic_nextarrow"
-                android:layout_gravity="right"
+                android:layout_gravity="end"
                 android:tint="#a9a0b0"
                 android:layout_marginTop="-14dp"
                 android:layout_marginBottom="-3dp"

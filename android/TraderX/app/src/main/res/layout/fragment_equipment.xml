@@ -123,7 +123,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Equipment Type"
+                            android:text="@string/equipment_type"
                             android:textColor="@color/txt_color"
                             android:textSize="14.3sp" />
                     </LinearLayout>
@@ -159,7 +159,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Stock"
+                            android:text="@string/stock"
                             android:textColor="@color/txt_color"
                             android:textSize="14.3sp" />
                     </LinearLayout>
@@ -196,7 +196,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Prediction Rate"
+                            android:text="@string/prediction_rate"
                             android:textColor="@color/txt_color"
                             android:textSize="14.3sp" />
 
@@ -234,7 +234,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="History - Last 30 days"
+                        android:text="@string/history_last_30_days"
                         android:textColor="@color/txt_color"
                         android:textSize="17.3sp" />
 
@@ -275,7 +275,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Comments"
+                        android:text="@string/comments"
                         android:textColor="@color/txt_color"
                         android:textSize="17.3sp" />
 

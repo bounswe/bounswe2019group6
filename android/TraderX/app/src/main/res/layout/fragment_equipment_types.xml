@@ -36,7 +36,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Currencies"
+                        android:text="@string/currencies"
                         android:textColor="@color/txt_color"
                         android:textSize="17.3sp" />
 
@@ -80,7 +80,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Crypto Currencies"
+                        android:text="@string/crypto_currencies"
                         android:textColor="@color/txt_color"
                         android:textSize="17.3sp" />
 
@@ -124,7 +124,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Stocks"
+                        android:text="@string/stocks"
                         android:textColor="@color/txt_color"
                         android:textSize="17.3sp" />
 

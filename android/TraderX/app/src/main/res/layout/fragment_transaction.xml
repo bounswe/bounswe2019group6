@@ -78,7 +78,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Your Deposit"
+                        android:text="@string/your_deposit"
                         android:textColor="@color/txt_color"
                         android:textSize="14.3sp" />
                 </LinearLayout>
@@ -115,7 +115,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Stock"
+                        android:text="@string/stock"
                         android:textColor="@color/txt_color"
                         android:textSize="14.3sp" />
                 </LinearLayout>
@@ -152,7 +152,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Value"
+                        android:text="@string/value"
                         android:textColor="@color/txt_color"
                         android:textSize="14.3sp" />
                 </LinearLayout>
@@ -197,7 +197,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="28.7dp"
-                    android:text="BTC"
+                    android:text="@string/btc"
                     android:textColor="@color/light_gray"
                     android:textSize="10sp" />
 
@@ -225,7 +225,7 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10.6dp"
+                android:layout_marginStart="10.6dp"
                 android:layout_weight="1"
                 android:orientation="vertical">
 
@@ -233,7 +233,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="28.7dp"
-                    android:text="USD"
+                    android:text="@string/usd"
                     android:textColor="@color/light_gray"
                     android:textSize="10sp" />
 
@@ -244,7 +244,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:background="#00000000"
-                    android:hint="Amount in USD"
+                    android:hint="@string/amount_in_usd"
                     android:inputType="numberDecimal"
                     android:textColor="@color/txt_color"
                     android:textColorHint="@color/light_gray"
