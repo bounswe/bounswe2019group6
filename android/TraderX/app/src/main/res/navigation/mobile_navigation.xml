@@ -190,6 +190,9 @@
         <action
             android:id="@+id/action_navigation_auth_user_to_navigation_alerts"
             app:destination="@id/navigation_alerts" />
+        <action
+            android:id="@+id/action_navigation_auth_user_to_navigation_portfolios"
+            app:destination="@id/navigation_portfolio" />
     </fragment>
 
     <fragment
@@ -215,5 +218,30 @@
         android:name="com.traderx.ui.profile.AuthUserEditFragment"
         android:label="@string/title_user_edit"
         tools:layout="@layout/fragment_auth_user_edit" />
+
+
+
+    <fragment
+        android:id="@+id/navigation_portfolios"
+        android:name="com.traderx.ui.portfolio.PortfoliosFragment"
+        android:label="My Portfolio"
+        tools:layout="@layout/fragment_portfolio">
+        <action
+            android:id="@+id/action_navigation_portfolio_to_details"
+            app:destination="@id/navigation_portfolio" />
+        <argument
+            android:name="portfolio_name"
+            app:argType="string" />
+        <argument
+            android:name="is_auth_user"
+            app:argType="boolean"
+            android:defaultValue="false" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_portfolio"
+        android:name="com.traderx.ui.portfolio.PortfoliosFragment"
+        android:label="Portfolio"
+        tools:layout="@layout/fragment_portfolio" />
 
 </navigation>

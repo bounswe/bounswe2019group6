@@ -23,6 +23,7 @@
                 android:id="@+id/equipment_types_currencies_action"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:baselineAligned="false"
                 android:orientation="horizontal"
                 android:padding="19.2dp">
 
@@ -66,6 +67,7 @@
                 android:id="@+id/equipment_types_crypto_currencies_action"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:baselineAligned="false"
                 android:orientation="horizontal"
                 android:padding="19.2dp">
 
@@ -109,6 +111,7 @@
                 android:id="@+id/equipment_types_stocks_action"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:baselineAligned="false"
                 android:orientation="horizontal"
                 android:padding="19.2dp">
 

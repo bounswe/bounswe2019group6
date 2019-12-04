@@ -108,6 +108,13 @@ class AuthUserFragment : Fragment() {
             }
         }
 
+        root.findViewById<LinearLayout>(R.id.my_portfolio_action)?.let {
+            it.setOnClickListener {
+                findNavController().navigate(AuthUserFragmentDirections.actionNavigationAuthUserToNavigationPortfolios())
+            }
+        }
+
+
         root.findViewById<ImageView>(R.id.action_menu)?.let { imageView ->
             imageView.setOnClickListener {
                 showMenu(it as View)

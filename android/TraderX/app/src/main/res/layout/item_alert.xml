@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/txt_color"
             android:textSize="17.3sp"
-            android:text="Code"/>
+            android:text="Code" />
 
 
     </LinearLayout>

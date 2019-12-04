@@ -1,7 +1,5 @@
 package com.traderx.api
 
-import com.traderx.AppConfig
-import com.traderx.api.request.ForgotPasswordRequest
 import com.traderx.api.request.AlertRequest
 import com.traderx.api.request.LoginRequest
 import com.traderx.api.request.SignUpRequest
@@ -12,23 +10,6 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import retrofit2.http.*
 
-object ApiUri {
-    const val API_URI: String = AppConfig.API_HOST
-    const val FOLLOW_URI: String = "$API_URI/follow"
-    const val FOLLOW_USER: String = "$FOLLOW_URI/follow_user"
-    const val USER_URI: String = "$API_URI/users"
-    const val USERS_GET_ALL: String = "$USER_URI/getAll"
-    const val USER_SIGNIN: String = "$API_URI/login"
-    const val USER_SIGNUP: String = "$API_URI/signup"
-    const val USER_SIGNOUT: String = "$API_URI/signout"
-    const val USER_INFO: String = "$USER_URI/me"
-    const val USER_PROFILE: String = "$USER_URI/profile/{username}"
-    const val UPDATE_USER: String = "$USER_URI/set_profile/{status}"
-    const val ARTICLE: String = "$API_URI/article/{articleId}"
-    const val ARTICLES: String = "$API_URI/test"
-    const val INSERT_ARTICLE: String = "$API_URI/article"
-    const val USER_FORGOT_PASSWORD: String = "$API_URI/password/forgot"
-}
 
 interface RequestService {
     @GET(ApiEndpoint.USER_INFO)
@@ -40,9 +21,8 @@ interface RequestService {
     @POST(ApiEndpoint.USER_SIGNUP)
     fun register(@Body signUpRequest: SignUpRequest): Single<SuccessResponse>
 
-    @POST(ApiUri.USER_FORGOT_PASSWORD)
+    @POST(ApiEndpoint.USER_FORGOT_PASSWORD)
     fun forgotpassword(@Query("email") email: String): Single<SuccessResponse>
-
 
     @GET(ApiEndpoint.USERS_ALL)
     fun allUsers(): Single<List<User>>
@@ -124,4 +104,28 @@ interface RequestService {
 
     @POST(ApiEndpoint.ALERT_CREATE)
     fun createAlert(@Body alert: AlertRequest): Completable
+
+    @POST(ApiEndpoint.ADD_PORTFOLIO)
+    fun createPortfolio(@Query("portfolioName")  portfolioName: String): Completable
+
+
+    @GET(ApiEndpoint.GET_PORTFOLIO)
+    fun getPortfolio(@Query("portfolioName") portfolioName: String): Single<PortfolioResponse>
+
+    @POST(ApiEndpoint.ADD_TO_PORTFOLIO)
+    fun addToPortfolio(
+        @Query("portfolioName") portfolioName: String,
+        @Query("code") equipment: String
+    ): Completable
+
+    @POST(ApiEndpoint.DELETE_PORTFOLIO)
+    fun delPortfolio(@Query("portfolioName") portfolioName: String): Completable
+
+    @POST(ApiEndpoint.DELETE_FROM_PORTFOLIO)
+    fun delFromPortfolio(
+        @Query("portfolioName") portfolioName: String,
+        @Query("code") equipment: String
+    ): Completable
+
+
 }

@@ -3,15 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.profile.PendingRequestsFragment">
+    android:name="com.traderx.ui.portfolio.PortfoliosFragment"
+    tools:context=".ui.portfolio.PortfoliosFragment">
 
     <androidx.recyclerview.widget.RecyclerView xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/pending_following_requests_list"
+        android:id="@+id/portfolio_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         app:layoutManager="LinearLayoutManager"
-        tools:listitem="@layout/item_follow" />
-
+        tools:listitem="@layout/item_portfolio" />
 </FrameLayout>
