@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/txt_color"
             android:textSize="17.3sp"
-            android:text="Code"/>
+            android:text="Code" />
 
 
         <LinearLayout
@@ -40,7 +40,7 @@
                 android:layout_marginStart="5dp"
                 android:textColor="#6e7f8d"
                 android:textSize="12sp"
-                android:text="Date"/>
+                android:text="Date" />
         </LinearLayout>
     </LinearLayout>
 

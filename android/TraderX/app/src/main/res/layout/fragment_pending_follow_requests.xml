@@ -5,8 +5,7 @@
     android:layout_height="match_parent"
     tools:context=".ui.profile.PendingRequestsFragment">
 
-    <androidx.recyclerview.widget.RecyclerView
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <androidx.recyclerview.widget.RecyclerView xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/pending_following_requests_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

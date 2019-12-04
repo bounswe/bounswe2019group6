@@ -199,14 +199,14 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight=".8"
-            tools:context="com.traderx.ui.auth.signup.SignUpActivity"/>
+            tools:context="com.traderx.ui.auth.signup.SignUpActivity" />
 
         <Button
             android:id="@+id/signup_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:text="@string/signup"/>
+            android:text="@string/signup" />
     </LinearLayout>
 
 </RelativeLayout>

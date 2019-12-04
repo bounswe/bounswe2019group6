@@ -99,8 +99,8 @@ class SignUpActivity : AppCompatActivity(), OnMapReadyCallback {
                 setWarning(getString(R.string.username_not_valid))
             !SignUpValidator.validateEmail(email.text.toString()) ->
                 setWarning(getString(R.string.email_not_valid))
-           // !SignUpValidator.validatePassword(password.text.toString()) ->
-            //    setWarning(getString(R.string.pass_not_valid))
+            !SignUpValidator.validatePassword(password.text.toString()) ->
+                setWarning(getString(R.string.pass_not_valid))
             !SignUpValidator.validatePasswordConformity(
                 password.text.toString(),
                 passwordConfirm.text.toString()
