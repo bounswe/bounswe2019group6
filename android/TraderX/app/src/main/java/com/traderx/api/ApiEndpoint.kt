@@ -41,5 +41,10 @@ object ApiEndpoint {
     const val ALERT_ALL: String = "$ALERT_URI/get"
     const val ALERT_CREATE: String = "$ALERT_URI/set"
     const val USER_FORGOT_PASSWORD: String = "$API_URI/password/forgot"
+    const val GET_PORTFOLIO: String = "$API_URI/portfolio/getPortfolio"
+    const val ADD_PORTFOLIO: String = "$API_URI/portfolio/create"
+    const val ADD_TO_PORTFOLIO: String = "$API_URI/portfolio/addToPortfolio"
+    const val DELETE_PORTFOLIO: String = "$API_URI/portfolio/delete"
+    const val DELETE_FROM_PORTFOLIO: String = "$API_URI/portfolio/deleteFromPortfolio"
 
 }

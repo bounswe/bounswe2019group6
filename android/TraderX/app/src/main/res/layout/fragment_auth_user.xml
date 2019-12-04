@@ -181,7 +181,7 @@
                     android:id="@+id/pending_follow_requests_action"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
+                    android:baselineAligned="false" android:orientation="horizontal"
                     android:padding="19.2dp">
 
 
@@ -216,7 +216,7 @@
                     android:id="@+id/my_alerts_action"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
+                    android:baselineAligned="false" android:orientation="horizontal"
                     android:padding="19.2dp">
 
 
@@ -251,7 +251,7 @@
                     android:id="@+id/my_transactions_action"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
+                    android:baselineAligned="false" android:orientation="horizontal"
                     android:padding="19.2dp">
 
 
@@ -287,7 +287,7 @@
                     android:id="@+id/my_portfolio_action"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
+                    android:baselineAligned="false" android:orientation="horizontal"
                     android:padding="19.2dp">
 
 
@@ -324,7 +324,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
+                    android:baselineAligned="false" android:orientation="horizontal"
                     android:padding="19.2dp">
 
 

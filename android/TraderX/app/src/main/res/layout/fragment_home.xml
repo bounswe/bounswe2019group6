@@ -22,7 +22,7 @@
                 android:id="@+id/home_article_action"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:baselineAligned="false" android:orientation="horizontal"
                 android:padding="19.2dp">
 
                 <LinearLayout
@@ -65,7 +65,7 @@
                 android:id="@+id/home_equipment_action"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:baselineAligned="false" android:orientation="horizontal"
                 android:padding="19.2dp">
 
                 <LinearLayout
