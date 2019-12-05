@@ -5,11 +5,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.traderx.R
 import com.traderx.api.ErrorHandler
 import com.traderx.api.response.CommentResponse
@@ -29,7 +32,6 @@ import lecho.lib.hellocharts.view.LineChartView
 class EquipmentFragment : Fragment(), FragmentTitleEmitters {
     private var equipmentCode: String? = null
     private lateinit var equipmentViewModel: EquipmentViewModel
-
     private lateinit var commentsRecyclerView: RecyclerView
 
     private lateinit var code: TextView
@@ -72,6 +74,18 @@ class EquipmentFragment : Fragment(), FragmentTitleEmitters {
         prediction = root.findViewById(R.id.prediction)
         equipmentType = root.findViewById(R.id.equipment_type)
 
+        root.findViewById<Button>(R.id.buy_action)?.let {
+            it.setOnClickListener {
+                findNavController().navigate(EquipmentFragmentDirections.actionNavigationEquipmentToNavigationTransaction(equipmentCode ?: ""))
+            }
+        }
+
+        root.findViewById<FloatingActionButton>(R.id.alert_action)?.let {
+            it.setOnClickListener {
+                findNavController().navigate(EquipmentFragmentDirections.actionNavigationEquipmentToNavigationAlert(equipmentCode ?: ""))
+            }
+        }
+
         val viewManager = LinearLayoutManager(context as Context)
         commentsRecyclerView = root.findViewById<RecyclerView>(R.id.comment_list).apply {
             layoutManager = viewManager
@@ -82,7 +96,7 @@ class EquipmentFragment : Fragment(), FragmentTitleEmitters {
 
         disposable.add(
             equipmentViewModel.getEquipment(equipmentCode ?: "")
-                .compose(Helper.applySchedulers<EquipmentResponse>())
+                .compose(Helper.applySingleSchedulers<EquipmentResponse>())
                 .subscribe({
                     updateView(it)
                 }, {
@@ -92,7 +106,7 @@ class EquipmentFragment : Fragment(), FragmentTitleEmitters {
 
         disposable.add(
             equipmentViewModel.getComments(equipmentCode ?: "")
-                .compose(Helper.applySchedulers<List<CommentResponse>>())
+                .compose(Helper.applySingleSchedulers<List<CommentResponse>>())
                 .subscribe({
                     commentsRecyclerView.swapAdapter(CommentRecyclerViewAdapter(it), true)
                 }, {

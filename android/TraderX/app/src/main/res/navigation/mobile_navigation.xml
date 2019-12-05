@@ -26,6 +26,50 @@
         <argument
             android:name="equipment_name"
             app:argType="string" />
+        <action
+            android:id="@+id/action_navigation_equipment_to_navigation_transaction"
+            app:destination="@id/navigation_transaction" />
+        <action
+            android:id="@+id/action_navigation_equipment_to_navigation_alert"
+            app:destination="@id/navigation_alert" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_alerts"
+        android:name="com.traderx.ui.alert.AlertsFragment"
+        android:label="@string/alert"
+        tools:layout="@layout/fragment_alerts"/>
+
+    <fragment
+        android:id="@+id/navigation_alert"
+        android:name="com.traderx.ui.alert.AlertFragment"
+        android:label="@string/alert"
+        tools:layout="@layout/fragment_alert">
+        <argument
+            android:name="equipment_code"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_navigation_alert_to_navigation_alerts"
+            app:destination="@id/navigation_alerts" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_transactions"
+        android:name="com.traderx.ui.transaction.TransactionsFragment"
+        android:label="@string/title_my_transactions"
+        tools:layout="@layout/fragment_transactions"/>
+
+    <fragment
+        android:id="@+id/navigation_transaction"
+        android:name="com.traderx.ui.transaction.TransactionFragment"
+        android:label="@string/title_transaction"
+        tools:layout="@layout/fragment_transaction">
+        <argument
+            android:name="equipment_code"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_navigation_transaction_to_navigation_transactions"
+            app:destination="@id/navigation_transactions" />
     </fragment>
 
     <fragment
@@ -59,6 +103,13 @@
         <action
             android:id="@+id/action_navigation_followers_to_navigation_user"
             app:destination="@id/navigation_user" />
+        <argument
+            android:name="username"
+            app:argType="string" />
+        <argument
+            android:name="is_auth_user"
+            app:argType="boolean"
+            android:defaultValue="false" />
     </fragment>
 
     <fragment
@@ -69,11 +120,18 @@
         <action
             android:id="@+id/action_navigation_followings_to_navigation_user"
             app:destination="@id/navigation_user" />
+        <argument
+            android:name="username"
+            app:argType="string" />
+        <argument
+            android:name="is_auth_user"
+            app:argType="boolean"
+            android:defaultValue="false" />
     </fragment>
 
     <fragment
         android:id="@+id/navigation_pending_follow_requests"
-        android:name="com.traderx.ui.profile.PendingFollowRequestsFragment"
+        android:name="com.traderx.ui.profile.PendingRequestsFragment"
         android:label="@string/pending"
         tools:layout="@layout/fragment_pending_follow_requests">
         <action
@@ -126,6 +184,15 @@
         <action
             android:id="@+id/action_navigation_auth_user_to_navigation_pending_follow_requests"
             app:destination="@id/navigation_pending_follow_requests" />
+        <action
+            android:id="@+id/action_navigation_auth_user_to_navigation_transactions"
+            app:destination="@id/navigation_transactions" />
+        <action
+            android:id="@+id/action_navigation_auth_user_to_navigation_alerts"
+            app:destination="@id/navigation_alerts" />
+        <action
+            android:id="@+id/action_navigation_auth_user_to_navigation_portfolios"
+            app:destination="@id/navigation_portfolio" />
     </fragment>
 
     <fragment
@@ -138,6 +205,12 @@
             android:defaultValue="@null"
             app:argType="string"
             app:nullable="true" />
+        <action
+            android:id="@+id/action_navigation_user_to_navigation_followings"
+            app:destination="@id/navigation_followings" />
+        <action
+            android:id="@+id/action_navigation_user_to_navigation_followers"
+            app:destination="@id/navigation_followers" />
     </fragment>
 
     <fragment
@@ -145,5 +218,30 @@
         android:name="com.traderx.ui.profile.AuthUserEditFragment"
         android:label="@string/title_user_edit"
         tools:layout="@layout/fragment_auth_user_edit" />
+
+
+
+    <fragment
+        android:id="@+id/navigation_portfolios"
+        android:name="com.traderx.ui.portfolio.PortfoliosFragment"
+        android:label="My Portfolio"
+        tools:layout="@layout/fragment_portfolio">
+        <action
+            android:id="@+id/action_navigation_portfolio_to_details"
+            app:destination="@id/navigation_portfolio" />
+        <argument
+            android:name="portfolio_name"
+            app:argType="string" />
+        <argument
+            android:name="is_auth_user"
+            app:argType="boolean"
+            android:defaultValue="false" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_portfolio"
+        android:name="com.traderx.ui.portfolio.PortfoliosFragment"
+        android:label="Portfolio"
+        tools:layout="@layout/fragment_portfolio" />
 
 </navigation>

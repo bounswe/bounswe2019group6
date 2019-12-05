@@ -1,140 +1,166 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:map="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
-    <!-- Header aligned to top -->
-
+    android:background="@color/white">
 
     <LinearLayout
-        android:id="@+id/footer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/reset_password_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1.5"
-            android:background="#01BBD6"
-            android:clickable="true"
-            android:fontFamily="sans-serif"
-            android:gravity="center"
-            android:minHeight="20dp"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
-            android:text="@string/reset_password"
-            android:textAllCaps="false"
-            android:textColor="#FFFF"
-            android:textSize="17sp" />
-
-        <Button
-            android:id="@+id/forgot_password_back_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:background="#33000000"
-            android:clickable="true"
-            android:fontFamily="sans-serif"
-            android:gravity="center"
-            android:minHeight="20dp"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
-            android:text="@string/back"
-            android:textAllCaps="false"
-            android:textColor="#FFFF"
-            android:textSize="17sp" />
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:id="@+id/content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/footer"
-        android:gravity="center"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1.5"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:layout_height="98dp"
+            android:orientation="horizontal">
 
-            <ImageView
-                android:id="@+id/main_page_logo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:src="@drawable/trader_logo" />
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingTop="40dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:breakStrategy="high_quality"
+                        android:text="@string/title_forgot_password"
+                        android:textColor="#141a22"
+                        android:textSize="19.2sp" />
+                </LinearLayout>
+            </FrameLayout>
         </LinearLayout>
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/forgot_password_warning_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#970000"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/forgot_password_warning"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="15dp"
+                android:textAlignment="center"
+                android:textColor="#FFFFFF"
+                map:layout_constraintBottom_toBottomOf="parent"
+                map:layout_constraintEnd_toEndOf="parent"
+                map:layout_constraintStart_toStartOf="parent"
+                map:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_weight="2"
-            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="130dp"
             android:orientation="vertical">
 
-
-            <Button
-                android:id="@+id/forgot_password"
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/StyledTilEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#33000000"
-                android:clickable="true"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
-                android:text="@string/forgot_pass"
-                android:textAllCaps="false"
+                android:layout_marginLeft="28.7dp"
+                android:layout_marginRight="28.7dp"
+                android:textColor="@color/black">
 
-                android:textColor="@android:color/white"
-                android:textSize="14sp"
-                android:focusable="true" />
-            <EditText
-                android:id="@+id/forgot_password_mail_val"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.18"
-                android:background="@drawable/draw_bottom_line"
-                android:drawableLeft="@drawable/login_mail_icon"
-                android:drawablePadding="13dp"
-                android:textColorHint="@color/white"
-                android:fontFamily="sans-serif"
-                android:gravity="center|start"
-                android:hint="@string/email"
-                android:inputType="textEmailAddress"
-                android:paddingLeft="10dp"
-                android:singleLine="true"
-                android:textColor="@android:color/white"
-                android:textSize="14sp"  />
-
-
-            <LinearLayout
-                android:id="@+id/login_or_layout"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.15"
-                android:gravity="center"
-                android:orientation="horizontal"/>
-
-            <TextView
-                android:id="@+id/login_warning"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.3" />
-
-
+                <EditText
+                    android:id="@+id/forgot_password_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/email"
+                    android:inputType="textEmailAddress"
+                    android:maxLines="1"
+                    android:paddingTop="10dp"
+                    android:textAllCaps="false"
+                    android:textColor="@color/black"
+                    android:textCursorDrawable="@drawable/color_cursor"
+                    android:textSize="14sp" />
+            </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 
     </LinearLayout>
 
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/reset_password_button"
+        android:orientation="vertical">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Don’t have an account?"
+                android:textSize="17.3sp" />
+
+            <TextView
+                android:id="@+id/forgot_password_signup_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:gravity="center"
+                android:text="@string/signup"
+                android:textColor="#006dff"
+                android:textSize="17.3sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="or"
+                android:textSize="17.3sp" />
+
+            <TextView
+                android:id="@+id/forgot_password_login_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:gravity="center"
+                android:text="@string/login"
+                android:textColor="#006dff"
+                android:textSize="17.3sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/reset_password_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="19.3dp"
+        android:text="@string/reset_password"
+        android:textAllCaps="false"
+        android:textColor="#fbfbfb" />
 </RelativeLayout>

@@ -16,17 +16,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-        <EditText
-            android:id="@+id/search_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/search"
-            android:inputType="text"
-            android:maxLines="1"
-            android:paddingTop="10dp"
-            android:textColor="@color/black"
-            android:textCursorDrawable="@drawable/color_cursor"
-            android:textSize="14sp"></EditText>
+            <EditText
+                android:id="@+id/search_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/search"
+                android:inputType="text"
+                android:maxLines="1"
+                android:paddingTop="10dp"
+                android:textColor="@color/black"
+                android:textCursorDrawable="@drawable/color_cursor"
+                android:textSize="14sp"/>
 
             <ImageButton
                 android:id="@+id/search_button"

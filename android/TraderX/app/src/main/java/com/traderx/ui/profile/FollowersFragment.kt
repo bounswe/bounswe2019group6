@@ -9,28 +9,50 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import com.traderx.R
 import com.traderx.api.ErrorHandler
 import com.traderx.api.response.FollowerResponse
+import com.traderx.api.response.SuccessResponse
 import com.traderx.ui.search.UserSearchSkeletonRecyclerViewAdapter
+import com.traderx.util.FragmentTitleEmitters
 import com.traderx.util.FragmentTitleListeners
 import com.traderx.util.Helper
 import com.traderx.util.Injection
 import com.traderx.viewmodel.AuthUserViewModel
+import com.traderx.viewmodel.UserViewModel
 import io.reactivex.disposables.CompositeDisposable
 
-class FollowersFragment : Fragment() {
-    private lateinit var userViewModel: AuthUserViewModel
+class FollowersFragment : Fragment(), FragmentTitleEmitters {
+    private lateinit var username: String
+    private var isAuthUser: Boolean = false
+    private lateinit var userViewModel: UserViewModel
+    private lateinit var authUserViewModel: AuthUserViewModel
     private lateinit var recyclerView: RecyclerView
+    private var isOnAction = false
     private val disposable = CompositeDisposable()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        arguments?.let {
+            username = it.getString(ARG_USERNAME) as String
+            isAuthUser = it.getBoolean(ARG_IS_AUTH_USER) as Boolean
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val userViewModelFactory = Injection.provideAuthUserViewModelFactory(context as Context)
+        setFragmentTitle(context, getString(R.string.followers))
+
+        val userViewModelFactory = Injection.provideUserViewModelFactory(context as Context)
         userViewModel =
-            ViewModelProvider(this, userViewModelFactory).get(AuthUserViewModel::class.java)
+            ViewModelProvider(this, userViewModelFactory).get(UserViewModel::class.java)
+        val authUserViewModelFactory = Injection.provideAuthUserViewModelFactory(context as Context)
+        authUserViewModel =
+            ViewModelProvider(this, authUserViewModelFactory).get(AuthUserViewModel::class.java)
 
         val root = inflater.inflate(R.layout.fragment_followers, container, false)
 
@@ -40,14 +62,17 @@ class FollowersFragment : Fragment() {
         }
 
         disposable.add(
-            userViewModel.followers(context as Context)
-                .compose(Helper.applySchedulers<List<FollowerResponse>>())
+            userViewModel.followers(username)
+                .compose(Helper.applySingleSchedulers<ArrayList<FollowerResponse>>())
                 .subscribe({
-                    recyclerView.adapter = FollowersRecyclerViewAdapter(it) { username ->
-                        FollowersFragmentDirections.actionNavigationFollowersToNavigationUser(
-                            username
-                        )
-                    }
+                    recyclerView.adapter = FollowRecyclerViewAdapter(it,
+                        { username, onComplete -> removeFollower(username, onComplete) },
+                        { username ->
+                            FollowersFragmentDirections.actionNavigationFollowersToNavigationUser(
+                                username
+                            )
+                        },
+                        isAuthUser)
                 },
                     { ErrorHandler.handleError(it, context as Context) })
         )
@@ -55,11 +80,40 @@ class FollowersFragment : Fragment() {
         return root
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-
-        if(context is FragmentTitleListeners) {
-            context.showFragmentTitle(getString(R.string.followers))
+    private fun removeFollower(username: String, onComplete: () -> Unit) {
+        if (isOnAction) {
+            return
         }
+
+        isOnAction = true
+
+        disposable.add(
+            authUserViewModel.removeFollower(username)
+                .compose(Helper.applySingleSchedulers<SuccessResponse>())
+                .doFinally {
+                    onComplete()
+                    isOnAction = false
+                }
+                .subscribe({
+                    Snackbar.make(
+                        requireView(),
+                        getString(R.string.remove_follower, username),
+                        Snackbar.LENGTH_SHORT
+                    ).show()
+                }, {
+                    ErrorHandler.handleError(it, context as Context)
+                })
+        )
+    }
+
+    override fun setFragmentTitle(context: Context?, title: String?) {
+        if (context is FragmentTitleListeners) {
+            context.showFragmentTitle(title)
+        }
+    }
+
+    companion object {
+        private const val ARG_USERNAME = "username"
+        private const val ARG_IS_AUTH_USER = "is_auth_user"
     }
 }

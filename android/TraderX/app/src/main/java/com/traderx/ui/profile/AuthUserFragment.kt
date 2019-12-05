@@ -8,19 +8,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.github.razir.progressbutton.bindProgressButton
 import com.github.razir.progressbutton.hideProgress
 import com.github.razir.progressbutton.isProgressActive
-import com.github.razir.progressbutton.showProgress
 import com.traderx.MainActivity
 import com.traderx.R
 import com.traderx.api.ApiService
 import com.traderx.api.ErrorHandler
 import com.traderx.api.RequestService
+import com.traderx.db.User
+import com.traderx.enum.Role
+import com.traderx.ui.auth.signup.SignUpValidator
+import com.traderx.util.Helper
 import com.traderx.util.Injection
 import com.traderx.util.TokenUtility
 import com.traderx.viewmodel.AuthUserViewModel
@@ -32,12 +35,14 @@ class AuthUserFragment : Fragment() {
 
     private lateinit var authUserViewModel: AuthUserViewModel
 
+    private lateinit var user: User
     private lateinit var userName: TextView
     private lateinit var email: TextView
     private lateinit var role: TextView
     private lateinit var followerCount: TextView
     private lateinit var followingCount: TextView
     private lateinit var profilePrivate: TextView
+    private lateinit var becomeTraderLayout: LinearLayout
     private lateinit var requestService: RequestService
 
     private val disposable = CompositeDisposable()
@@ -46,8 +51,6 @@ class AuthUserFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-
         val root = inflater.inflate(R.layout.fragment_auth_user, container, false)
 
         userName = root.findViewById(R.id.profile_username)
@@ -56,16 +59,34 @@ class AuthUserFragment : Fragment() {
         profilePrivate = root.findViewById(R.id.profile_private)
         followerCount = root.findViewById(R.id.profile_follower)
         followingCount = root.findViewById(R.id.profile_following)
+        becomeTraderLayout = root.findViewById(R.id.become_trader_action)
+        becomeTraderLayout.setOnClickListener {
+            becomeTrader(inflater)
+        }
 
         root.findViewById<LinearLayout>(R.id.followers_list_action)?.let {
             it.setOnClickListener {
-                findNavController().navigate(AuthUserFragmentDirections.actionNavigationAuthUserToNavigationFollowers())
+                if (isClickable()) {
+                    findNavController().navigate(
+                        AuthUserFragmentDirections.actionNavigationAuthUserToNavigationFollowers(
+                            user.username,
+                            true
+                        )
+                    )
+                }
             }
         }
 
         root.findViewById<LinearLayout>(R.id.followings_list_action)?.let {
             it.setOnClickListener {
-                findNavController().navigate(AuthUserFragmentDirections.actionNavigationAuthUserToNavigationFollowings())
+                if (isClickable()) {
+                    findNavController().navigate(
+                        AuthUserFragmentDirections.actionNavigationAuthUserToNavigationFollowings(
+                            user.username,
+                            true
+                        )
+                    )
+                }
             }
         }
 
@@ -74,6 +95,25 @@ class AuthUserFragment : Fragment() {
                 findNavController().navigate(AuthUserFragmentDirections.actionNavigationAuthUserToNavigationPendingFollowRequests())
             }
         }
+
+        root.findViewById<LinearLayout>(R.id.my_transactions_action)?.let {
+            it.setOnClickListener {
+                findNavController().navigate(AuthUserFragmentDirections.actionNavigationAuthUserToNavigationTransactions())
+            }
+        }
+
+        root.findViewById<LinearLayout>(R.id.my_alerts_action)?.let {
+            it.setOnClickListener {
+                findNavController().navigate(AuthUserFragmentDirections.actionNavigationAuthUserToNavigationAlerts())
+            }
+        }
+
+        root.findViewById<LinearLayout>(R.id.my_portfolio_action)?.let {
+            it.setOnClickListener {
+                findNavController().navigate(AuthUserFragmentDirections.actionNavigationAuthUserToNavigationPortfolios())
+            }
+        }
+
 
         root.findViewById<ImageView>(R.id.action_menu)?.let { imageView ->
             imageView.setOnClickListener {
@@ -102,12 +142,18 @@ class AuthUserFragment : Fragment() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe({
+                    user = it
                     userName.text = it.username
                     email.text = it.email
                     role.text = it.localizedRole(context)
                     profilePrivate.text = it.localizedIsPrivate(context)
                     followerCount.text = it.followersCount.toString()
                     followingCount.text = it.followingsCount.toString()
+
+                    if (user.role == Role.ROLE_BASIC.value) {
+                        becomeTraderLayout.visibility = View.VISIBLE
+                    }
+
                 }, {
                     ErrorHandler.handleError(it, activity)
                 })
@@ -118,6 +164,10 @@ class AuthUserFragment : Fragment() {
         super.onStop()
 
         disposable.clear()
+    }
+
+    private fun isClickable(): Boolean {
+        return ::user.isInitialized
     }
 
     private fun showMenu(anchor: View) {
@@ -153,4 +203,45 @@ class AuthUserFragment : Fragment() {
         )
     }
 
+    private fun becomeTrader(inflater: LayoutInflater) {
+
+        val builder = AlertDialog.Builder(context as Context)
+
+        val view = inflater.inflate(R.layout.dialog_become_trader, null)
+
+        builder.setView(view)
+        val warningLayout = view.findViewById<LinearLayout>(R.id.warning_layout)
+        val warning = view.findViewById<TextView>(R.id.warning)
+        val iban = view.findViewById<EditText>(R.id.iban)
+        val okButton = view.findViewById<Button>(R.id.ok_action)
+
+        builder.setNegativeButton(R.string.cancel) { _, _ -> }
+
+        val alertDialog = builder.create()
+        alertDialog.show()
+
+        okButton.setOnClickListener {
+            if (!okButton.isProgressActive()) {
+                if (!SignUpValidator.validateIban(iban.text.toString())) {
+                    warningLayout.visibility = View.VISIBLE
+                    warning.text = getString(R.string.trader_iban_not_valid)
+                } else {
+
+                    warningLayout.visibility = View.GONE
+
+                    disposable.add(
+                        authUserViewModel.becomeTrader(iban.text.toString())
+                            .compose(Helper.applyCompletableSchedulers())
+                            .subscribe({
+                                alertDialog.dismiss()
+                                becomeTraderLayout.visibility = View.GONE
+                                okButton.hideProgress(R.string.ok)
+                            }, {
+                                ErrorHandler.handleError(it, context as Context)
+                            })
+                    )
+                }
+            }
+        }
+    }
 }

@@ -5,13 +5,12 @@
     android:layout_height="match_parent"
     tools:context=".ui.profile.FollowingsFragment">
 
-    <androidx.recyclerview.widget.RecyclerView
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <androidx.recyclerview.widget.RecyclerView xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/followings_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         app:layoutManager="LinearLayoutManager"
-        tools:listitem="@layout/item_follower" />
+        tools:listitem="@layout/item_follow" />
 </FrameLayout>
