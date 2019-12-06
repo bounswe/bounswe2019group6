@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import com.traderx.R
 import com.traderx.api.response.AlertResponse
@@ -12,7 +13,9 @@ import kotlinx.android.synthetic.main.item_alert.view.*
 
 class AlertRecyclerViewAdapter(
     private val alerts: ArrayList<AlertResponse>,
-    private val context: Context
+    private val context: Context,
+    private val fragmentManager: FragmentManager,
+    private val onDeleteAction: (id: Int, doOnSuccess: () -> Unit) -> Unit
 ) : RecyclerView.Adapter<AlertRecyclerViewAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -31,6 +34,20 @@ class AlertRecyclerViewAdapter(
             alerts[position].limitValue.toString(),
             alerts[position].amount.toString()
         )
+
+        holder.view.setOnLongClickListener {
+            val alertDeleteModal = AlertDeleteModal { modal ->
+                onDeleteAction(alerts[position].id) {
+                    alerts.removeAt(position)
+                    notifyItemRemoved(position)
+                    modal.dismiss()
+                }
+            }
+
+            alertDeleteModal.show(fragmentManager, AlertDeleteModal.TAG)
+
+            true
+        }
     }
 
     override fun getItemCount(): Int = alerts.size

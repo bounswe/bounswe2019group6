@@ -105,6 +105,9 @@ interface RequestService {
     @POST(ApiEndpoint.ALERT_CREATE)
     fun createAlert(@Body alert: AlertRequest): Completable
 
+    @DELETE(ApiEndpoint.ALERT_DELETE)
+    fun deleteAlert(@Query("id") id: Int): Completable
+
     @POST(ApiEndpoint.ADD_PORTFOLIO)
     fun createPortfolio(@Query("portfolioName")  portfolioName: String): Completable
 

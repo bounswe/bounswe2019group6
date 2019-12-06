@@ -43,4 +43,8 @@ class EquipmentViewModel(
     fun createAlert(alert: AlertRequest): Completable {
         return networkSource.createAlert(alert)
     }
+
+    fun deleteAlert(id: Int) : Completable {
+        return networkSource.deleteAlert(id)
+    }
 }
