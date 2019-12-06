@@ -23,7 +23,7 @@ class SignUpValidator {
         }
 
         fun validatePassword(password: String): Boolean {
-            val patt = Regex("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#\$%^&+=])(?=\\S+\$).{6,}\$")
+            val patt = Regex("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=_])(?=\\S+$).{6,}$")
 
             return password.matches(patt)
         }
