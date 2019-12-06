@@ -21,6 +21,9 @@ interface RequestService {
     @POST(ApiEndpoint.USER_SIGNUP)
     fun register(@Body signUpRequest: SignUpRequest): Single<SuccessResponse>
 
+    @POST(ApiEndpoint.USER_FORGOT_PASSWORD)
+    fun forgotpassword(@Query("email") email: String): Single<SuccessResponse>
+
     @GET(ApiEndpoint.USERS_ALL)
     fun allUsers(): Single<List<User>>
 
@@ -101,4 +104,28 @@ interface RequestService {
 
     @POST(ApiEndpoint.ALERT_CREATE)
     fun createAlert(@Body alert: AlertRequest): Completable
+
+    @POST(ApiEndpoint.ADD_PORTFOLIO)
+    fun createPortfolio(@Query("portfolioName")  portfolioName: String): Completable
+
+
+    @GET(ApiEndpoint.GET_PORTFOLIO)
+    fun getPortfolio(@Query("portfolioName") portfolioName: String): Single<PortfolioResponse>
+
+    @POST(ApiEndpoint.ADD_TO_PORTFOLIO)
+    fun addToPortfolio(
+        @Query("portfolioName") portfolioName: String,
+        @Query("code") equipment: String
+    ): Completable
+
+    @POST(ApiEndpoint.DELETE_PORTFOLIO)
+    fun delPortfolio(@Query("portfolioName") portfolioName: String): Completable
+
+    @POST(ApiEndpoint.DELETE_FROM_PORTFOLIO)
+    fun delFromPortfolio(
+        @Query("portfolioName") portfolioName: String,
+        @Query("code") equipment: String
+    ): Completable
+
+
 }

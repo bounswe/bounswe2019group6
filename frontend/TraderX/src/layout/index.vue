@@ -1,5 +1,6 @@
 <template>
   <div :class="classObj" class="app-wrapper">
+    <github-corner class="github-corner" style="margin-top: 50px"/>
     <div v-if="device==='mobile'&&sidebar.opened" class="drawer-bg" @click="handleClickOutside" />
     <sidebar class="sidebar-container" />
     <div :class="{hasTagsView:needTagsView}" class="main-container">
@@ -16,6 +17,7 @@
 </template>
 
 <script>
+import GithubCorner from '@/components/GithubCorner'
 import RightPanel from '@/components/RightPanel'
 import { AppMain, Navbar, Settings, Sidebar, TagsView } from './components'
 import ResizeMixin from './mixin/ResizeHandler'
@@ -24,6 +26,7 @@ import { mapState } from 'vuex'
 export default {
   name: 'Layout',
   components: {
+    GithubCorner,
     AppMain,
     Navbar,
     RightPanel,

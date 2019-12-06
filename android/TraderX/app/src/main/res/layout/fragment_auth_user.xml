@@ -5,311 +5,356 @@
     android:layout_height="match_parent"
     tools:context=".ui.profile.AuthUserFragment">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:focusableInTouchMode="true"
-        android:orientation="vertical">
-
-        <ImageView
-            android:id="@+id/action_menu"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:layout_marginTop="14dp"
-            android:layout_marginRight="12dp"
-            android:src="@drawable/ic_more" />
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/profile_image"
-            android:layout_width="85dp"
-            android:layout_height="95.7dp"
-            android:layout_gravity="center"
-            android:src="@drawable/profile" />
-
-        <TextView
-            android:id="@+id/profile_username"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="16dp"
-            android:textColor="#3b3b3b"
-            android:textSize="23dp" />
-
-        <TextView
-            android:id="@+id/profile_email"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="2dp"
-            android:textColor="#a9a9b0"
-            android:textSize="14.3sp" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginLeft="17dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginRight="17dp"
-            android:background="#33979797" />
-
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginBottom="15dp"
-            android:elevation="5dp"
-            android:orientation="horizontal"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingBottom="13dp">
-
-                <TextView
-                    android:id="@+id/profile_role"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:paddingTop="13dp"
-                    android:textColor="#3b3b3b"
-                    android:textSize="13sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/role"
-                    android:textColor="#a9a9b0"
-                    android:textSize="13sp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/followers_list_action"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="45dp"
-                android:orientation="vertical"
-                android:paddingBottom="13dp">
-
-                <TextView
-                    android:id="@+id/profile_follower"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:paddingTop="13dp"
-                    android:textColor="#3b3b3b"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/followers"
-                    android:textColor="#a9a9b0"
-                    android:textSize="13sp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/followings_list_action"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="45dp"
-                android:orientation="vertical"
-                android:paddingBottom="13dp">
-
-                <TextView
-                    android:id="@+id/profile_following"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:paddingTop="13dp"
-                    android:textColor="#3b3b3b"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/following"
-                    android:textColor="#a9a9b0"
-                    android:textSize="13sp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="45dp"
-                android:orientation="vertical"
-                android:paddingBottom="13dp">
-
-                <TextView
-                    android:id="@+id/profile_private"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:paddingTop="13dp"
-                    android:textColor="#3b3b3b"
-                    android:textSize="13sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/profile"
-                    android:textColor="#a9a9b0"
-                    android:textSize="12sp" />
-            </LinearLayout>
-
-        </LinearLayout>
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="19.3dp"
-            android:layout_marginRight="19.3dp"
-            android:layout_marginBottom="19.3dp"
-            android:background="@color/white"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:focusableInTouchMode="true"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:id="@+id/pending_follow_requests_action"
-                android:layout_width="match_parent"
+            <ImageView
+                android:id="@+id/action_menu"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="19.2dp">
+                android:layout_gravity="end"
+                android:layout_marginTop="14dp"
+                android:layout_marginEnd="12dp"
+                android:src="@drawable/ic_more" />
 
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/profile_image"
+                android:layout_width="85dp"
+                android:layout_height="95.7dp"
+                android:layout_gravity="center"
+                android:src="@drawable/profile" />
+
+            <TextView
+                android:id="@+id/profile_username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp"
+                android:textColor="#3b3b3b"
+                android:textSize="23dp" />
+
+            <TextView
+                android:id="@+id/profile_email"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="2dp"
+                android:textColor="#a9a9b0"
+                android:textSize="14.3sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="17dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginRight="17dp"
+                android:background="#33979797" />
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="15dp"
+                android:elevation="5dp"
+                android:orientation="horizontal"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp">
 
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:paddingBottom="13dp">
+
+                    <TextView
+                        android:id="@+id/profile_role"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:paddingTop="13dp"
+                        android:textColor="#3b3b3b"
+                        android:textSize="13sp" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/pending_following_requests"
-                        android:textColor="@color/txt_color"
-                        android:textSize="17.3sp" />
+                        android:text="@string/role"
+                        android:textColor="#a9a9b0"
+                        android:textSize="13sp" />
 
                 </LinearLayout>
 
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="19.3dp"
-            android:layout_marginRight="19.3dp"
-            android:layout_marginBottom="19.3dp"
-            android:background="@color/white"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:id="@+id/my_alerts_action"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="19.2dp">
-
-
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:id="@+id/followers_list_action"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:layout_marginStart="45dp"
+                    android:orientation="vertical"
+                    android:paddingBottom="13dp">
+
+                    <TextView
+                        android:id="@+id/profile_follower"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:paddingTop="13dp"
+                        android:textColor="#3b3b3b"
+                        android:textSize="12sp" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/my_alerts"
-                        android:textColor="@color/txt_color"
-                        android:textSize="17.3sp" />
-
+                        android:text="@string/followers"
+                        android:textColor="#a9a9b0"
+                        android:textSize="13sp" />
                 </LinearLayout>
 
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="19.3dp"
-            android:layout_marginRight="19.3dp"
-            android:layout_marginBottom="19.3dp"
-            android:background="@color/white"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:id="@+id/my_transactions_action"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="19.2dp">
-
-
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:id="@+id/followings_list_action"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:layout_marginStart="45dp"
+                    android:orientation="vertical"
+                    android:paddingBottom="13dp">
+
+                    <TextView
+                        android:id="@+id/profile_following"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:paddingTop="13dp"
+                        android:textColor="#3b3b3b"
+                        android:textSize="12sp" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/title_my_transactions"
-                        android:textColor="@color/txt_color"
-                        android:textSize="17.3sp" />
-
+                        android:text="@string/following"
+                        android:textColor="#a9a9b0"
+                        android:textSize="13sp" />
                 </LinearLayout>
 
-            </LinearLayout>
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:id="@+id/become_trader_action"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="19.3dp"
-            android:layout_marginRight="19.3dp"
-            android:layout_marginBottom="19.3dp"
-            android:background="@color/white"
-            android:backgroundTint="#4CAF50"
-            android:orientation="vertical"
-            android:visibility="gone">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="19.2dp">
-
-
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:layout_marginStart="45dp"
+                    android:orientation="vertical"
+                    android:paddingBottom="13dp">
+
+                    <TextView
+                        android:id="@+id/profile_private"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:paddingTop="13dp"
+                        android:textColor="#3b3b3b"
+                        android:textSize="13sp" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/become_trader"
-                        android:textColor="@color/white"
-                        android:textSize="17.3sp" />
+                        android:text="@string/profile"
+                        android:textColor="#a9a9b0"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="19.3dp"
+                android:layout_marginRight="19.3dp"
+                android:layout_marginBottom="19.3dp"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/pending_follow_requests_action"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal"
+                    android:padding="19.2dp">
+
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/pending_following_requests"
+                            android:textColor="@color/txt_color"
+                            android:textSize="17.3sp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="19.3dp"
+                android:layout_marginRight="19.3dp"
+                android:layout_marginBottom="19.3dp"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/my_alerts_action"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal"
+                    android:padding="19.2dp">
+
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/my_alerts"
+                            android:textColor="@color/txt_color"
+                            android:textSize="17.3sp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="19.3dp"
+                android:layout_marginRight="19.3dp"
+                android:layout_marginBottom="19.3dp"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/my_transactions_action"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal"
+                    android:padding="19.2dp">
+
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/title_my_transactions"
+                            android:textColor="@color/txt_color"
+                            android:textSize="17.3sp" />
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="19.3dp"
+                android:layout_marginRight="19.3dp"
+                android:layout_marginBottom="19.3dp"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/my_portfolio_action"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal"
+                    android:padding="19.2dp">
+
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/title_my_portfolio"
+                            android:textColor="@color/txt_color"
+                            android:textSize="17.3sp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/become_trader_action"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="19.3dp"
+                android:layout_marginRight="19.3dp"
+                android:layout_marginBottom="19.3dp"
+                android:background="@color/white"
+                android:backgroundTint="#4CAF50"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal"
+                    android:padding="19.2dp">
+
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/become_trader"
+                            android:textColor="@color/white"
+                            android:textSize="17.3sp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+            </LinearLayout>
+
+
         </LinearLayout>
-
-    </LinearLayout>
-
+    </ScrollView>
 
 
 </FrameLayout>

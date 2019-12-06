@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/txt_color"
             android:textSize="17.3sp"
-            android:text="Code"/>
+            android:text="Code" />
 
 
         <LinearLayout
@@ -40,7 +40,7 @@
                 android:layout_marginStart="5dp"
                 android:textColor="#6e7f8d"
                 android:textSize="12sp"
-                android:text="Date"/>
+                android:text="@string/date" />
         </LinearLayout>
     </LinearLayout>
 
@@ -59,19 +59,20 @@
                 android:id="@+id/amount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Amount"
+                android:text="@string/amount"
                 android:textColor="@color/txt_color"
                 android:textSize="17.3sp" />
         </LinearLayout>
 
 
         <TextView
+            android:id="@+id/type"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
             android:layout_marginTop="8dp"
             android:gravity="end"
-            android:text="Type"
+            android:text="@string/type"
             android:textColor="@color/light_gray"
             android:textSize="12sp" />
     </LinearLayout>

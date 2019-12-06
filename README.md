@@ -9,7 +9,7 @@ Stay tuned for inspiring ideas!
 
 This project aims to create a social platform for people who can be considered as a trader. Traders platform lets people follow and trade indices, stocks, ETFs, commodities, currencies, funds, bonds, and cryptocurrencies. The platform will support various interactions, such as sharing ideas (as an article), commenting and rating ideas of other users, commenting about trading equipment.  Users will be able to follow other users and trading equipment and set alerts  for  certain  levels  of  trading  equipment.  The system will notify users in accordance with their alerts and, importantly will make predictions about trading equipments.
 
-To see current website, visit: http://ec2-54-89-235-179.compute-1.amazonaws.com/
+To see current website, visit: https://traderx.company/
 
 ## Team Members
 [![Sadullah Gültekin (Communicator)](https://avatars2.githubusercontent.com/u/16756389?s=400&v=4)](https://github.com/bounswe/bounswe2019group6/wiki/Sadullah-G%C3%BCltekin) |

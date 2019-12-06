@@ -69,15 +69,13 @@ class TransactionFragment : Fragment(), FragmentTitleEmitters {
 
         setFragmentTitle(context, getString(R.string.title_transaction))
 
-        val equipmentViewModelFactory =
-            Injection.provideEquipmentViewModelFactory(context)
-        equipmentViewModel = ViewModelProvider(this, equipmentViewModelFactory)
-            .get(EquipmentViewModel::class.java)
+        equipmentViewModel =
+            ViewModelProvider(this, Injection.provideEquipmentViewModelFactory(context))
+                .get(EquipmentViewModel::class.java)
 
-        val transactionViewModelFactory = Injection.provideTransactionViewModelFactory(context)
         transactionViewModel = ViewModelProvider(
             this,
-            transactionViewModelFactory
+            Injection.provideTransactionViewModelFactory(context)
         ).get(TransactionViewModel::class.java)
 
         val authUserViewModelFactory = Injection.provideAuthUserViewModelFactory(context)
@@ -195,7 +193,7 @@ class TransactionFragment : Fragment(), FragmentTitleEmitters {
 
             )
                 .compose(Helper.applyCompletableSchedulers())
-                .doOnComplete {
+                .doFinally {
                     button.hideProgress(R.string.buy)
                 }
                 .subscribe({
@@ -207,13 +205,16 @@ class TransactionFragment : Fragment(), FragmentTitleEmitters {
 
                     findNavController().navigate(TransactionFragmentDirections.actionNavigationTransactionToNavigationTransactions())
                 }, {
+                    if(it is HttpException && it.code() == 412) {
+                        showError(getString(R.string.not_enough_deposit))
+                    }
                     ErrorHandler.handleError(it, context as Context)
                 })
         )
     }
 
     private fun applyRatio(input: EditText, output: EditText, ratio: Double) {
-        val amount = if(input.text.isEmpty()) 0.0 else parseDouble(input.text.toString())
+        val amount = if (input.text.isEmpty()) 0.0 else parseDouble(input.text.toString())
 
         output.setText((amount * ratio).toString())
     }

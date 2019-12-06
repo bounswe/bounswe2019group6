@@ -66,6 +66,11 @@ export const constantRoutes = [
     component: () => import('@/views/register/confirm')
   },
   {
+    path: '/renew_password',
+    hidden: true,
+    component: () => import('@/views/login/renew-password')
+  },
+  {
     path: '/auth-redirect',
     component: () => import('@/views/login/auth-redirect'),
     hidden: true
@@ -141,7 +146,87 @@ export const constantRoutes = [
         meta: { title: 'Profile', icon: 'user', noCache: true }
       }
     ]
-  }
+  },
+  {
+    path: '/trading-equipment',
+    component: Layout,
+    // redirect: '/trading-equipment/list',
+    hidden: false,
+    meta: {
+      title: 'Trading Equipment', 
+      icon: 'shopping',
+      noCache: true
+    },
+    children: [
+      {
+        path: 'list',
+        component: () => import('@/views/trading-equipment/index'),
+        // name: 'Trading Equipment List',
+        meta: { title: 'List of Equipment' }
+      }, 
+      {
+        path: 'money-currencies',
+        component: () => import('@/views/trading-equipment/money_currencies'),
+        // name: 'Money Currencies',
+        meta: { title: 'Money Currencies'}
+      },
+      {
+        path: 'cryptocurrencies',
+        component: () => import('@/views/trading-equipment/cryptocurrencies'),
+        // name: 'Cryptocurrencies',
+        meta: { title: 'Cryptocurrencies'}
+      },
+      {
+        path: 'stocks',
+        component: () => import('@/views/trading-equipment/stocks'),
+        // name: 'Stocks',
+        meta: { title: 'Stocks'}
+      },
+    ]
+  },
+  {
+    path: '/search',
+    component: Layout,
+    redirect: '/search/index',
+    hidden: false,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/search/index'),
+        name: 'Search',
+        meta: { title: 'Search', icon: 'search', noCache: true }
+      }
+    ]
+  },
+  {
+    path: '/user/:username/profile',
+    component: Layout,
+    redirect: '/user/:username/profile',
+    hidden: true,
+    children: [
+      {
+        path: '',
+        component: () => import('@/views/user-profile/index'),
+        name: 'User Profile',
+        meta: { title: 'User Profile', noCache: true },
+      }
+    ]
+  },
+  {
+    path: '/portfolio/:username/:portfolioname',
+    component: Layout,
+    redirect: '/portfolio/:username/:portfolioname',
+    hidden: true,
+    children: [
+      {
+        path: '',
+        component: () => import('@/views/portfolio/index'),
+        name: 'Portfolio',
+        meta: { title: 'Portfolio', noCache: true },
+      }
+    ]
+  },
+
 ]
 
 /**

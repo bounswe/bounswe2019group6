@@ -23,7 +23,8 @@ class TransactionRecyclerViewAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.amount.text = transactions[position].amount.toString()
         holder.code.text = transactions[position].equipment
-        holder.date.text = transactions[position].date
+        holder.date.text = transactions[position].createdAt
+        holder.type.text = transactions[position].transactionType
     }
 
     override fun getItemCount(): Int = transactions.size
@@ -32,5 +33,6 @@ class TransactionRecyclerViewAdapter(
         val amount: TextView = view.amount
         val code: TextView = view.code
         val date: TextView = view.date
+        val type: TextView = view.type
     }
 }
