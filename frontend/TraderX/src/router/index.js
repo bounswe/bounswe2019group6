@@ -199,6 +199,20 @@ export const constantRoutes = [
     ]
   },
   {
+    path: '/article',
+    component: Layout,
+    redirect: '/article/index',
+    hidden: false,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/article/index'),
+        name: 'Article',
+        meta: { title: 'Article', icon: 'documentation', noCache: true }
+      }
+    ]
+  },
+  {
     path: '/user/:username/profile',
     component: Layout,
     redirect: '/user/:username/profile',

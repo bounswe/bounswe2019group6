@@ -39,12 +39,6 @@
               >
                 <editprofile :user="user" v-if="this.user.username"/>
               </el-tab-pane>
-              <el-tab-pane
-                label="TestArticle"
-                name="testarticle"
-              >
-                <TestArticle />
-              </el-tab-pane>
             </el-tabs>
           </el-card>
         </el-col>
@@ -59,13 +53,12 @@ import UserCard from './components/UserCard'
 import Portfolio from './components/Portfolio'
 import Articles from './components/Articles'
 import Editprofile from './components/Editprofile'
-import TestArticle from './components/TestArticle'
 import PrivateAccount from './components/PrivateAccount'
 import MyInvestments from '@/components/MyInvestments'
 
 export default {
   name: 'Profile',
-  components: { UserCard, Portfolio, Articles, Editprofile, PrivateAccount, MyInvestments, TestArticle },
+  components: { UserCard, Portfolio, Articles, Editprofile, PrivateAccount, MyInvestments },
   data() {
     return {
       user: {},
