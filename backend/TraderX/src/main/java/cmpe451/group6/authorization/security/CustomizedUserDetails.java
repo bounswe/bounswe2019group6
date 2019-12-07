@@ -25,7 +25,7 @@ public class CustomizedUserDetails implements UserDetailsService {
 
     return org.springframework.security.core.userdetails.User//
         .withUsername(username)//
-        .password(user.getPassword())//
+        .password(user.getPassword() == null ? user.getGoogleToken() : user.getPassword())//
         .authorities(user.getRoles())//
         .accountExpired(false)//
         .accountLocked(false)//

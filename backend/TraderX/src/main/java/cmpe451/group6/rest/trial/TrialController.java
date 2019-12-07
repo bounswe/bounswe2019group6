@@ -1,4 +1,4 @@
-package cmpe451.group6.rest.trial.controller;
+package cmpe451.group6.rest.trial;
 
 import cmpe451.group6.authorization.security.JwtTokenProvider;
 import io.swagger.annotations.Api;

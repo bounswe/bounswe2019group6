@@ -4,6 +4,7 @@ package cmpe451.group6.authorization.service;
 import cmpe451.group6.authorization.dto.LoginInfoDTO;
 import cmpe451.group6.authorization.dto.TokenWrapperDTO;
 import cmpe451.group6.authorization.exception.CustomException;
+import cmpe451.group6.authorization.model.RegistrationStatus;
 import cmpe451.group6.authorization.model.User;
 import cmpe451.group6.authorization.repository.UserRepository;
 import cmpe451.group6.authorization.security.JwtTokenProvider;
@@ -45,7 +46,15 @@ public class LoginService {
             throw new CustomException("No such a user", HttpStatus.GONE);
         }
 
+        if (user.getRegistrationStatus() == RegistrationStatus.PENDING) {
+            throw new CustomException("Account is not verified.", HttpStatus.PRECONDITION_FAILED);
+        }
+
         boolean isGoogleLogin = loginInfoDTO.getGoogleToken() != null;
+
+        if(user.getGoogleToken() == null && isGoogleLogin){
+            throw new CustomException("User is not registered via Google", HttpStatus.NOT_ACCEPTABLE);
+        }
 
         if (!isGoogleLogin) {
             try {

@@ -38,6 +38,7 @@ public class SwaggerConfig {
             .tags(new Tag("Login", "Sign in raleted operations"))
             .tags(new Tag("Signup", "Sign up related operations"))
             .tags(new Tag("Trial", "Auth test operations for developers"))
+            .tags(new Tag("Follow", "Follow operations"))
         .genericModelSubstitutes(Optional.class);
 
   }

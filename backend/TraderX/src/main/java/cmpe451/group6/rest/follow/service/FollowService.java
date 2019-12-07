@@ -4,8 +4,7 @@ import cmpe451.group6.authorization.exception.CustomException;
 import cmpe451.group6.authorization.model.RegistrationStatus;
 import cmpe451.group6.authorization.model.User;
 import cmpe451.group6.authorization.repository.UserRepository;
-import cmpe451.group6.authorization.security.JwtTokenProvider;
-import cmpe451.group6.rest.follow.DTO.FolloweeDTO;
+import cmpe451.group6.rest.follow.DTO.UsernameWrapper;
 import cmpe451.group6.rest.follow.model.FollowDAO;
 import cmpe451.group6.rest.follow.model.FollowStatus;
 import cmpe451.group6.rest.follow.repository.FollowRepository;
@@ -13,7 +12,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,143 +22,180 @@ public class FollowService {
     private UserRepository userRepository;
 
     @Autowired
-    private JwtTokenProvider jwtTokenProvider;
-
-    @Autowired
     private FollowRepository followRepository;
 
     @Autowired
     private ModelMapper modelMapper;
 
-    /**
-     * 
-     * @param username
-     * @param request
-     * @return info about state
-     */
-    public String followUser(String username, HttpServletRequest request) {
+    public String followUser(String username, String requesterUsername) {
+
+        if(username.equals(requesterUsername)){
+            throw new CustomException("Self following is not acceptable.", HttpStatus.EXPECTATION_FAILED);
+        }
+
         User userToFollow = userRepository.findByUsername(username);
-        User currentUser = userRepository
-                .findByUsername(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(request)));
+        User requesterUser = userRepository.findByUsername(requesterUsername);
 
         if (userToFollow == null) {
             throw new CustomException("There is no user named " + username + ".", HttpStatus.NOT_ACCEPTABLE);
-        } else if (userToFollow.getRegistrationStatus() == RegistrationStatus.PENDING) {
+        }
+
+        if (userToFollow.getRegistrationStatus() == RegistrationStatus.PENDING) {
             throw new CustomException("The user is not activate his/her account. Therefore s/he cannot be followed ",
                     HttpStatus.PRECONDITION_FAILED);
-        } else if (amIFollowing(username, request)) {
+        }
+
+        FollowStatus status = getFollowStatus(username, requesterUsername);
+
+        if (status == FollowStatus.PENDING) {
+            throw new CustomException("A request has already been sent to that user.", HttpStatus.PRECONDITION_FAILED);
+        } else if (status == FollowStatus.APPROVED){
             throw new CustomException("The user has already been followed", HttpStatus.PRECONDITION_FAILED);
         }
 
+        // status = null here, which means it's safe to create new followDAO
+
         FollowDAO temp = new FollowDAO();
-        temp.setFollower(currentUser);
+        temp.setFollower(requesterUser);
         temp.setFollowee(userToFollow);
-        temp.setFollowStatus(FollowStatus.PENDING);
+
+        String message ;
+        if (userToFollow.getIsPrivate()) {
+            message = "Request has been sent to ";
+            temp.setFollowStatus(FollowStatus.PENDING);
+        } else {
+            message = "User followed: ";
+            temp.setFollowStatus(FollowStatus.APPROVED);
+        }
 
         followRepository.save(temp);
-        return String.format("%s want to follow %s", currentUser.getUsername(), userToFollow.getUsername());
+        return (message + userToFollow.getUsername());
+        
     }
 
-    /**
-     * 
-     * @param username
-     * @param request
-     * @return info about state
-     */
-    public String unfollowUser(String followee_username, HttpServletRequest request) {
+    public String unfollowUser(String username, String requesterUsername) {
 
-        User userToUnfollow = userRepository.findByUsername(followee_username);
-        String currentUsername = jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(request));
+        boolean userExists = userRepository.existsByUsername(username);
 
-        User currentUser = userRepository.findByUsername(currentUsername);
-
-        if (userToUnfollow == null) {
-            throw new CustomException("There is no user named " + followee_username + ". Thus, can not be unfollowed",
-                    HttpStatus.NOT_ACCEPTABLE);
-        } else if (!amIFollowing(followee_username, request)) {
-            throw new CustomException(
-                    String.format("%s is not following %s already", currentUsername, followee_username),
-                    HttpStatus.PRECONDITION_FAILED);
-        } else {
-            followRepository.deleteByAndFolloweeUsernameAndFollowerUsername(followee_username, currentUsername);
-            return String.format("%s succesfully unfollowed %s", currentUsername, followee_username);
+        if (!userExists) {
+            throw new CustomException("There is no user named " + username, HttpStatus.NOT_ACCEPTABLE);
         }
+
+        String message;
+        FollowStatus status = getFollowStatus(username,requesterUsername);
+        if(status == null) {
+            throw new CustomException("Already not following " + username, HttpStatus.PRECONDITION_FAILED);
+        } else if (status == FollowStatus.PENDING){
+            message = "Request has been cancelled.";
+        } else {
+            message = "User has been unfollowed.";
+        }
+
+        followRepository.deleteByFolloweeUsernameAndFollowerUsername(username, requesterUsername);
+
+        return message;
     }
 
-    /**
-     * 
-     * @param request
-     * @return followeeList of the currentuser
-     */
-    public List<FolloweeDTO> following(HttpServletRequest request) {
-        String currentUsername = jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(request));
-        User currentUser = userRepository.findByUsername(currentUsername);
+    public String removeFollower(String followerName, String username){
+        if(!userRepository.existsByUsername(username))
+            throw new CustomException("No such user exists", HttpStatus.NOT_ACCEPTABLE);
+
+        FollowDAO dao = followRepository.getFollowDAO(followerName,username);
+
+        if(dao.getFollowStatus() != FollowStatus.APPROVED)
+            throw new CustomException("User is not following.", HttpStatus.NOT_ACCEPTABLE);
+
+        followRepository.delete(dao);
+        return followerName + " has been removed from followers.";
+
+    }
+
+    public List<UsernameWrapper> getFollowingList(String username) {
+
+        User currentUser = userRepository.findByUsername(username);
+
         if (currentUser == null) {
-            throw new CustomException("There is no user named " + currentUsername + ". ", HttpStatus.NOT_ACCEPTABLE);
+            throw new CustomException("There is no user named " + username + ". ", HttpStatus.NOT_ACCEPTABLE);
         } else {
-            List<FolloweeDTO> followeeList = new ArrayList<FolloweeDTO>();
+            List<UsernameWrapper> followeeList = new ArrayList<UsernameWrapper>();
             followRepository.findByFollower_username(currentUser.getUsername())
-                    .forEach(item -> followeeList.add(modelMapper.map(item.getFollowee(), FolloweeDTO.class)));
+                    .forEach(item -> followeeList.add(modelMapper.map(item.getFollowee(), UsernameWrapper.class)));
             return followeeList;
         }
-
     }
 
-    /**
-     * 
-     * @param request
-     * @return followerList of the currentuser
-     */
-    public List<FolloweeDTO> followers(HttpServletRequest request) {
-        String currentUsername = jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(request));
-        User currentUser = userRepository.findByUsername(currentUsername);
+    public List<UsernameWrapper> getFollowerList(String username) {
+
+        User currentUser = userRepository.findByUsername(username);
+
         if (currentUser == null) {
-            throw new CustomException("There is no user named " + currentUsername + ". ", HttpStatus.NOT_ACCEPTABLE);
+            throw new CustomException("There is no user named " + username + ". ", HttpStatus.NOT_ACCEPTABLE);
         } else {
-            List<FolloweeDTO> followerList = new ArrayList<FolloweeDTO>();
+            List<UsernameWrapper> followerList = new ArrayList<UsernameWrapper>();
             followRepository.findByFollowee_username(currentUser.getUsername())
-                    .forEach(item -> followerList.add(modelMapper.map(item.getFollowee(), FolloweeDTO.class)));
+                    .forEach(item -> followerList.add(modelMapper.map(item.getFollower(), UsernameWrapper.class)));
             return followerList;
         }
-
     }
 
-    /**
-     * 
-     * @param request
-     * @return number of users that current user follows
-     */
-    public String following_number(HttpServletRequest request) {
-        return (following(request).size() + "");
-    }
+    public List<UsernameWrapper> getPendingRequests(String username) {
 
-    /**
-     * 
-     * @param request
-     * @return number of users that follows current user
-     */
-    public String followee_number(HttpServletRequest request) {
-        return (followers(request).size() + "");
-    }
+        User currentUser = userRepository.findByUsername(username);
 
-    /**
-     * 
-     * @param followee_username
-     * @param request
-     * @return boolean, true if current user follows the given user
-     */
-    public boolean amIFollowing(String followee_username, HttpServletRequest request) {
-
-        User userToUnfollow = userRepository.findByUsername(followee_username);
-
-        if (userToUnfollow == null) {
-            throw new CustomException("There is no user named " + followee_username + ". Thus, can not be unfollowed",
-                    HttpStatus.NOT_ACCEPTABLE);
+        if (currentUser == null) {
+            throw new CustomException("There is no user named " + username + ". ", HttpStatus.NOT_ACCEPTABLE);
         } else {
-            return followRepository.existsByAndFolloweeUsernameAndFollowerUsername(followee_username,
-                    jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(request)));
+            List<UsernameWrapper> followerList = new ArrayList<UsernameWrapper>();
+            followRepository.findByFollowee_UsernameAndFollowStatus(username,FollowStatus.PENDING)
+                    .forEach(item -> followerList.add(modelMapper.map(item.getFollower(), UsernameWrapper.class)));
+            return followerList;
         }
-
     }
 
+    public int getFollowingsCount(String username) {
+        return followRepository.getFollowingsCount(username);
+    }
+
+    public int getFollowersCount(String username) {
+        return followRepository.getFollowersCount(username);
+    }
+
+    public FollowStatus getFollowStatus(String user, String follower){
+        FollowDAO dao = followRepository.getFollowDAO(follower,user);
+        if(dao == null) return null;
+        return dao.getFollowStatus();
+    }
+
+    public void checkPermission(String username, String requesterUsername){
+        User user = userRepository.findByUsername(username);
+
+        if(user == null ) return; // Null check is handled by other methods.
+        if(username.equals(requesterUsername)) return; // Allow self profile information
+
+        if(user.getIsPrivate() && getFollowStatus(username,requesterUsername) != FollowStatus.APPROVED)
+            throw new CustomException("Profile is private.", HttpStatus.PRECONDITION_REQUIRED);
+    }
+
+    public boolean isPermitted(String username, String requesterUsername){
+        User user = userRepository.findByUsername(username);
+
+        if(user == null ) return true; // Null check is handled by other methods.
+        if(username.equals(requesterUsername)) return true; // Allow self profile information
+
+        return !(user.getIsPrivate() && getFollowStatus(username,requesterUsername) != FollowStatus.APPROVED);
+    }
+
+    public String answerRequest(String username, String requesterUsername, boolean accept){
+        FollowDAO dao = followRepository.getFollowDAO(requesterUsername,username);
+        if (dao == null) throw new CustomException("No such request exists",HttpStatus.PRECONDITION_FAILED);//412
+        if (dao.getFollowStatus()==FollowStatus.APPROVED)
+            throw new CustomException("Request is already approved.",HttpStatus.NOT_ACCEPTABLE);//406
+        if(accept){
+            dao.setFollowStatus(FollowStatus.APPROVED);
+            followRepository.save(dao);
+        } else {
+            followRepository.delete(dao);
+        }
+        return "Success";
+    }
 }
