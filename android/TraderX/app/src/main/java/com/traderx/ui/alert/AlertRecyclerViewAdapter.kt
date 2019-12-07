@@ -37,9 +37,11 @@ class AlertRecyclerViewAdapter(
 
         holder.view.setOnLongClickListener {
             val alertDeleteModal = AlertDeleteModal { modal ->
-                onDeleteAction(alerts[position].id) {
-                    alerts.removeAt(position)
-                    notifyItemRemoved(position)
+                onDeleteAction(
+                    alerts[holder.adapterPosition].id
+                ) {
+                    alerts.removeAt(holder.adapterPosition)
+                    notifyItemRemoved(holder.adapterPosition)
                     modal.dismiss()
                 }
             }
