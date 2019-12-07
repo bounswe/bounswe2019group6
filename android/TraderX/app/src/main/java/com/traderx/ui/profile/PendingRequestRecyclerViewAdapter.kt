@@ -33,21 +33,21 @@ class PendingRequestRecyclerViewAdapter(
 
         with(holder.view) {
             setOnClickListener {
-                findNavController().navigate(actionNavDirection(pendingRequests[position].username))
+                findNavController().navigate(actionNavDirection(pendingRequests[holder.adapterPosition].username))
             }
         }
 
         holder.acceptAction.setOnClickListener {
-            acceptRequest(pendingRequests[position].username) {
-                pendingRequests.removeAt(position)
-                notifyItemRemoved(position)
+            acceptRequest(pendingRequests[holder.adapterPosition].username) {
+                pendingRequests.removeAt(holder.adapterPosition)
+                notifyItemRemoved(holder.adapterPosition)
             }
         }
 
         holder.declineAction.setOnClickListener {
-            declineRequest(pendingRequests[position].username) {
-                pendingRequests.removeAt(position)
-                notifyItemRemoved(position)
+            declineRequest(pendingRequests[holder.adapterPosition].username) {
+                pendingRequests.removeAt(holder.adapterPosition)
+                notifyItemRemoved(holder.adapterPosition)
             }
         }
     }
