@@ -5,12 +5,8 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import cmpe451.group6.authorization.model.RegistrationStatus;
-import cmpe451.group6.authorization.repository.UserRepository;
-import cmpe451.group6.authorization.service.HazelcastService;
 import cmpe451.group6.authorization.service.SignupService;
-import cmpe451.group6.rest.comment.service.EquipmentCommentService;
 import cmpe451.group6.rest.equipment.service.EquipmentUpdateService;
-import cmpe451.group6.rest.follow.service.FollowService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,32 +17,24 @@ import org.springframework.context.annotation.Bean;
 
 import cmpe451.group6.authorization.model.Role;
 import cmpe451.group6.authorization.model.User;
+import org.springframework.core.task.TaskExecutor;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 @SpringBootApplication
 @EnableScheduling
+@EnableAsync
 public class Group6BackendService implements CommandLineRunner {
 
   @Autowired
   SignupService signupService;
 
   @Autowired
-  HazelcastService hazelcastService;
-
-  @Autowired
-  UserRepository userRepository;
-
-  @Autowired
   EquipmentUpdateService equipmentUpdateService;
-
-  @Autowired
-  FollowService followService;
-
-  @Autowired
-  EquipmentCommentService commentService;
 
   @Value("${security.admin-un}")
   String adminUsername;
@@ -56,6 +44,16 @@ public class Group6BackendService implements CommandLineRunner {
 
   public static void main(String[] args) {
     SpringApplication.run(Group6BackendService.class, args);
+  }
+
+  @Bean(name="threadPoolTaskExecutor")
+  public TaskExecutor threadPoolTaskExecutor() {
+    ThreadPoolTaskExecutor threadPoolTaskExecutor = new ThreadPoolTaskExecutor();
+    threadPoolTaskExecutor.setThreadNamePrefix("Async-");
+    threadPoolTaskExecutor.setCorePoolSize(3);
+    threadPoolTaskExecutor.setMaxPoolSize(3);
+    threadPoolTaskExecutor.afterPropertiesSet();
+    return threadPoolTaskExecutor;
   }
 
   @Bean
@@ -75,7 +73,7 @@ public class Group6BackendService implements CommandLineRunner {
     return new CorsFilter(source);
   }
 
-  // Predefined admin, trader and basic users
+  // Predefined users
   @Override
   public void run(String... params) throws Exception {
 
