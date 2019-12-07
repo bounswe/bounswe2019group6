@@ -13,12 +13,12 @@ class SignUpValidatorTest {
 
     @Test
     fun validateUsername_not_valid_less() {
-        assertThat(SignUpValidator.validateUsername("test"), `is`(false))
+        assertThat(SignUpValidator.validateUsername("te"), `is`(false))
     }
 
     @Test
     fun validateUsername_valid() {
-        assertThat(SignUpValidator.validateUsername("bwqrr"), `is`(true))
+        assertThat(SignUpValidator.validateUsername("user"), `is`(true))
     }
 
     @Test
@@ -38,7 +38,7 @@ class SignUpValidatorTest {
 
     @Test
     fun validateIban_valid() {
-        assertThat(SignUpValidator.validateIban("TR123456789011121314151617"), `is`(true))
+        assertThat(SignUpValidator.validateIban("TR123456789123456789"), `is`(true))
     }
 
     @Test
@@ -91,7 +91,7 @@ class SignUpValidatorTest {
 
     @Test
     fun validatePassword_valid() {
-        assertThat(SignUpValidator.validatePassword("Pass1234."), `is`(true))
+        assertThat(SignUpValidator.validatePassword("Pass1234$"), `is`(true))
     }
 
     @Test
