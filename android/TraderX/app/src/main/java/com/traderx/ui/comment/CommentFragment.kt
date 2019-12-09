@@ -75,7 +75,7 @@ class CommentFragment(
     }
 
     private fun createComment() {
-        if (commentEditText.text.toString() == "") {
+        if (commentEditText.text.isEmpty() && commentEditText.text.length > 1000) {
             return
         }
 

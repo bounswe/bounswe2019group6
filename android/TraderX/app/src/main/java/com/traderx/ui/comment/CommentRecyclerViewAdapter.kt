@@ -34,11 +34,6 @@ class CommentRecyclerViewAdapter(
 
     override fun getItemCount(): Int = comments.size
 
-    public fun addItem(comment: CommentResponse) {
-        comments.add(comment)
-        notifyItemInserted(comments.size - 1)
-    }
-
     inner class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
         val author: TextView = view.author
         val comment: TextView = view.comment
