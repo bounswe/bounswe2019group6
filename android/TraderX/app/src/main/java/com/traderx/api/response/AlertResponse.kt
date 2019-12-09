@@ -4,6 +4,7 @@ import com.traderx.enum.AlertType
 import com.traderx.enum.TransactionType
 
 data class AlertResponse(
+    val id: Int,
     val alertType: AlertType,
     val amount: Double,
     val limitValue: Double,

@@ -60,12 +60,12 @@
     <string name="transaction_type">Transaction Type</string>
     <string name="alert_type">Alert Type</string>
     <string name="amount">Amount</string>
-
+    <string name="delete">Delete</string>
     <!--    Actions-->
     <string name="become_trader">Become a Trader</string>
     <string name="enter_iban_for_trader">Enter Your IBAN to Become Trader</string>
     <string name="alert_create_success">Alert is created successfully</string>
-
+    <string name="alert_delete_success">Alert is deleted successfully</string>
     <!--    Symbols-->
     <string name="try_value">₺ %1$s</string>
     <string name="eur_value">€ %1$s</string>
