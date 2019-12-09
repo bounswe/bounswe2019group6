@@ -32,6 +32,7 @@ object ApiEndpoint {
     const val EQUIPMENT_STOCK_LIST: String = "$EQUIPMENT_URI/stock/list"
     const val COMMENT_URI: String = "$API_URI/comment"
     const val COMMENT_EQUIPMENT: String = "$COMMENT_URI/equipment/{code}"
+    const val COMMENT_EQUIPMENT_POST: String = "$COMMENT_URI/equipment/post/{code}"
     const val TRANSACTION_URI: String = "$API_URI/transaction"
     const val TRANSACTION_BUY: String = "$TRANSACTION_URI/buy"
     const val TRANSACTIONS: String = "$TRANSACTION_URI/user/{username}"

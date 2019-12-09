@@ -6,19 +6,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
 import com.traderx.R
 import com.traderx.api.ErrorHandler
 import com.traderx.api.response.CommentResponse
 import com.traderx.api.response.EquipmentResponse
+import com.traderx.ui.comment.CommentFragment
 import com.traderx.util.FragmentTitleEmitters
-import com.traderx.util.FragmentTitleListeners
 import com.traderx.util.Helper
 import com.traderx.util.Injection
 import com.traderx.viewmodel.EquipmentViewModel
@@ -32,7 +32,6 @@ import lecho.lib.hellocharts.view.LineChartView
 class EquipmentFragment : Fragment(), FragmentTitleEmitters {
     private var equipmentCode: String? = null
     private lateinit var equipmentViewModel: EquipmentViewModel
-    private lateinit var commentsRecyclerView: RecyclerView
 
     private lateinit var code: TextView
     private lateinit var name: TextView
@@ -42,7 +41,7 @@ class EquipmentFragment : Fragment(), FragmentTitleEmitters {
     private lateinit var equipmentType: TextView
     private lateinit var stock: TextView
     private lateinit var chart: LineChartView
-
+    private var isCommenting = false
     private val disposable = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,19 +75,39 @@ class EquipmentFragment : Fragment(), FragmentTitleEmitters {
 
         root.findViewById<Button>(R.id.buy_action)?.let {
             it.setOnClickListener {
-                findNavController().navigate(EquipmentFragmentDirections.actionNavigationEquipmentToNavigationTransaction(equipmentCode ?: ""))
+                findNavController().navigate(
+                    EquipmentFragmentDirections.actionNavigationEquipmentToNavigationTransaction(
+                        equipmentCode ?: ""
+                    )
+                )
             }
         }
 
         root.findViewById<FloatingActionButton>(R.id.alert_action)?.let {
             it.setOnClickListener {
-                findNavController().navigate(EquipmentFragmentDirections.actionNavigationEquipmentToNavigationAlert(equipmentCode ?: ""))
+                findNavController().navigate(
+                    EquipmentFragmentDirections.actionNavigationEquipmentToNavigationAlert(
+                        equipmentCode ?: ""
+                    )
+                )
             }
         }
 
-        val viewManager = LinearLayoutManager(context as Context)
-        commentsRecyclerView = root.findViewById<RecyclerView>(R.id.comment_list).apply {
-            layoutManager = viewManager
+        root.findViewById<FrameLayout>(R.id.comments)?.let {
+            val commentFragment = CommentFragment(
+                equipmentViewModel.getComments(equipmentCode ?: "")
+                    .compose(Helper.applySingleSchedulers<ArrayList<CommentResponse>>()),
+                {},
+                { comment, doOnSuccess ->
+                    createComment(comment, doOnSuccess)
+                },
+                {}
+            )
+
+            val fragmentTransaction = fragmentManager?.beginTransaction()
+
+            fragmentTransaction?.add(it.id, commentFragment, "test")
+            fragmentTransaction?.commit()
         }
 
         chart = root.findViewById(R.id.chart)
@@ -104,17 +123,33 @@ class EquipmentFragment : Fragment(), FragmentTitleEmitters {
                 })
         )
 
+        return root
+    }
+
+    private fun createComment(comment: String, doOnSuccess: () -> Unit) {
+        if (isCommenting) {
+            return
+        }
+
+        isCommenting = true
+
         disposable.add(
-            equipmentViewModel.getComments(equipmentCode ?: "")
-                .compose(Helper.applySingleSchedulers<List<CommentResponse>>())
+            equipmentViewModel.createComment(equipmentCode ?: "", comment)
+                .compose(Helper.applyCompletableSchedulers())
+                .doOnComplete {
+                    doOnSuccess()
+                    isCommenting = false
+                }
                 .subscribe({
-                    commentsRecyclerView.swapAdapter(CommentRecyclerViewAdapter(it), true)
+                    Snackbar.make(
+                        requireView(),
+                        getString(R.string.comment_create_success),
+                        Snackbar.LENGTH_SHORT
+                    ).show()
                 }, {
                     ErrorHandler.handleError(it, context as Context)
                 })
         )
-
-        return root
     }
 
     private fun updateView(equipment: EquipmentResponse) {
@@ -154,12 +189,6 @@ class EquipmentFragment : Fragment(), FragmentTitleEmitters {
         v.set(v.left, max * (1.05f), v.right, min / (1.1f))
         chart.maximumViewport = v
         chart.currentViewport = v
-    }
-
-    override fun setFragmentTitle(context: Context?, title: String?) {
-        if (context is FragmentTitleListeners) {
-            context.showFragmentTitle(title)
-        }
     }
 
     companion object {

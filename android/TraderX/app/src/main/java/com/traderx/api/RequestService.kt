@@ -1,6 +1,7 @@
 package com.traderx.api
 
 import com.traderx.api.request.AlertRequest
+import com.traderx.api.request.CommentRequest
 import com.traderx.api.request.LoginRequest
 import com.traderx.api.request.SignUpRequest
 import com.traderx.api.response.*
@@ -88,7 +89,10 @@ interface RequestService {
     fun getStockEquipments(): Single<EquipmentsResponse>
 
     @GET(ApiEndpoint.COMMENT_EQUIPMENT)
-    fun getEquipmentComments(@Path("code") code: String): Single<List<CommentResponse>>
+    fun getEquipmentComments(@Path("code") code: String): Single<ArrayList<CommentResponse>>
+
+    @POST(ApiEndpoint.COMMENT_EQUIPMENT_POST)
+    fun createComment(@Path("code") code: String, @Body comment: CommentRequest): Completable
 
     @POST(ApiEndpoint.TRANSACTION_BUY)
     fun postTransactionBuy(@Query("code") code: String, @Query("amount") amount: Double): Completable

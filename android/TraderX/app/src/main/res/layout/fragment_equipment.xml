@@ -281,10 +281,11 @@
 
                 </LinearLayout>
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/comment_list"
+                <FrameLayout
+                    android:id="@+id/comments"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"/>
+
             </LinearLayout>
 
         </LinearLayout>

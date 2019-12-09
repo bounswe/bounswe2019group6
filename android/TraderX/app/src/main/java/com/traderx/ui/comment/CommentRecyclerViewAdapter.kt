@@ -1,4 +1,4 @@
-package com.traderx.ui.equipment
+package com.traderx.ui.comment
 
 import android.annotation.TargetApi
 import android.icu.text.SimpleDateFormat
@@ -14,11 +14,10 @@ import kotlinx.android.synthetic.main.item_comment.view.*
 
 @TargetApi(Build.VERSION_CODES.N)
 class CommentRecyclerViewAdapter(
-    private val comments: List<CommentResponse>
+    private val comments: ArrayList<CommentResponse>
 ) : RecyclerView.Adapter<CommentRecyclerViewAdapter.ViewHolder>() {
 
     private var dateFormatter = SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
-
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -34,6 +33,11 @@ class CommentRecyclerViewAdapter(
     }
 
     override fun getItemCount(): Int = comments.size
+
+    public fun addItem(comment: CommentResponse) {
+        comments.add(comment)
+        notifyItemInserted(comments.size - 1)
+    }
 
     inner class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
         val author: TextView = view.author

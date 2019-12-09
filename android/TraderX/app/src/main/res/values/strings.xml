@@ -66,6 +66,8 @@
     <string name="enter_iban_for_trader">Enter Your IBAN to Become Trader</string>
     <string name="alert_create_success">Alert is created successfully</string>
     <string name="alert_delete_success">Alert is deleted successfully</string>
+    <string name="create_comment">Create a comment</string>
+    <string name="comment_create_success">Comment is created successfully</string>
     <!--    Symbols-->
     <string name="try_value">₺ %1$s</string>
     <string name="eur_value">€ %1$s</string>

@@ -2,6 +2,7 @@ package com.traderx.viewmodel
 
 import com.traderx.api.RequestService
 import com.traderx.api.request.AlertRequest
+import com.traderx.api.request.CommentRequest
 import com.traderx.api.response.AlertResponse
 import com.traderx.api.response.CommentResponse
 import com.traderx.api.response.EquipmentResponse
@@ -32,7 +33,7 @@ class EquipmentViewModel(
         return networkSource.getEquipment(code)
     }
 
-    fun getComments(code: String): Single<List<CommentResponse>> {
+    fun getComments(code: String): Single<ArrayList<CommentResponse>> {
         return networkSource.getEquipmentComments(code)
     }
 
@@ -44,7 +45,11 @@ class EquipmentViewModel(
         return networkSource.createAlert(alert)
     }
 
-    fun deleteAlert(id: Int) : Completable {
+    fun createComment(code: String, comment: String): Completable {
+        return networkSource.createComment(code, CommentRequest(comment))
+    }
+
+    fun deleteAlert(id: Int): Completable {
         return networkSource.deleteAlert(id)
     }
 }
