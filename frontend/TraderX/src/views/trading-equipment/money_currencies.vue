@@ -35,7 +35,7 @@
                 </div>
 
                 <el-button class='change-base-button' @click="changeBaseofEquipment(ed.label)"><svg-icon style="margin-right:10px" icon-class="chart" />Change the Base</el-button>
-                <el-button class='buy-button' @click="showDialog=true"><svg-icon style="margin-right:10px" icon-class="shopping" />Buy Equipment</el-button>
+                <el-button class='buy-button' @click="showBuyEquipmentDialog=true"><svg-icon style="margin-right:10px" icon-class="shopping" />Buy Equipment</el-button>
                 
                 <el-card class='container-in-tab'>
                   <p> alerts comes here </p>
@@ -92,6 +92,9 @@
 
                 <el-card class='container-in-tab'>
                   <h4> Comments about {{ ed.label }} </h4>
+                  <el-button class='create-comment' style="margin-top:20px;margin-bottom:20px;" @click="showCreateCommentDialog=true">
+                    <svg-icon style="margin-right:10px" icon-class="edit" /> Write Comment </el-button>
+                  
                   <el-row class='row' v-for="c in commentList" v-bind:key="c.id" :gutter="20" style="padding:16px 16px 0;margin-bottom:32px;">
                     <el-card class='comment-container'>
                       <p>
@@ -116,7 +119,7 @@
       </el-card>
     </el-row>
 
-    <el-dialog title="Select Trading Equipment" :visible.sync="showDialog">
+    <el-dialog title="Select Trading Equipment" :visible.sync="showBuyEquipmentDialog">
       <el-input placeholder="Please enter an amount" v-model="buyamountinput" class="input-with-select">
         <el-select style="width:120px" v-model="select" slot="prepend" placeholder="Select">
           <div>
@@ -127,11 +130,18 @@
       </el-input>  
     </el-dialog>
 
+    <el-dialog title="Create Comment" :visible.sync="showCreateCommentDialog">
+      <!-- TODO: make sure that after receiving input from tinymce, it parses the input!!! -->
+      <Tinymce ref="editor" v-model="createCommentContent" :height="300"/>
+      <el-button style="margin-top:10px;" @click="createComment()"><svg-icon icon-class="edit"/> Publish Comment </el-button>
+    </el-dialog>
+
   </div>
    
 </template>
 
 <script>
+import Tinymce from '@/components/Tinymce'
 import LineChart from './components/LineChart'
 import LineChartDetailed from './components/LineChartDetailed'
 import LineChartComparison from './components/LineChartComparison'
@@ -150,13 +160,16 @@ export default {
     LineChartDetailed,
     LineChart,
     RaddarChart,
+    Tinymce,
   },
   data() {
     return {
       chartData: {},
-      showDialog: false,
+      showBuyEquipmentDialog: false,
+      showCreateCommentDialog: false,
       buyamountinput: '',
       select: '',
+      createCommentContent: '',
       // equipmentData is expected to be: 
       // [
       //   {
@@ -390,7 +403,7 @@ export default {
 
     buyEquipment() {
       this.$store.dispatch('equipment/buyEquipment', {'code' : this.select, "amount" : this.buyamountinput}).then(response => {
-        this.showDialog = false
+        this.showBuyEquipmentDialog = false
         this.buyamountinput =  ''
         this.$message.success('Equipment Is Bought Successfully!')
       }).catch(err => {
@@ -433,6 +446,20 @@ export default {
     // TODO: This should be done at the backend
     replyComment(commentId) {
 
+    },
+
+    // TODO connect this to backend
+    createComment() {
+      var newComment = {
+        id: this.commentList.length+1,
+        timestamp: Date.now(),
+        likes: 0,
+        author: 'current-user', // TODO: change this with backend added
+        comment: this.createCommentContent
+      }
+      this.commentList.push(newComment)
+      this.showCreateCommentDialog = false
+      this.createCommentContent = ''
     }
   }
 }
