@@ -36,6 +36,64 @@
 
                 <el-button class='change-base-button' @click="changeBaseofEquipment(ed.label)"><svg-icon style="margin-right:10px" icon-class="chart" />Change the Base</el-button>
                 <el-button class='buy-button' @click="showDialog=true"><svg-icon style="margin-right:10px" icon-class="shopping" />Buy Equipment</el-button>
+              
+                <el-card class='container-in-tab'>
+                  <p> alerts comes here </p>
+                </el-card>
+
+                <el-card class='container-in-tab'>
+                  <h4> Most reviewed articles about {{ed.label}} </h4>
+
+                  <!-- Got this from complex-table component -->
+                  <el-table
+                    :data="articleList"
+                    border
+                    fit
+                    highlight-current-row
+                    style="width: 100%;"
+                  >
+                    <el-table-column label="ID" prop="id" align="center">
+                      <template slot-scope="scope">
+                        <span>{{ scope.row.id }}</span>
+                      </template>
+                    </el-table-column>
+                    <el-table-column label="Date" align="center">
+                      <template slot-scope="scope">
+                        <span>{{ scope.row.timestamp | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
+                      </template>
+                    </el-table-column>
+                    <!-- TODO: when pressed to one of the titles it should direct the user to the corresponding article -->
+                    <el-table-column label="Title" >
+                      <template slot-scope="{row}">
+                        <span class="link-type">{{ row.title }}</span>
+                        <!-- <el-tag>{{ row.type | typeFilter }}</el-tag> -->
+                      </template>
+                    </el-table-column>
+                    <el-table-column label="Author" align="center">
+                      <template slot-scope="scope">
+                        <span>{{ scope.row.author }}</span>
+                      </template>
+                    </el-table-column>
+                    <el-table-column label="Importance" >
+                      <template slot-scope="scope">
+                        <svg-icon v-for="n in +scope.row.importance" :key="n" icon-class="star" class="meta-item__icon" />
+                      </template>
+                    </el-table-column>
+                    <el-table-column label="Readings" align="center">
+                      <template slot-scope="{row}">
+                        <span v-if="row.pageviews" class="link-type">{{ row.pageviews }}</span>
+                        <span v-else>0</span>
+                      </template>
+                    </el-table-column>
+                  </el-table>
+                  <el-button class='read-article' style="margin-top:20px;" @click="readArticle(ed.label)"><svg-icon style="margin-right:10px" icon-class="shopping" /> Read More Articles about {{ ed.label }} </el-button>
+                </el-card>
+
+                <el-card class='container-in-tab'>
+                  <p> comments comes here </p>
+                </el-card>
+              
+              
               </div>
           </el-tab-pane>
         </el-tabs>
@@ -86,9 +144,11 @@ export default {
       showDialog: false,
       buyamountinput: '',
       select: '',
+      articleList: null
     }
   },
   async created() {
+    this.returnArticleList()
     var equipmentList = await this.getEquipmentList()
     // Fill the equipmentData with equipment list
     equipmentList.forEach(function(equipmentKey) {
@@ -101,6 +161,57 @@ export default {
     this.comparisonData.equipmentData = this.equipmentData
   },
   methods: {
+    // For now it returns mock data
+    // TODO: change this method to get actual articles
+    returnArticleList() {
+      this.articleList = [
+        {
+          id: 1,
+          timestamp: 1024316325463,
+          title: 'Trolollolo',
+          author: 'Irmos',
+          importance: 3,
+          pageviews: 245
+        },
+
+        {
+          id: 2,
+          timestamp: 1012345625463,
+          title: 'Random articlezz',
+          author: 'Sado',
+          importance: 2,
+          pageviews: 12420425
+        },
+
+        {
+          id: 3,
+          timestamp: 1024316325463,
+          title: 'adfniun biyg oiniug',
+          author: 'Yukseljim',
+          importance: 3,
+          pageviews: 15
+        },
+
+        {
+          id: 4,
+          timestamp: 1024313478569,
+          title: 'U picku materinu',
+          author: 'More Irmos',
+          importance: 1,
+          pageviews: 945231
+        },
+
+        {
+          id: 5,
+          timestamp: 1024313456789,
+          title: 'My hands are typing words',
+          author: 'Irmos',
+          importance: 2,
+          pageviews: 8245
+        }
+      ]
+    },
+
     // Promise for getting equipments list 
     async getEquipmentList() {
       try {
@@ -229,6 +340,10 @@ export default {
 
 .raddar-chart-container {
     margin-top: 10;
+}
+
+.container-in-tab {
+    margin-top: 30px;
 }
 
 </style>
