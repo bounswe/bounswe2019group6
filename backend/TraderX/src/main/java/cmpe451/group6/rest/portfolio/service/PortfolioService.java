@@ -5,6 +5,7 @@ import cmpe451.group6.authorization.repository.UserRepository;
 import cmpe451.group6.authorization.model.User;
 import cmpe451.group6.rest.portfolio.dto.PortfolioResponseDTO;
 import cmpe451.group6.rest.portfolio.dto.PortfolioEquipmentDTO;
+import cmpe451.group6.rest.portfolio.dto.PortfolioNamesDTO;
 import cmpe451.group6.rest.equipment.model.Equipment;
 import cmpe451.group6.rest.portfolio.model.Portfolio;
 import cmpe451.group6.rest.equipment.repository.EquipmentRepository;
@@ -295,7 +296,7 @@ public class PortfolioService {
      * @param requesterName
      * @return List of Strings
      */
-    public List<String> getSelfPortfolios(String requesterName) {
+    public List<PortfolioNamesDTO> getSelfPortfolios(String requesterName) {
 
         User requester = userRepository.findByUsername(requesterName);
 
@@ -304,7 +305,13 @@ public class PortfolioService {
                     HttpStatus.NOT_ACCEPTABLE);
         }
 
-        return portfolioRepository.getPortfolioNamesOfUser(requesterName);
+        List<PortfolioNamesDTO> portfolioNames = new ArrayList<PortfolioNamesDTO>();
+        // return portfolioRepository.getPortfolioNamesOfUser(requesterName);
+
+        portfolioRepository.getPortfolioNamesOfUser(requesterName)
+                .forEach(item -> portfolioNames.add(new PortfolioNamesDTO(item)));
+
+        return portfolioNames;
 
     }
 

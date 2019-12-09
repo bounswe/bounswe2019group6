@@ -5,6 +5,7 @@ import cmpe451.group6.rest.portfolio.model.Portfolio;
 import cmpe451.group6.rest.portfolio.service.PortfolioService;
 import cmpe451.group6.rest.portfolio.dto.PortfolioResponseDTO;
 import cmpe451.group6.rest.portfolio.dto.PortfolioEquipmentDTO;
+import cmpe451.group6.rest.portfolio.dto.PortfolioNamesDTO;
 import cmpe451.group6.authorization.dto.StringResponseWrapper;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +50,7 @@ public class PortfolioController {
         return new StringResponseWrapper(portfolioService.deletePortfolio(util.unwrapUsername(req), portfolioName));
     }
 
-    @PostMapping(value = "/addToPortfolio")
+    @PostMapping(value = "/add")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_BASIC') or hasRole('ROLE_TRADER')")
     @ApiOperation(value = "Add an equipment to a portfolio", response = StringResponseWrapper.class)
@@ -61,7 +62,7 @@ public class PortfolioController {
                 portfolioService.addToPortfolio(util.unwrapUsername(req), portfolioName, code));
     }
 
-    @DeleteMapping(value = "/deleteFromPortfolio")
+    @DeleteMapping(value = "/discard")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_BASIC') or hasRole('ROLE_TRADER')")
     @ApiOperation(value = "Delete an equipment from a portfolio", response = StringResponseWrapper.class)
@@ -73,7 +74,7 @@ public class PortfolioController {
                 portfolioService.deleteFromPortfolio(util.unwrapUsername(req), portfolioName, code));
     }
 
-    @GetMapping(value = "/getPortfolio")
+    @GetMapping(value = "/get")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_BASIC') or hasRole('ROLE_TRADER')")
     @ApiOperation(value = "Get a portfolio of requester", response = StringResponseWrapper.class)
@@ -82,15 +83,14 @@ public class PortfolioController {
             @ApiParam("Portfolio Name") @RequestParam String portfolioName) {
         return portfolioService.getPortfolio(util.unwrapUsername(req), portfolioName);
     }
-  
-    @GetMapping(value = "/getSelfPortfolios")
+
+    @GetMapping(value = "/getAll")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_BASIC') or hasRole('ROLE_TRADER')")
     @ApiOperation(value = "Get all portfolios of requester", response = StringResponseWrapper.class)
     @ApiResponses(value = { @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE) })
-    public List<String> getSelfPortfolios(HttpServletRequest req) {
+    public List<PortfolioNamesDTO> getSelfPortfolios(HttpServletRequest req) {
         return portfolioService.getSelfPortfolios(util.unwrapUsername(req));
     }
-      
 
 }
