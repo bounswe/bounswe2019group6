@@ -35,7 +35,7 @@
                 </div>
 
                 <el-button class='change-base-button' @click="changeBaseofEquipment(ed.label)"><svg-icon style="margin-right:10px" icon-class="chart" />Change the Base</el-button>
-                <el-button class='buy-button' @click="showDialog=true"><svg-icon style="margin-right:10px" icon-class="shopping" />Buy Equipment</el-button>
+                <el-button class='buy-button' @click="showBuyEquipmentDialog=true"><svg-icon style="margin-right:10px" icon-class="shopping" />Buy Equipment</el-button>
               
                 <el-card class='container-in-tab'>
                   <p> alerts comes here </p>
@@ -90,7 +90,36 @@
                 </el-card>
 
                 <el-card class='container-in-tab'>
-                  <p> comments comes here </p>
+                  <h4> Comments about {{ ed.label }} </h4>
+                  <el-button class='create-comment' style="margin-top:20px;margin-bottom:20px;" @click="showCreateCommentDialog=true">
+                    <svg-icon style="margin-right:10px" icon-class="edit" /> Write Comment </el-button>
+                  
+                  <el-row class='row' v-for="c in commentList" v-bind:key="c.id" :gutter="20" style="padding:16px 16px 0;margin-bottom:20px;">
+                    <el-card class='comment-container'>
+                      <p>
+                        <span class="comment-author"> {{ c.author }} </span>
+                        <span class="comment-time"> {{ c.timestamp | parseTime('{y}-{m}-{d} {h}:{i}') }} - </span>
+                        <span class="comment-options"> {{ c.likes }} Likes </span>
+                      </p>
+                      <p class="comment-text"> {{ c.comment }} </p>
+                      <p class="comment-options">
+                        <a @click="showReplyCommentDialog=true;replyCommentId=c.id"> Reply </a> |
+                        <a @click="likeComment(c.id)"> <svg-icon icon-class="star" /> Like </a>
+                      </p>
+                      <div class="comment-replies" v-for="r in c.replies" v-bind:key="r.id" style="padding:8px 20px 0;margin-bottom:10px;">
+                        <p>
+                          <span class="comment-author"> {{ r.author }} </span>
+                          <span class="comment-time"> {{ r.timestamp | parseTime('{y}-{m}-{d} {h}:{i}') }} - </span>
+                          <span class="comment-options"> {{ r.likes }} Likes </span>
+                        </p>
+                        <p class="comment-text"> {{ r.comment }} </p>
+                        <p class="comment-options">
+                          <a @click="likeReplyComment(c.id, r.id)"> <svg-icon icon-class="star" /> Like </a>
+                        </p>
+                      </div>
+                    </el-card>
+                  </el-row>
+                
                 </el-card>
               
               </div>
@@ -99,7 +128,7 @@
       </el-card>
     </el-row>
 
-    <el-dialog title="Select Trading Equipment" :visible.sync="showDialog">
+    <el-dialog title="Select Trading Equipment" :visible.sync="showBuyEquipmentDialog">
       <el-input placeholder="Please enter an amount" v-model="buyamountinput" class="input-with-select">
         <el-select style="width:120px" v-model="select" slot="prepend" placeholder="Select">
           <div>
@@ -110,11 +139,24 @@
       </el-input>  
     </el-dialog>
 
+    <el-dialog title="Create Comment" :visible.sync="showCreateCommentDialog">
+      <!-- TODO: make sure that after receiving input from tinymce, it parses the input!!! -->
+      <Tinymce ref="editor" v-model="createCommentContent" :height="300"/>
+      <el-button style="margin-top:10px;" @click="createComment()"><svg-icon icon-class="edit"/> Publish Comment </el-button>
+    </el-dialog>
+
+    <el-dialog title="Reply Comment" :visible.sync="showReplyCommentDialog">
+      <!-- TODO: make sure that after receiving input from tinymce, it parses the input!!! -->
+      <Tinymce ref="editor" v-model="replyCommentContent" :height="300"/>
+      <el-button style="margin-top:10px;" @click="replyComment(replyCommentId)"><svg-icon icon-class="edit"/> Reply </el-button>
+    </el-dialog>
+
   </div>
    
 </template>
 
 <script>
+import Tinymce from '@/components/Tinymce'
 import LineChart from './components/LineChart'
 import LineChartDetailed from './components/LineChartDetailed'
 import LineChartComparison from './components/LineChartComparison'
@@ -133,21 +175,47 @@ export default {
     LineChartDetailed,
     LineChart,
     RaddarChart,
+    Tinymce,
   },
   data() {
     return {
       chartData: {},
-      equipmentData: [],
-      comparisonData: {equipmentData: []},
-      activeTab: 'AMZN',
-      showDialog: false,
+      showBuyEquipmentDialog: false,
+      showCreateCommentDialog: false,
+      showReplyCommentDialog: false,
       buyamountinput: '',
       select: '',
-      articleList: null
+      createCommentContent: '',
+      replyCommentContent: '',
+      replyCommentId: '',
+      // equipmentData is expected to be: 
+      // [
+      //   {
+      //     label: Euro,
+      //     key: EUR,
+      //     data: {
+      //       open: [...],
+      //       close: [...],
+      //       high: [...],
+      //       low: [...],
+      //       current: [...] 
+      //     }
+      //   }, 
+      //   {
+      //     label: Japanese Yen,
+      //     key: JPY
+      //   }, ...
+      // ]
+      equipmentData: [],
+      comparisonData: {equipmentData: []},
+      activeTab: 'JPY',
+      articleList: null,
+      commentList: null
     }
   },
   async created() {
     this.returnArticleList()
+    this.returnCommentList()
     var equipmentList = await this.getEquipmentList()
     // Fill the equipmentData with equipment list
     equipmentList.forEach(function(equipmentKey) {
@@ -208,6 +276,66 @@ export default {
           importance: 2,
           pageviews: 8245
         }
+      ]
+    },
+
+    returnCommentList() {
+      this.commentList = [
+        {
+          id: 1,
+          timestamp: 1024316325463,
+          likes: 5,
+          author: 'irmakguzey',
+          comment: 'That’s the findings of Natixis Global Asset Management’s annual Global Portfolio Barometer, which has found that UK portfolios with significant non-sterling assets saw average performance of more than 13 per cent.',
+          replies: [
+            {
+              id: 1,
+              timestamp: 1024316325463,
+              likes: 1,
+              author: 'sadullahgultekin',
+              comment: 'I think you are quite correct!'
+            },
+            {
+              id: 2,
+              timestamp: 1024316325463,
+              likes: 0,
+              author: 'irmakguzey',
+              comment: 'Thank you!'
+            },
+          ]
+        },
+        {
+          id: 2,
+          timestamp: 1056316325463,
+          likes: 54,
+          author: 'sadullahgultekin',
+          comment: 'Matthew Riley, head of research at the portfolio research and consulting group, says: “A substantial part of the explanation is currency risk which is no surprise since currency moves in 2016 were the highest since 2008 and had a large impact on the surveyed portfolios.',
+          replies: []
+        },
+        {
+          id: 3,
+          timestamp: 1234567890123,
+          likes: 15,
+          author: 'burakyuksel',
+          comment: 'For example, he says, a UK investor with unhedged US equity exposure (in other words, without making compensating investments to counteract the risk) would have gained an extra 19 per cent return in 2016 due to the depreciation of the Pound versus the Dollar.\"For eurozone equities, this would have been around 16 per cent, and for Japanese equities this would have been 23 per cent. Currency impact was also seen in allocation funds, EM debt and high yield debt funds, which are often not hedged by advisers.\”',
+          replies: []
+        },
+        {
+          id: 4,
+          timestamp: 1024457825463,
+          likes: 500,
+          author: 'irmakguzey',
+          comment: 'A lot of people. Foreign exchange is most commonly known as Forex and Forex is the world’s most traded market. According to CityIndex there’s an average turnover in excess of US$5.3 trillion every single day. That’s 4.24 trillion pounds at time of writing, although as will be seen that can change. A lot of different people are trading, from large companies to part-time traders operating out of their bedrooms, something that only became possible with the proliferation of the internet.',
+          replies: []
+        },
+        {
+          id: 5,
+          timestamp: 3456789341267,
+          likes: 234,
+          author: 'burakyuksel',
+          comment: 'What drives currency movements? Most people already know that the values of currencies shift, that’s why exchange rates change. And the changes in those rates are determined by multitude of traders buying currencies with other currencies and making judgements on what each is worth in relation to each other. Prices can change at incredible speed in response to news and global events. Traders look at key factors, including political and economic stability, currency intervention, monetary policy and major events such as natural disasters. How does it work? When trading Forex, currencies come in pairs, for example, sterling/US dollar. The trader predicts how the exchange rate between the two currencies will change. So, if the trader believes that US dollars will strengthen against the pound then they buy dollars, which means they are also ditching their pounds. If they are right then the value of their currency rises and they can sell for a profit. If their hunch was wrong then they lose. For example, the GBP/USD rate shows the number of dollars one pound can buy. If a trader believes the pound will increase in value against the dollar then they use dollars to buy pounds. If the exchange rate rises then they can sell the pounds back for a profit. One of the reasons Forex trading is so popular with hobbyist investors is that the markets are open pretty much 24 hours a day, following the different countries’ time zones. Will I make any money? Forex is risky. It’s so risky that many commentators have likened home traders to professional gamblers, arguing that the idea an individual can reliably predict the movements of currencies is nonsense. There are an abundance of platforms and guides and books and investment tutorials that suggest it’s possible to make a small fortune trading currencies. However, spend any time reading forums and there are hoards of bedroom Forex traders losing money day after day. It can be very expensive to make currency transactions and individual traders usually don’t have a large enough pot to make anything other than small gains.',
+          replies: []
+        },
       ]
     },
 
@@ -318,6 +446,59 @@ export default {
       })
     },
 
+    //  TODO: This should be done at the backend
+    likeComment(commentId) {
+      this.commentList.forEach(function(comment) {
+        if (comment.id == commentId) {
+          comment.likes += 1;
+        }
+      }, this)
+    },
+
+    likeReplyComment(commentId, replyId) {
+      this.commentList.forEach(function(comment) {
+        if (comment.id == commentId) {
+          comment.replies.forEach(function(reply){
+            if (reply.id == replyId) {
+              reply.likes += 1;
+            }
+          })
+        }
+      }, this)
+    },
+
+    // TODO: This should be done at the backend
+    replyComment(commentId) {
+      this.commentList.forEach(function(comment) {
+        if (comment.id == commentId) {
+          var newReply = {
+            id: comment.replies.length+1,
+            timestamp: Date.now(),
+            likes: 0,
+            author: 'current-user',
+            comment: this.replyCommentContent
+          }
+          comment.replies.push(newReply)
+        }
+      }, this)
+        this.showReplyCommentDialog = false
+        this.replyCommentContent = ''
+    },
+
+    // TODO connect this to backend
+    createComment() {
+      var newComment = {
+        id: this.commentList.length+1,
+        timestamp: Date.now(),
+        likes: 0,
+        author: 'current-user', // TODO: change this with backend added
+        comment: this.createCommentContent
+      }
+      this.commentList.push(newComment)
+      this.showCreateCommentDialog = false
+      this.createCommentContent = ''
+    },
+
     changeBaseofEquipment(equipmentLabel) {
       this.equipmentData.forEach(function(currency) {
         if (currency.label == equipmentLabel) {
@@ -343,6 +524,33 @@ export default {
 
 .container-in-tab {
     margin-top: 30px;
+}
+
+.comment-time {
+  font-weight: normal;
+  font-size: 8pt;
+  color:#696969;
+}
+
+.comment-author {
+  font-weight: bold;
+  font-size: 11pt;
+}
+
+.comment-text {
+  font-weight: normal;
+  font-size: 10pt;
+  color: #404040
+}
+
+.comment-options {
+  font-weight: normal;
+  font-size: 9pt;
+  color: #696969
+}
+
+.star {
+  background-color: #696969;
 }
 
 </style>
