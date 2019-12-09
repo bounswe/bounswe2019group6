@@ -1,5 +1,5 @@
 <template>
- 
+
   <div>
     <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
       <el-card class='raddar-chart-container'>
@@ -36,9 +36,70 @@
 
                 <el-button class='change-base-button' @click="changeBaseofEquipment(ed.label)"><svg-icon style="margin-right:10px" icon-class="chart" />Change the Base</el-button>
                 <el-button class='buy-button' @click="showDialog=true"><svg-icon style="margin-right:10px" icon-class="shopping" />Buy Equipment</el-button>
-                
+
                 <el-card class='container-in-tab'>
-                  <p> alerts comes here </p>
+                  <el-row gutter="50">
+                    <el-col :span="7">
+                      <el-card>
+                        <el-form>
+                          <el-form-item label="Code">
+                            <el-input v-model="alertForm.code"></el-input>
+                          </el-form-item>
+                          <el-form-item label="Alert Type">
+                            <el-radio-group v-model="alertForm.alertType" size="medium">
+                              <el-radio border label="Above"></el-radio>
+                              <el-radio border label="Below"></el-radio>
+                            </el-radio-group>
+                          </el-form-item>
+                          <el-form-item label="Limit">
+                            <el-input-number v-model="alertForm.limit"></el-input-number>
+                          </el-form-item>
+                          <el-form-item label="Transaction Type">
+                            <el-radio-group v-model="alertForm.transactionType" size="medium">
+                              <el-radio border label="Buy"></el-radio>
+                              <el-radio border label="Sell"></el-radio>
+                            </el-radio-group>
+                          </el-form-item>
+                          <el-form-item label="Amount">
+                            <el-input-number v-model="alertForm.amount"></el-input-number>
+                          </el-form-item>
+                          <el-form-item>
+                            <el-button type="primary" @click="onSubmit">Create</el-button>
+                            <el-button>Cancel</el-button>
+                          </el-form-item>
+                        </el-form>
+                      </el-card>
+                    </el-col>
+                    <el-col :span="17">
+                      <el-card>
+                        <el-table
+                          :data="alerts"
+                          height="250"
+                          style="width: 100%">
+                          <el-table-column
+                            prop="code"
+                            label="Code">
+                          </el-table-column>
+                          <el-table-column
+                            prop="alertType"
+                            label="Alert Type">
+                          </el-table-column>
+                          <el-table-column
+                            prop="limit"
+                            label="Limit">
+                          </el-table-column>
+                          <el-table-column
+                            prop="transactionType"
+                            label="Transaction Type">
+                          </el-table-column>
+                          <el-table-column
+                            prop="amount"
+                            label="Amount">
+                          </el-table-column>
+                        </el-table>
+                      </el-card>
+                    </el-col>
+                  </el-row>
                 </el-card>
 
                 <el-card class='container-in-tab'>
@@ -107,11 +168,11 @@
           </div>
         </el-select>
         <el-button slot="append" @click="buyEquipment()">Buy</el-button>
-      </el-input>  
+      </el-input>
     </el-dialog>
 
   </div>
-   
+
 </template>
 
 <script>
@@ -136,11 +197,55 @@ export default {
   },
   data() {
     return {
+      alertForm: {
+          code: "",
+          alertType: "",
+          transactionType: "",
+          limit: "",
+          amount: ""
+      },
+      alerts: [
+          {
+              code: 'Red',
+              alertType: 'Below',
+              limit: 5.72,
+              transactionType: "Buy",
+              amount: 1000
+          },
+          {
+              code: 'Blue',
+              alertType: 'Below',
+              limit: 5.72,
+              transactionType: "Buy",
+              amount: 72
+          },
+          {
+              code: 'Yellow',
+              alertType: 'Above',
+              limit: 5.72,
+              transactionType: "Sell",
+              amount: 100
+          },
+          {
+              code: 'White',
+              alertType: 'Below',
+              limit: 6.00,
+              transactionType: "Sell",
+              amount: 550
+          },
+          {
+              code: 'Brown',
+              alertType: 'Above',
+              limit: 5.12,
+              transactionType: "Buy",
+              amount: 10000
+          }
+      ],
       chartData: {},
       showDialog: false,
       buyamountinput: '',
       select: '',
-      // equipmentData is expected to be: 
+      // equipmentData is expected to be:
       // [
       //   {
       //     label: Euro,
@@ -150,9 +255,9 @@ export default {
       //       close: [...],
       //       high: [...],
       //       low: [...],
-      //       current: [...] 
+      //       current: [...]
       //     }
-      //   }, 
+      //   },
       //   {
       //     label: Japanese Yen,
       //     key: JPY
@@ -171,10 +276,10 @@ export default {
     equipmentList.forEach(function(equipmentKey) {
       this.equipmentData.push({key: equipmentKey.code})
     }, this)
-    var equipmentValues = await this.getEquipmentValues(equipmentList) 
+    var equipmentValues = await this.getEquipmentValues(equipmentList)
     this.createRadarChartData(equipmentValues)
     this.equipmentData = equipmentValues
-    
+
     this.comparisonData.equipmentData = this.equipmentData
   },
   methods: {
@@ -230,7 +335,7 @@ export default {
       ]
     },
 
-    // Promise for getting equipments list 
+    // Promise for getting equipments list
     async getEquipmentList() {
       try {
         await this.$store.dispatch('equipment/getAllCurrencies')
@@ -239,14 +344,14 @@ export default {
       } catch (error) {
         console.log(error)
         return error
-      }  
+      }
     },
 
     // equipment = ['JPY', 'TRY', ...]
     async getEquipmentValues(equipmentList) {
       // equipmentValues = [{label="Turkish Lira", key="TRY", data={open=[5.6, 4.34, 7.54,...], close=[..], high=[..], low=[..]}}, {label="Japanese Yen", key="JPY", data={actualData=[12.2312, 11.234545, 10.23234, ...]}} ...]
       var equipmentValues = []
-      
+
       equipmentList.forEach(async function(e) {
         try {
           await this.$store.dispatch('equipment/getEquipment', e.code.toLowerCase())
@@ -326,7 +431,7 @@ export default {
           indicatorData: indicatorData
         }
       }
-     
+
     },
 
     buyEquipment() {
