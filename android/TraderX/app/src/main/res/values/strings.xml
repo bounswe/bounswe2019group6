@@ -67,9 +67,9 @@
     <string name="alert_create_success">Alert is created successfully</string>
 
     <!--    Symbols-->
-    <string name="try_value">₺ %1$s</string>
-    <string name="eur_value">€ %1$s</string>
-    <string name="usd_value">$ %1$s</string>
+    <string name="try_value">₺ %.4f</string>
+    <string name="eur_value">€ %.4f</string>
+    <string name="usd_value">$ %.4f</string>
 
     <!--    Alert-->
     <string name="amount_or_limit_empty">Amount or Limit is empty</string>
