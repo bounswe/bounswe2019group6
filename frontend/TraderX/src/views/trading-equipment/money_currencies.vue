@@ -166,7 +166,6 @@ export default {
   },
   async created() {
     this.returnArticleList()
-    console.log(this.articleList)
     var equipmentList = await this.getEquipmentList()
     // Fill the equipmentData with equipment list
     equipmentList.forEach(function(equipmentKey) {
