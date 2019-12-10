@@ -115,7 +115,21 @@ public class PredictionService {
         String code = prediction.getEquipment().getCode();
         Equipment equipment = equipmentRepository.findByCode(code);
         HistoricalValue hw = historicalValueRepository.findHistoricalValueByDate(code,prediction.getPredictionDate());
-        if (hw == null || equipment == null) return;
+
+        hw_check:
+        if (hw == null) {
+            // Prediction might be made on weekend.
+            // API service does not provide weekend values for some equipments.
+            // in such a case, evaluate prediction according to the very next weekday.
+            Date next1 = new Date(prediction.getPredictionDate().getTime() + 1000 * 60 * 60 * 24);
+            hw = historicalValueRepository.findHistoricalValueByDate(code,next1);
+            if (hw != null) break hw_check;
+            Date next2 = new Date(prediction.getPredictionDate().getTime() + 1000 * 60 * 60 * 24 * 2);
+            hw = historicalValueRepository.findHistoricalValueByDate(code,next2);
+            if (hw == null) return; // No value is found for the given prediction date.
+        }
+        if (equipment == null) return;
+
         double lastDayAvg = (hw.getOpen() + hw.getClose())/2;
         double current = equipment.getCurrentValue();
         switch (prediction.getPredictionType()){
