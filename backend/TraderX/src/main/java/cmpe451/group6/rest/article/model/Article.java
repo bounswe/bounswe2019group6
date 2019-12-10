@@ -3,7 +3,9 @@ package cmpe451.group6.rest.article.model;
 import cmpe451.group6.authorization.model.User;;
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 public class Article implements Serializable {
@@ -20,8 +22,11 @@ public class Article implements Serializable {
     private String header;
 
     @Lob
-    @Column(length = 2147483647)
-    private byte[] body;
+    @Column(nullable = false, length = 2147483647)
+    private String body;
+
+    @ElementCollection
+    private List<String> tags = new ArrayList<String>();
 
     @Column(nullable = false, name = "createdAt", updatable = false, columnDefinition = " datetime default NOW() ")
     private Date createdAt;
@@ -55,7 +60,7 @@ public class Article implements Serializable {
         return header;
     }
 
-    public byte[] getBody() {
+    public String getBody() {
         return body;
     }
 
@@ -67,8 +72,15 @@ public class Article implements Serializable {
         this.header = header;
     }
 
-    public void setBody(byte[] body) {
+    public void setBody(String body) {
         this.body = body;
     }
 
+    public List<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<String> tags) {
+        this.tags = tags;
+    }
 }

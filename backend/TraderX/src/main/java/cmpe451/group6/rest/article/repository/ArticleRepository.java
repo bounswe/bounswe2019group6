@@ -24,10 +24,10 @@ public interface ArticleRepository extends JpaRepository<Article, Integer> {
 
     List<Article> findAll();
 
-    @Query("SELECT a FROM Investment a WHERE a.createdAt BETWEEN  ?1 AND ?2")
+    @Query("SELECT a FROM Article a WHERE a.createdAt BETWEEN  ?1 AND ?2")
     List<Article> findByDateBetween(Date start, Date end);
 
-    @Query("SELECT a FROM Investment a WHERE a.createdAt >= ?2 AND a.createdAt <= ?3 AND a.user= ?1")
+    @Query("SELECT a FROM Article a WHERE a.createdAt >= ?2 AND a.createdAt <= ?3 AND a.user= ?1")
     List<Article> findByUser_usernameAndDateBetween(String requesterName, Date start, Date end);
 
 
