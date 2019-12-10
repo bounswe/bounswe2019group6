@@ -5,13 +5,14 @@ import cmpe451.group6.authorization.repository.UserRepository;
 import cmpe451.group6.authorization.model.User;
 import cmpe451.group6.rest.portfolio.dto.PortfolioResponseDTO;
 import cmpe451.group6.rest.portfolio.dto.PortfolioEquipmentDTO;
+import cmpe451.group6.rest.portfolio.dto.PortfolioNamesDTO;
 import cmpe451.group6.rest.equipment.model.Equipment;
 import cmpe451.group6.rest.portfolio.model.Portfolio;
 import cmpe451.group6.rest.equipment.repository.EquipmentRepository;
 import cmpe451.group6.rest.equipment.repository.HistoricalValueRepository;
 import cmpe451.group6.rest.equipment.service.EquipmentService;
 import cmpe451.group6.rest.portfolio.repository.PortfolioRepository;
-import cmpe451.group6.rest.follow.service.FollowService;;
+import cmpe451.group6.rest.follow.service.FollowService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,7 +30,7 @@ public class PortfolioService {
 
     @Autowired
     EquipmentService equipmentService;
-    
+
     @Autowired
     PortfolioService portfolioService;
 
@@ -286,6 +287,31 @@ public class PortfolioService {
             return portfolioList;
 
         }
+
+    }
+
+    /**
+     * Returns a list consisting of names of portfolios of "requester"
+     * 
+     * @param requesterName
+     * @return List of Strings
+     */
+    public List<PortfolioNamesDTO> getSelfPortfolios(String requesterName) {
+
+        User requester = userRepository.findByUsername(requesterName);
+
+        if (requester == null) {
+            throw new CustomException("The requester named " + requesterName + " does not exist.",
+                    HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        List<PortfolioNamesDTO> portfolioNames = new ArrayList<PortfolioNamesDTO>();
+        // return portfolioRepository.getPortfolioNamesOfUser(requesterName);
+
+        portfolioRepository.getPortfolioNamesOfUser(requesterName)
+                .forEach(item -> portfolioNames.add(new PortfolioNamesDTO(item)));
+
+        return portfolioNames;
 
     }
 
