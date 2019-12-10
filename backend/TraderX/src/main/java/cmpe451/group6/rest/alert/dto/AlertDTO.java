@@ -2,7 +2,7 @@ package cmpe451.group6.rest.alert.dto;
 
 import cmpe451.group6.authorization.exception.CustomException;
 import cmpe451.group6.rest.alert.model.AlertType;
-import cmpe451.group6.rest.transaction.model.TransactionType;
+import cmpe451.group6.rest.alert.model.OrderType;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.http.HttpStatus;
 
@@ -15,7 +15,7 @@ public class AlertDTO implements Serializable {
     @ApiModelProperty(position = 1, required = true)
     private String alertType;
     @ApiModelProperty(position = 2, required = true)
-    private String transactionType;
+    private String orderType;
     @ApiModelProperty(position = 3, required = true)
     private double limit;
     @ApiModelProperty(position = 4, required = true)
@@ -24,10 +24,10 @@ public class AlertDTO implements Serializable {
     public AlertDTO() {
     }
 
-    public AlertDTO(String code, String alertType, String transactionType, double limit, double amount) {
+    public AlertDTO(String code, String alertType, String orderType, double limit, double amount) {
         this.code = code;
         this.alertType = alertType;
-        this.transactionType = transactionType;
+        this.orderType = orderType;
         this.limit = limit;
         this.amount = amount;
     }
@@ -48,12 +48,12 @@ public class AlertDTO implements Serializable {
         this.alertType = alertType;
     }
 
-    public String getTransactionType() {
-        return transactionType;
+    public String getOrderType() {
+        return orderType;
     }
 
-    public void setTransactionType(String transactionType) {
-        this.transactionType = transactionType;
+    public void setOrderType(String orderType) {
+        this.orderType = orderType;
     }
 
     public double getLimit() {
@@ -79,10 +79,11 @@ public class AlertDTO implements Serializable {
                 HttpStatus.EXPECTATION_FAILED);//417
     }
 
-    public static TransactionType convertTransactionType(String type){
-        if(type.equals("buy")) return TransactionType.BUY;
-        if(type.equals("sell")) return TransactionType.SELL;
-        throw new CustomException(String.format("Invalid transaction type: %s. use \"buy\" or \"sell\" only.", type),
+    public static OrderType convertOrderType(String type){
+        if(type.equals("notify")) return OrderType.NOTIFY;
+        if(type.equals("buy")) return OrderType.BUY;
+        if(type.equals("sell")) return OrderType.SELL;
+        throw new CustomException(String.format("Invalid order type: %s. use \"buy\" or \"sell\" or \"notify\" only.", type),
                 HttpStatus.EXPECTATION_FAILED);//417
     }
 }

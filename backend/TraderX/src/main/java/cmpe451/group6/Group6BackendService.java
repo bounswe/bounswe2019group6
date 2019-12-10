@@ -21,13 +21,17 @@ import org.springframework.context.annotation.Bean;
 
 import cmpe451.group6.authorization.model.Role;
 import cmpe451.group6.authorization.model.User;
+import org.springframework.core.task.TaskExecutor;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 @SpringBootApplication
 @EnableScheduling
+@EnableAsync
 public class Group6BackendService implements CommandLineRunner {
 
   @Autowired
@@ -56,6 +60,16 @@ public class Group6BackendService implements CommandLineRunner {
 
   public static void main(String[] args) {
     SpringApplication.run(Group6BackendService.class, args);
+  }
+
+  @Bean(name="threadPoolTaskExecutor")
+  public TaskExecutor threadPoolTaskExecutor() {
+    ThreadPoolTaskExecutor threadPoolTaskExecutor = new ThreadPoolTaskExecutor();
+    threadPoolTaskExecutor.setThreadNamePrefix("Async-");
+    threadPoolTaskExecutor.setCorePoolSize(3);
+    threadPoolTaskExecutor.setMaxPoolSize(3);
+    threadPoolTaskExecutor.afterPropertiesSet();
+    return threadPoolTaskExecutor;
   }
 
   @Bean
