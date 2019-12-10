@@ -139,16 +139,18 @@
       </el-input>  
     </el-dialog>
 
-    <el-dialog title="Create Comment" :visible.sync="showCreateCommentDialog">
-      <!-- TODO: make sure that after receiving input from tinymce, it parses the input!!! -->
-      <Tinymce ref="editor" v-model="createCommentContent" :height="300"/>
-      <el-button style="margin-top:10px;" @click="createComment()"><svg-icon icon-class="edit"/> Publish Comment </el-button>
+   <el-dialog title="Create Comment" :visible.sync="showCreateCommentDialog">
+      <textarea class="comment-textarea" placeholder="Write your comment here" cols="100" rows="10" v-model="createCommentContent"></textarea>
+      <div>
+        <el-button style="margin-top:10px;" @click="createComment()"><svg-icon icon-class="edit"/> Publish Comment </el-button>
+      </div>
     </el-dialog>
 
     <el-dialog title="Reply Comment" :visible.sync="showReplyCommentDialog">
-      <!-- TODO: make sure that after receiving input from tinymce, it parses the input!!! -->
-      <Tinymce ref="editor" v-model="replyCommentContent" :height="300"/>
-      <el-button style="margin-top:10px;" @click="replyComment(replyCommentId)"><svg-icon icon-class="edit"/> Reply </el-button>
+      <textarea class="comment-textarea" placeholder="Write your comment here" cols="100" rows="10" v-model="replyCommentContent"></textarea>
+      <div> 
+        <el-button style="margin-top:10px;" @click="replyComment(replyCommentId)"><svg-icon icon-class="edit"/> Reply </el-button>
+      </div>
     </el-dialog>
 
   </div>
@@ -492,7 +494,8 @@ export default {
         timestamp: Date.now(),
         likes: 0,
         author: 'current-user', // TODO: change this with backend added
-        comment: this.createCommentContent
+        comment: this.createCommentContent,
+        replies: []
       }
       this.commentList.push(newComment)
       this.showCreateCommentDialog = false
@@ -540,7 +543,8 @@ export default {
 .comment-text {
   font-weight: normal;
   font-size: 10pt;
-  color: #404040
+  color: #404040;
+  white-space: pre-line;
 }
 
 .comment-options {
@@ -551,6 +555,10 @@ export default {
 
 .star {
   background-color: #696969;
+}
+
+.comment-textarea {
+  resize: none;
 }
 
 </style>
