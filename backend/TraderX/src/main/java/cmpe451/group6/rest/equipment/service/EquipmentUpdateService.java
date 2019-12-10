@@ -178,7 +178,7 @@ public class EquipmentUpdateService {
             return;
         }
 
-        if(type == EquipmentType.CRYPTO_CURRENCY) {
+        if(type == EquipmentType.CRYPTO_CURRENCY || type == EquipmentType.CURRENCY) {
             // make value USD based.
             equipment.setCurrentValue(1/equipment.getCurrentValue());
         }
@@ -208,7 +208,7 @@ public class EquipmentUpdateService {
             throw new IllegalArgumentException("Invalid data from the API service");
         }
 
-        if(type == EquipmentType.CRYPTO_CURRENCY) {
+        if(type == EquipmentType.CRYPTO_CURRENCY || type == EquipmentType.CURRENCY) {
             // make value USD based.
             equipment.setCurrentValue(1/equipment.getCurrentValue());
         }
@@ -265,10 +265,10 @@ public class EquipmentUpdateService {
                 continue;
             }
 
-            double low = Double.parseDouble(daily.getValue().get(lowHeader));
-            double high = Double.parseDouble(daily.getValue().get(highHeader));
-            double open = Double.parseDouble(daily.getValue().get(openHeader));
-            double close = Double.parseDouble(daily.getValue().get(closeHeader));
+            double low = 1/Double.parseDouble(daily.getValue().get(lowHeader));
+            double high = 1/Double.parseDouble(daily.getValue().get(highHeader));
+            double open = 1/Double.parseDouble(daily.getValue().get(openHeader));
+            double close = 1/Double.parseDouble(daily.getValue().get(closeHeader));
 
             HistoricalValue hw = new HistoricalValue(current,low,open,high,close,equipment);
             historicalValueRepository.save(hw);
