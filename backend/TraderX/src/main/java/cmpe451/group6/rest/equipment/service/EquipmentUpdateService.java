@@ -264,11 +264,12 @@ public class EquipmentUpdateService {
                 e.printStackTrace();
                 continue;
             }
+            int rearrangeRate = type == EquipmentType.CURRENCY ? -1 : 1;
 
-            double low = 1/Double.parseDouble(daily.getValue().get(lowHeader));
-            double high = 1/Double.parseDouble(daily.getValue().get(highHeader));
-            double open = 1/Double.parseDouble(daily.getValue().get(openHeader));
-            double close = 1/Double.parseDouble(daily.getValue().get(closeHeader));
+            double low = Math.pow(Double.parseDouble(daily.getValue().get(lowHeader)),rearrangeRate);
+            double high = Math.pow(Double.parseDouble(daily.getValue().get(highHeader)),rearrangeRate);
+            double open = Math.pow(Double.parseDouble(daily.getValue().get(openHeader)),rearrangeRate);
+            double close = Math.pow(Double.parseDouble(daily.getValue().get(closeHeader)),rearrangeRate);
 
             HistoricalValue hw = new HistoricalValue(current,low,open,high,close,equipment);
             historicalValueRepository.save(hw);
