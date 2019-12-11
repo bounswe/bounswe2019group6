@@ -5,12 +5,8 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import cmpe451.group6.authorization.model.RegistrationStatus;
-import cmpe451.group6.authorization.repository.UserRepository;
-import cmpe451.group6.authorization.service.HazelcastService;
 import cmpe451.group6.authorization.service.SignupService;
-import cmpe451.group6.rest.comment.service.EquipmentCommentService;
 import cmpe451.group6.rest.equipment.service.EquipmentUpdateService;
-import cmpe451.group6.rest.follow.service.FollowService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,19 +34,7 @@ public class Group6BackendService implements CommandLineRunner {
   SignupService signupService;
 
   @Autowired
-  HazelcastService hazelcastService;
-
-  @Autowired
-  UserRepository userRepository;
-
-  @Autowired
   EquipmentUpdateService equipmentUpdateService;
-
-  @Autowired
-  FollowService followService;
-
-  @Autowired
-  EquipmentCommentService commentService;
 
   @Value("${security.admin-un}")
   String adminUsername;
@@ -89,7 +73,7 @@ public class Group6BackendService implements CommandLineRunner {
     return new CorsFilter(source);
   }
 
-  // Predefined admin, trader and basic users
+  // Predefined users
   @Override
   public void run(String... params) throws Exception {
 

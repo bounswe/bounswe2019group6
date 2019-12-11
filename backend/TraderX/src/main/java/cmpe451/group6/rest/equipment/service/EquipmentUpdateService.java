@@ -7,6 +7,7 @@ import cmpe451.group6.rest.equipment.model.EquipmentType;
 import cmpe451.group6.rest.equipment.model.HistoricalValue;
 import cmpe451.group6.rest.equipment.repository.EquipmentRepository;
 import cmpe451.group6.rest.equipment.repository.HistoricalValueRepository;
+import cmpe451.group6.rest.predict.service.PredictionService;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,6 +37,9 @@ public class EquipmentUpdateService {
 
     @Autowired
     AlertService alertService;
+
+    @Autowired
+    PredictionService predictionService;
 
     private String apiKey1;
 
@@ -182,7 +186,7 @@ public class EquipmentUpdateService {
             return;
         }
 
-        if(type == EquipmentType.CRYPTO_CURRENCY) {
+        if(type == EquipmentType.CRYPTO_CURRENCY || type == EquipmentType.CURRENCY) {
             // make value USD based.
             equipment.setCurrentValue(1/equipment.getCurrentValue());
         }
@@ -212,7 +216,7 @@ public class EquipmentUpdateService {
             throw new IllegalArgumentException("Invalid data from the API service");
         }
 
-        if(type == EquipmentType.CRYPTO_CURRENCY) {
+        if(type == EquipmentType.CRYPTO_CURRENCY || type == EquipmentType.CURRENCY) {
             // make value USD based.
             equipment.setCurrentValue(1/equipment.getCurrentValue());
         }
@@ -269,11 +273,12 @@ public class EquipmentUpdateService {
                 e.printStackTrace();
                 continue;
             }
+            int rearrangeRate = type == EquipmentType.CURRENCY ? -1 : 1;
 
-            double low = Double.parseDouble(daily.getValue().get(lowHeader));
-            double high = Double.parseDouble(daily.getValue().get(highHeader));
-            double open = Double.parseDouble(daily.getValue().get(openHeader));
-            double close = Double.parseDouble(daily.getValue().get(closeHeader));
+            double low = Math.pow(Double.parseDouble(daily.getValue().get(lowHeader)),rearrangeRate);
+            double high = Math.pow(Double.parseDouble(daily.getValue().get(highHeader)),rearrangeRate);
+            double open = Math.pow(Double.parseDouble(daily.getValue().get(openHeader)),rearrangeRate);
+            double close = Math.pow(Double.parseDouble(daily.getValue().get(closeHeader)),rearrangeRate);
 
             HistoricalValue hw = new HistoricalValue(current,low,open,high,close,equipment);
             historicalValueRepository.save(hw);
@@ -285,6 +290,8 @@ public class EquipmentUpdateService {
 
         double predictRate = getNextPredictionRate(predictionList, equipment.getCurrentValue());
         equipment.setPredictionRate(predictRate);
+
+        predictionService.updatePredictions(code);
 
         equipmentRepository.save(equipment);
 
