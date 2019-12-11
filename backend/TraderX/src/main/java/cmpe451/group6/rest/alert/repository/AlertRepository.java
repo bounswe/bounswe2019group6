@@ -10,6 +10,8 @@ public interface AlertRepository extends JpaRepository<Alert,Integer> {
 
     List<Alert> findAllByUser_Username(String username);
 
+    List<Alert> findAllByEquipment_Code(String code);
+
     @Transactional
     void deleteById(int id);
 

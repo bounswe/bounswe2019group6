@@ -2,7 +2,6 @@ package cmpe451.group6.rest.alert.model;
 
 import cmpe451.group6.authorization.model.User;
 import cmpe451.group6.rest.equipment.model.Equipment;
-import cmpe451.group6.rest.transaction.model.TransactionType;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -22,7 +21,7 @@ public class Alert implements Serializable {
     private AlertType alertType;
 
     @Column(nullable = false)
-    private TransactionType transactionType;
+    private OrderType orderType;
 
     @Column(nullable = false)
     private double limitValue;
@@ -41,10 +40,10 @@ public class Alert implements Serializable {
     public Alert() {
     }
 
-    public Alert(AlertType alertType, TransactionType transactionType, double limitValue, double amount,
+    public Alert(AlertType alertType, OrderType orderType, double limitValue, double amount,
                  User user, Equipment equipment, Date createdAt) {
         this.alertType = alertType;
-        this.transactionType = transactionType;
+        this.orderType = orderType;
         this.limitValue = limitValue;
         this.amount = amount;
         this.user = user;
@@ -64,12 +63,12 @@ public class Alert implements Serializable {
         this.alertType = alertType;
     }
 
-    public TransactionType getTransactionType() {
-        return transactionType;
+    public OrderType getOrderType() {
+        return orderType;
     }
 
-    public void setTransactionType(TransactionType transactionType) {
-        this.transactionType = transactionType;
+    public void setOrderType(OrderType orderType) {
+        this.orderType = orderType;
     }
 
     public double getAmount() {

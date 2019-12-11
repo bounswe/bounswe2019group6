@@ -1,5 +1,6 @@
 package cmpe451.group6.rest.equipment.service;
 
+import cmpe451.group6.rest.alert.service.AlertService;
 import cmpe451.group6.rest.equipment.alpha.api.*;
 import cmpe451.group6.rest.equipment.model.Equipment;
 import cmpe451.group6.rest.equipment.model.EquipmentType;
@@ -33,6 +34,9 @@ public class EquipmentUpdateService {
 
     @Autowired
     HistoricalValueRepository historicalValueRepository;
+
+    @Autowired
+    AlertService alertService;
 
     @Autowired
     PredictionService predictionService;
@@ -217,6 +221,7 @@ public class EquipmentUpdateService {
             equipment.setCurrentValue(1/equipment.getCurrentValue());
         }
         equipmentRepository.save(equipment);
+        alertService.handleAlerts(code);
     }
 
 

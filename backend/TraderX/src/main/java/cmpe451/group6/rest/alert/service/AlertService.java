@@ -8,13 +8,15 @@ import cmpe451.group6.rest.alert.dto.AlertEditDTO;
 import cmpe451.group6.rest.alert.dto.AlertResponseDTO;
 import cmpe451.group6.rest.alert.model.Alert;
 import cmpe451.group6.rest.alert.model.AlertType;
+import cmpe451.group6.rest.alert.model.OrderType;
 import cmpe451.group6.rest.alert.repository.AlertRepository;
 import cmpe451.group6.rest.equipment.model.Equipment;
 import cmpe451.group6.rest.equipment.repository.EquipmentRepository;
-import cmpe451.group6.rest.transaction.model.TransactionType;
+import cmpe451.group6.rest.transaction.service.TransactionService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -36,6 +38,9 @@ public class AlertService {
     @Autowired
     ModelMapper modelMapper;
 
+    @Autowired
+    TransactionService transactionService;
+
     public String setAlert(AlertDTO dto, String username){
         User requester = userRepository.findByUsername(username);
         // Username is fetched from token hence null check is not necessary
@@ -47,11 +52,11 @@ public class AlertService {
                 HttpStatus.EXPECTATION_FAILED);//417
 
         AlertType alertType = AlertDTO.convertAlertType(dto.getAlertType());
-        TransactionType transactionType = AlertDTO.convertTransactionType(dto.getTransactionType());
+        OrderType orderType = AlertDTO.convertOrderType(dto.getOrderType());
         if(dto.getLimit() < 0 || dto.getAmount() < 0) throw new
                 CustomException("Limit and amount must be positive values",HttpStatus.EXPECTATION_FAILED);//417
 
-        alertRepository.save(new Alert(alertType,transactionType,dto.getLimit(),
+        alertRepository.save(new Alert(alertType,orderType,dto.getLimit(),
                 dto.getAmount(), requester, equipment, new Date()));
         return "Alert is set for the equipment: " + code;
     }
@@ -90,6 +95,51 @@ public class AlertService {
             // Prevent to delete other's alerts.
             throw new CustomException(String.format("No such alert for the user: %s, id: %d", requesterUsername,alertId),
                     HttpStatus.PRECONDITION_FAILED); //412
+        }
+    }
+
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // Alert handlers
+
+    @Async("threadPoolTaskExecutor")
+    public void handleAlerts(String code){
+        for (Alert a: alertRepository.findAllByEquipment_Code(code)) {
+            handleAlert(a);
+        }
+    }
+
+    private void handleAlert(Alert alert){
+        // do not throw exception upon error since
+        // this is not called by requests but internally.
+        if (alert == null || !isTransactionRequired(alert)) return;
+        String username = alert.getUser().getUsername();
+        String code = alert.getEquipment().getCode();
+        double amount = alert.getAmount();
+
+        try {
+            switch (alert.getOrderType()){
+                case BUY:
+                    transactionService.buyAsset(username,code,amount);
+                    break;
+                case SELL:
+                    transactionService.sellAsset(username,code,amount);
+                    break;
+                case NOTIFY:
+                    // TODO : Add this as notification for user's notification list.
+                    break;
+            }
+        } catch (Exception e) {
+            // TODO : Report this as notification to user with exception message.
+        }
+    }
+
+    private boolean isTransactionRequired(Alert alert){
+        double currentValue = alert.getEquipment().getCurrentValue();
+        double limit = alert.getLimitValue();
+        if (alert.getAlertType() == AlertType.ABOVE) {
+            return currentValue > limit;
+        } else {
+            return currentValue < limit;
         }
     }
 }

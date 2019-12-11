@@ -1,6 +1,7 @@
 package cmpe451.group6.rest.alert.dto;
 
 import cmpe451.group6.rest.alert.model.AlertType;
+import cmpe451.group6.rest.alert.model.OrderType;
 import cmpe451.group6.rest.transaction.model.TransactionType;
 
 import java.util.Date;
@@ -10,7 +11,7 @@ public class AlertResponseDTO {
     private Integer id;
     private Date createdAt;
     private AlertType alertType;
-    private TransactionType transactionType;
+    private OrderType orderType;
     private double limitValue;
     private double amount;
     private String username;
@@ -43,12 +44,12 @@ public class AlertResponseDTO {
         this.alertType = alertType;
     }
 
-    public TransactionType getTransactionType() {
-        return transactionType;
+    public OrderType getOrderType() {
+        return orderType;
     }
 
-    public void setTransactionType(TransactionType transactionType) {
-        this.transactionType = transactionType;
+    public void setOrderType(OrderType orderType) {
+        this.orderType = orderType;
     }
 
     public double getLimitValue() {
