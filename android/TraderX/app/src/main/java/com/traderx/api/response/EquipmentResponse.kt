@@ -2,7 +2,7 @@ package com.traderx.api.response
 
 import android.content.Context
 import com.traderx.R
-import com.traderx.enum.EquipmentType
+import com.traderx.type.EquipmentType
 
 data class EquipmentResponse(
     val equipment: Equipment,

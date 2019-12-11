@@ -1,4 +1,4 @@
-package com.traderx.enum
+package com.traderx.type
 
 enum class EquipmentType(val value: String) {
     STOCK("stock"),

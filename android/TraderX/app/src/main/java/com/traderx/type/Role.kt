@@ -1,4 +1,4 @@
-package com.traderx.enum
+package com.traderx.type
 
 enum class Role(val value: String) {
     ROLE_ADMIN("ROLE_ADMIN"),

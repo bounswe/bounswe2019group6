@@ -10,7 +10,7 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.traderx.R
 import com.traderx.api.response.EquipmentsResponse
-import com.traderx.enum.EquipmentType
+import com.traderx.type.EquipmentType
 import kotlinx.android.synthetic.main.item_equipment.view.*
 
 class EquipmentRecyclerViewAdapter(
