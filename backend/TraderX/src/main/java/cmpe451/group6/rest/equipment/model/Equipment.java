@@ -37,7 +37,6 @@ public class Equipment implements Serializable {
     @Column(nullable = false)
     private double predictionRate;
 
-
     @Column(nullable = false)
     private EquipmentType equipmentType;
 

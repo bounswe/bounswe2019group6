@@ -2,9 +2,11 @@ package cmpe451.group6.rest.comment.controller;
 
 import cmpe451.group6.Util;
 import cmpe451.group6.authorization.dto.StringResponseWrapper;
+import cmpe451.group6.authorization.exception.CustomException;
 import cmpe451.group6.rest.comment.model.CommentRequestDTO;
 import cmpe451.group6.rest.comment.model.CommentResponseDTO;
 import cmpe451.group6.rest.comment.service.EquipmentCommentService;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,6 +26,36 @@ public class CommentController {
 
     @Autowired
     Util util;
+
+    @PostMapping(value = "/equipment/vote/{id}/{type}")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_BASIC') or hasRole('ROLE_TRADER')")
+    @ApiOperation(value = "Vote comment", response = StringResponseWrapper.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 406, message = "Cannot vote own comments."),
+            @ApiResponse(code = 409, message = "Comment has already been voted."),
+            @ApiResponse(code = 412, message = "No such comment"),
+            @ApiResponse(code = 422, message = "Invalid vote type.")})
+    public StringResponseWrapper postComment(@ApiParam("Comment id") @PathVariable("id") String id,
+                                             @ApiParam("Vote type. [ up | down]") @PathVariable String type,
+                                             HttpServletRequest req) {
+        boolean isUpvote = verifyPathParams(id,type);
+        return new StringResponseWrapper(equipmentCommentService.vote(util.unwrapUsername(req),Integer.parseInt(id),isUpvote));
+    }
+
+    @DeleteMapping(value = "/equipment/revoke/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_BASIC') or hasRole('ROLE_TRADER')")
+    @ApiOperation(value = "Revoke previously made vote.", response = StringResponseWrapper.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 406, message = "Cannot vote own comments."),
+            @ApiResponse(code = 409, message = "Comment has not been voted."),
+            @ApiResponse(code = 412, message = "No such comment")})
+    public StringResponseWrapper postComment(@ApiParam("Comment id") @PathVariable("id") String id,
+                                             HttpServletRequest req) {
+        verifyPathParams(id,"up"); // type is not necessary here. only id check is performed.
+        return new StringResponseWrapper(equipmentCommentService.revokeVote(util.unwrapUsername(req),Integer.parseInt(id)));
+    }
 
     @PostMapping(value = "/equipment/post/{code}")
     @ResponseStatus(HttpStatus.OK)
@@ -100,6 +132,20 @@ public class CommentController {
                                                        @PathVariable String username,
                                                    HttpServletRequest req) {
         return equipmentCommentService.findUserComments(username,util.unwrapUsername(req));
+    }
+
+    private boolean verifyPathParams(String id, String type){
+        try {
+            Integer.parseInt(id);
+        } catch (NumberFormatException e) {
+            throw new CustomException("Invalid id. Use integer values only",HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+        Boolean isUpvote = null;
+        if (type.equals("up")) isUpvote = true;
+        if (type.equals("down")) isUpvote = false;
+        if (isUpvote == null) throw new CustomException(
+                String.format("Invalid vote type: %s. Use \"up\" or \"down\" only", type), HttpStatus.UNPROCESSABLE_ENTITY);
+        return isUpvote;
     }
 
 

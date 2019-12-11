@@ -4,7 +4,9 @@ import cmpe451.group6.authorization.exception.CustomException;
 import cmpe451.group6.authorization.model.User;
 import cmpe451.group6.authorization.repository.UserRepository;
 import cmpe451.group6.rest.comment.model.CommentResponseDTO;
+import cmpe451.group6.rest.comment.model.CommentVote;
 import cmpe451.group6.rest.comment.model.EquipmentComment;
+import cmpe451.group6.rest.comment.repository.CommentVoteRepository;
 import cmpe451.group6.rest.comment.repository.EquipmentCommentRepository;
 import cmpe451.group6.rest.equipment.model.Equipment;
 import cmpe451.group6.rest.equipment.repository.EquipmentRepository;
@@ -33,6 +35,35 @@ public class EquipmentCommentService {
     @Autowired
     FollowService followService;
 
+    @Autowired
+    CommentVoteRepository commentVoteRepository;
+
+    public String vote(String username, int commentId, boolean isUpVote){
+        User user = userRepository.findByUsername(username); // NO need to null check since fetched from token.
+        EquipmentComment comment = commentRepository.findById(commentId);
+        if (comment == null) throw new CustomException("No such comment", HttpStatus.PRECONDITION_FAILED); //412
+        if (comment.getAuthor().getUsername().equals(user.getUsername()))
+            throw new CustomException("Cannot vote own comments.", HttpStatus.NOT_ACCEPTABLE); //406
+        if (commentVoteRepository.findByOwner_UsernameAndEquipmentComment_Id(username,commentId) != null){
+            throw new CustomException("Comment is already voted. Revoke the previous one first.", HttpStatus.CONFLICT); //409
+        }
+        CommentVote cv = new CommentVote(comment,user,isUpVote);
+        commentVoteRepository.save(cv);
+        return "Comment has voted";
+    }
+
+    public String revokeVote(String username, int commentId){
+        User user = userRepository.findByUsername(username); // No need to null check since fetched from token.
+        EquipmentComment comment = commentRepository.findById(commentId);
+        if (comment == null) throw new CustomException("No such comment", HttpStatus.PRECONDITION_FAILED); //412
+        if (comment.getAuthor().getUsername().equals(user.getUsername()))
+            throw new CustomException("Cannot vote own comments.", HttpStatus.NOT_ACCEPTABLE); //406
+
+        CommentVote cv = commentVoteRepository.findByOwner_UsernameAndEquipmentComment_Id(username,commentId);
+        if (cv == null) throw new CustomException("Comment is not voted.", HttpStatus.CONFLICT); //409
+        commentVoteRepository.delete(cv);
+        return "Vote has been revoked.";
+    }
 
     public int postEquipmentComment(String authorUsername, String content, String code){
         EquipmentComment comment = new EquipmentComment();
@@ -78,7 +109,7 @@ public class EquipmentCommentService {
         if(!equipmentRepository.existsByCode(equipmentCode)){
             throw new CustomException("No such equipment found", HttpStatus.PRECONDITION_FAILED);
         }
-        return convertToDto(commentRepository.findTop50ByAuthor_UsernameAndEquipment_Code(authorUsername,equipmentCode));
+        return convertToDto(commentRepository.findTop50ByAuthor_UsernameAndEquipment_Code(authorUsername,equipmentCode),claimerUsername);
     }
 
     public List<CommentResponseDTO>  findEquipmentComments(String equipmentCode, String claimerUsername){
@@ -93,7 +124,7 @@ public class EquipmentCommentService {
                         return !userRepository.findByUsername(c.getAuthor().getUsername()).getIsPrivate();
                     }
                 }
-             ).collect(Collectors.toList()));
+             ).collect(Collectors.toList()),claimerUsername);
     }
 
     public List<CommentResponseDTO>  findUserComments(String username,String claimerUsername){
@@ -101,18 +132,30 @@ public class EquipmentCommentService {
         if(!userRepository.existsByUsername(username)){
             throw new CustomException("No such user found", HttpStatus.PRECONDITION_FAILED);
         }
-        return convertToDto(commentRepository.findTop50ByAuthor_Username(username));
+        return convertToDto(commentRepository.findTop50ByAuthor_Username(username),claimerUsername);
     }
 
     public int getCommentsCount(String username){
         return commentRepository.countByAuthor_Username(username);
     }
 
-    private List<CommentResponseDTO> convertToDto(List<EquipmentComment> comments){
+    private List<CommentResponseDTO> convertToDto(List<EquipmentComment> comments, String claimerUsername){
         List<CommentResponseDTO> dto = new ArrayList<>();
         for (EquipmentComment ec: comments) {
+            // Get claimers vote status
+            CommentVote cv = commentVoteRepository.findByOwner_UsernameAndEquipmentComment_Id(claimerUsername,ec.getId());
+            CommentResponseDTO.VoteStatus status;
+            if (cv == null){
+                status = CommentResponseDTO.VoteStatus.NOT_COMMENTED;
+            } else if (cv.getUpvote()) {
+                status = CommentResponseDTO.VoteStatus.LIKED;
+            } else {
+                status = CommentResponseDTO.VoteStatus.DISLIKED;
+            }
+            int likes = commentVoteRepository.countAllByEquipmentComment_IdAndUpvoteIsTrue(ec.getId());
+            int dislikes = commentVoteRepository.countAllByEquipmentComment_IdAndUpvoteIsFalse(ec.getId());;
             dto.add(new CommentResponseDTO(ec.getId(),ec.getLastModifiedTime(),ec.getComment(),
-                    ec.getAuthor().getUsername(),ec.getEquipment().getCode()));
+                    ec.getAuthor().getUsername(),ec.getEquipment().getCode(),likes,dislikes,status));
         }
         return dto;
     }
