@@ -136,13 +136,17 @@ public class AlertService {
                 case BUY:
                     transactionService.buyAsset(username,code,amount);
                     notificationType = NotificationType.ALERT_TRANSACTION_SUCCESS;
+                    message = String.format("%.2f %s has been bought.", amount,code);
                     break;
                 case SELL:
                     transactionService.sellAsset(username,code,amount);
                     notificationType = NotificationType.ALERT_TRANSACTION_SUCCESS;
+                    message = String.format("%.2f %s has been sold.", amount,code);
                     break;
                 case NOTIFY:
                     notificationType = NotificationType.ALERT_NOTIFY;
+                    String status = alert.getAlertType() == AlertType.ABOVE ? "exceeded" : "dropped below";
+                    message = String.format("Limit %.2f has been %s for %s", amount, status, code);
                     break;
             }
         } catch (Exception e) {
@@ -156,6 +160,7 @@ public class AlertService {
                             code,
                             alert.getOrderType().name(),
                             Double.toString(alert.getAmount()),
+                            Double.toString(alert.getLimitValue()),
                             message
                     });
         }

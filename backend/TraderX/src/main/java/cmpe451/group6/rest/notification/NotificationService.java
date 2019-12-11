@@ -4,11 +4,33 @@ import cmpe451.group6.authorization.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class NotificationService {
 
     @Autowired
     NotificationRepository notificationRepository;
+
+    public List<NotificationDTO> getAll(String username){
+        return notificationRepository.findByOwner_Username(username).stream().map(NotificationDTO::new).collect(Collectors.toList());
+    }
+
+    public List<NotificationDTO> getAllNews(String username){
+        return notificationRepository.findByOwner_UsernameAndIsNewIsTrue(username).stream().map(NotificationDTO::new).collect(Collectors.toList());
+    }
+
+    public void readAll(String username){
+        notificationRepository.findByOwner_UsernameAndIsNewIsTrue(username).forEach(n -> {
+            n.setIsNew(false);
+            notificationRepository.save(n);
+        });
+    }
+
+    public void deleteAll(String username){
+        notificationRepository.deleteAllByOwner_Username(username);
+    }
 
     public void createNotification(User owner, NotificationType type, String[] payload) throws IllegalArgumentException{
         String[] payloadHeaders = NotificationType.payloadHeaders(type);
@@ -20,10 +42,6 @@ public class NotificationService {
             notification.getPayload().put(payloadHeaders[i],payload[i]);
         }
         notificationRepository.save(notification);
-    }
-
-    public void clearNotifications(String username){
-        //
     }
 
 }

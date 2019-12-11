@@ -16,7 +16,7 @@ public class Notification {
     @Column(nullable = false, updatable = false)
     private Date created;
 
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false)
     private boolean isNew;
 
     @Column(nullable = false, updatable = false)

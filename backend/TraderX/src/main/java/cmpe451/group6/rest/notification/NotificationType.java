@@ -2,7 +2,6 @@ package cmpe451.group6.rest.notification;
 
 public enum NotificationType {
 
-
     ALERT_TRANSACTION_SUCCESS,
     ALERT_TRANSACTION_FAIL,
     ALERT_NOTIFY,
@@ -12,7 +11,7 @@ public enum NotificationType {
     FOLLOW_REQUEST_ACCEPTED,
     FOLLOW_REQUEST_DENIED;
 
-    private static final String[] ALERT_HEADERS = new String[]{"alertId","timestamp","code","type","amount","message"};
+    private static final String[] ALERT_HEADERS = new String[]{"alertId","timestamp","code","type","amount","limit","message"};
     private static final String[] FOLLOW_HEADERS = new String[]{"username"};
 
     static String[] payloadHeaders(NotificationType type){
