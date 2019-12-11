@@ -8,6 +8,8 @@ import cmpe451.group6.rest.follow.DTO.UsernameWrapper;
 import cmpe451.group6.rest.follow.model.FollowDAO;
 import cmpe451.group6.rest.follow.model.FollowStatus;
 import cmpe451.group6.rest.follow.repository.FollowRepository;
+import cmpe451.group6.rest.notification.NotificationService;
+import cmpe451.group6.rest.notification.NotificationType;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,6 +28,9 @@ public class FollowService {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+    private NotificationService notificationService;
 
     public String followUser(String username, String requesterUsername) {
 
@@ -59,16 +64,20 @@ public class FollowService {
         temp.setFollower(requesterUser);
         temp.setFollowee(userToFollow);
 
-        String message ;
+        String message;
+        NotificationType notificationType;
         if (userToFollow.getIsPrivate()) {
             message = "Request has been sent to ";
             temp.setFollowStatus(FollowStatus.PENDING);
+            notificationType = NotificationType.FOLLOW_REQUESTED;
         } else {
             message = "User followed: ";
             temp.setFollowStatus(FollowStatus.APPROVED);
+            notificationType = NotificationType.FOLLOWED;
         }
 
         followRepository.save(temp);
+        notificationService.createNotification(userToFollow, notificationType,new String[]{requesterUsername});
         return (message + userToFollow.getUsername());
         
     }
@@ -190,12 +199,16 @@ public class FollowService {
         if (dao == null) throw new CustomException("No such request exists",HttpStatus.PRECONDITION_FAILED);//412
         if (dao.getFollowStatus()==FollowStatus.APPROVED)
             throw new CustomException("Request is already approved.",HttpStatus.NOT_ACCEPTABLE);//406
+        NotificationType notificationType;
         if(accept){
             dao.setFollowStatus(FollowStatus.APPROVED);
+            notificationType = NotificationType.FOLLOW_REQUEST_ACCEPTED;
             followRepository.save(dao);
         } else {
             followRepository.delete(dao);
+            notificationType = NotificationType.FOLLOW_REQUEST_DENIED;
         }
+        notificationService.createNotification(dao.getFollowee(),notificationType,new String[]{requesterUsername});
         return "Success";
     }
 }

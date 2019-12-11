@@ -12,6 +12,9 @@ import cmpe451.group6.rest.alert.model.OrderType;
 import cmpe451.group6.rest.alert.repository.AlertRepository;
 import cmpe451.group6.rest.equipment.model.Equipment;
 import cmpe451.group6.rest.equipment.repository.EquipmentRepository;
+import cmpe451.group6.rest.notification.Notification;
+import cmpe451.group6.rest.notification.NotificationService;
+import cmpe451.group6.rest.notification.NotificationType;
 import cmpe451.group6.rest.transaction.service.TransactionService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +44,9 @@ public class AlertService {
     @Autowired
     TransactionService transactionService;
 
+    @Autowired
+    NotificationService notificationService;
+
     public String setAlert(AlertDTO dto, String username){
         User requester = userRepository.findByUsername(username);
         // Username is fetched from token hence null check is not necessary
@@ -55,6 +61,10 @@ public class AlertService {
         OrderType orderType = AlertDTO.convertOrderType(dto.getOrderType());
         if(dto.getLimit() < 0 || dto.getAmount() < 0) throw new
                 CustomException("Limit and amount must be positive values",HttpStatus.EXPECTATION_FAILED);//417
+
+        if (orderType == OrderType.NOTIFY) {
+            dto.setAmount(0); // nullable when notify only.
+        }
 
         alertRepository.save(new Alert(alertType,orderType,dto.getLimit(),
                 dto.getAmount(), requester, equipment, new Date()));
@@ -83,6 +93,9 @@ public class AlertService {
         if(dto.getNewLimit() < 0 || dto.getNewAmount() < 0) throw new
                 CustomException("Limit and amount must be positive values",HttpStatus.EXPECTATION_FAILED);//417
         Alert alert = alertRepository.findOne(dto.getAlertId());
+        if (alert.getOrderType() == OrderType.NOTIFY) {
+            dto.setNewAmount(0); // nullable when notify.
+        }
         alert.setAmount(dto.getNewAmount());
         alert.setLimitValue(dto.getNewLimit());
         alertRepository.save(alert);
@@ -116,20 +129,35 @@ public class AlertService {
         String code = alert.getEquipment().getCode();
         double amount = alert.getAmount();
 
+        NotificationType notificationType = null;
+        String message = "";
         try {
             switch (alert.getOrderType()){
                 case BUY:
                     transactionService.buyAsset(username,code,amount);
+                    notificationType = NotificationType.ALERT_TRANSACTION_SUCCESS;
                     break;
                 case SELL:
                     transactionService.sellAsset(username,code,amount);
+                    notificationType = NotificationType.ALERT_TRANSACTION_SUCCESS;
                     break;
                 case NOTIFY:
-                    // TODO : Add this as notification for user's notification list.
+                    notificationType = NotificationType.ALERT_NOTIFY;
                     break;
             }
         } catch (Exception e) {
-            // TODO : Report this as notification to user with exception message.
+            notificationType = NotificationType.ALERT_TRANSACTION_FAIL;
+            message = e.getMessage();
+        } finally {
+            notificationService.createNotification(userRepository.findByUsername(username),
+                    notificationType, new String[]{
+                            alert.getId().toString(),
+                            Long.toString(new Date().getTime()),
+                            code,
+                            alert.getOrderType().name(),
+                            Double.toString(alert.getAmount()),
+                            message
+                    });
         }
     }
 
