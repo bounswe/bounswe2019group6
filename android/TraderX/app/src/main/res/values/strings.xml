@@ -70,6 +70,11 @@
     <string name="comment_create_success">Comment is created successfully</string>
     <string name="comment_edit_success">Comment is edited successfully</string>
     <string name="comment_delete_success">Comment is deleted successfully</string>
+    <string name="comment_revoke">Comment vote is revoked successfully</string>
+    <string name="comment_dislike">Comment is disliked</string>
+    <string name="comment_like">Comment is liked</string>
+    <string name="comment_already_voted">Comment is already liked or disliked</string>
+
     <!--    Symbols-->
     <string name="try_value">₺ %1$s</string>
     <string name="eur_value">€ %1$s</string>

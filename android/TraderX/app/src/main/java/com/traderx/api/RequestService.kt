@@ -97,11 +97,17 @@ interface RequestService {
     @POST(ApiEndpoint.COMMENT_EDIT)
     fun editComment(@Path("id") id: Int, @Body comment: CommentRequest): Completable
 
-    @DELETE(ApiEndpoint.COMMENT_DELETE)
-    fun deleteComment(@Path("id") id: Int): Completable
+    @POST(ApiEndpoint.COMMENT_VOTE)
+    fun voteComment(@Path("id") id: Int, @Path("vote") vote: String): Completable
+
+    @DELETE(ApiEndpoint.COMMENT_REVOKE)
+    fun revokeComment(@Path("id") id: Int): Completable
 
     @POST(ApiEndpoint.TRANSACTION_BUY)
     fun postTransactionBuy(@Query("code") code: String, @Query("amount") amount: Double): Completable
+
+    @DELETE(ApiEndpoint.COMMENT_DELETE)
+    fun deleteComment(@Path("id") id: Int): Completable
 
     @GET(ApiEndpoint.TRANSACTIONS)
     fun getTransactions(@Path("username") username: String): Single<List<TransactionsResponse>>

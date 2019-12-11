@@ -12,11 +12,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
 import com.traderx.R
 import com.traderx.api.ErrorHandler
 import com.traderx.api.response.CommentResponse
 import com.traderx.api.response.EquipmentResponse
+import com.traderx.type.VoteType
 import com.traderx.ui.comment.CommentFragment
 import com.traderx.util.FragmentTitleEmitters
 import com.traderx.util.Helper
@@ -105,7 +105,12 @@ class EquipmentFragment : Fragment(), FragmentTitleEmitters {
                 { comment, doOnSuccess ->
                     createComment(comment, doOnSuccess)
                 },
-                {}
+                { id, vote, doOnVote ->
+                    voteComment(id, vote, doOnVote)
+                },
+                { id, doOnRevoke ->
+                    revokeComment(id, doOnRevoke)
+                }
             )
 
             val fragmentTransaction = fragmentManager?.beginTransaction()
@@ -130,18 +135,34 @@ class EquipmentFragment : Fragment(), FragmentTitleEmitters {
         return root
     }
 
+    private fun revokeComment(id: Int, doOnRevoke: () -> Unit) {
+        disposable.add(
+            equipmentViewModel.revokeComment(id)
+                .compose(Helper.applyCompletableSchedulers())
+                .doOnComplete(doOnRevoke)
+                .subscribe({}, {
+                    ErrorHandler.handleError(it, context as Context)
+                })
+        )
+    }
+
+    private fun voteComment(id: Int, vote: VoteType, doOnVote: () -> Unit) {
+        disposable.add(
+            equipmentViewModel.voteComment(id, vote)
+                .compose(Helper.applyCompletableSchedulers())
+                .doOnComplete(doOnVote)
+                .subscribe({}, {
+                    ErrorHandler.handleError(it, context as Context)
+                })
+        )
+    }
+
     private fun editComment(id: Int, message: String, doOnSuccess: () -> Unit) {
         disposable.add(
             equipmentViewModel.editComment(id, message)
                 .compose(Helper.applyCompletableSchedulers())
                 .doOnComplete(doOnSuccess)
-                .subscribe({
-                    Snackbar.make(
-                        requireView(),
-                        getString(R.string.comment_edit_success),
-                        Snackbar.LENGTH_SHORT
-                    ).show()
-                }, {
+                .subscribe({}, {
                     ErrorHandler.handleError(it, context as Context)
                 })
         )
@@ -152,13 +173,7 @@ class EquipmentFragment : Fragment(), FragmentTitleEmitters {
             equipmentViewModel.deleteComment(id)
                 .compose(Helper.applyCompletableSchedulers())
                 .doOnComplete(doOnSuccess)
-                .subscribe({
-                    Snackbar.make(
-                        requireView(),
-                        getString(R.string.comment_delete_success),
-                        Snackbar.LENGTH_SHORT
-                    ).show()
-                }, {
+                .subscribe({}, {
                     ErrorHandler.handleError(it, context as Context)
                 })
         )
@@ -169,13 +184,7 @@ class EquipmentFragment : Fragment(), FragmentTitleEmitters {
             equipmentViewModel.createComment(equipmentCode ?: "", comment)
                 .compose(Helper.applyCompletableSchedulers())
                 .doOnComplete(doOnSuccess)
-                .subscribe({
-                    Snackbar.make(
-                        requireView(),
-                        getString(R.string.comment_create_success),
-                        Snackbar.LENGTH_SHORT
-                    ).show()
-                }, {
+                .subscribe({}, {
                     ErrorHandler.handleError(it, context as Context)
                 })
         )

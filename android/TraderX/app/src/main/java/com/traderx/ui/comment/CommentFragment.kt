@@ -15,9 +15,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
 import com.traderx.R
 import com.traderx.api.ErrorHandler
 import com.traderx.api.response.CommentResponse
+import com.traderx.type.VoteType
 import com.traderx.ui.search.UserSearchSkeletonRecyclerViewAdapter
 import com.traderx.util.Helper
 import com.traderx.util.Injection
@@ -30,7 +32,8 @@ class CommentFragment(
     private val onDelete: (id: Int, doOnSuccess: () -> Unit) -> Unit,
     private val onEdit: (id: Int, message: String, doOnSuccess: () -> Unit) -> Unit,
     private val onCreate: (comment: String, doOnSuccess: () -> Unit) -> Unit,
-    private val onRate: () -> Unit
+    private val onVote: (id: Int, vote: VoteType, doOnVote: () -> Unit) -> Unit,
+    private val onRevoke: (id: Int, doOnRevoke: () -> Unit) -> Unit
 ) : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
@@ -93,10 +96,14 @@ class CommentFragment(
                                     CommentRecyclerViewAdapter(
                                         it,
                                         user.username,
-                                        { id, doOnSuccess -> deleteComment(id, doOnSuccess) }
-                                    ) { id, message, doOnSuccess ->
-                                        editComment(id, message, doOnSuccess)
-                                    }
+                                        { id, doOnSuccess -> deleteComment(id, doOnSuccess) },
+                                        { id, message, doOnSuccess ->
+                                            editComment(id, message, doOnSuccess)
+                                        },
+                                        { comment, vote, doOnVote ->
+                                            voteComment(comment, vote, doOnVote)
+                                        }
+                                    )
                             }, {
                                 ErrorHandler.handleError(it, context as Context)
                             })
@@ -105,12 +112,74 @@ class CommentFragment(
         )
     }
 
+    private fun voteComment(comment: CommentResponse, vote: VoteType, doOnVote: () -> Unit) {
+        if (!isCommenting) {
+            isCommenting = true
+
+            if (comment.status == vote) {
+                onRevoke(comment.id) {
+                    Snackbar.make(
+                        requireView(),
+                        getString(R.string.comment_revoke),
+                        Snackbar.LENGTH_SHORT
+                    ).show()
+
+                    isCommenting = false
+
+                    when (vote) {
+                        VoteType.LIKED -> comment.likes--
+                        VoteType.DISLIKED -> comment.dislikes--
+                    }
+
+                    comment.status = VoteType.NOT_COMMENTED
+
+                    doOnVote()
+                }
+            } else if (comment.status == VoteType.NOT_COMMENTED) {
+                onVote(comment.id, vote) {
+
+                    Snackbar.make(
+                        requireView(),
+                        getString(if (vote == VoteType.LIKED) R.string.comment_like else R.string.comment_dislike),
+                        Snackbar.LENGTH_SHORT
+                    ).show()
+
+                    isCommenting = false
+
+                    when (vote) {
+                        VoteType.LIKED -> comment.likes++
+                        VoteType.DISLIKED -> comment.dislikes++
+                    }
+
+                    comment.status = vote
+
+                    doOnVote()
+                }
+            } else {
+                Snackbar.make(
+                    requireView(),
+                    getString(R.string.comment_already_voted),
+                    Snackbar.LENGTH_SHORT
+                ).show()
+
+                isCommenting = false
+            }
+        }
+    }
+
     private fun deleteComment(id: Int, doOnSuccess: () -> Unit) {
-        if(!isCommenting) {
+        if (!isCommenting) {
             isCommenting = true
 
             onDelete(id) {
+                Snackbar.make(
+                    requireView(),
+                    getString(R.string.comment_delete_success),
+                    Snackbar.LENGTH_SHORT
+                ).show()
+
                 isCommenting = false
+
                 doOnSuccess()
             }
         }
@@ -134,6 +203,12 @@ class CommentFragment(
                 if (!isCommenting) {
                     isCommenting = true
                     onEdit(id, mes) {
+                        Snackbar.make(
+                            requireView(),
+                            getString(R.string.comment_edit_success),
+                            Snackbar.LENGTH_SHORT
+                        ).show()
+
                         doOnSave()
                         doOnSuccess(id, mes)
                         isCommenting = false
@@ -157,6 +232,12 @@ class CommentFragment(
             }
 
             onCreate(commentEditText.text.toString()) {
+                Snackbar.make(
+                    requireView(),
+                    getString(R.string.comment_create_success),
+                    Snackbar.LENGTH_SHORT
+                ).show()
+
                 commentEditText.setText("")
                 isCommenting = false
                 refreshComments()
