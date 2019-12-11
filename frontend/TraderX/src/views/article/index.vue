@@ -29,7 +29,7 @@
         </el-table-column>
         <el-table-column fixed="right" width="120">
           <template slot-scope="scope">
-            <el-button @click.native.prevent="HandleRedirect(tableData[scope.$index])" type="text" round>See Article</el-button>
+            <el-button @click="HandleRedirect(tableData[scope.$index])" type="text" round>See Article</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -66,8 +66,12 @@
       }
     },
     methods: {
-      HandleRedirect(aa) {
-        console.log(aa.id)
+      HandleRedirect(article) {
+        var articleid = article.id
+        console.log("id is: ", articleid)
+        // this.$router.push({ path: '/login' })
+        this.$router.push({ path: `/view/${articleid}` })
+        
       }
     }
   }

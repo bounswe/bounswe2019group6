@@ -213,6 +213,20 @@ export const constantRoutes = [
     ]
   },
   {
+    path: '/view/:articleid',
+    component: Layout,
+    redirect: '/view/:articleid/index',
+    hidden: true,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/view-article/index'),
+        name: 'View Article',
+        meta: { title: 'View Article', noCache: true }
+      }
+    ]
+  },
+  {
     path: '/user/:username/profile',
     component: Layout,
     redirect: '/user/:username/profile',
