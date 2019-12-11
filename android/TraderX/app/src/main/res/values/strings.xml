@@ -68,6 +68,7 @@
     <string name="alert_delete_success">Alert is deleted successfully</string>
     <string name="create_comment">Create a comment</string>
     <string name="comment_create_success">Comment is created successfully</string>
+    <string name="comment_edit_success">Comment is edited successfully</string>
     <string name="comment_delete_success">Comment is deleted successfully</string>
     <!--    Symbols-->
     <string name="try_value">₺ %1$s</string>

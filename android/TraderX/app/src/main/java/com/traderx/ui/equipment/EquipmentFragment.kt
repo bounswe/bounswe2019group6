@@ -41,7 +41,6 @@ class EquipmentFragment : Fragment(), FragmentTitleEmitters {
     private lateinit var equipmentType: TextView
     private lateinit var stock: TextView
     private lateinit var chart: LineChartView
-    private var isCommenting = false
     private val disposable = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -100,6 +99,9 @@ class EquipmentFragment : Fragment(), FragmentTitleEmitters {
                 { id, doOnSuccess ->
                     deleteComment(id, doOnSuccess)
                 },
+                { id, message, doOnSuccess ->
+                    editComment(id, message, doOnSuccess)
+                },
                 { comment, doOnSuccess ->
                     createComment(comment, doOnSuccess)
                 },
@@ -108,7 +110,7 @@ class EquipmentFragment : Fragment(), FragmentTitleEmitters {
 
             val fragmentTransaction = fragmentManager?.beginTransaction()
 
-            fragmentTransaction?.add(it.id, commentFragment, "test")
+            fragmentTransaction?.add(it.id, commentFragment, CommentFragment.TAG)
             fragmentTransaction?.commit()
         }
 
@@ -128,20 +130,28 @@ class EquipmentFragment : Fragment(), FragmentTitleEmitters {
         return root
     }
 
+    private fun editComment(id: Int, message: String, doOnSuccess: () -> Unit) {
+        disposable.add(
+            equipmentViewModel.editComment(id, message)
+                .compose(Helper.applyCompletableSchedulers())
+                .doOnComplete(doOnSuccess)
+                .subscribe({
+                    Snackbar.make(
+                        requireView(),
+                        getString(R.string.comment_edit_success),
+                        Snackbar.LENGTH_SHORT
+                    ).show()
+                }, {
+                    ErrorHandler.handleError(it, context as Context)
+                })
+        )
+    }
+
     private fun deleteComment(id: Int, doOnSuccess: () -> Unit) {
-        if(isCommenting) {
-            return
-        }
-
-        isCommenting = true
-
         disposable.add(
             equipmentViewModel.deleteComment(id)
                 .compose(Helper.applyCompletableSchedulers())
-                .doOnComplete {
-                    doOnSuccess()
-                    isCommenting = false
-                }
+                .doOnComplete(doOnSuccess)
                 .subscribe({
                     Snackbar.make(
                         requireView(),
@@ -155,19 +165,10 @@ class EquipmentFragment : Fragment(), FragmentTitleEmitters {
     }
 
     private fun createComment(comment: String, doOnSuccess: () -> Unit) {
-        if (isCommenting) {
-            return
-        }
-
-        isCommenting = true
-
         disposable.add(
             equipmentViewModel.createComment(equipmentCode ?: "", comment)
                 .compose(Helper.applyCompletableSchedulers())
-                .doOnComplete {
-                    doOnSuccess()
-                    isCommenting = false
-                }
+                .doOnComplete(doOnSuccess)
                 .subscribe({
                     Snackbar.make(
                         requireView(),

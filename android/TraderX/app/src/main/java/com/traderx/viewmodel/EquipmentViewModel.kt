@@ -49,6 +49,10 @@ class EquipmentViewModel(
         return networkSource.createComment(code, CommentRequest(comment))
     }
 
+    fun editComment(id: Int, message: String): Completable {
+        return networkSource.editComment(id, CommentRequest(message))
+    }
+
     fun deleteAlert(id: Int): Completable {
         return networkSource.deleteAlert(id)
     }
