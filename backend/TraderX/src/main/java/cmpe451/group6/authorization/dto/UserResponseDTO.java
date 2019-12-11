@@ -3,6 +3,7 @@ package cmpe451.group6.authorization.dto;
 import java.util.List;
 
 import cmpe451.group6.authorization.model.Role;
+import cmpe451.group6.rest.predict.dto.PredictionStatsDTO;
 import io.swagger.annotations.ApiModelProperty;
 
 public class UserResponseDTO {
@@ -31,6 +32,8 @@ public class UserResponseDTO {
   private int commentsCount;
   @ApiModelProperty(position = 11)
   private FollowingStatus followingStatus;
+  @ApiModelProperty(position = 12)
+  private PredictionStatsDTO predictionStats;
 
   // NOTE : DO NOT CHANGE GETTER and SETTER SIGNATURES FOR THIS FIELD !!
   // Because the mapper seeks the getter & setter fields by these names,
@@ -106,6 +109,14 @@ public class UserResponseDTO {
 
   public void setCommentsCount(int commentsCount) {
     this.commentsCount = commentsCount;
+  }
+
+  public PredictionStatsDTO getPredictionStats() {
+    return predictionStats;
+  }
+
+  public void setPredictionStats(PredictionStatsDTO predictionStats) {
+    this.predictionStats = predictionStats;
   }
 
   // Used only in this DTO. Differs from the follow.mode.FollowStatus

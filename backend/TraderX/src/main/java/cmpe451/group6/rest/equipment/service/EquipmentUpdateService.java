@@ -6,6 +6,7 @@ import cmpe451.group6.rest.equipment.model.EquipmentType;
 import cmpe451.group6.rest.equipment.model.HistoricalValue;
 import cmpe451.group6.rest.equipment.repository.EquipmentRepository;
 import cmpe451.group6.rest.equipment.repository.HistoricalValueRepository;
+import cmpe451.group6.rest.predict.service.PredictionService;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,6 +33,9 @@ public class EquipmentUpdateService {
 
     @Autowired
     HistoricalValueRepository historicalValueRepository;
+
+    @Autowired
+    PredictionService predictionService;
 
     private String apiKey1;
 
@@ -281,6 +285,8 @@ public class EquipmentUpdateService {
 
         double predictRate = getNextPredictionRate(predictionList, equipment.getCurrentValue());
         equipment.setPredictionRate(predictRate);
+
+        predictionService.updatePredictions(code);
 
         equipmentRepository.save(equipment);
 

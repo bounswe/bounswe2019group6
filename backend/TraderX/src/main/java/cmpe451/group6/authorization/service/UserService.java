@@ -11,6 +11,7 @@ import cmpe451.group6.authorization.model.Role;
 import cmpe451.group6.rest.comment.service.EquipmentCommentService;
 import cmpe451.group6.rest.follow.model.FollowStatus;
 import cmpe451.group6.rest.follow.service.FollowService;
+import cmpe451.group6.rest.predict.service.PredictionService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -46,6 +47,9 @@ public class UserService {
 
   @Autowired
   private EquipmentCommentService equipmentCommentService;
+
+  @Autowired
+  private PredictionService predictionService;
 
   public void deleteUser(String username) {
     User user = userRepository.findByUsername(username);
@@ -186,6 +190,7 @@ public class UserService {
     response.setFollowingsCount(followService.getFollowingsCount(profileOwner.getUsername()));
     response.setFollowingStatus(convertStatus(status));
     response.setArticlesCount(0); // not active yet
+    response.setPredictionStats(predictionService.getStats(profileOwner.getUsername()));
     response.setCommentsCount(equipmentCommentService.getCommentsCount(profileOwner.getUsername()));
     return response;
   }
