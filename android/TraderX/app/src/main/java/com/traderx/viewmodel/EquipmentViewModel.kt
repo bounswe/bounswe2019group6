@@ -52,4 +52,8 @@ class EquipmentViewModel(
     fun deleteAlert(id: Int): Completable {
         return networkSource.deleteAlert(id)
     }
+
+    fun deleteComment(id: Int): Completable {
+        return networkSource.deleteComment(id)
+    }
 }

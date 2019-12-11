@@ -94,6 +94,9 @@ interface RequestService {
     @POST(ApiEndpoint.COMMENT_EQUIPMENT_POST)
     fun createComment(@Path("code") code: String, @Body comment: CommentRequest): Completable
 
+    @DELETE(ApiEndpoint.COMMENT_DELETE)
+    fun deleteComment(@Path("id") id: Int): Completable
+
     @POST(ApiEndpoint.TRANSACTION_BUY)
     fun postTransactionBuy(@Query("code") code: String, @Query("amount") amount: Double): Completable
 

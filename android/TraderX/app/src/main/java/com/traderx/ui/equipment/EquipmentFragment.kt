@@ -97,7 +97,9 @@ class EquipmentFragment : Fragment(), FragmentTitleEmitters {
             val commentFragment = CommentFragment(
                 equipmentViewModel.getComments(equipmentCode ?: "")
                     .compose(Helper.applySingleSchedulers<ArrayList<CommentResponse>>()),
-                {},
+                { id, doOnSuccess ->
+                    deleteComment(id, doOnSuccess)
+                },
                 { comment, doOnSuccess ->
                     createComment(comment, doOnSuccess)
                 },
@@ -124,6 +126,32 @@ class EquipmentFragment : Fragment(), FragmentTitleEmitters {
         )
 
         return root
+    }
+
+    private fun deleteComment(id: Int, doOnSuccess: () -> Unit) {
+        if(isCommenting) {
+            return
+        }
+
+        isCommenting = true
+
+        disposable.add(
+            equipmentViewModel.deleteComment(id)
+                .compose(Helper.applyCompletableSchedulers())
+                .doOnComplete {
+                    doOnSuccess()
+                    isCommenting = false
+                }
+                .subscribe({
+                    Snackbar.make(
+                        requireView(),
+                        getString(R.string.comment_delete_success),
+                        Snackbar.LENGTH_SHORT
+                    ).show()
+                }, {
+                    ErrorHandler.handleError(it, context as Context)
+                })
+        )
     }
 
     private fun createComment(comment: String, doOnSuccess: () -> Unit) {
