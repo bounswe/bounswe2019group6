@@ -62,6 +62,18 @@ public class PortfolioController {
                 portfolioService.addToPortfolio(util.unwrapUsername(req), portfolioName, code));
     }
 
+    @PostMapping(value = "/equipments")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_BASIC') or hasRole('ROLE_TRADER')")
+    @ApiOperation(value = "Add many equipments to a portfolio", response = StringResponseWrapper.class)
+    @ApiResponses(value = { @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE) })
+    public StringResponseWrapper addManyToPortfolio(HttpServletRequest req,
+                                                  @ApiParam("Portfolio Name") @RequestParam String portfolioName,
+                                                  @ApiParam("Equipment codes") @RequestBody List<String> codes) {
+        return new StringResponseWrapper(
+                portfolioService.addManyToPortfolio(util.unwrapUsername(req), portfolioName, codes));
+    }
+
     @DeleteMapping(value = "/discard")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_BASIC') or hasRole('ROLE_TRADER')")
@@ -79,7 +91,7 @@ public class PortfolioController {
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_BASIC') or hasRole('ROLE_TRADER')")
     @ApiOperation(value = "Get a portfolio of requester", response = StringResponseWrapper.class)
     @ApiResponses(value = { @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE) })
-    public PortfolioResponseDTO getPortfolio(HttpServletRequest req,
+    public List<PortfolioEquipmentDTO> getPortfolio(HttpServletRequest req,
             @ApiParam("Portfolio Name") @RequestParam String portfolioName) {
         return portfolioService.getPortfolio(util.unwrapUsername(req), portfolioName);
     }

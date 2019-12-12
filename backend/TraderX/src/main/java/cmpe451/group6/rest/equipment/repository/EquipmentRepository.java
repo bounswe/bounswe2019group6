@@ -13,6 +13,6 @@ public interface EquipmentRepository extends JpaRepository<Equipment,Integer> {
     boolean existsByCode(String code);
 
     List<Equipment> findAll();
-
+    List<Equipment> findByCodeIn(List<String> code);
 
 }
