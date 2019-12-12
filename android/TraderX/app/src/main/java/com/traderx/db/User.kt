@@ -44,4 +44,10 @@ data class User(
         FollowingStatus.PENDING.value ->context.getString(R.string.pending)
         else -> ""
     }
+
+    companion object {
+        fun newInstance(username: String): User {
+            return User(1, username, "", 0f, 0f, listOf(), false, 0, 0, 0, 0, null, null)
+        }
+    }
 }

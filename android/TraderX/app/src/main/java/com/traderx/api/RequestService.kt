@@ -1,6 +1,7 @@
 package com.traderx.api
 
 import com.traderx.api.request.AlertRequest
+import com.traderx.api.request.CommentRequest
 import com.traderx.api.request.LoginRequest
 import com.traderx.api.request.SignUpRequest
 import com.traderx.api.response.*
@@ -88,10 +89,25 @@ interface RequestService {
     fun getStockEquipments(): Single<EquipmentsResponse>
 
     @GET(ApiEndpoint.COMMENT_EQUIPMENT)
-    fun getEquipmentComments(@Path("code") code: String): Single<List<CommentResponse>>
+    fun getEquipmentComments(@Path("code") code: String): Single<ArrayList<CommentResponse>>
+
+    @POST(ApiEndpoint.COMMENT_EQUIPMENT_POST)
+    fun createComment(@Path("code") code: String, @Body comment: CommentRequest): Completable
+
+    @POST(ApiEndpoint.COMMENT_EDIT)
+    fun editComment(@Path("id") id: Int, @Body comment: CommentRequest): Completable
+
+    @POST(ApiEndpoint.COMMENT_VOTE)
+    fun voteComment(@Path("id") id: Int, @Path("vote") vote: String): Completable
+
+    @DELETE(ApiEndpoint.COMMENT_REVOKE)
+    fun revokeComment(@Path("id") id: Int): Completable
 
     @POST(ApiEndpoint.TRANSACTION_BUY)
     fun postTransactionBuy(@Query("code") code: String, @Query("amount") amount: Double): Completable
+
+    @DELETE(ApiEndpoint.COMMENT_DELETE)
+    fun deleteComment(@Path("id") id: Int): Completable
 
     @GET(ApiEndpoint.TRANSACTIONS)
     fun getTransactions(@Path("username") username: String): Single<List<TransactionsResponse>>

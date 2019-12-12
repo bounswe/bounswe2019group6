@@ -41,6 +41,10 @@ class AuthUserViewModel(
         }
     }
 
+    fun userOrNew(): Single<User> {
+        return localUser().onErrorReturnItem(User.newInstance(""))
+    }
+
     fun deleteUser(): Completable {
         userUpdated = false
 
