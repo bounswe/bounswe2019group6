@@ -24,7 +24,7 @@ public class Portfolio {
     @Column(nullable = false)
     private String portfolioName;
 
-    @OneToMany
+    @ManyToMany
     private List<Equipment> equipmentsList = new ArrayList<>();
 
     @Column(nullable = false, name = "createdAt", updatable = false, columnDefinition = " datetime default NOW() ")
