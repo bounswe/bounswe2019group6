@@ -33,7 +33,7 @@
         </el-table>  
       </div>
       <div class="equipment" :style=equipmentVisibility>
-        <el-table ref="tradingEquipmentTable" :data="searchEquipmentResult" style="width: 100%">
+        <el-table ref="tradingEquipmentTable" :data="searchEquipmentResultToShow" style="width: 100%">
           <el-table-column prop="name" label="Equipment Name">
             <template slot-scope="scope">{{ scope.row.equipmentName }}</template>
           </el-table-column>
@@ -68,6 +68,7 @@ export default {
         followText : ''
       }],
       searchEquipmentResult: [],
+      searchEquipmentResultToShow: [],
       selectedFilter: "user",
       userVisibility: "display: block",
       equipmentVisibility: "display: none"
@@ -114,6 +115,11 @@ export default {
             "currentValue": res.equipments[i].data.currentValue, 
             "currentStock": res.equipments[i].data.currentStock,
           })
+          this.searchEquipmentResultToShow.push({
+            "equipmentName" : res.equipments[i].code,
+            "currentValue": res.equipments[i].data.currentValue, 
+            "currentStock": res.equipments[i].data.currentStock,
+          })
         }
         console.log(res)
       }).catch(error => {
@@ -129,6 +135,11 @@ export default {
             "currentValue": res.equipments[i].data.currentValue, 
             "currentStock": res.equipments[i].data.currentStock,
           })
+          this.searchEquipmentResultToShow.push({
+            "equipmentName" : res.equipments[i].code,
+            "currentValue": res.equipments[i].data.currentValue, 
+            "currentStock": res.equipments[i].data.currentStock,
+          })
         }
       }).catch(error => {
         console.log(error)
@@ -139,6 +150,11 @@ export default {
         var res = this.$store.getters.stockResult
         for (var i = 0; i < res.equipments.length; i++) {
           this.searchEquipmentResult.push({
+            "equipmentName" : res.equipments[i].code,
+            "currentValue": res.equipments[i].data.currentValue, 
+            "currentStock": res.equipments[i].data.currentStock,
+          })
+          this.searchEquipmentResultToShow.push({
             "equipmentName" : res.equipments[i].code,
             "currentValue": res.equipments[i].data.currentValue, 
             "currentStock": res.equipments[i].data.currentStock,
@@ -195,36 +211,38 @@ export default {
           console.log("errorrr in unfollowing user")
         })
       }
-
-      
     },
     handleSearch() {
-      this.$store.dispatch('search/getAllUsers').then(() => {
-        if (this.searchText == ''){
-          var res = this.$store.getters.userSearchResult
-        } else {
-          var res = this.$store.getters.userSearchResult.filter(user => user.username.includes(this.searchText))
-        }
-        var temp = []
-        
-        res.forEach(function (user) {
-          var followText = user.followingStatus == 'NOT_FOLLOWING' ? "Follow" : user.followingStatus == 'FOLLOWING' ? "Unfollow" : 'Requested'
-          var isFollowing = user.followingStatus == 'FOLLOWING' ? true : false
-          var isNotFollowing = user.followingStatus == 'NOT_FOLLOWING' ? true : false
-          var isPending = user.followingStatus == 'PENDING' ? true : false
-          temp.push({
-            'name': user.username,
-            'privacy' : user.isPrivate ? "Private" : 'Public',
-            'role' : user.roles[0] == "ROLE_TRADER" ? "Trader" : "Basic",
-            'followText' : followText,
-            'isFollowing' : isFollowing,
-            'isNotFollowing' : isNotFollowing,
-            'isPending' : isPending,
-
-          })
-        });
-        this.searchResult = temp
-      })
+      if (this.selectedFilter == "user") {
+        this.$store.dispatch('search/getAllUsers').then(() => {
+          if (this.searchText == ''){
+            var res = this.$store.getters.userSearchResult
+          } else {
+            var res = this.$store.getters.userSearchResult.filter(user => user.username.includes(this.searchText))
+          }
+          var temp = []
+          
+          res.forEach(function (user) {
+            var followText = user.followingStatus == 'NOT_FOLLOWING' ? "Follow" : user.followingStatus == 'FOLLOWING' ? "Unfollow" : 'Requested'
+            var isFollowing = user.followingStatus == 'FOLLOWING' ? true : false
+            var isNotFollowing = user.followingStatus == 'NOT_FOLLOWING' ? true : false
+            var isPending = user.followingStatus == 'PENDING' ? true : false
+            temp.push({
+              'name': user.username,
+              'privacy' : user.isPrivate ? "Private" : 'Public',
+              'role' : user.roles[0] == "ROLE_TRADER" ? "Trader" : "Basic",
+              'followText' : followText,
+              'isFollowing' : isFollowing,
+              'isNotFollowing' : isNotFollowing,
+              'isPending' : isPending,
+  
+            })
+          });
+          this.searchResult = temp
+        })
+      } else if (this.selectedFilter == "equipment"){
+        this.searchEquipmentResultToShow = this.searchEquipmentResult.filter(equipment => equipment.equipmentName.includes(this.searchText.toUpperCase()))
+      }
     } 
   } 
 }
