@@ -42,10 +42,11 @@ object ApiEndpoint {
     const val ALERT_DELETE: String = "$ALERT_URI/remove"
     const val ALERT_CREATE: String = "$ALERT_URI/set"
     const val USER_FORGOT_PASSWORD: String = "$API_URI/password/forgot"
-    const val GET_PORTFOLIO: String = "$API_URI/portfolio/getPortfolio"
+    const val GET_PORTFOLIO: String = "$API_URI/portfolio/get"
+    const val GET_ALL_PORTFOLIO: String = "$API_URI/portfolio/getAll"
     const val ADD_PORTFOLIO: String = "$API_URI/portfolio/create"
-    const val ADD_TO_PORTFOLIO: String = "$API_URI/portfolio/addToPortfolio"
+    const val ADD_TO_PORTFOLIO: String = "$API_URI/portfolio/add"
     const val DELETE_PORTFOLIO: String = "$API_URI/portfolio/delete"
-    const val DELETE_FROM_PORTFOLIO: String = "$API_URI/portfolio/deleteFromPortfolio"
+    const val DELETE_FROM_PORTFOLIO: String = "$API_URI/portfolio/discard"
 
 }

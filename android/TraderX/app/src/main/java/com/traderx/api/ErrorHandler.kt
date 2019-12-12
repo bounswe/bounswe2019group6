@@ -47,8 +47,7 @@ class ErrorHandler<T> {
             if (error is ConnectException) {
                 AlertDialog.Builder(context)
                     .setMessage(context.getString(R.string.connection_error))
-                    .setPositiveButton("Ok", DialogInterface.OnClickListener { dialog, id ->
-                    }).create().show()
+                    .setPositiveButton("Ok", { dialog, id -> }).create().show()
 
                 return true
             }
