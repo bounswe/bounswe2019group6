@@ -79,10 +79,10 @@ export default {
       } else {
         this.$store.dispatch('equipment/createPortfolio', { portfolioName: this.createPortfolioForm.portfolioName }).then(() => {
           this.showCreateDialog = false,
-          this.createPortfolioForm.portfolioName = ""
           this.all_portfolios.push({
             portfolioName : this.createPortfolioForm.portfolioName,
           })
+          this.createPortfolioForm.portfolioName = ""
           this.$notify({ title: 'Success', message: 'Portfolio is posted', type: 'success', duration: 2000 }) 
          }).catch(error => {
            console.log("errorrr in iban change")
