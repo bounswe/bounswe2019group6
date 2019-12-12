@@ -183,14 +183,12 @@ export default {
       var selectedAll = currencySelections.concat(cryptoCurrencySelections).concat(stockSelectinos)
       for(var i = 0; i < selectedAll.length; i++) {
         if(!this.alreadyAddedTableData.includes(selectedAll[i])){
+          console.log(selectedAll[i])
           this.$store.dispatch('equipment/addEquipmentToPortfolio', { portfolioName: this.portfolioname, code: selectedAll[i].equipmentName }).then(() => {
-            
-          }).catch(error => {
-            console.log("errorrr in equipment addition")
+            }).catch(error => {
+              console.log("errorrr in equipment addition")
             console.log(error)
           })
-          
-
           this.alreadyAddedTableData.push(selectedAll[i])
         }
       }
@@ -201,7 +199,12 @@ export default {
       this.activeNames = []
     },
     handleDeleteEquipmentPortfolio(elem) {
-      this.alreadyAddedTableData = this.alreadyAddedTableData.filter(item => item !== elem)
+      this.$store.dispatch('equipment/deleteEquipmentFromPortfolio', { portfolioName: this.portfolioname, code: elem.equipmentName }).then(() => {
+        this.alreadyAddedTableData = this.alreadyAddedTableData.filter(item => item !== elem)
+      }).catch(error => {
+        console.log("errorrr in equipment deletion")
+        console.log(error)
+      })
     }
 
   }
