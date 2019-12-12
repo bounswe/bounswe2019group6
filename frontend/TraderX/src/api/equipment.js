@@ -77,7 +77,7 @@ export function createPortfolio(query) {
 export function deletePortfolio(query) {
   return request({
     url: '/portfolio/delete',
-    method: 'post',
+    method: 'delete',
     params: query,
   })
 }
