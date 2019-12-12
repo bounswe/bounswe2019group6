@@ -151,6 +151,43 @@ public class PortfolioService {
     }
 
     /**
+     * Adds the specified equipments to the specified portfolio
+     *
+     * @param username
+     * @param portfolioName
+     * @param codes
+     * @return status message
+     */
+    public String addManyToPortfolio(String username, String portfolioName, List<String> codes) {
+
+        final User user = userRepository.findByUsername(username);
+        if (user == null) {
+            throw new CustomException("There is no user named " + username + ".", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        final Portfolio targetPortfolio = portfolioRepository.getPortfolioOfUser(username, portfolioName);
+
+        if (targetPortfolio == null) {
+            throw new CustomException("Portfolio with the name " + portfolioName + " does not exist",
+                    HttpStatus.PRECONDITION_FAILED);
+        }
+
+        final List<Equipment> equipments = equipmentRepository.findByCodeIn(codes);
+        if (equipments == null || equipments.isEmpty()) {
+            throw new CustomException("There is no equipment with given codes", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        final List<Equipment> equipmentList = targetPortfolio.getEquipmentsList();
+        equipments.stream().filter(equipment -> !equipmentList.contains(equipment)).forEach(equipmentList::add);
+
+        targetPortfolio.setEquipmentsList(equipmentList);
+        portfolioRepository.save(targetPortfolio);
+
+        return ("The equipments are successfully added to the portfolio: " + portfolioName);
+
+    }
+
+    /**
      * Discards the specified equipment from the specified portfolio
      * 
      * @param username
@@ -204,12 +241,9 @@ public class PortfolioService {
      * @return class containing "equipmentsInPortfolio "list consisting of
      *         PortfolioEquipmentDTO's
      */
-    public PortfolioResponseDTO getPortfolio(String username, String portfolioName) {
+    public List<PortfolioEquipmentDTO> getPortfolio(String username, String portfolioName) {
 
-        User user = userRepository.findByUsername(username);
-        if (user == null) {
-            throw new CustomException("There is no user named " + username + ".", HttpStatus.NOT_ACCEPTABLE);
-        }
+
 
         Portfolio portfolioToGet = portfolioRepository.getPortfolioOfUser(username, portfolioName);
 
@@ -218,7 +252,7 @@ public class PortfolioService {
                     HttpStatus.PRECONDITION_FAILED);
         }
 
-        List<PortfolioEquipmentDTO> portfolioDtoList = new ArrayList<PortfolioEquipmentDTO>();
+        final List<PortfolioEquipmentDTO> portfolioDtoList = new ArrayList<PortfolioEquipmentDTO>();
 
         String code;
         double currentValue, currentStock, dailyChange, predictionRate;
@@ -236,7 +270,7 @@ public class PortfolioService {
                     predictionRate));
         }
 
-        return new PortfolioResponseDTO(portfolioDtoList);
+        return  portfolioDtoList;
 
     }
 
