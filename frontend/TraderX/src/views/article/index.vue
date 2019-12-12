@@ -67,11 +67,7 @@
     },
     methods: {
       HandleRedirect(article) {
-        var articleid = article.id
-        console.log("id is: ", articleid)
-        // this.$router.push({ path: '/login' })
-        this.$router.push({ path: `/view/${articleid}` })
-        
+        this.$router.push({ path: `/view/${article.id}` })
       }
     }
   }

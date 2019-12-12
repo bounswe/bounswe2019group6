@@ -1,6 +1,6 @@
 import { getEquipment, listEquipment, getAllCurrencies, getAllCryptoCurrencies, getAllStocks, depositMoney, 
         buyEquipment, sellEquipment, getAssetInfo, getMyAllPortfolios, createPortfolio, deletePortfolio, 
-        addEquipmentToPortfolio, deleteEquipmentFromPortfolio} from '@/api/equipment'
+        addEquipmentToPortfolio, deleteEquipmentFromPortfolio, getAllEquipmentOfPortfolio} from '@/api/equipment'
 
 const state = {
   equipmentQueryResult : {
@@ -23,7 +23,10 @@ const mutations = {
   },
   SET_PORTFOLIO_RESULT: (state, result) => {
     state.allPortfolios = result
-  }
+  },
+  SET_EQUIPMENT_RESULT: (state, result) => {
+    state.allEquipments = result
+  },
 }
 
 const actions = {
@@ -153,6 +156,17 @@ const actions = {
       deletePortfolio(username, portfolioname).then(response => {
         const { data } = response
         commit('SET_QUERY_RESULT', data)
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  getAllEquipmentOfPortfolio({ commit }, portfolioName) {
+    return new Promise((resolve, reject) => {
+      getAllEquipmentOfPortfolio(portfolioName).then(response => {
+        const { data } = response
+        commit('SET_EQUIPMENT_RESULT', data)
         resolve()
       }).catch(error => {
         reject(error)

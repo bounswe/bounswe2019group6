@@ -73,6 +73,13 @@ export function getMyAllPortfolios() {
   })
 }
 
+export function getAllEquipmentOfPortfolio(portfolioName) {
+  return request({
+    url: '/portfolio/get?portfolioName=' + portfolioName,
+    method: 'get',
+  })
+}
+
 export function createPortfolio(query) {
   return request({
     url: '/portfolio/create',

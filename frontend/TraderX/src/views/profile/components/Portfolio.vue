@@ -79,6 +79,7 @@ export default {
       } else {
         this.$store.dispatch('equipment/createPortfolio', { portfolioName: this.createPortfolioForm.portfolioName }).then(() => {
           this.showCreateDialog = false,
+          this.createPortfolioForm.portfolioName = ""
           this.all_portfolios.push({
             portfolioName : this.createPortfolioForm.portfolioName,
           })
@@ -94,9 +95,9 @@ export default {
         this.$message.error("Portfolio Name Can Not Be Empty")
       } else {
         this.$store.dispatch('equipment/deletePortfolio', { portfolioName: this.deletePortfolioForm.portfolioName }).then(() => {
-          this.showCreateDialog = false,
           this.all_portfolios = this.all_portfolios.filter(portfolio => portfolio.portfolioName != this.deletePortfolioForm.portfolioName);
-          
+          this.showDeleteDialog = false;
+          this.deletePortfolioForm.portfolioName = ""
           this.$notify({ title: 'Success', message: 'Portfolio is deleted', type: 'success', duration: 2000 }) 
         }).catch(error => {
           console.log("errorrr in portfolio deletion")
