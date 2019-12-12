@@ -13,6 +13,7 @@ const getters = {
   stockResult: state => state.equipment.stockResult,
   allPortfolios: state => state.equipment.allPortfolios,
   allEquipments: state => state.equipment.allEquipments,
+  transaction: state => state.equipment.transaction,
 
   // TODO these are deprecated but we can keep useful ones
   roles: state => state.user.roles,

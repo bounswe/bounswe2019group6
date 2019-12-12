@@ -111,3 +111,10 @@ export function deleteEquipmentFromPortfolio(query) {
     params: query,
   })
 }
+
+export function getAllTransactions(user) {
+  return request({
+    url: '/transaction/user/'+user,
+    method: 'get',
+  })
+}
