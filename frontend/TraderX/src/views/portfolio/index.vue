@@ -184,7 +184,6 @@ export default {
     async getAllEquipmentsOfThisPortfolio(){
       const portfolioName = this.$route.path.split('/')[3]
       await this.$store.dispatch('equipment/getAllEquipmentOfPortfolio', portfolioName ).then(() => {
-        console.log(this.$store.getters.allEquipments.equipmentsInPortfolio[0])
         for(var i = 0; i < this.$store.getters.allEquipments.equipmentsInPortfolio.length; i++) {
           var t_code = this.$store.getters.allEquipments.equipmentsInPortfolio[i].code
           var t_currentVal = this.$store.getters.allEquipments.equipmentsInPortfolio[i].currentValue
@@ -199,7 +198,6 @@ export default {
           })
         }
       }).catch(error => {
-        console.log("errorrr in getting equipment")
         console.log(error)
       })
     },
@@ -227,7 +225,6 @@ export default {
       this.$store.dispatch('equipment/deleteEquipmentFromPortfolio', { portfolioName: this.portfolioname, code: elem.equipmentName }).then(() => {
         this.alreadyAddedTableData = this.alreadyAddedTableData.filter(item => item !== elem)
       }).catch(error => {
-        console.log("errorrr in equipment deletion")
         console.log(error)
       })
     }

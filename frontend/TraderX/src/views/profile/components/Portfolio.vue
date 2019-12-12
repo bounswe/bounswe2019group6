@@ -69,7 +69,6 @@ export default {
           })
         }
       }).catch(error => {
-        console.log("errorrr in iban change")
         console.log(error)
       })
     },
@@ -85,7 +84,6 @@ export default {
           this.createPortfolioForm.portfolioName = ""
           this.$notify({ title: 'Success', message: 'Portfolio is posted', type: 'success', duration: 2000 }) 
          }).catch(error => {
-           console.log("errorrr in iban change")
            console.log(error)
          })
       }
@@ -100,7 +98,6 @@ export default {
           this.deletePortfolioForm.portfolioName = ""
           this.$notify({ title: 'Success', message: 'Portfolio is deleted', type: 'success', duration: 2000 }) 
         }).catch(error => {
-          console.log("errorrr in portfolio deletion")
           console.log(error)
         })
       }

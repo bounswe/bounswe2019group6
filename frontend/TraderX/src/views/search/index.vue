@@ -140,7 +140,6 @@ export default {
             "currentStock": res.equipments[i].data.currentStock,
           })
         }
-        console.log(res)
       }).catch(error => {
         console.log(error)
       }) 
@@ -187,11 +186,9 @@ export default {
       if (this.selectedFilter == "user") {
         this.equipmentVisibility = "display: none"
         this.userVisibility = "display: block"
-        console.log(this.equipmentVisibility)
       } else if (this.selectedFilter == "equipment") {
         this.equipmentVisibility = "display: block"
         this.userVisibility = "display: none"
-        console.log(this.equipmentVisibility)
       }
     },
     showUserProfile(user) {
@@ -226,8 +223,8 @@ export default {
             user.isFollowing = false
           }
           user.followText = user.isNotFollowing ? "Follow" : user.isFollowing ? "Unfollow" : 'Requested'
-        }).catch(() => {
-          console.log("errorrr in unfollowing user")
+        }).catch(err => {
+          console.log(err)
         })
       }
     },

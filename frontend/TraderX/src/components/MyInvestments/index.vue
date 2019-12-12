@@ -51,7 +51,6 @@ export default {
     },
     async getAllEquipments(){
       await this.$store.dispatch('equipment/getAssetInfo').then(response => {
-        console.log(this.$store.getters.equipmentQueryResult)
         for(var i = 0; i < this.$store.getters.equipmentQueryResult.length; i++) {
           this.tableData.push({
             'code': this.$store.getters.equipmentQueryResult[i].code,

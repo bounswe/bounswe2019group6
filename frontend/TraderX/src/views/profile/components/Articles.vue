@@ -211,7 +211,6 @@ export default {
         this.$refs.postForm.validate(valid => {
           if (valid) {
             // TODO later send a request to backend from here
-            console.log(this.postForm)
             this.loading = true
             this.$notify({
               title: 'Success',
@@ -222,7 +221,6 @@ export default {
             this.postForm.status = 'published'
             this.loading = false
           } else {
-            console.log('error submit!!')
             return false
           }
         })
