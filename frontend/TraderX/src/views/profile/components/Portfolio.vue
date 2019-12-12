@@ -36,7 +36,7 @@
 <script>
 
 import CoolCard from '@/components/CoolCard'
-import { createPortfolio, deletePortfolio, addEquipmentToPortfolio, deleteEquipmentFromPortfolio } from '@/api/equipment'
+import { getMyAllPortfolios, createPortfolio, deletePortfolio, addEquipmentToPortfolio, deleteEquipmentFromPortfolio } from '@/api/equipment'
 
 export default {
   props: {
@@ -57,7 +57,22 @@ export default {
       isSelf: this.$route.path.split('/')[1] == 'profile' ? true : false
     }
   },
+  created() {
+    this.getAllPortfolios()
+  },
   methods: {
+    getAllPortfolios() {
+      this.$store.dispatch('equipment/getMyAllPortfolios').then(() => {
+        for(var i = 0; i < this.$store.getters.allPortfolios.length; i++) {
+          this.all_portfolios.push({
+            portfolioName : this.$store.getters.allPortfolios[i].portfolioName,
+          })
+        }
+      }).catch(error => {
+        console.log("errorrr in iban change")
+        console.log(error)
+      })
+    },
     handleCreatePortfolio(){
       if (this.createPortfolioForm.portfolioName == '') {
         this.$message.error("Portfolio Name Can Not Be Empty")

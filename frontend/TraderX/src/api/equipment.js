@@ -66,6 +66,13 @@ export function getAssetInfo() {
   })
 }
 
+export function getMyAllPortfolios() {
+  return request({
+    url: '/portfolio/getAll',
+    method: 'get',
+  })
+}
+
 export function createPortfolio(query) {
   return request({
     url: '/portfolio/create',

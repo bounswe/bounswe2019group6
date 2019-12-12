@@ -11,6 +11,7 @@ const getters = {
   currencyResult: state => state.equipment.currencyResult,
   cryptoCurrencyResult: state => state.equipment.cryptoCurrencyResult,
   stockResult: state => state.equipment.stockResult,
+  allPortfolios: state => state.equipment.allPortfolios,
 
   // TODO these are deprecated but we can keep useful ones
   roles: state => state.user.roles,
