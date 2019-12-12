@@ -99,8 +99,8 @@ export function addEquipmentToPortfolio(query) {
 
 export function deleteEquipmentFromPortfolio(query) {
   return request({
-    url: '/portfolio/delete',
-    method: 'post',
+    url: '/portfolio/discard',
+    method: 'delete',
     params: query,
   })
 }

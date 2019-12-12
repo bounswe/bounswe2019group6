@@ -90,7 +90,7 @@
 
 <script>
 
-import { getAllCurrencies, getAllCryptoCurrencies, getAllStocks } from '@/api/equipment'
+import { getAllCurrencies, getAllCryptoCurrencies, getAllStocks, addEquipmentToPortfolio, deleteEquipmentFromPortfolio } from '@/api/equipment'
 import equipment from '../../store/modules/equipment'
 
 export default {
@@ -183,6 +183,14 @@ export default {
       var selectedAll = currencySelections.concat(cryptoCurrencySelections).concat(stockSelectinos)
       for(var i = 0; i < selectedAll.length; i++) {
         if(!this.alreadyAddedTableData.includes(selectedAll[i])){
+          this.$store.dispatch('equipment/addEquipmentToPortfolio', { portfolioName: this.portfolioname, code: selectedAll[i].equipmentName }).then(() => {
+            
+          }).catch(error => {
+            console.log("errorrr in equipment addition")
+            console.log(error)
+          })
+          
+
           this.alreadyAddedTableData.push(selectedAll[i])
         }
       }
