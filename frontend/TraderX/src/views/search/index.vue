@@ -43,6 +43,11 @@
           <el-table-column prop="stock" label="Current Stock">
             <template slot-scope="scope">{{ scope.row.currentStock }}</template>
           </el-table-column>
+          <el-table-column fixed="right" width="120">
+            <template slot-scope="scope">
+              <el-button @click.native.prevent="showTradingEquipment(searchEquipmentResultToShow[scope.$index])" type="text" round>Details</el-button>
+            </template>
+          </el-table-column>
         </el-table>
       </div>
     </div>
@@ -67,6 +72,9 @@ export default {
         isPending : '',
         followText : ''
       }],
+      all_currency_codes: ['JPY','EUR','TRY','CZK','GBP','CNY'],
+      all_stock_codes: ['AMZN','BABA','MSFT','ORCL','SILK','ENSG'],
+      all_crypto_codes: ['BTC','ETC','VIB','ETH','BTG','ZEN'],
       searchEquipmentResult: [],
       searchEquipmentResultToShow: [],
       selectedFilter: "user",
@@ -106,6 +114,17 @@ export default {
 
   },
   methods: {
+    showTradingEquipment(equip) {
+      var e_type = this.all_currency_codes.includes(equip.equipmentName) ? "Currency" : 
+                     this.all_crypto_codes.includes(equip.equipmentName) ? "Crypto Currency" : "Stock"
+      if (e_type == "Currency") {
+        this.$router.push('/trading-equipment/money-currencies')
+      } else if (e_type == "Crypto Currency") {
+        this.$router.push('/trading-equipment/cryptocurrencies')
+      } else if (e_type == "Stock") {
+        this.$router.push('/trading-equipment/stocks')
+      }
+    },
     getCurrencyList() {
       this.$store.dispatch('equipment/getAllCurrencies').then(() => {
         var res = this.$store.getters.currencyResult
