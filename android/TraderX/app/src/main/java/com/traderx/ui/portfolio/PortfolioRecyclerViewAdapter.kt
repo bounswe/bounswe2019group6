@@ -5,15 +5,20 @@ package com.traderx.ui.portfolio
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
+import androidx.navigation.NavDirections
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.traderx.R
 import com.traderx.api.response.PortfolioResponse
-import kotlinx.android.synthetic.main.item_user.view.*
+import kotlinx.android.synthetic.main.item_portfolio.view.*
 
 class PortfolioRecyclerViewAdapter(
-    private val mValues: List<PortfolioResponse>
-) : RecyclerView.Adapter<PortfolioRecyclerViewAdapter.ViewHolder>() {
+    private val portfolios: ArrayList<PortfolioResponse>,
+    private val deleteAction: (name: String, () -> Unit) -> Unit,
+    private val actionNavDirection: (name: String ) -> NavDirections
+    ) : RecyclerView.Adapter<PortfolioRecyclerViewAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -22,28 +27,27 @@ class PortfolioRecyclerViewAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = mValues[position]
-        holder.mUserNameView.text = item.name
+        val item = portfolios[position]
+        holder.mPortfolioName.text = item.portfolioName
 
         with(holder.mView) {
             setOnClickListener {
+                findNavController().navigate(actionNavDirection(portfolios[holder.adapterPosition].portfolioName))
+            }
+        }
 
-             //   val action =
-               //     UserSearchFragmentDirections.actionNavigationUserSearchToNavigationUser(item.name)
-
-//                findNavController().navigate(action)
-
+        holder.deleteAction.setOnClickListener {
+            deleteAction(portfolios[holder.adapterPosition].portfolioName) {
+                portfolios.removeAt(holder.adapterPosition)
+                notifyItemRemoved(holder.adapterPosition)
             }
         }
     }
 
-    override fun getItemCount(): Int = mValues.size
+    override fun getItemCount(): Int = portfolios.size
 
     inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {
-        val mUserNameView: TextView = mView.item_username
-
-        override fun toString(): String {
-            return super.toString() + " '" + mUserNameView.text + "'"
-        }
+        val mPortfolioName: TextView = mView.portfolio_name
+        val deleteAction: ImageView = mView.delete_portfolio_action
     }
 }

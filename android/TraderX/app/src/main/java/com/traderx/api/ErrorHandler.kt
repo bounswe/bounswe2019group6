@@ -22,6 +22,7 @@ class ErrorHandler<T> {
         fun handleError(error: Throwable, context: Context): Boolean {
             Log.e(TAG, error.javaClass.name)
             Log.e(TAG, error.message)
+            error.printStackTrace()
 
             return when (error) {
                 is HttpException -> handleHttpException(error, context)

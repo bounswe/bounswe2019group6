@@ -5,6 +5,7 @@ import com.traderx.api.request.LoginRequest
 import com.traderx.api.request.SignUpRequest
 import com.traderx.api.response.*
 import com.traderx.db.Article
+import com.traderx.db.Equipment
 import com.traderx.db.User
 import io.reactivex.Completable
 import io.reactivex.Single
@@ -111,17 +112,20 @@ interface RequestService {
     @POST(ApiEndpoint.ADD_PORTFOLIO)
     fun createPortfolio(@Query("portfolioName")  portfolioName: String): Completable
 
-
     @GET(ApiEndpoint.GET_PORTFOLIO)
-    fun getPortfolio(@Query("portfolioName") portfolioName: String): Single<PortfolioResponse>
+    fun getPortfolio(@Query("portfolioName") portfolioName: String): Single<List<Equipment>>
 
     @POST(ApiEndpoint.ADD_TO_PORTFOLIO)
     fun addToPortfolio(
         @Query("portfolioName") portfolioName: String,
-        @Query("code") equipment: String
+        @Body codes : List<String>
     ): Completable
 
-    @POST(ApiEndpoint.DELETE_PORTFOLIO)
+    @GET(ApiEndpoint.GET_ALL_PORTFOLIO)
+    fun getPortfolios(): Single<ArrayList<PortfolioResponse>>
+
+
+    @DELETE(ApiEndpoint.DELETE_PORTFOLIO)
     fun delPortfolio(@Query("portfolioName") portfolioName: String): Completable
 
     @POST(ApiEndpoint.DELETE_FROM_PORTFOLIO)
