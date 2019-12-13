@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import cmpe451.group6.authorization.model.RegistrationStatus;
+import cmpe451.group6.authorization.repository.UserRepository;
 import cmpe451.group6.authorization.service.SignupService;
 import cmpe451.group6.rest.equipment.service.EquipmentUpdateService;
 import org.modelmapper.ModelMapper;
@@ -35,6 +36,9 @@ public class Group6BackendService implements CommandLineRunner {
 
   @Autowired
   EquipmentUpdateService equipmentUpdateService;
+
+  @Autowired
+  UserRepository userRepository;
 
   @Value("${security.admin-un}")
   String adminUsername;
@@ -77,16 +81,18 @@ public class Group6BackendService implements CommandLineRunner {
   @Override
   public void run(String... params) throws Exception {
 
-    User admin = new User();
-    admin.setUsername(adminUsername);
-    admin.setPassword(adminPassword);
-    admin.setEmail("admin@email.com");
-    admin.setLatitude("6");
-    admin.setLongitude("6");
-    admin.setRegistrationStatus(RegistrationStatus.ENABLED);
-    admin.setRoles(new ArrayList<Role>(Arrays.asList(Role.ROLE_ADMIN)));
-    admin.setIsPrivate(true);
-    signupService.internal_signup(admin);
+    if (!userRepository.existsByUsername(adminUsername)) {
+      User admin = new User();
+      admin.setUsername(adminUsername);
+      admin.setPassword(adminPassword);
+      admin.setEmail("admin@email.com");
+      admin.setLatitude("6");
+      admin.setLongitude("6");
+      admin.setRegistrationStatus(RegistrationStatus.ENABLED);
+      admin.setRoles(new ArrayList<Role>(Arrays.asList(Role.ROLE_ADMIN)));
+      admin.setIsPrivate(true);
+      signupService.internal_signup(admin);
+    }
 
     equipmentUpdateService.initializeEquipments();
 

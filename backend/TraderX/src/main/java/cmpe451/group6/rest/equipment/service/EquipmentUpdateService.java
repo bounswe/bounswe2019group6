@@ -60,6 +60,11 @@ public class EquipmentUpdateService {
     }
 
     private void initBase(){
+        if (isInitialized(BASE_CURRENCY_CODE)) {
+            logger.info("Skipping base equipment initialization.");
+            return;
+        }
+
         Equipment equipment = new Equipment();
         equipment.setName(BASE_CURRENCY_NAME);
         equipment.setCode(BASE_CURRENCY_CODE);
@@ -81,6 +86,10 @@ public class EquipmentUpdateService {
         final boolean isStock = type == EquipmentType.STOCK;
 
         for (String equipment: equipments) {
+            if (isInitialized(equipment)) {
+                logger.info(String.format("Skipping equipment initialization: [%s]", equipment));
+                continue;
+            }
             // Init other currencies
             Map<String, String> data = getDataMap(restTemplate, isStock, equipment);
             saveSingleEquipment(data, type);
@@ -116,6 +125,10 @@ public class EquipmentUpdateService {
 
         for (String currency: currencies) { // No need to load history for base currency.
             // Init other currencies
+            if (hasHistoryLoaded(currency)) {
+                logger.info(String.format("Skipping equipment history initialization: [%s]", currency));
+                continue;
+            }
 
             final String uri,historyHeader, metaHeader;
             switch (type) {
@@ -339,4 +352,11 @@ public class EquipmentUpdateService {
                 (isStock ? Stock3rdParty.header : Currency3rdPartyDTO.header);
     }
 
+    protected boolean isInitialized(String code){
+        return equipmentRepository.existsByCode(code);
+    }
+
+    protected boolean hasHistoryLoaded(String code){
+        return historicalValueRepository.existsByEquipment_Code(code);
+    }
 }
