@@ -505,7 +505,7 @@ export default {
       }, this)
 
       // Posting to backend
-      this.$store.dispatch('comment/postComment', {"equipmentCode" : equipmentCode.toLowerCase(), "commentDict" : this.createCommentContent}).then(response => {
+      this.$store.dispatch('comment/postComment', {"equipmentCode" : equipmentCode.toLowerCase(), "commentDict" : {"comment": this.createCommentContent}}).then(response => {
         this.showCreateCommentDialog = false
         this.createCommentContent = ''
         this.$message.success('Comment is posted successfully!')
