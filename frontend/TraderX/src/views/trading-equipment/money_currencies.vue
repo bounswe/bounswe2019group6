@@ -95,7 +95,7 @@
                   <el-button class='create-comment' style="margin-top:20px;margin-bottom:20px;" @click="showCreateCommentDialog=true">
                     <svg-icon style="margin-right:10px" icon-class="edit" /> Write Comment </el-button>
                   
-                  <el-row class='row' v-for="c in commentList" v-bind:key="c.id" :gutter="20" style="padding:16px 16px 0;margin-bottom:20px;">
+                  <el-row class='row' v-for="c in ed.comments" :key="c.id" :gutter="20" style="padding:16px 16px 0;margin-bottom:20px;">
                     <el-card class='comment-container'>
                       <p>
                         <span class="comment-author"> {{ c.author }} </span>
@@ -105,11 +105,18 @@
                       </p>
                       <p class="comment-text"> {{ c.comment }} </p>
                       <p class="comment-options">
-                        <a @click="dislikeComment(c.id)"> Dislike </a> |
-                        <a @click="likeComment(c.id)"> Like </a>
+                        <a @click="dislikeComment(ed.key, c.id)"> Dislike </a> |
+                        <a @click="likeComment(ed.key, c.id)"> Like </a>
                       </p>
                     </el-card>
                   </el-row>
+
+                  <el-dialog title="Create Comment" :visible.sync="showCreateCommentDialog">
+                    <textarea class="comment-textarea" placeholder="Write your comment here" column="100" rows="10" v-model="createCommentContent"></textarea>
+                    <div>
+                      <el-button style="margin-top:10px;" @click="createComment(ed.key)"><svg-icon icon-class="edit"/> Publish Comment </el-button>
+                    </div>
+                  </el-dialog>
                 
                 </el-card>
 
@@ -130,19 +137,7 @@
       </el-input>  
     </el-dialog>
 
-    <el-dialog title="Create Comment" :visible.sync="showCreateCommentDialog">
-      <textarea class="comment-textarea" placeholder="Write your comment here" cols="100" rows="10" v-model="createCommentContent"></textarea>
-      <div>
-        <el-button style="margin-top:10px;" @click="createComment()"><svg-icon icon-class="edit"/> Publish Comment </el-button>
-      </div>
-    </el-dialog>
 
-    <el-dialog title="Reply Comment" :visible.sync="showReplyCommentDialog">
-      <textarea class="comment-textarea" placeholder="Write your comment here" cols="100" rows="10" v-model="replyCommentContent"></textarea>
-      <div> 
-        <el-button style="margin-top:10px;" @click="replyComment(replyCommentId)"><svg-icon icon-class="edit"/> Reply </el-button>
-      </div>
-    </el-dialog>
 
   </div>
    
@@ -200,21 +195,26 @@ export default {
       comparisonData: {equipmentData: []},
       activeTab: 'JPY',
       articleList: null,
-      commentList: null
+      commentList: {}
     }
   },
   async created() {
     this.returnArticleList()
-    this.returnCommentList()
+    
     var equipmentList = await this.getEquipmentList()
+    this.getCommentList(equipmentList)
     // Fill the equipmentData with equipment list
     equipmentList.forEach(function(equipmentKey) {
       this.equipmentData.push({key: equipmentKey.code})
     }, this)
     var equipmentValues = await this.getEquipmentValues(equipmentList) 
+    console.log(this.commentList)
     this.createRadarChartData(equipmentValues)
     this.equipmentData = equipmentValues
-    
+
+    console.log('equipmentData is: ')
+    console.log(this.equipmentData)
+
     this.comparisonData.equipmentData = this.equipmentData
   },
   methods: {
@@ -270,7 +270,7 @@ export default {
       ]
     },
 
-    returnCommentList() {
+    returnCommentListFrontend() {
       this.commentList = [
         {
           id: 1,
@@ -310,8 +310,23 @@ export default {
       ]
     },
 
+    // Comment List will be received for all of the equipment
+    async getCommentList(equipmentList) {
+      var commentList = {}
+      equipmentList.forEach(async function(e) {
+        try {
+          await this.$store.dispatch('comment/getCommentList', e.code.toLowerCase())
+          var res = this.$store.getters.commentQueryResult
+          commentList[e.code] = res
+        } catch (error) {
+          console.log(error)
+        }
+      }, this)
+      this.commentList = commentList
+    },
+
     // Promise for getting equipments list 
-    async getEquipmentList() {
+    async getEquipmentList(equipmentList) {
       try {
         await this.$store.dispatch('equipment/getAllCurrencies')
         var res = this.$store.getters.currencyResult
@@ -342,6 +357,7 @@ export default {
             low: [],
             current: [],
           }
+          equipmentValues[equipmentValues.length-1].comments = this.commentList[res.equipment.code]
           res.historicalValues.forEach(function(val) {
             equipmentValues[equipmentValues.length-1].data.open.push(val.open)
             equipmentValues[equipmentValues.length-1].data.close.push(val.close)
@@ -443,35 +459,60 @@ export default {
     },
 
     //  TODO: This should be done at the backend
-    likeComment(commentId) {
-      this.commentList.forEach(function(comment) {
-        if (comment.id == commentId) {
-          comment.likes += 1;
+    likeComment(equipmentCode, commentId) {
+      // TODO: Do this at the backend as well
+      this.equipmentData.forEach(function(e) {
+        if (e.key == equipmentCode) {
+          e.comments.forEach(function(comment) {
+            if (comment.id == commentId) {
+              comment.likes += 1
+            }
+          })
         }
       }, this)
     },
 
-    dislikeComment(commentId) {
-      this.commentList.forEach(function(comment) {
-        if (comment.id == commentId) {
-          comment.dislikes += 1;
+    // TODO: Do this at the backend as well
+    dislikeComment(equipmentCode, commentId) {
+      this.equipmentData.forEach(function(e) {
+        if (e.key == equipmentCode) {
+          e.comments.forEach(function(comment) {
+            if (comment.id == commentId) {
+              comment.dislikes += 1
+            }
+          })
         }
       }, this)
     },
 
     // TODO connect this to backend
-    createComment() {
+    createComment(equipmentCode) {
+      // This is for the frontend purposes for now 
+      // TODO: change this so that you won't need it
       var newComment = {
-        id: this.commentList.length+1,
+        id: this.commentList[equipmentCode].length+1,
         timestamp: Date.now(),
         likes: 0,
         dislikes: 0,
         author: 'current-user', // TODO: change this with backend added
         comment: this.createCommentContent,
       }
-      this.commentList.push(newComment)
-      this.showCreateCommentDialog = false
-      this.createCommentContent = ''
+      //this.commentList[equipmentCode].push(newComment)
+      this.equipmentData.forEach(function(e) {
+        if (e.key == equipmentCode) {
+          e.comments.push(newComment)
+        }
+      }, this)
+
+      // Posting to backend
+      this.$store.dispatch('comment/postComment', {"equipmentCode" : equipmentCode.toLowerCase(), "commentDict" : this.createCommentContent}).then(response => {
+        this.showCreateCommentDialog = false
+        this.createCommentContent = ''
+        this.$message.success('Comment is posted successfully!')
+      }).catch(err => {
+        console.log(err)
+      })
+
     }
   }
 }
