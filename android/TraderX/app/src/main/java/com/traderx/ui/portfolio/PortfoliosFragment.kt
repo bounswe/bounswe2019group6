@@ -1,11 +1,14 @@
 package com.traderx.ui.portfolio
 
 
+import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,6 +26,9 @@ import com.traderx.util.Injection
 import com.traderx.viewmodel.AuthUserViewModel
 import com.traderx.viewmodel.PortfolioViewModel
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.internal.util.HalfSerializer.onComplete
+import kotlinx.android.synthetic.main.layout_portfolio_modal.view.*
+import retrofit2.HttpException
 
 class PortfoliosFragment : Fragment(), FragmentTitleEmitters {
 
@@ -30,6 +36,7 @@ class PortfoliosFragment : Fragment(), FragmentTitleEmitters {
     private lateinit var recyclerView: RecyclerView
     private val disposable = CompositeDisposable()
     private lateinit var portfolioViewModel: PortfolioViewModel
+    private lateinit var addPortfolioButton: ImageButton
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,9 +58,35 @@ class PortfoliosFragment : Fragment(), FragmentTitleEmitters {
 
         val root = inflater.inflate(R.layout.fragment_portfolio, container, false)
 
+        addPortfolioButton = root.findViewById(R.id.portfolio_add_action)
+
         recyclerView = root.findViewById<RecyclerView>(R.id.portfolio_list).apply {
             layoutManager = LinearLayoutManager(context)
             adapter = UserSearchSkeletonRecyclerViewAdapter(5)
+        }
+
+        addPortfolioButton.setOnClickListener {
+            val pDialogView = LayoutInflater.from(context as Context)
+                .inflate(R.layout.layout_portfolio_modal, null)
+
+            val builder = AlertDialog.Builder(context as Context)
+                .setView(pDialogView).setTitle("Create Portfolio")
+            val pAlertDialog = builder.show()
+
+            pDialogView.dialog_add_portfolio.setOnClickListener {
+                val portfolioName = pDialogView.dialog_port_name.text.toString()
+                addPortfolio(portfolioName, onComplete = {
+                    pAlertDialog.dismiss()
+
+                })
+
+            }
+
+            pDialogView.dialog_cancel_btn.setOnClickListener {
+                pAlertDialog.dismiss()
+            }
+
+
         }
 
         disposable.add(
@@ -64,9 +97,9 @@ class PortfoliosFragment : Fragment(), FragmentTitleEmitters {
                         PortfolioRecyclerViewAdapter(
                             it,
                             { name, onComplete -> deletePortfolio(name, onComplete) },
-                            { username ->
+                            { name ->
                                 FollowersFragmentDirections.actionNavigationFollowersToNavigationUser(
-                                    username
+                                    name
                                 )
                             }
                         )
@@ -76,6 +109,36 @@ class PortfoliosFragment : Fragment(), FragmentTitleEmitters {
         return root
     }
 
+
+    private fun addPortfolio(name: String, onComplete: () -> Unit) {
+        disposable.add(
+            portfolioViewModel.addPortfolio(name)
+                .compose(Helper.applyCompletableSchedulers())
+                .doFinally {
+                    onComplete()
+                }
+                .subscribe({
+                    (recyclerView.adapter as PortfolioRecyclerViewAdapter).addData(PortfolioResponse(name))
+                    Snackbar.make(
+                        requireView(),
+                        "Added $name",
+                        Snackbar.LENGTH_SHORT
+                    ).show()
+
+                }, {
+                    if (!ErrorHandler.handleConnectException(it, context as Context) && it is HttpException) {
+                        val errorResponse = ErrorHandler.parseErrorMessage(
+                            it.response().errorBody()?.string() ?: ""
+                        )
+                        Snackbar.make(
+                            requireView(),
+                            errorResponse.message,
+                            Snackbar.LENGTH_SHORT
+                        ).show()
+                    }
+                })
+        )
+    }
 
     private fun deletePortfolio(name: String, onComplete: () -> Unit) {
 

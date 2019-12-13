@@ -42,7 +42,14 @@ class PortfolioRecyclerViewAdapter(
                 notifyItemRemoved(holder.adapterPosition)
             }
         }
+
     }
+
+    fun addData(portfolio:PortfolioResponse) {
+        portfolios.add(portfolio)
+        notifyDataSetChanged()
+    }
+
 
     override fun getItemCount(): Int = portfolios.size
 
