@@ -24,16 +24,17 @@ import com.traderx.ui.search.UserSearchSkeletonRecyclerViewAdapter
 import com.traderx.util.Helper
 import com.traderx.util.Injection
 import com.traderx.viewmodel.AuthUserViewModel
+import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 
 class CommentFragment(
     private val commentsSingle: Single<ArrayList<CommentResponse>>,
-    private val onDelete: (id: Int, doOnSuccess: () -> Unit) -> Unit,
-    private val onEdit: (id: Int, message: String, doOnSuccess: () -> Unit) -> Unit,
-    private val onCreate: (comment: String, doOnSuccess: () -> Unit) -> Unit,
-    private val onVote: (id: Int, vote: VoteType, doOnVote: () -> Unit) -> Unit,
-    private val onRevoke: (id: Int, doOnRevoke: () -> Unit) -> Unit
+    private val deleteComp: (id: Int) -> Completable,
+    private val editComp: (id: Int, message: String) -> Completable,
+    private val createComp: (message: String) -> Completable,
+    private val voteComp: (id: Int, vote: VoteType) -> Completable,
+    private val revokeComp: (id: Int) -> Completable
 ) : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
@@ -117,44 +118,51 @@ class CommentFragment(
             isCommenting = true
 
             if (comment.status == vote) {
-                onRevoke(comment.id) {
-                    Snackbar.make(
-                        requireView(),
-                        getString(R.string.comment_revoke),
-                        Snackbar.LENGTH_SHORT
-                    ).show()
+                disposable.add(
+                    revokeComp(comment.id)
+                        .compose(Helper.applyCompletableSchedulers())
+                        .doOnComplete(doOnVote)
+                        .subscribe({
+                            Snackbar.make(
+                                requireView(),
+                                getString(R.string.comment_revoke),
+                                Snackbar.LENGTH_SHORT
+                            ).show()
 
-                    isCommenting = false
+                            isCommenting = false
 
-                    when (vote) {
-                        VoteType.LIKED -> comment.likes--
-                        VoteType.DISLIKED -> comment.dislikes--
-                    }
+                            when (vote) {
+                                VoteType.LIKED -> comment.likes--
+                                VoteType.DISLIKED -> comment.dislikes--
+                            }
 
-                    comment.status = VoteType.NOT_COMMENTED
+                            comment.status = VoteType.NOT_COMMENTED
+                        }, { ErrorHandler.handleError(it, context as Context) })
+                )
 
-                    doOnVote()
-                }
             } else if (comment.status == VoteType.NOT_COMMENTED) {
-                onVote(comment.id, vote) {
+                disposable.add(
+                    voteComp(comment.id, vote)
+                        .compose(Helper.applyCompletableSchedulers())
+                        .doOnComplete(doOnVote)
+                        .subscribe({
+                            Snackbar.make(
+                                requireView(),
+                                getString(if (vote == VoteType.LIKED) R.string.comment_like else R.string.comment_dislike),
+                                Snackbar.LENGTH_SHORT
+                            ).show()
 
-                    Snackbar.make(
-                        requireView(),
-                        getString(if (vote == VoteType.LIKED) R.string.comment_like else R.string.comment_dislike),
-                        Snackbar.LENGTH_SHORT
-                    ).show()
+                            isCommenting = false
 
-                    isCommenting = false
+                            when (vote) {
+                                VoteType.LIKED -> comment.likes++
+                                VoteType.DISLIKED -> comment.dislikes++
+                            }
 
-                    when (vote) {
-                        VoteType.LIKED -> comment.likes++
-                        VoteType.DISLIKED -> comment.dislikes++
-                    }
+                            comment.status = vote
 
-                    comment.status = vote
-
-                    doOnVote()
-                }
+                        }, { ErrorHandler.handleError(it, context as Context) })
+                )
             } else {
                 Snackbar.make(
                     requireView(),
@@ -171,17 +179,21 @@ class CommentFragment(
         if (!isCommenting) {
             isCommenting = true
 
-            onDelete(id) {
-                Snackbar.make(
-                    requireView(),
-                    getString(R.string.comment_delete_success),
-                    Snackbar.LENGTH_SHORT
-                ).show()
+            disposable.add(
+                deleteComp(id)
+                    .compose(Helper.applyCompletableSchedulers())
+                    .doOnComplete(doOnSuccess)
+                    .subscribe({
+                        Snackbar.make(
+                            requireView(),
+                            getString(R.string.comment_delete_success),
+                            Snackbar.LENGTH_SHORT
+                        ).show()
 
-                isCommenting = false
+                        isCommenting = false
 
-                doOnSuccess()
-            }
+                    }, { ErrorHandler.handleError(it, context as Context) })
+            )
         }
     }
 
@@ -202,17 +214,25 @@ class CommentFragment(
             }) { mes, doOnSave ->
                 if (!isCommenting) {
                     isCommenting = true
-                    onEdit(id, mes) {
-                        Snackbar.make(
-                            requireView(),
-                            getString(R.string.comment_edit_success),
-                            Snackbar.LENGTH_SHORT
-                        ).show()
+                    disposable.add(
+                        editComp(id, message)
+                            .compose(Helper.applyCompletableSchedulers())
+                            .doOnComplete {
+                                doOnSave()
+                                isCommenting = false
+                            }
+                            .subscribe({
+                                Snackbar.make(
+                                    requireView(),
+                                    getString(R.string.comment_edit_success),
+                                    Snackbar.LENGTH_SHORT
+                                ).show()
 
-                        doOnSave()
-                        doOnSuccess(id, mes)
-                        isCommenting = false
-                    }
+                                doOnSave()
+                                doOnSuccess(id, mes)
+
+                            }, { ErrorHandler.handleError(it, context as Context) })
+                    )
                 }
             }
 
@@ -231,17 +251,23 @@ class CommentFragment(
                 return
             }
 
-            onCreate(commentEditText.text.toString()) {
-                Snackbar.make(
-                    requireView(),
-                    getString(R.string.comment_create_success),
-                    Snackbar.LENGTH_SHORT
-                ).show()
+            disposable.add(
+                createComp(commentEditText.text.toString())
+                    .compose(Helper.applyCompletableSchedulers())
+                    .doOnComplete {
+                        isCommenting = false
+                    }.subscribe({
+                        Snackbar.make(
+                            requireView(),
+                            getString(R.string.comment_create_success),
+                            Snackbar.LENGTH_SHORT
+                        ).show()
 
-                commentEditText.setText("")
-                isCommenting = false
-                refreshComments()
-            }
+                        commentEditText.setText("")
+                        isCommenting = false
+                        refreshComments()
+                    }, { ErrorHandler.handleError(it, context as Context) })
+            )
         }
     }
 

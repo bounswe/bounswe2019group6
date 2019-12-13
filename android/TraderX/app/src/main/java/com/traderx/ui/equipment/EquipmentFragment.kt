@@ -96,20 +96,20 @@ class EquipmentFragment : Fragment(), FragmentTitleEmitters {
             val commentFragment = CommentFragment(
                 equipmentViewModel.getComments(equipmentCode ?: "")
                     .compose(Helper.applySingleSchedulers<ArrayList<CommentResponse>>()),
-                { id, doOnSuccess ->
-                    deleteComment(id, doOnSuccess)
+                { id ->
+                    equipmentViewModel.deleteComment(id)
                 },
-                { id, message, doOnSuccess ->
-                    editComment(id, message, doOnSuccess)
+                { id, message ->
+                    equipmentViewModel.editComment(id, message)
                 },
-                { comment, doOnSuccess ->
-                    createComment(comment, doOnSuccess)
+                { message ->
+                    equipmentViewModel.createComment(equipmentCode ?: "", message)
                 },
-                { id, vote, doOnVote ->
-                    voteComment(id, vote, doOnVote)
+                { id, vote ->
+                    equipmentViewModel.voteComment(id, vote)
                 },
-                { id, doOnRevoke ->
-                    revokeComment(id, doOnRevoke)
+                { id ->
+                    equipmentViewModel.revokeComment(id)
                 }
             )
 
@@ -133,61 +133,6 @@ class EquipmentFragment : Fragment(), FragmentTitleEmitters {
         )
 
         return root
-    }
-
-    private fun revokeComment(id: Int, doOnRevoke: () -> Unit) {
-        disposable.add(
-            equipmentViewModel.revokeComment(id)
-                .compose(Helper.applyCompletableSchedulers())
-                .doOnComplete(doOnRevoke)
-                .subscribe({}, {
-                    ErrorHandler.handleError(it, context as Context)
-                })
-        )
-    }
-
-    private fun voteComment(id: Int, vote: VoteType, doOnVote: () -> Unit) {
-        disposable.add(
-            equipmentViewModel.voteComment(id, vote)
-                .compose(Helper.applyCompletableSchedulers())
-                .doOnComplete(doOnVote)
-                .subscribe({}, {
-                    ErrorHandler.handleError(it, context as Context)
-                })
-        )
-    }
-
-    private fun editComment(id: Int, message: String, doOnSuccess: () -> Unit) {
-        disposable.add(
-            equipmentViewModel.editComment(id, message)
-                .compose(Helper.applyCompletableSchedulers())
-                .doOnComplete(doOnSuccess)
-                .subscribe({}, {
-                    ErrorHandler.handleError(it, context as Context)
-                })
-        )
-    }
-
-    private fun deleteComment(id: Int, doOnSuccess: () -> Unit) {
-        disposable.add(
-            equipmentViewModel.deleteComment(id)
-                .compose(Helper.applyCompletableSchedulers())
-                .doOnComplete(doOnSuccess)
-                .subscribe({}, {
-                    ErrorHandler.handleError(it, context as Context)
-                })
-        )
-    }
-
-    private fun createComment(comment: String, doOnSuccess: () -> Unit) {
-        disposable.add(
-            equipmentViewModel.createComment(equipmentCode ?: "", comment)
-                .compose(Helper.applyCompletableSchedulers())
-                .doOnComplete(doOnSuccess)
-                .subscribe({}, {
-                    ErrorHandler.handleError(it, context as Context)
-                })
-        )
     }
 
     private fun updateView(equipment: EquipmentResponse) {
