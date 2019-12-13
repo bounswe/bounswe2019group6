@@ -41,7 +41,8 @@ public class ArticleController {
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_BASIC') or hasRole('ROLE_TRADER')")
     @ApiOperation(value = "Gets all articles of user (public or private but following). ", response = ArticleDTO.class)
-    @ApiResponses(value = { @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE) })
+    @ApiResponses(value = { @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE),
+            @ApiResponse(code = 406, message = "User's profile is not public and requester is not following")})
     public List<ArticleDTO> getArticles(@ApiParam( "Username" ) @PathVariable String username,
                                      HttpServletRequest req) {
         return articleService.getArticlesByUser(username, util.unwrapUsername(req));
@@ -51,7 +52,8 @@ public class ArticleController {
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_BASIC') or hasRole('ROLE_TRADER')")
     @ApiOperation(value = "Gets all articles of user (public or private but following). ", response = ArticleDTO.class)
-    @ApiResponses(value = { @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE) })
+    @ApiResponses(value = { @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE),
+            @ApiResponse(code = 406, message = "The profile of the owner of the article is not public and requester is not following") })
     public ArticleDTO getArticleById(@ApiParam( "Article Id" ) @PathVariable int id,
                                      HttpServletRequest req) {
         return articleService.getArticleById(id, util.unwrapUsername(req));
@@ -75,7 +77,7 @@ public class ArticleController {
     @ApiOperation(value = "Returns articles of the specified user in between start date (yyyy-MM-dd HH:mm:ss) and end date (yyyy-MM-dd HH:mm:ss)", response = ArticleDTO.class)
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE),
-    } )
+            @ApiResponse(code = 406, message = "User's profile is not public and requester is not following")} )
     public List<ArticleDTO> getArticlesByDateAndUsername(@ApiParam("Start Date (yyyy-MM-dd HH:mm:ss)") @RequestParam Date start,
                                            @ApiParam("End Date (yyyy-MM-dd HH:mm:ss)") @RequestParam Date end , @ApiParam("Username") @PathVariable String username, HttpServletRequest req) {
         return articleService.getArticlesByUsernameAndDateBetween(start, end, username, util.unwrapUsername(req));
@@ -87,7 +89,7 @@ public class ArticleController {
     @ApiOperation(value = "write article", response = Boolean.class)
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE),
-    } )
+            @ApiResponse(code = 406, message = "Header and Body cannot be null!")} )
     public boolean writeArticle(@ApiParam("Article header, body, and tags") @RequestBody ArticleInfoDTO articleInfoDTO, HttpServletRequest req) {
         return articleService.writeArticle(articleInfoDTO, util.unwrapUsername(req));
     }
@@ -98,7 +100,7 @@ public class ArticleController {
     @ApiOperation(value = "delete article", response = Boolean.class)
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE),
-    } )
+            @ApiResponse(code = 406, message = "There is no article with given id or requester is not the owner of it")} )
     public boolean deleteArticle(@ApiParam("article id to be deleted") @RequestParam int id, HttpServletRequest req) {
         return articleService.deleteArticle(id, util.unwrapUsername(req));
     }
@@ -109,7 +111,7 @@ public class ArticleController {
     @ApiOperation(value = "delete article", response = Boolean.class)
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE),
-    } )
+            @ApiResponse(code = 406, message = "There is no article with given id or requester is not the owner of it or header/body is null!")} )
     public boolean editArticle(@ApiParam("Article header, body, and tags") @RequestBody ArticleInfoDTO articleInfoDTO, @ApiParam("article id to be edited") @RequestParam int id, HttpServletRequest req) {
         return articleService.editArticle(articleInfoDTO, id, util.unwrapUsername(req));
     }
