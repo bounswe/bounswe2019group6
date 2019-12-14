@@ -1,16 +1,6 @@
 <template>
  
   <div>
-    <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
-      <el-card class='raddar-chart-container'>
-        <raddar-chart :chart-data="chartData"/>
-        <div>
-          <p  class="te-info-text">Categories are calculated as follows;</p>
-          <p  class="te-info-text"><b>Stabilitity:</b> 1 / [ sum( | average - ith data | / average ) / 100 ] --> i:[0,100]</p>
-          <p  class="te-info-text"><b>Growth:</b> sum( ith data - (i+1)th data ) / 100 --> i:[0,99]</p>
-        </div>
-      </el-card>
-    </el-row>
 
     <el-row :gutter="20" style="padding:16px 16px 0;margin-bottom:32px;">
       <el-card>
@@ -111,7 +101,6 @@
 <script>
 import LineChart from './components/LineChart'
 import LineChartDetailed from './components/LineChartDetailed'
-import RaddarChart from './components/RaddarChart'
 import { buyEquipment } from '@/api/equipment'
 
 // The usual sorting in javascript sorts alphabetically which causes mistake in our code
@@ -124,13 +113,11 @@ export default {
   components: {
     LineChartDetailed,
     LineChart,
-    RaddarChart,
   },
   data() {
     return {
-      chartData: {},
       equipmentData: [],
-      activeTab: 'JPY',
+      activeTab: 'BTC',
       showDialog: false,
       buyamountinput: '',
       select: '',
@@ -145,8 +132,8 @@ export default {
       this.equipmentData.push({key: equipmentKey.code})
     }, this)
     var equipmentValues = await this.getEquipmentValues(equipmentList) 
-    this.createRadarChartData(equipmentValues)
     this.equipmentData = equipmentValues
+    this.activeTab = this.equipmentData[0].key
   },
   methods: {
     // For now it returns mock data
@@ -244,59 +231,6 @@ export default {
       return equipmentValues
     },
 
-    // Put values from 1 to 3 to each of equipment in categories: Stability, Growth Rate, Values
-    createRadarChartData(equipmentValues) {
-      // wait for data to be pulled properly
-      if (equipmentValues.length == 0) {
-        setTimeout(() => {
-          this.createRadarChartData(equipmentValues)
-        }, 500)
-      } else {
-        this.activeTab = equipmentValues[0].key
-        var stabilities = [] // calculate stability of each trading equipment
-        var growth = [] // calculate growth rate for each equipment
-        var values = []
-        var legendData = [] // For getting legendData
-        var graphData = []
-
-        const equipmentSize = equipmentValues.length
-        for (let i = 0; i < equipmentSize; i++) {
-          let valueAverage = 0
-          equipmentValues[i].data.open.forEach(function(val) {
-            valueAverage += val / equipmentValues[i].data.open.length
-          })
-          let stability = Math.abs(valueAverage - equipmentValues[i].data.open[0]) / equipmentValues[i].data.open.length
-          let growthRate = 0
-          for (let j = 0; j < equipmentValues[i].data.open.length-1; j++) {
-            stability += (Math.abs(valueAverage - equipmentValues[i].data.open[j+1]) / valueAverage) / equipmentValues[i].data.open.length
-            growthRate += (1/equipmentValues[i].data.open[j] - 1/equipmentValues[i].data.open[j+1]) / equipmentValues[i].data.open.length
-          }
-          stabilities.push(1/stability)
-          growth.push(growthRate)
-          values.push(1/equipmentValues[i].currentValue)
-          legendData.push(equipmentValues[i].label)
-          graphData.push({value: [1/stability, growthRate, 1/equipmentValues[i].currentValue], name: equipmentValues[i].label})
-        }
-        stabilities.sort(numberSort)
-        growth.sort(numberSort)
-        values.sort(numberSort)
-        for (let i = 0; i < equipmentSize; i++) {
-          graphData[i].value = [stabilities.indexOf(graphData[i].value[0])+1, growth.indexOf(graphData[i].value[1])+1, values.indexOf(graphData[i].value[2])+1]
-        }
-        var indicatorData = [
-          { name: 'Stability', max: equipmentSize+0.5 },
-          { name: 'Growth', max: equipmentSize+0.5 },
-          { name: 'Value', max: equipmentSize+0.5 }
-        ]
-        this.chartData = {
-          legendData: legendData,
-          graphData: graphData,
-          indicatorData: indicatorData
-        }
-      }
-     
-    },
-
     buyEquipment() {
       this.$store.dispatch('equipment/buyEquipment', {'code' : this.select, "amount" : this.buyamountinput}).then(response => {
         this.showDialog = false
@@ -325,10 +259,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
-.raddar-chart-container {
-    margin-top: 10;
-}
 
 .container-in-tab {
     margin-top: 30px;
