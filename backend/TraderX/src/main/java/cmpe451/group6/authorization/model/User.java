@@ -20,7 +20,7 @@ public class User implements Serializable {
   // TODO: reformat iban regex (limit only a few country ibans)
   public static final transient String IBANRegex = "^[A-Z]{2}[0-9]{18}$";
   public static final transient String locationRegex = "^(-?\\d{1,5}(\\.\\d{1,10})?)$";
-  public static final transient String passwordRegex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=_])(?=\\S+$).{6,}$";
+  public static final transient String passwordRegex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=_.])(?=\\S+$).{6,}$";
   public static final transient String emailRegex = "^\\w+([-+.']\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$";
 
   @Id
