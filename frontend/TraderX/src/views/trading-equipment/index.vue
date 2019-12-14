@@ -21,7 +21,7 @@
           <el-tabs v-model="te.activeTab" >
             <el-tab-pane class='te-tab-pane' v-for="t in te.data" :key="t.key" :label="t.label" :name="t.key" :type="t.key">
               <div v-if="te.activeTab==t.key">
-                <p class="te-info-text">Last 100 days' American Dollar / {{ t.label }} is as follows:</p>
+                <p class="te-info-text">Last 100 days' {{ t.label }} / American Dollar is as follows:</p>
                 <div style="margin-top:50px;margin-bottom:50px" class='chart-wrapper'>
                   <line-chart :type="t.key" :chart-data="t.data"/>
                 </div>
@@ -87,7 +87,7 @@ export default {
     this.tradingEquipments.push({label: 'Crytocurrencies'})
     this.tradingEquipments.push({label: 'Stocks'})
 
-this.currencyList = await this.getCurrencyList()
+    this.currencyList = await this.getCurrencyList()
     this.cryptoList = await this.getCryptoList()
     this.stocksList = await this.getStocksList()
 
@@ -146,6 +146,7 @@ this.currencyList = await this.getCurrencyList()
     // equipmentType is 0,1 or 2. 0 indicating Money Currencies, 1 indicating CryptoCurrencies, 2 indicating Stocks
     addKeyToTradingEquipments(equipmentList, equipmentType) {
       // Wait until the list is pulled properly
+      this.tradingEquipments[equipmentType].data = []
       if (equipmentList.length == 0) {
         setTimeout(() => {
           this.addKeyToTradingEquipments(equipmentList, equipmentType)
