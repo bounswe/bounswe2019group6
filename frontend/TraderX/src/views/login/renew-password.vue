@@ -15,11 +15,22 @@
       </div>
 
       <el-tooltip
-        v-model="capsTooltip"
-        content="Caps lock is On"
+        v-model="isPasswordFocused"
         placement="right"
         manual
       >
+        <div slot="content">
+          * Minimum 6 characters
+          <br>
+          * At least a lowercase letter (a-z)
+          <br>
+          * At least an uppercase letter (A-Z)
+          <br>
+          * At least a digit (0-9)
+          <br>
+          * At least a special character (@#$%^&+=_.)
+          <br>
+        </div>
         <el-form-item prop="newPassword">
             <span class="svg-container">
               <svg-icon icon-class="password" />
@@ -32,8 +43,8 @@
             placeholder="New Password"
             name="newPassword"
             tabindex="1"
-            @keyup.native="checkCapslock"
-            @blur="capsTooltip = false"
+            @focus="isPasswordFocused = true"
+            @blur="isPasswordFocused = false"
             @keyup.enter.native="handleRenewPassword"
           />
           <span
@@ -45,30 +56,23 @@
         </el-form-item>
       </el-tooltip>
 
-      <el-tooltip
-        v-model="capsTooltip"
-        content="Caps lock is On"
-        placement="right"
-        manual
-      >
-        <el-form-item prop="newPasswordAgain">
-            <span class="svg-container">
+      <el-form-item prop="newPasswordAgain">
+        <span class="svg-container">
               <svg-icon icon-class="password" />
             </span>
-          <el-input
-            :key="passwordType"
-            ref="newPasswordAgain"
-            v-model="checkPassword"
-            :type="passwordType"
-            placeholder="New Password Again"
-            name="newPasswordAgain"
-            tabindex="2"
-            @keyup.native="checkCapslock"
-            @blur="capsTooltip = false"
-            @keyup.enter.native="handleRenewPassword"
-          />
-        </el-form-item>
-      </el-tooltip>
+        <el-input
+          :key="passwordType"
+          ref="newPasswordAgain"
+          v-model="checkPassword"
+          :type="passwordType"
+          placeholder="New Password Again"
+          name="newPasswordAgain"
+          tabindex="2"
+          @focus="isPasswordFocused = true"
+          @blur="isPasswordFocused = false"
+          @keyup.enter.native="handleRenewPassword"
+        />
+      </el-form-item>
 
       <el-button
         type="primary"
@@ -117,7 +121,7 @@
         },
         checkPassword: '',
         passwordType: 'password',
-        capsTooltip: false
+        isPasswordFocused: false
       }
     },
     created() {
@@ -130,19 +134,6 @@
       // window.removeEventListener('storage', this.afterQRScan)
     },
     methods: {
-      checkCapslock({ shiftKey, key } = {}) {
-        this.$refs.renewForm.validate()
-        if (key && key.length === 1) {
-          if (shiftKey && (key >= 'a' && key <= 'z') || !shiftKey && (key >= 'A' && key <= 'Z')) {
-            this.capsTooltip = true
-          } else {
-            this.capsTooltip = false
-          }
-        }
-        if (key === 'CapsLock' && this.capsTooltip === true) {
-          this.capsTooltip = false
-        }
-      },
       showPwd() {
         if (this.passwordType === 'password') {
           this.passwordType = ''

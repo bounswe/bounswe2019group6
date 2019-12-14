@@ -34,7 +34,7 @@
                 <articles />
               </el-tab-pane>
               <el-tab-pane
-                label="EditProfile"
+                label="Edit Profile"
                 name="editprofile"
               >
                 <editprofile :user="user" v-if="this.user.username"/>
@@ -83,7 +83,7 @@ export default {
         console.log(error)
       })
     },
-      
+
   },
   mounted() {
   }
