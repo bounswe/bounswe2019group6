@@ -119,14 +119,16 @@ public class EquipmentUpdateService {
     // This is required since the service is limited by 5 calls per min for
     // an IP and using different apiKey makes no sense.
     // Call on start-up and on daily updates for each batch
-    void loadEquipmentHistory(String[] currencies, EquipmentType type){
+    // isInit is true only when called from run-once-cron jobs.
+    void loadEquipmentHistory(String[] currencies, EquipmentType type, boolean isInit){
         //isCryptoCurrency
         RestTemplate restTemplate = new RestTemplate();
 
         for (String currency: currencies) { // No need to load history for base currency.
             // Init other currencies
-            if (hasHistoryLoaded(currency)) {
+            if (isInit && hasHistoryLoaded(currency)) {
                 logger.info(String.format("Skipping equipment history initialization: [%s]", currency));
+                predictionService.updatePredictions(currency); // TODO: Remove after debug
                 continue;
             }
 
