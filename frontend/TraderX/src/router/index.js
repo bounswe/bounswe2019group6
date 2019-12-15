@@ -227,6 +227,20 @@ export const constantRoutes = [
     ]
   },
   {
+    path: '/write',
+    component: Layout,
+    redirect: '/write/index',
+    hidden: true,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/write-article/index'),
+        name: 'Write Article',
+        meta: { title: 'Write Article', noCache: true }
+      }
+    ]
+  },
+  {
     path: '/user/:username/profile',
     component: Layout,
     redirect: '/user/:username/profile',

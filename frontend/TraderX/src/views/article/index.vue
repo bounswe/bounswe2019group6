@@ -74,11 +74,12 @@ export default {
       })
     },
     createArticle(){
-      this.$store.dispatch('search/writeArticle', { header: "aaaa", body: "bbbbal", tags: ["t1", "t2"] }).then(() => {
-        console.log("done")
-      }).catch(err => {
-        console.log(err)
-      })
+      this.$router.push({ path: `/write` })
+      // this.$store.dispatch('search/writeArticle', { header: "aaaa", body: "bbbbal", tags: ["t1", "t2"] }).then(() => {
+      //   console.log("done")
+      // }).catch(err => {
+      //   console.log(err)
+      // })
     }
   }
 }
