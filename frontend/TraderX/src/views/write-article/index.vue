@@ -1,11 +1,10 @@
 <template>
   <div class="createPost-container">
-    
     <el-button
       v-loading="loading"
-      style="float:right; margin-top:80px; margin-right:40px"
+      style="float:right; margin-top:80px; margin-right:100px;"
       type="success"
-      @click="submitForm"
+      @click.native.prevent="submitForm()"
     >
       Publish
     </el-button>
@@ -19,7 +18,7 @@
       <div class="createPost-main-container">
         
         <el-form-item
-          style="margin-bottom: 40px;"
+          style="margin-bottom: 40px; width:300px"
           prop="title"
         >
           <MDinput
@@ -56,10 +55,7 @@
 <script>
 import Tinymce from '@/components/Tinymce'
 import MDinput from '@/components/MDinput'
-import Sticky from '@/components/Sticky' // 粘性header组件
 import { fetchArticle } from '@/api/article'
-import { searchUser } from '@/api/remote-search'
-import { CommentDropdown } from '@/views/profile/components/Dropdown'
 
 const defaultForm = {
   status: 'draft',
@@ -75,7 +71,7 @@ const defaultForm = {
 
 export default {
   name: 'ArticleDetail',
-  components: { Tinymce, MDinput, Sticky, CommentDropdown },
+  components: { Tinymce, MDinput },
   props: {
     isEdit: {
       type: Boolean,
@@ -88,6 +84,11 @@ export default {
       loading: false,
       userListOptions: [],
       tempRoute: {},
+      inputdata: {
+        "header": "",
+        "body": "",
+        "tags" : []
+      }
     }
   },
   computed: {
@@ -159,13 +160,15 @@ export default {
       } else {
         this.$refs.postForm.validate(valid => {
           if (valid) {
-            // TODO later send a request to backend from here
-            this.loading = true
-            this.$notify({
-              title: 'Success',
-              message: 'Your article is posted',
-              type: 'success',
-              duration: 2000
+              // TODO later send a request to backend from here
+              this.loading = true
+              this.inputdata["header"] = this.postForm.title
+              this.inputdata["body"] = this.postForm.content
+              this.inputdata["tags"] = ["t1", "t2"]
+              this.$store.dispatch('search/writeArticle', this.inputdata ).then(() => {
+              this.$notify({ title: 'Success', message: 'Article is posted', type: 'success', duration: 2000 }) 
+            }).catch(err => {
+              console.log(err)
             })
             this.postForm.status = 'published'
             this.loading = false
@@ -175,33 +178,6 @@ export default {
         })
       }
     },
-    draftForm() {
-      if (this.postForm.title == '') {
-        this.$notify({
-          message: 'Title cannot be empty',
-          type: 'warning'
-        })
-      } else if (this.postForm.content == '') {
-        this.$notify({
-          message: 'Content cannot be empty',
-          type: 'warning'
-        })
-      } else {
-        this.$notify({
-          message: 'Draft successful',
-          type: 'success',
-          showClose: true,
-          duration: 1000
-        })
-        this.postForm.status = 'draft'
-      }
-    },
-    getRemoteUserList(query) {
-      searchUser(query).then(response => {
-        if (!response.data.items) return
-        this.userListOptions = response.data.items.map(v => v.name)
-      })
-    }
   }
 }
 </script>

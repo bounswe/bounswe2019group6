@@ -21,11 +21,11 @@ export function getAllArticles() {
   })
 }
 
-export function writeArticle(query) {
+export function writeArticle(data) {
   return request({
     url: '/article/write',
     method: 'post',
-    params: query,
+    data,
   })
 }
 
