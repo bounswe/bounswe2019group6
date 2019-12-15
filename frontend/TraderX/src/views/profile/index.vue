@@ -34,7 +34,7 @@
                 <my-transactions/>
               </el-tab-pane>
               <el-tab-pane
-                label="Article"
+                label="My Articles"
                 name="articles"
               >
                 <articles />

@@ -28,3 +28,10 @@ export function writeArticle(query) {
     params: query,
   })
 }
+
+export function getArticleByUserName(username) {
+  return request({
+    url: '/article/byUsername/'+username,
+    method: 'get',
+  })
+}

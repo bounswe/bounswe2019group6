@@ -1,4 +1,4 @@
-import { searchUser, getAllUsers, getAllArticles, writeArticle } from '@/api/search'
+import { searchUser, getAllUsers, getAllArticles, writeArticle, getArticleByUserName } from '@/api/search'
 
 const state = {
   userSearchResult : {},
@@ -15,6 +15,10 @@ const mutations = {
   SET_ARTICLE_WRITE_RESULT: (state, result) => {
     state.articleWriteResult = result
   },
+  SET_GET_USERS_ARTICLE_RESULT: (state, result) => {
+    state.userArticle = result
+  },
+  
 }
 
 const actions = {
@@ -62,6 +66,18 @@ const actions = {
       })
     })
   },
+  getArticleByUserName({ commit }, username) {
+    return new Promise((resolve, reject) => {
+      getArticleByUserName(username).then(response => {
+        const { data } = response
+        commit('SET_GET_USERS_ARTICLE_RESULT', data)
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  
 }
 
 export default {
