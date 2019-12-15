@@ -36,7 +36,7 @@ public class CommentController {
             @ApiResponse(code = 409, message = "Comment has already been voted."),
             @ApiResponse(code = 412, message = "No such comment"),
             @ApiResponse(code = 422, message = "Invalid vote type.")})
-    public StringResponseWrapper postComment(@ApiParam("Comment id") @PathVariable("id") String id,
+    public StringResponseWrapper voteComment(@ApiParam("Comment id") @PathVariable("id") String id,
                                              @ApiParam("Vote type. [ up | down]") @PathVariable String type,
                                              HttpServletRequest req) {
         boolean isUpvote = verifyPathParams(id,type);
@@ -51,7 +51,7 @@ public class CommentController {
             @ApiResponse(code = 406, message = "Cannot vote own comments."),
             @ApiResponse(code = 409, message = "Comment has not been voted."),
             @ApiResponse(code = 412, message = "No such comment")})
-    public StringResponseWrapper postComment(@ApiParam("Comment id") @PathVariable("id") String id,
+    public StringResponseWrapper revokeCommentVote(@ApiParam("Comment id") @PathVariable("id") String id,
                                              HttpServletRequest req) {
         verifyPathParams(id,"up"); // type is not necessary here. only id check is performed.
         return new StringResponseWrapper(equipmentCommentService.revokeVote(util.unwrapUsername(req),Integer.parseInt(id)));
@@ -60,13 +60,12 @@ public class CommentController {
     @PostMapping(value = "/equipment/post/{code}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_BASIC') or hasRole('ROLE_TRADER')")
-    @ApiOperation(value = "Post comment on equipment (1-1000 chars)", response = StringResponseWrapper.class)
+    @ApiOperation(value = "Post comment on equipment (1-1000 chars)", response = CommentResponseDTO.class)
     @ApiResponses(value = {
             @ApiResponse(code = 406, message = "No such an equipment/user found or improper length.")})
-    public StringResponseWrapper postComment(@ApiParam("Equipment Code") @PathVariable String code,
+    public CommentResponseDTO postComment(@ApiParam("Equipment Code") @PathVariable String code,
                                              @ApiParam("Comment") @RequestBody CommentRequestDTO comment, HttpServletRequest req) {
-        int id = equipmentCommentService.postEquipmentComment(util.unwrapUsername(req),comment.getComment(),code);
-        return new StringResponseWrapper("Comment has been posted with id " + id);
+        return equipmentCommentService.postEquipmentComment(util.unwrapUsername(req),comment.getComment(),code);
     }
 
     @DeleteMapping(value = "/equipment/delete/{id}")

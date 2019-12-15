@@ -15,9 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -65,7 +63,7 @@ public class EquipmentCommentService {
         return "Vote has been revoked.";
     }
 
-    public int postEquipmentComment(String authorUsername, String content, String code){
+    public CommentResponseDTO postEquipmentComment(String authorUsername, String content, String code){
         EquipmentComment comment = new EquipmentComment();
 
         User author = userRepository.findByUsername(authorUsername);
@@ -81,7 +79,7 @@ public class EquipmentCommentService {
         comment.setEquipment(equipment);
         comment.setLastModifiedTime(new Date());
         commentRepository.save(comment);
-        return comment.getId();
+        return convertToDto(Collections.singletonList(comment),authorUsername).get(0);
     }
 
     public void deleteEquipmentComment(String claimerUsername, int commentId){

@@ -57,6 +57,7 @@ public class CustomModelMapper extends ModelMapper {
         }
     };
 
+
     //custom mapper for ArticleSearchDTO
     PropertyMap<Article, ArticleSearchDTO> customMapArticleSearchDTO = new PropertyMap<Article, ArticleSearchDTO>() {
         @Override
@@ -66,6 +67,7 @@ public class CustomModelMapper extends ModelMapper {
         }
     };
 
+
     public CustomModelMapper(){
         super();
         this.addMappings(customMapTransactionDTO);
@@ -73,5 +75,6 @@ public class CustomModelMapper extends ModelMapper {
         this.addMappings(customMapAssetDTO);
         this.addMappings(customMapArticleDTO);
         this.addMappings(customMapArticleSearchDTO);
+
     }
 }

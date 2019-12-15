@@ -103,7 +103,7 @@ public class TransactionController {
 
     @PostMapping(value = "/buy")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_TRADER')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_TRADER') or hasRole('ROLE_BASIC')")
     @ApiOperation(value = " Buy asset ", response = Boolean.class)
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE),
@@ -116,7 +116,7 @@ public class TransactionController {
 
     @PostMapping(value = "/sell")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_TRADER')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_TRADER') or hasRole('ROLE_BASIC')")
     @ApiOperation(value = " Sell asset ", response = Boolean.class)
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE),
