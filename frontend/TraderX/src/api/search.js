@@ -20,3 +20,11 @@ export function getAllArticles() {
     method: 'get'
   })
 }
+
+export function writeArticle(query) {
+  return request({
+    url: '/article/write',
+    method: 'post',
+    params: query,
+  })
+}

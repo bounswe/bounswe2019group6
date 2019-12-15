@@ -41,54 +41,45 @@
 </template>
 
 <script>
-  export default {
-    name: 'Article',
-    data() {
-      return {
-        tableData: [{
-          author: 'aTom',
-          timestamp: '2016-05-04',
-          title: 'Tittttttleeeeee',
-          id: '1'
-        },{
-          author: 'zTom',
-          timestamp: '2016-05-03',
-          title: 'aaaaattleeeeee',
-          id: '2'
-        },{
-          author: 'Tom',
-          timestamp: '2016-05-02',
-          title: 'zzzzzTittttttleeeeee',
-          id: '3'
-        },{
-          author: 'yTom',
-          timestamp: '2016-05-01',
-          title: 'yyyyTittttttleeeeee',
-          id: '4'
-        }]
-      }
+
+import { writeArticle } from '@/api/search'
+
+export default {
+  name: 'Article',
+  data() {
+    return {
+      tableData: []
+    }
+  },
+  created() {
+    this.getAllArticles()
+  },
+  methods: {
+    HandleRedirect(article) {
+      this.$router.push({ path: `/view/${article.id}` })
     },
-    created() {
-      this.getAllArticles()
+    getAllArticles(){
+      this.$store.dispatch('search/getAllArticles').then(() => {
+        for(var i = 0; i < this.$store.getters.articleSearchResult.length; i++){
+          this.tableData.push({
+            "author" : this.$store.getters.articleSearchResult[i].username,
+            "timestamp" : this.$store.getters.articleSearchResult[i].createdAt,
+            "title" : this.$store.getters.articleSearchResult[i].header,
+            "id" : this.$store.getters.articleSearchResult[i].id
+          })
+          
+        } 
+      }).catch(err => {
+        console.log(err)
+      })
     },
-    methods: {
-      HandleRedirect(article) {
-        this.$router.push({ path: `/view/${article.id}` })
-      },
-      getAllArticles(){
-        this.$store.dispatch('search/getAllArticles').then(() => {
-          console.log(this.$store.getters.articleSearchResult)
-        }).catch(err => {
-          console.log(err)
-        })
-      },
-      createArticle(){
-        this.$store.dispatch('search/writeArticle').then(() => {
-          console.log(this.$store.getters.articleSearchResult)
-        }).catch(err => {
-          console.log(err)
-        })
-      }
+    createArticle(){
+      this.$store.dispatch('search/writeArticle', { header: "aaaa", body: "bbbbal", tags: ["t1", "t2"] }).then(() => {
+        console.log("done")
+      }).catch(err => {
+        console.log(err)
+      })
     }
   }
+}
 </script>
