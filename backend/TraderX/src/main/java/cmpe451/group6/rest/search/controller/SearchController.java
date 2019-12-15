@@ -2,7 +2,9 @@ package cmpe451.group6.rest.search.controller;
 
 import cmpe451.group6.Util;
 import cmpe451.group6.rest.article.dto.ArticleDTO;
+import cmpe451.group6.rest.article.model.Article;
 import cmpe451.group6.rest.equipment.dto.EquipmentResponseDTO;
+import cmpe451.group6.rest.search.dto.ArticleSearchDTO;
 import cmpe451.group6.rest.search.dto.EquipmentSearchDTO;
 import cmpe451.group6.rest.search.dto.UserSearchDTO;
 import cmpe451.group6.rest.search.service.SearchService;
@@ -54,6 +56,25 @@ public class SearchController {
     @ApiResponses(value = { @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE) })
     public List<UserSearchDTO> getUsersByName(@ApiParam("User name") @RequestParam String name, HttpServletRequest req) {
         return searchService.getUsersByName(name, util.unwrapUsername(req));
+    }
+
+    @GetMapping(value = "/article/byHeader")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_BASIC') or hasRole('ROLE_TRADER')")
+    @ApiOperation(value = "Gets articles whose header contains the given string.  ", response = ArticleSearchDTO.class)
+    @ApiResponses(value = { @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE) })
+    public List<ArticleSearchDTO> getArticlesByHeader(@ApiParam("Header") @RequestParam String header, HttpServletRequest req) {
+        return searchService.getArticlesByHeader(header, util.unwrapUsername(req));
+    }
+
+
+    @GetMapping(value = "/article/byTag")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_BASIC') or hasRole('ROLE_TRADER')")
+    @ApiOperation(value = "Gets articles whose tags contains the given string.  ", response = ArticleSearchDTO.class)
+    @ApiResponses(value = { @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE) })
+    public List<ArticleSearchDTO> getArticlesByTag(@ApiParam("Tag") @RequestParam String tag, HttpServletRequest req) {
+        return searchService.getArticlesByTag(tag, util.unwrapUsername(req));
     }
 
 }

@@ -4,6 +4,7 @@ import cmpe451.group6.rest.article.dto.ArticleDTO;
 import cmpe451.group6.rest.article.model.Article;
 import cmpe451.group6.rest.asset.dto.AssetDTO;
 import cmpe451.group6.rest.asset.model.Asset;
+import cmpe451.group6.rest.search.dto.ArticleSearchDTO;
 import cmpe451.group6.rest.transaction.dto.TransactionDTO;
 import cmpe451.group6.rest.transaction.dto.TransactionWithUserDTO;
 import cmpe451.group6.rest.transaction.model.Transaction;
@@ -56,11 +57,21 @@ public class CustomModelMapper extends ModelMapper {
         }
     };
 
+    //custom mapper for ArticleSearchDTO
+    PropertyMap<Article, ArticleSearchDTO> customMapArticleSearchDTO = new PropertyMap<Article, ArticleSearchDTO>() {
+        @Override
+        protected void configure() {
+            map().setUser(source.getUser().getUsername());
+
+        }
+    };
+
     public CustomModelMapper(){
         super();
         this.addMappings(customMapTransactionDTO);
         this.addMappings(customMapTransactionWithUserDTO);
         this.addMappings(customMapAssetDTO);
         this.addMappings(customMapArticleDTO);
+        this.addMappings(customMapArticleSearchDTO);
     }
 }
