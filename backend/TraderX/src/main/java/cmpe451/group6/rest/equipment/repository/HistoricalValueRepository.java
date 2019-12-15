@@ -16,6 +16,8 @@ public interface HistoricalValueRepository extends JpaRepository<HistoricalValue
     @Query("SELECT h FROM HistoricalValue h WHERE h.equipment.code = ?1 AND h.timestamp = ?2")
     HistoricalValue findHistoricalValueByDate(String code, Date date);
 
+    boolean existsByEquipment_Code(String code);
+
     List<HistoricalValue> findAllByEquipment_Code(String code);
 
     @Transactional

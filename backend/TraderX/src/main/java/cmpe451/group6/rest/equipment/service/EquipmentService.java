@@ -104,7 +104,7 @@ public class EquipmentService {
 
     public void forceLoadHistory(String code, String type){
         logger.warning("Forcefully loading history: " + code);
-        equipmentUpdateService.loadEquipmentHistory(new String[]{code},stringToType(type));
+        equipmentUpdateService.loadEquipmentHistory(new String[]{code},stringToType(type),false);
     }
 
     private <T> T[] concatenate(T[] a, T[] b) {
