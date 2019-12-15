@@ -1,85 +1,37 @@
 <template>
   <div class="createPost-container">
+    
+    <el-button
+      v-loading="loading"
+      style="float:right; margin-top:80px; margin-right:40px"
+      type="success"
+      @click="submitForm"
+    >
+      Publish
+    </el-button>
+
+
     <el-form
-      v-if="isSelf"
       ref="postForm"
       :model="postForm"
       class="form-container"
     >
-      <sticky
-        :z-index="10"
-        :class-name="'sub-navbar '+postForm.status"
-      >
-        <CommentDropdown v-model="postForm.comment_disabled" />
-        <!-- <PlatformDropdown v-model="postForm.platforms" />
-        <SourceUrlDropdown v-model="postForm.source_uri" /> -->
-        <el-button
-          v-loading="loading"
-          style="margin-left: 10px;"
-          type="success"
-          @click="submitForm"
-        >
-          Publish
-        </el-button>
-        <!-- <el-button v-loading="loading" type="warning" @click="draftForm">
-          Draft
-        </el-button> -->
-      </sticky>
-
       <div class="createPost-main-container">
-        <el-row :gutter="100">
-          <el-col :span="15">
-            <el-form-item
-              style="margin-bottom: 40px;"
-              prop="title"
-            >
-              <MDinput
-                v-model="postForm.title"
-                :maxlength="100"
-                name="name"
-                required
-              >
-                Title
-              </MDinput>
-            </el-form-item>
-          </el-col>
-          <el-col :span="9">
-            <el-form-item
-              style="margin-top:40px;"
-              label-width="90px"
-              label="Importance:"
-              class="postInfo-container-item"
-            >
-              <el-rate
-                v-model="postForm.importance"
-                :max="3"
-                :colors="['#99A9BF', '#F7BA2A', '#FF9900']"
-                :low-threshold="1"
-                :high-threshold="3"
-                style="display:inline-block"
-              />
-            </el-form-item>
-          </el-col>
-        </el-row>
-
+        
         <el-form-item
           style="margin-bottom: 40px;"
-          label-width="70px"
-          label="Summary:"
+          prop="title"
         >
-          <el-input
-            v-model="postForm.content_short"
-            :rows="1"
-            type="textarea"
-            class="article-textarea"
-            autosize
-            placeholder="Please enter the content"
-          />
-          <span
-            v-show="contentShortLength"
-            class="word-counter"
-          >{{ contentShortLength }}words</span>
-        </el-form-item>
+          <MDinput
+            style="width:500px"
+            v-model="postForm.title"
+            :maxlength="100"
+            name="name"
+            required
+          >
+            Title
+          </MDinput>
+        </el-form-item>        
 
         <el-form-item
           prop="content"
@@ -97,9 +49,7 @@
         </el-form-item> -->
       </div>
     </el-form>
-    <div style="text-align: center" v-else>
-      <h2>This user has no article to show</h2>
-    </div>
+    
   </div>
 </template>
 
@@ -138,7 +88,6 @@ export default {
       loading: false,
       userListOptions: [],
       tempRoute: {},
-      isSelf: this.$route.path.split('/')[1] == 'profile' ? true : false
     }
   },
   computed: {
@@ -159,8 +108,6 @@ export default {
     }
   },
   created() {
-    console.log("path is: ")
-    console.log(this.$route.path.split('/'))
     if (this.isEdit) {
       const id = this.$route.params && this.$route.params.id
       this.fetchData(id)
