@@ -236,6 +236,7 @@ public class TransactionService {
         newTransaction.setUser(user);
         newTransaction.setEquipment(equipment);
         newTransaction.setTransactionType(TransactionType.SELL);
+        newTransaction.setAmount(amount);
         TransactionRepository.save(newTransaction);
         return true;
     }
