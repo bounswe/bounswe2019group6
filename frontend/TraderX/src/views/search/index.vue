@@ -6,7 +6,7 @@
           <el-select @change="updateFilterType()" style="width: 170px" v-model="selectedFilter" slot="prepend" placeholder="Search In">
             <el-option label="User" value="user"></el-option>
             <el-option label="Trading Equipment" value="equipment"></el-option>
-            <!-- <el-option label="Event" value="event"></el-option>  -->
+            <el-option label="Article" value="article"></el-option> 
           </el-select>
           <el-button slot="append" icon="el-icon-search" @click.native.prevent="handleSearch">Search</el-button>
         </el-input>
@@ -50,6 +50,27 @@
           </el-table-column>
         </el-table>
       </div>
+      <div class="article" :style=articleVisibility>
+        <el-table ref="articleTable" :data="searchArticleResultToShow" style="width: 100%">
+          <el-table-column prop="id" label="ID">
+            <template slot-scope="scope">{{ scope.row.id }}</template>
+          </el-table-column>
+          <el-table-column prop="title" label="Title">
+            <template slot-scope="scope">{{ scope.row.title }}</template>
+          </el-table-column>
+          <el-table-column prop="author" label="Author">
+            <template slot-scope="scope">{{ scope.row.author }}</template>
+          </el-table-column>
+          <el-table-column prop="time" label="Time">
+            <template slot-scope="scope">{{ scope.row.timestamp }}</template>
+          </el-table-column>
+          <el-table-column fixed="right" width="120">
+            <template slot-scope="scope">
+              <el-button @click.native.prevent="showArticle(searchArticleResultToShow[scope.$index])" type="text" round>See Article</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
     </div>
   </div>
 </template>
@@ -77,9 +98,12 @@ export default {
       all_crypto_codes: ['BTC','ETC','VIB','ETH','BTG','ZEN'],
       searchEquipmentResult: [],
       searchEquipmentResultToShow: [],
+      searchArticleResult: [],
+      searchArticleResultToShow: [],
       selectedFilter: "user",
       userVisibility: "display: block",
-      equipmentVisibility: "display: none"
+      equipmentVisibility: "display: none",
+      articleVisibility: "display: none",
     }
   },
   created() {
@@ -106,6 +130,7 @@ export default {
       });
       this.searchResult = temp
     })
+    this.getAllArticles()
     this.getCurrencyList()
     this.getCryptoList()
     this.getStocksList()
@@ -114,6 +139,29 @@ export default {
 
   },
   methods: {
+    showArticle(article) {
+      this.$router.push({ path: `/view/${article.id}` })
+    },
+    getAllArticles(){
+      this.$store.dispatch('search/getAllArticles').then(() => {
+        for(var i = 0; i < this.$store.getters.articleSearchResult.length; i++){
+          this.searchArticleResult.push({
+            "author" : this.$store.getters.articleSearchResult[i].username,
+            "timestamp" : this.$store.getters.articleSearchResult[i].createdAt,
+            "title" : this.$store.getters.articleSearchResult[i].header,
+            "id" : this.$store.getters.articleSearchResult[i].id
+          })
+          this.searchArticleResultToShow.push({
+            "author" : this.$store.getters.articleSearchResult[i].username,
+            "timestamp" : this.$store.getters.articleSearchResult[i].createdAt,
+            "title" : this.$store.getters.articleSearchResult[i].header,
+            "id" : this.$store.getters.articleSearchResult[i].id
+          })
+        } 
+      }).catch(err => {
+        console.log(err)
+      })
+    },
     showTradingEquipment(equip) {
       var e_type = this.all_currency_codes.includes(equip.equipmentName) ? "Currency" : 
                      this.all_crypto_codes.includes(equip.equipmentName) ? "Crypto Currency" : "Stock"
@@ -185,10 +233,16 @@ export default {
     updateFilterType() {
       if (this.selectedFilter == "user") {
         this.equipmentVisibility = "display: none"
+        this.articleVisibility = "display: none"
         this.userVisibility = "display: block"
       } else if (this.selectedFilter == "equipment") {
         this.equipmentVisibility = "display: block"
         this.userVisibility = "display: none"
+        this.articleVisibility = "display: none"
+      } else if (this.selectedFilter == "article") {
+        this.equipmentVisibility = "display: none"
+        this.userVisibility = "display: none"
+        this.articleVisibility = "display: block"
       }
     },
     showUserProfile(user) {
@@ -258,6 +312,8 @@ export default {
         })
       } else if (this.selectedFilter == "equipment"){
         this.searchEquipmentResultToShow = this.searchEquipmentResult.filter(equipment => equipment.equipmentName.includes(this.searchText.toUpperCase()))
+      } else if (this.selectedFilter == "article"){
+        this.searchArticleResultToShow = this.searchArticleResult.filter(article => article.title.toUpperCase().includes(this.searchText.toUpperCase()))
       }
     } 
   } 
