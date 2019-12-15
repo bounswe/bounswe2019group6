@@ -50,7 +50,6 @@ export default {
   },
   created() {
     this.$store.dispatch('search/getArticleByUserName', this.$store.getters.userInfo.username).then(() => {
-      console.log("hhhhee")
       for(var i = 0; i < this.$store.getters.userArticle.length; i++){
         this.tableData.push({
           "timestamp" : this.$store.getters.userArticle[i].createdAt,

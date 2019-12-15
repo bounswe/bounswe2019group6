@@ -138,7 +138,7 @@ export default {
       loading: false,
       userListOptions: [],
       tempRoute: {},
-      isSelf: this.$route.path.split('/')[1] != 'profile' ? true : false
+      isSelf: this.$route.path.split('/')[1] == 'profile' ? true : false
     }
   },
   computed: {
@@ -159,6 +159,8 @@ export default {
     }
   },
   created() {
+    console.log("path is: ")
+    console.log(this.$route.path.split('/'))
     if (this.isEdit) {
       const id = this.$route.params && this.$route.params.id
       this.fetchData(id)
