@@ -13,3 +13,10 @@ export function getAllUsers() {
     method: 'get'
   })
 }
+
+export function getAllArticles() {
+  return request({
+    url: '/article/all',
+    method: 'get'
+  })
+}

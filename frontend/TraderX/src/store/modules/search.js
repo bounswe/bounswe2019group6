@@ -1,14 +1,16 @@
-import { searchUser, getAllUsers } from '@/api/search'
+import { searchUser, getAllUsers, getAllArticles } from '@/api/search'
 
 const state = {
-  userSearchResult : {
-
-  }
+  userSearchResult : {},
+  articleSearchResult : {}
 }
 
 const mutations = {
   SET_USER_SEARCH_RESULT: (state, result) => {
     state.userSearchResult = result
+  },
+  SET_ARTICLE_SEARCH_RESULT: (state, result) => {
+    state.articleSearchResult = result
   }
 }
 
@@ -29,6 +31,17 @@ const actions = {
       getAllUsers().then(response => {
         const { data } = response
         commit('SET_USER_SEARCH_RESULT', data)
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  getAllArticles({ commit }) {
+    return new Promise((resolve, reject) => {
+      getAllArticles().then(response => {
+        const { data } = response
+        commit('SET_ARTICLE_SEARCH_RESULT', data)
         resolve()
       }).catch(error => {
         reject(error)

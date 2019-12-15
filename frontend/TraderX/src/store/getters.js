@@ -7,6 +7,7 @@ const getters = {
   token: state => state.user.token,
   userInfo: state => state.user.userInfo,
   userSearchResult: state => state.search.userSearchResult,
+  articleSearchResult: state => state.search.articleSearchResult,
   equipmentQueryResult: state => state.equipment.equipmentQueryResult,
   currencyResult: state => state.equipment.currencyResult,
   cryptoCurrencyResult: state => state.equipment.cryptoCurrencyResult,

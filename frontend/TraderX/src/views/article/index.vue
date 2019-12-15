@@ -1,5 +1,8 @@
 <template>
   <div class="app-container">
+    <div style="text-align: right; padding-right: 60px; padding-top: 20px;">
+      <el-button @click="createArticle()" type="primary"><svg-icon style="margin-right:10px; display:inline-block;" icon-class="documentation" />Write Article</el-button>
+    </div>
     <div style="margin-top: 30px; margin-bottom: 50px; margin-left: 60px; margin-right: 60px">
       <el-table
         :data="tableData"
@@ -65,9 +68,26 @@
         }]
       }
     },
+    created() {
+      this.getAllArticles()
+    },
     methods: {
       HandleRedirect(article) {
         this.$router.push({ path: `/view/${article.id}` })
+      },
+      getAllArticles(){
+        this.$store.dispatch('search/getAllArticles').then(() => {
+          console.log(this.$store.getters.articleSearchResult)
+        }).catch(err => {
+          console.log(err)
+        })
+      },
+      createArticle(){
+        this.$store.dispatch('search/writeArticle').then(() => {
+          console.log(this.$store.getters.articleSearchResult)
+        }).catch(err => {
+          console.log(err)
+        })
       }
     }
   }

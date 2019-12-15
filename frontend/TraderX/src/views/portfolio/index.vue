@@ -184,6 +184,7 @@ export default {
     async getAllEquipmentsOfThisPortfolio(){
       const portfolioName = this.$route.path.split('/')[3]
       await this.$store.dispatch('equipment/getAllEquipmentOfPortfolio', portfolioName ).then(() => {
+        console.log(this.$store.getters.allEquipments)
         for(var i = 0; i < this.$store.getters.allEquipments.equipmentsInPortfolio.length; i++) {
           var t_code = this.$store.getters.allEquipments.equipmentsInPortfolio[i].code
           var t_currentVal = this.$store.getters.allEquipments.equipmentsInPortfolio[i].currentValue
