@@ -27,13 +27,7 @@
           <el-card>
             <el-tabs v-model="activeTab">
               <el-tab-pane
-                label="Portfolio"
-                name="portfolio"
-              >
-                <portfolio />
-              </el-tab-pane>
-              <el-tab-pane
-                label="Article"
+                label="Articles"
                 name="articles"
               >
                 <div style="margin-top: 10px">
@@ -88,7 +82,7 @@ export default {
   data() {
     return {
       user: {},
-      activeTab: 'portfolio',
+      activeTab: 'articles',
       visibility: 'visibility: hidden',
       privacyDisplay: 'display: none',
       infoTabDisplay: 'display: none',
@@ -103,27 +97,30 @@ export default {
     ])
   },
   created() {
-    this.$store.dispatch('search/getArticleByUserName', this.$route.path.split('/')[2]).then(() => {
-      for(var i = 0; i < this.$store.getters.userArticle.length; i++){
-        this.tableData.push({
-          "timestamp" : this.$store.getters.userArticle[i].createdAt,
-          "title" : this.$store.getters.userArticle[i].header,
-          "id" : this.$store.getters.userArticle[i].id
-        })
-        
-      } 
-    }).catch(err => {
-      console.log(err)
-    })
     getUser(this.$route.path.split('/')[2]).then(response => {
       this.user = response.data
       this.visibility = 'visibility: visible'
       this.privacyDisplay = this.user.isPrivate ? 'display: none': 'display: block'
       this.infoTabDisplay = this.user.isPrivate ? 'display: block': 'display: none'
+      this.getUserArticle()
     })
   },
   methods: {
-    
+    getUserArticle(){
+      if(!this.user.isPrivate){
+        this.$store.dispatch('search/getArticleByUserName', this.$route.path.split('/')[2]).then(() => {
+          for(var i = 0; i < this.$store.getters.userArticle.length; i++){
+            this.tableData.push({
+              "timestamp" : this.$store.getters.userArticle[i].createdAt,
+              "title" : this.$store.getters.userArticle[i].header,
+              "id" : this.$store.getters.userArticle[i].id
+            }) 
+          } 
+        }).catch(err => {
+          console.log(err)
+        })
+      }
+    }
   }
 }
 </script>
