@@ -8,6 +8,7 @@ import cmpe451.group6.authorization.model.RegistrationStatus;
 import cmpe451.group6.authorization.repository.UserRepository;
 import cmpe451.group6.authorization.service.SignupService;
 import cmpe451.group6.rest.equipment.service.EquipmentUpdateService;
+import cmpe451.group6.rest.event.service.EventService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,6 +37,9 @@ public class Group6BackendService implements CommandLineRunner {
 
   @Autowired
   EquipmentUpdateService equipmentUpdateService;
+
+  @Autowired
+  EventService eventService;
 
   @Autowired
   UserRepository userRepository;
@@ -95,6 +99,7 @@ public class Group6BackendService implements CommandLineRunner {
     }
 
     equipmentUpdateService.initializeEquipments();
+    eventService.initializeIfRequired();
 
   }
 

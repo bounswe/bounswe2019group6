@@ -46,6 +46,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .antMatchers("/transaction/byDate").permitAll()
         .antMatchers("/transaction/count/all").permitAll()
         .antMatchers("/transaction/count/equipment/**").permitAll()
+        .antMatchers("/events").permitAll()
         // Disallow everything else..
         .anyRequest().authenticated();
 
@@ -79,6 +80,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .antMatchers("/transaction/byDate")
         .antMatchers("/transaction/count/all")
         .antMatchers("/transaction/count/equipment/**")
+        .antMatchers("/events")
         
         // Un-secure H2 Database (for testing purposes, H2 console shouldn't be unprotected in production)
         .and()
