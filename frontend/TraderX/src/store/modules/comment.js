@@ -38,7 +38,7 @@ const actions = {
         })
     },
 
-    editComment({ commit }, commentId, commentDict) {
+    editComment({ commit }, {commentId, commentDict}) {
         return new Promise((resolve, reject) => {
             editComment(commentId, commentDict).then(response => {
                 const { data } = response

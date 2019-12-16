@@ -108,7 +108,16 @@
                         <a @click="likeComment(ed.key, c.id)"><i class="el-icon-arrow-up"/> Like </a> 
                         <a @click="dislikeComment(ed.key, c.id)"><i class="el-icon-arrow-down"/> Dislike </a> |
                         <a @click="revokeComment(ed.key, c.id)"> Revoke Vote </a> |
-                        <a class="delete-text" @clik="deleteComment(ed.key, c.id)"><i class="el-icon-delete"/> Delete Comment </a>
+                        <a class="delete-text" @clik="deleteComment(ed.key, c.id)"><i class="el-icon-delete"/> Delete Comment </a> |
+                        <a class="delete-text" @click="showEditCommentDialog=true;editCommentContent=c.comment"><i class="el-icon-edit"/> Edit Comment </a>
+
+                        <el-dialog title="Edit Comment" :visible.sync="showEditCommentDialog">
+                          <textarea class="comment-textarea" column="100" rows="10" v-model="editCommentContent"></textarea>
+                          <div>
+                            <el-button style="margin-top:10px;" @click="editComment(ed.key, c.id)"><svg-icon icon-class="edit"/> Edit Comment </el-button>
+                          </div>
+                        </el-dialog>
+
                       </p>
                     </el-card>
                   </el-row>
@@ -119,6 +128,8 @@
                       <el-button style="margin-top:10px;" @click="createComment(ed.key)"><svg-icon icon-class="edit"/> Publish Comment </el-button>
                     </div>
                   </el-dialog>
+
+                  
                 
                 </el-card>
 
@@ -172,9 +183,11 @@ export default {
       chartData: {},
       showBuyEquipmentDialog: false,
       showCreateCommentDialog: false,
+      showEditCommentDialog: false,
       buyamountinput: '',
       select: '',
       createCommentContent: '',
+      editCommentContent: '',
       // equipmentData is expected to be: 
       // [
       //   {
@@ -198,9 +211,12 @@ export default {
       activeTab: 'JPY',
       articleList: null,
       commentList: {},
-      postComment: {
+      postCommentDict: {
         "comment": "",
-      }
+      },
+      editCommentDict: {
+        "comment": "",
+      },
     }
   },
   async created() {
@@ -469,7 +485,7 @@ export default {
       // TODO: change this so that you won't need it
       var newComment = {
         id: this.commentList[equipmentCode].length+1,
-        timestamp: Date.now(),
+        lastModifiedTime: Date.now(),
         likes: 0,
         dislikes: 0,
         author: 'current-user', // TODO: change this with backend added
@@ -481,9 +497,9 @@ export default {
         }
       }, this)
 
-      this.postComment["comment"] = "hellolar"
+      this.postCommentDict["comment"] =  this.createCommentContent
       // Posting to backend
-      this.$store.dispatch('comment/postComment', (equipmentCode.toLowerCase(), this.postComment)).then(response => {
+      this.$store.dispatch('comment/postComment', {equipmentCode: equipmentCode.toLowerCase(), commentDict: this.postCommentDict}).then(response => {
         this.showCreateCommentDialog = false
         this.createCommentContent = ''
         this.$message.success('Comment is posted successfully!')
@@ -493,6 +509,30 @@ export default {
         console.log(err)
       })
 
+    },
+
+    editComment(equipmentCode, commentId) {
+      // This is for the frontend purposes for now 
+      var that = this
+      this.equipmentData.forEach(function(e) {
+        if (e.key == equipmentCode) {
+          e.comments.forEach(function(c) {
+            if (c.id == commentId) {
+              c.comment = that.editCommentContent
+            }
+          })
+        }
+      })
+
+      // Posting to backend
+      this.editCommentDict["comment"] = this.editCommentContent
+      this.$store.dispatch('comment/editComment', {"commentId": commentId, "commentDict": this.editCommentDict}).then(response => {
+        this.showEditCommentDialog = false
+        this.editCommentContent = ''
+        this.$message.success('Comment is edited successfully!')
+      }).catch(err => {
+        console.log(err)
+      })
     },
 
     deleteComment(equipmentCode, commentId) {
@@ -630,6 +670,10 @@ export default {
 
 .comment-textarea {
   resize: none;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 100%;
 }
 
 </style>
