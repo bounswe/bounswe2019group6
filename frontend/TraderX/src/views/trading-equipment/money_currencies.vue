@@ -498,24 +498,24 @@ export default {
     },
 
     editComment(equipmentCode, commentId) {
-      // This is for the frontend purposes for now 
-      var that = this
-      this.equipmentData.forEach(function(e) {
-        if (e.key == equipmentCode) {
-          e.comments.forEach(function(c) {
-            if (c.id == commentId) {
-              c.comment = that.editCommentContent
-            }
-          })
-        }
-      })
-
       // Posting to backend
       this.editCommentDict["comment"] = this.editCommentContent
-      this.$store.dispatch('comment/editComment', {"commentId": commentId, "commentDict": this.editCommentDict}).then(response => {
+      this.$store.dispatch('comment/editComment', {"commentId": commentId, "commentDict": this.editCommentDict}).then(() => {
         this.showEditCommentDialog = false
         this.editCommentContent = ''
         this.$message.success('Comment is edited successfully!')
+
+        var that = this
+        this.equipmentData.forEach(function(e) {
+          if (e.key == equipmentCode) {
+            e.comments.forEach(function(c) {
+              if (c.id == commentId) {
+                c.comment = that.editCommentContent
+              }
+            })
+          }
+        })
+
       }).catch(err => {
         console.log(err)
       })

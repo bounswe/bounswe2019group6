@@ -14,12 +14,12 @@ export function deleteComment(commentId) {
     })
 }
 
-// query: {comment = 'str'}
-export function editComment(commentId, commentDict) {
+// data: {comment = 'str'}
+export function editComment(id, data) {
     return request({
-        url: '/comment/equipment/edit/' + commentId,
+        url: '/comment/equipment/edit/' + id,
         method: 'post',
-        commentDict,
+        data,
     })
 }
 
