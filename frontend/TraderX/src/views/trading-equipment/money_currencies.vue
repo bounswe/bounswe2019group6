@@ -99,15 +99,15 @@
                     <el-card class='comment-container'>
                       <p>
                         <span class="comment-author"> {{ c.author }} </span>
-                        <span class="comment-time"> {{ c.timestamp | parseTime('{y}-{m}-{d} {h}:{i}') }} - </span>
+                        <span class="comment-time"> {{ c.lastModifiedTime | parseTime('{y}-{m}-{d} {h}:{i}') }} - </span>
                         <span class="comment-options"> {{ c.likes }} Likes - </span>
                         <span class="comment-options"> {{ c.dislikes }} Dislikes </span>
                       </p>
                       <p class="comment-text"> {{ c.comment }} </p>
                       <p class="comment-options">
-                        <a @click="likeComment(ed.key, c.id)"> Like </a> |
-                        <a @click="dislikeComment(ed.key, c.id)"> Dislike </a> |
-                        <a @click="revokeComment(c.id)"> Revoke Vote </a>
+                        <a @click="likeComment(ed.key, c.id)"><i class="el-icon-arrow-up"/> Like </a> |
+                        <a @click="dislikeComment(ed.key, c.id)"><i class="el-icon-arrow-down"/> Dislike </a> |
+                        <a @click="revokeComment(ed.key, c.id)"> Revoke Vote </a>
                       </p>
                     </el-card>
                   </el-row>
@@ -466,15 +466,18 @@ export default {
       // Post to backend
       this.$store.dispatch('comment/voteComment', {"commentId": commentId, "voteType": "up"}).then(response => {
         this.$message.success('Comment liked!')
+        var lastStatus = ""
         this.equipmentData.forEach(function(e) {
           if (e.key == equipmentCode) {
             e.comments.forEach(function(comment) {
               if (comment.id == commentId) {
                 comment.likes += 1
+                lastStatus = comment.status
               }
             })
           }
         }, this)
+        console.log('lastStatus in dislike: ' + lastStatus)
       }).catch(err => {
         console.log(err)
       })
@@ -484,23 +487,50 @@ export default {
       // Post to backend
       this.$store.dispatch('comment/voteComment', {"commentId": commentId, "voteType": "down"}).then(response => {
         this.$message.success('Comment disliked!')
+        var lastStatus = ""
         this.equipmentData.forEach(function(e) {
           if (e.key == equipmentCode) {
             e.comments.forEach(function(comment) {
               if (comment.id == commentId) {
                 comment.dislikes += 1
+                lastStatus = comment.status
               }
             })
           }
         }, this)
+        console.log('lastStatus in dislike: ' + lastStatus)
       }).catch(err => {
         console.log(err)
       })
     },
 
-    revokeComment(commentId) {
+    revokeComment(equipmentCode, commentId) {
+      var lastStatus = ""
+      this.equipmentData.forEach(function(e) {
+        if (e.key == equipmentCode) {
+          e.comments.forEach(function(comment) {
+            if (comment.id == commentId) {
+              lastStatus = comment.status
+            }
+          })
+        }
+      }, this)
+      console.log('lastStatus is revokeComment : ' + lastStatus)
       this.$store.dispatch('comment/revokeVote', commentId).then(response => {
         this.$message.success('Last vote revoked!')
+        this.equipmentData.forEach(function(e) {
+          if (e.key == equipmentCode) {
+            e.comments.forEach(function(comment) {
+              if (comment.id == commentId) {
+                if (lastStatus == "LIKED") {
+                  comment.likes -= 1
+                } else {
+                  comment.dislikes -= 1
+                }
+              }
+            })
+          }
+        }, this)
       }).catch(err => {
         console.log(err)
       })
