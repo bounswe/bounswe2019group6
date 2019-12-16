@@ -10,7 +10,7 @@ export function getCommentList(equipmentCode) {
 export function deleteComment(commentId) {
     return request({
         url: '/comment/equipment/delete/' + commentId,
-        method: 'post',
+        method: 'delete',
     })
 }
 

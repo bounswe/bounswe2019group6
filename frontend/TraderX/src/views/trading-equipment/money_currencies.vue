@@ -105,9 +105,10 @@
                       </p>
                       <p class="comment-text"> {{ c.comment }} </p>
                       <p class="comment-options">
-                        <a @click="likeComment(ed.key, c.id)"><i class="el-icon-arrow-up"/> Like </a> |
+                        <a @click="likeComment(ed.key, c.id)"><i class="el-icon-arrow-up"/> Like </a> 
                         <a @click="dislikeComment(ed.key, c.id)"><i class="el-icon-arrow-down"/> Dislike </a> |
-                        <a @click="revokeComment(ed.key, c.id)"> Revoke Vote </a>
+                        <a @click="revokeComment(ed.key, c.id)"> Revoke Vote </a> |
+                        <a class="delete-text" @clik="deleteComment(ed.key, c.id)"><i class="el-icon-delete"/> Delete Comment </a>
                       </p>
                     </el-card>
                   </el-row>
@@ -462,8 +463,58 @@ export default {
       })
     },
 
+    // TODO connect this to backend
+    createComment(equipmentCode) {
+      // This is for the frontend purposes for now 
+      // TODO: change this so that you won't need it
+      var newComment = {
+        id: this.commentList[equipmentCode].length+1,
+        timestamp: Date.now(),
+        likes: 0,
+        dislikes: 0,
+        author: 'current-user', // TODO: change this with backend added
+        comment: this.createCommentContent,
+      }
+      this.equipmentData.forEach(function(e) {
+        if (e.key == equipmentCode) {
+          e.comments.push(newComment)
+        }
+      }, this)
+
+      this.postComment["comment"] = "hellolar"
+      // Posting to backend
+      this.$store.dispatch('comment/postComment', (equipmentCode.toLowerCase(), this.postComment)).then(response => {
+        this.showCreateCommentDialog = false
+        this.createCommentContent = ''
+        this.$message.success('Comment is posted successfully!')
+        console.log("response in postComment is: ")
+        console.log(response)
+      }).catch(err => {
+        console.log(err)
+      })
+
+    },
+
+    deleteComment(equipmentCode, commentId) {
+      this.$store.dispatch('comment/deleteComment', commentId).then(response => {
+        this.$message.success('Comment deleted!')
+        this.equipmentData.forEach(function(e) {
+          if (e.key == equipmentCode) {
+            var i = 0
+            e.comments.forEach(function(comment) {
+              if (comment.id == commentId) {
+                e.comments.splice(i, 1) // delete 1 element, starting from index i
+              }
+              i += 1
+            })
+          }
+        }, this)
+      }).catch(err => {
+        console.log(err)
+      })
+    }, 
+
     likeComment(equipmentCode, commentId) {
-      // Post to backend
       this.$store.dispatch('comment/voteComment', {"commentId": commentId, "voteType": "up"}).then(response => {
         this.$message.success('Comment liked!')
         var lastStatus = ""
@@ -535,37 +586,6 @@ export default {
         console.log(err)
       })
     },
-
-    // TODO connect this to backend
-    createComment(equipmentCode) {
-      // This is for the frontend purposes for now 
-      // TODO: change this so that you won't need it
-      var newComment = {
-        id: this.commentList[equipmentCode].length+1,
-        timestamp: Date.now(),
-        likes: 0,
-        dislikes: 0,
-        author: 'current-user', // TODO: change this with backend added
-        comment: this.createCommentContent,
-      }
-      //this.commentList[equipmentCode].push(newComment)
-      this.equipmentData.forEach(function(e) {
-        if (e.key == equipmentCode) {
-          e.comments.push(newComment)
-        }
-      }, this)
-
-      this.postComment["comment"] = "hellolar"
-      // Posting to backend
-      this.$store.dispatch('comment/postComment', (equipmentCode.toLowerCase(), this.postComment)).then(response => {
-        this.showCreateCommentDialog = false
-        this.createCommentContent = ''
-        this.$message.success('Comment is posted successfully!')
-      }).catch(err => {
-        console.log(err)
-      })
-
-    }
   }
 }
 </script>
