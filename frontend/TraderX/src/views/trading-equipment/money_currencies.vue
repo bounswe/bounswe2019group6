@@ -108,7 +108,7 @@
                         <a @click="likeComment(ed.key, c.id)"><i class="el-icon-arrow-up"/> Like </a> 
                         <a @click="dislikeComment(ed.key, c.id)"><i class="el-icon-arrow-down"/> Dislike </a> |
                         <a @click="revokeComment(ed.key, c.id)"> Revoke Vote </a> |
-                        <a class="delete-text" @clik="deleteComment(ed.key, c.id)"><i class="el-icon-delete"/> Delete Comment </a> |
+                        <a class="delete-text" @click="deleteComment(ed.key, c.id)"><i class="el-icon-delete"/> Delete Comment </a> |
                         <a class="delete-text" @click="showEditCommentDialog=true;editCommentContent=c.comment"><i class="el-icon-edit"/> Edit Comment </a>
 
                         <el-dialog title="Edit Comment" :visible.sync="showEditCommentDialog">
@@ -125,7 +125,7 @@
                   <el-dialog title="Create Comment" :visible.sync="showCreateCommentDialog">
                     <textarea class="comment-textarea" placeholder="Write your comment here" column="100" rows="10" v-model="createCommentContent"></textarea>
                     <div>
-                      <el-button style="margin-top:10px;" @click="createComment(ed.key)"><svg-icon icon-class="edit"/> Publish Comment </el-button>
+                      <el-button style="margin-top:10px;" @click="postComment(ed.key)"><svg-icon icon-class="edit"/> Publish Comment </el-button>
                     </div>
                   </el-dialog>
 
@@ -157,7 +157,6 @@
 </template>
 
 <script>
-import Tinymce from '@/components/Tinymce'
 import LineChart from './components/LineChart'
 import LineChartDetailed from './components/LineChartDetailed'
 import LineChartComparison from './components/LineChartComparison'
@@ -176,7 +175,6 @@ export default {
     LineChartDetailed,
     LineChart,
     RaddarChart,
-    Tinymce,
   },
   data() {
     return {
@@ -479,36 +477,24 @@ export default {
       })
     },
 
-    // TODO connect this to backend
-    createComment(equipmentCode) {
-      // This is for the frontend purposes for now 
-      // TODO: change this so that you won't need it
-      var newComment = {
-        id: this.commentList[equipmentCode].length+1,
-        lastModifiedTime: Date.now(),
-        likes: 0,
-        dislikes: 0,
-        author: 'current-user', // TODO: change this with backend added
-        comment: this.createCommentContent,
-      }
-      this.equipmentData.forEach(function(e) {
-        if (e.key == equipmentCode) {
-          e.comments.push(newComment)
-        }
-      }, this)
-
+    postComment(equipmentCode) {
       this.postCommentDict["comment"] =  this.createCommentContent
       // Posting to backend
-      this.$store.dispatch('comment/postComment', {equipmentCode: equipmentCode.toLowerCase(), commentDict: this.postCommentDict}).then(response => {
+      this.$store.dispatch('comment/postComment', {"code": equipmentCode, "commentDict": this.postCommentDict}).then(() => {
         this.showCreateCommentDialog = false
         this.createCommentContent = ''
         this.$message.success('Comment is posted successfully!')
-        console.log("response in postComment is: ")
-        console.log(response)
+        
+        var res = this.$store.getters.commentQueryResult
+        this.equipmentData.forEach(function(e) {
+          if (e.key == equipmentCode) {
+            e.comments.push(res)
+          }
+        }, this)
+
       }).catch(err => {
         console.log(err)
       })
-
     },
 
     editComment(equipmentCode, commentId) {

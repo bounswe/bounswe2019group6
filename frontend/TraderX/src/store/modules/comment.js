@@ -50,13 +50,13 @@ const actions = {
         })
     },
 
-    postComment( { commit }, {equipmentCode, commentDict}) {
-        console.log('equipmentCode in modules is: ')
-        console.log(equipmentCode)
-        console.log('commentDict in modules is: ')
-        console.log(commentDict)
+    postComment( { commit }, {code, commentDict}) {
+        // console.log('equipmentCode in modules is: ')
+        // console.log(code)
+        // console.log('commentDict in modules is: ')
+        // console.log(comment)
         return new Promise((resolve, reject) => {
-            postComment(equipmentCode, commentDict).then(response => {
+            postComment(code, commentDict).then(response => {
                 const { data } = response
                 commit('SET_QUERY_RESULT', data)
                 resolve()

@@ -23,14 +23,12 @@ export function editComment(commentId, commentDict) {
     })
 }
 
-// commentDict = {comment = 'str'}
-export function postComment(equipmentCode, commentDict) {
-    console.log('commentDict in api is:')
-    console.log(commentDict)
+// data = {comment = 'str'}
+export function postComment(code, data) {
     return request({
-        url: '/comment/equipment/post/' + equipmentCode,
+        url: '/comment/equipment/post/' + code,
         method: 'post',
-        commentDict,
+        data
     })
 }
 
