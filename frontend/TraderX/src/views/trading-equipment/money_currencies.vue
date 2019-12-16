@@ -289,46 +289,6 @@ export default {
       ]
     },
 
-    returnCommentListFrontend() {
-      this.commentList = [
-        {
-          id: 1,
-          timestamp: 1024316325463,
-          likes: 5,
-          dislikes: 10,
-          author: 'irmakguzey',
-          comment: 'That’s the findings of Natixis Global Asset Management’s annual Global Portfolio Barometer, which has found that UK portfolios with significant non-sterling assets saw average performance of more than 13 per cent.',
-        },
-        {
-          id: 2,
-          timestamp: 1056316325463,
-          likes: 54,
-          dislikes: 0,
-          author: 'sadullahgultekin',
-          comment: 'Matthew Riley, head of research at the portfolio research and consulting group, says: “A substantial part of the explanation is currency risk which is no surprise since currency moves in 2016 were the highest since 2008 and had a large impact on the surveyed portfolios.',
-          replies: []
-        },
-        {
-          id: 3,
-          timestamp: 1234567890123,
-          likes: 15,
-          dislikes: 60,
-          author: 'burakyuksel',
-          comment: 'For example, he says, a UK investor with unhedged US equity exposure (in other words, without making compensating investments to counteract the risk) would have gained an extra 19 per cent return in 2016 due to the depreciation of the Pound versus the Dollar.\"For eurozone equities, this would have been around 16 per cent, and for Japanese equities this would have been 23 per cent. Currency impact was also seen in allocation funds, EM debt and high yield debt funds, which are often not hedged by advisers.\”',
-          replies: []
-        },
-        {
-          id: 4,
-          timestamp: 1024457825463,
-          likes: 500,
-          dislikes: 500,
-          author: 'irmakguzey',
-          comment: 'A lot of people. Foreign exchange is most commonly known as Forex and Forex is the world’s most traded market. According to CityIndex there’s an average turnover in excess of US$5.3 trillion every single day. That’s 4.24 trillion pounds at time of writing, although as will be seen that can change. A lot of different people are trading, from large companies to part-time traders operating out of their bedrooms, something that only became possible with the proliferation of the internet.',
-          replies: []
-        },
-      ]
-    },
-
     // Comment List will be received for all of the equipment
     async getCommentList(equipmentList) {
       var commentList = {}
@@ -529,7 +489,8 @@ export default {
             var i = 0
             e.comments.forEach(function(comment) {
               if (comment.id == commentId) {
-                e.comments.splice(i, 1) // delete 1 element, starting from index i
+                // e.comments.splice(i, 1) // delete 1 element, starting from index i
+                comment = null
               }
               i += 1
             })
@@ -543,18 +504,16 @@ export default {
     likeComment(equipmentCode, commentId) {
       this.$store.dispatch('comment/voteComment', {"commentId": commentId, "voteType": "up"}).then(response => {
         this.$message.success('Comment liked!')
-        var lastStatus = ""
         this.equipmentData.forEach(function(e) {
           if (e.key == equipmentCode) {
             e.comments.forEach(function(comment) {
               if (comment.id == commentId) {
                 comment.likes += 1
-                lastStatus = comment.status
+                comment.status = "LIKED"
               }
             })
           }
         }, this)
-        console.log('lastStatus in dislike: ' + lastStatus)
       }).catch(err => {
         console.log(err)
       })
@@ -564,18 +523,16 @@ export default {
       // Post to backend
       this.$store.dispatch('comment/voteComment', {"commentId": commentId, "voteType": "down"}).then(response => {
         this.$message.success('Comment disliked!')
-        var lastStatus = ""
         this.equipmentData.forEach(function(e) {
           if (e.key == equipmentCode) {
             e.comments.forEach(function(comment) {
               if (comment.id == commentId) {
                 comment.dislikes += 1
-                lastStatus = comment.status
+                comment.status = "DISLIKED"
               }
             })
           }
         }, this)
-        console.log('lastStatus in dislike: ' + lastStatus)
       }).catch(err => {
         console.log(err)
       })
@@ -601,9 +558,9 @@ export default {
               if (comment.id == commentId) {
                 if (lastStatus == "LIKED") {
                   comment.likes -= 1
-                } else {
+                } else if (lastStatus == "DISLIKED") {
                   comment.dislikes -= 1
-                }
+                } 
               }
             })
           }
