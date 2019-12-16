@@ -35,9 +35,10 @@ export function postComment(equipmentCode, commentDict) {
 }
 
 export function revokeVote(commentId) {
+    console.log('commentId in revokeVote: ' + commentId)
     return request({
         url: '/comment/equipment/revoke/' + commentId,
-        method: 'post',
+        method: 'delete',
     })
 }
 

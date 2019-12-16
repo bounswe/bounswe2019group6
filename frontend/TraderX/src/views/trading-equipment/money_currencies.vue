@@ -105,8 +105,9 @@
                       </p>
                       <p class="comment-text"> {{ c.comment }} </p>
                       <p class="comment-options">
+                        <a @click="likeComment(ed.key, c.id)"> Like </a> |
                         <a @click="dislikeComment(ed.key, c.id)"> Dislike </a> |
-                        <a @click="likeComment(ed.key, c.id)"> Like </a>
+                        <a @click="revokeComment(c.id)"> Revoke Vote </a>
                       </p>
                     </el-card>
                   </el-row>
@@ -481,7 +482,7 @@ export default {
 
     dislikeComment(equipmentCode, commentId) {
       // Post to backend
-      this.$store.dispatch('comment/voteComment', commentId, "down").then(response => {
+      this.$store.dispatch('comment/voteComment', {"commentId": commentId, "voteType": "down"}).then(response => {
         this.$message.success('Comment disliked!')
         this.equipmentData.forEach(function(e) {
           if (e.key == equipmentCode) {
@@ -492,6 +493,14 @@ export default {
             })
           }
         }, this)
+      }).catch(err => {
+        console.log(err)
+      })
+    },
+
+    revokeComment(commentId) {
+      this.$store.dispatch('comment/revokeVote', commentId).then(response => {
+        this.$message.success('Last vote revoked!')
       }).catch(err => {
         console.log(err)
       })
