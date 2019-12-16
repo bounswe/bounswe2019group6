@@ -195,7 +195,10 @@ export default {
       comparisonData: {equipmentData: []},
       activeTab: 'JPY',
       articleList: null,
-      commentList: {}
+      commentList: {},
+      postComment: {
+        "comment": "",
+      }
     }
   },
   async created() {
@@ -458,31 +461,40 @@ export default {
       })
     },
 
-    //  TODO: This should be done at the backend
     likeComment(equipmentCode, commentId) {
-      // TODO: Do this at the backend as well
-      this.equipmentData.forEach(function(e) {
-        if (e.key == equipmentCode) {
-          e.comments.forEach(function(comment) {
-            if (comment.id == commentId) {
-              comment.likes += 1
-            }
-          })
-        }
-      }, this)
+      // Post to backend
+      this.$store.dispatch('comment/voteComment', {"commentId": commentId, "voteType": "up"}).then(response => {
+        this.$message.success('Comment liked!')
+        this.equipmentData.forEach(function(e) {
+          if (e.key == equipmentCode) {
+            e.comments.forEach(function(comment) {
+              if (comment.id == commentId) {
+                comment.likes += 1
+              }
+            })
+          }
+        }, this)
+      }).catch(err => {
+        console.log(err)
+      })
     },
 
-    // TODO: Do this at the backend as well
     dislikeComment(equipmentCode, commentId) {
-      this.equipmentData.forEach(function(e) {
-        if (e.key == equipmentCode) {
-          e.comments.forEach(function(comment) {
-            if (comment.id == commentId) {
-              comment.dislikes += 1
-            }
-          })
-        }
-      }, this)
+      // Post to backend
+      this.$store.dispatch('comment/voteComment', commentId, "down").then(response => {
+        this.$message.success('Comment disliked!')
+        this.equipmentData.forEach(function(e) {
+          if (e.key == equipmentCode) {
+            e.comments.forEach(function(comment) {
+              if (comment.id == commentId) {
+                comment.dislikes += 1
+              }
+            })
+          }
+        }, this)
+      }).catch(err => {
+        console.log(err)
+      })
     },
 
     // TODO connect this to backend
@@ -504,8 +516,9 @@ export default {
         }
       }, this)
 
+      this.postComment["comment"] = "hellolar"
       // Posting to backend
-      this.$store.dispatch('comment/postComment', {"equipmentCode" : equipmentCode.toLowerCase(), "commentDict" : {"comment": this.createCommentContent}}).then(response => {
+      this.$store.dispatch('comment/postComment', (equipmentCode.toLowerCase(), this.postComment)).then(response => {
         this.showCreateCommentDialog = false
         this.createCommentContent = ''
         this.$message.success('Comment is posted successfully!')

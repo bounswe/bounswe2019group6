@@ -1,4 +1,5 @@
 import { getCommentList, deleteComment, editComment, postComment, revokeVote, voteComment } from '@/api/comment'
+import equipment from './equipment'
 
 const state = {
     commentQueryResult : {
@@ -49,13 +50,13 @@ const actions = {
         })
     },
 
-    postComment( { commit }, data) {
+    postComment( { commit }, {equipmentCode, commentDict}) {
         console.log('equipmentCode in modules is: ')
-        console.log(data.equipmentCode)
+        console.log(equipmentCode)
         console.log('commentDict in modules is: ')
-        console.log(data.commentDict)
+        console.log(commentDict)
         return new Promise((resolve, reject) => {
-            postComment(data.equipmentCode, data.commentDict).then(response => {
+            postComment(equipmentCode, commentDict).then(response => {
                 const { data } = response
                 commit('SET_QUERY_RESULT', data)
                 resolve()
@@ -78,7 +79,7 @@ const actions = {
         })
     },
 
-    voteComment({ commit }, commentId, voteType) {
+    voteComment({ commit }, {commentId, voteType}) {
         return new Promise((resolve, reject) => {
             voteComment(commentId, voteType).then(response => {
                 const { data } = response
