@@ -134,14 +134,14 @@ export default {
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!validUsername(value)) {
-        callback(new Error('Please enter a valid username'))
+        callback(new Error('Username can not be less than 3 characters'))
       } else {
         callback()
       }
     }
     const validatePassword = (rule, value, callback) => {
       if (value.length < 6) {
-        callback(new Error('The password can not be less than 6 characters'))
+        callback(new Error('Password can not be less than 6 characters'))
       } else {
         callback()
       }
