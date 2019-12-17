@@ -87,8 +87,8 @@
                       </p>
                       <p class="comment-text"> {{ c.comment }} </p>
                       <p class="comment-options">
-                        <a @click="likeComment(ed.key, c.id)"><i class="el-icon-arrow-up"/> Like </a> 
-                        <a @click="dislikeComment(ed.key, c.id)"><i class="el-icon-arrow-down"/> Dislike </a> |
+                        <a :class="{liked: c.status === 'LIKED'}" @click="likeComment(ed.key, c.id)"><i class="el-icon-arrow-up"/> Like </a> 
+                        <a :class="{disliked: c.status === 'DISLIKED'}" @click="dislikeComment(ed.key, c.id)"><i class="el-icon-arrow-down"/> Dislike </a> |
                         <a @click="revokeComment(ed.key, c.id)"> Revoke Vote </a> |
                         <a class="delete-text" @click="deleteComment(ed.key, c.id)"><i class="el-icon-delete"/> Delete Comment </a> |
                         <a class="delete-text" @click="showEditCommentDialog=true;editCommentContent=c.comment"><i class="el-icon-edit"/> Edit Comment </a>
@@ -480,6 +480,7 @@ export default {
                 } else if (lastStatus == "DISLIKED") {
                   comment.dislikes -= 1
                 } 
+                comment.status = "NOT_COMMENTED"
               }
             })
           }
@@ -521,6 +522,19 @@ export default {
   font-size: 9pt;
   color: #696969
 }
+
+.disliked{
+  font-weight: normal;
+  font-size: 9pt;
+  color: red;
+}
+
+.liked {
+  font-weight: normal;
+  font-size: 9pt;
+  color: green;
+}
+
 
 .comment-textarea {
   resize: none;
