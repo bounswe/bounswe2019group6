@@ -10,6 +10,7 @@ const getters = {
   articleSearchResult: state => state.search.articleSearchResult,
   articleWriteResult: state => state.search.articleWriteResult,
   userArticle: state => state.search.userArticle,
+  allEvents: state => state.search.allEvents,
   equipmentQueryResult: state => state.equipment.equipmentQueryResult,
   currencyResult: state => state.equipment.currencyResult,
   cryptoCurrencyResult: state => state.equipment.cryptoCurrencyResult,
