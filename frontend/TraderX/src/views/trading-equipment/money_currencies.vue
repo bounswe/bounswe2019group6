@@ -606,10 +606,6 @@ export default {
   color: #696969
 }
 
-.star {
-  background-color: #696969;
-}
-
 .comment-textarea {
   resize: none;
   -webkit-box-sizing: border-box;

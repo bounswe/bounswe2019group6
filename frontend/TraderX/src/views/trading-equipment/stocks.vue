@@ -94,31 +94,41 @@
                   <el-button class='create-comment' style="margin-top:20px;margin-bottom:20px;" @click="showCreateCommentDialog=true">
                     <svg-icon style="margin-right:10px" icon-class="edit" /> Write Comment </el-button>
                   
-                  <el-row class='row' v-for="c in commentList" v-bind:key="c.id" :gutter="20" style="padding:16px 16px 0;margin-bottom:20px;">
+                  <el-row class='row' v-for="c in ed.comments" :key="c.id" :gutter="20" style="padding:16px 16px 0;margin-bottom:20px;">
                     <el-card class='comment-container'>
                       <p>
                         <span class="comment-author"> {{ c.author }} </span>
-                        <span class="comment-time"> {{ c.timestamp | parseTime('{y}-{m}-{d} {h}:{i}') }} - </span>
-                        <span class="comment-options"> {{ c.likes }} Likes </span>
+                        <span class="comment-time"> {{ c.lastModifiedTime | parseTime('{y}-{m}-{d} {h}:{i}') }} - </span>
+                        <span class="comment-options"> {{ c.likes }} Likes - </span>
+                        <span class="comment-options"> {{ c.dislikes }} Dislikes </span>
                       </p>
                       <p class="comment-text"> {{ c.comment }} </p>
                       <p class="comment-options">
-                        <a @click="showReplyCommentDialog=true;replyCommentId=c.id"> Reply </a> |
-                        <a @click="likeComment(c.id)"> <svg-icon icon-class="star" /> Like </a>
+                        <a @click="likeComment(ed.key, c.id)"><i class="el-icon-arrow-up"/> Like </a> 
+                        <a @click="dislikeComment(ed.key, c.id)"><i class="el-icon-arrow-down"/> Dislike </a> |
+                        <a @click="revokeComment(ed.key, c.id)"> Revoke Vote </a> |
+                        <a class="delete-text" @click="deleteComment(ed.key, c.id)"><i class="el-icon-delete"/> Delete Comment </a> |
+                        <a class="delete-text" @click="showEditCommentDialog=true;editCommentContent=c.comment"><i class="el-icon-edit"/> Edit Comment </a>
+
+                        <el-dialog title="Edit Comment" :visible.sync="showEditCommentDialog">
+                          <textarea class="comment-textarea" column="100" rows="10" v-model="editCommentContent"></textarea>
+                          <div>
+                            <el-button style="margin-top:10px;" @click="editComment(ed.key, c.id)"><svg-icon icon-class="edit"/> Edit Comment </el-button>
+                          </div>
+                        </el-dialog>
+
                       </p>
-                      <div class="comment-replies" v-for="r in c.replies" v-bind:key="r.id" style="padding:8px 20px 0;margin-bottom:10px;">
-                        <p>
-                          <span class="comment-author"> {{ r.author }} </span>
-                          <span class="comment-time"> {{ r.timestamp | parseTime('{y}-{m}-{d} {h}:{i}') }} - </span>
-                          <span class="comment-options"> {{ r.likes }} Likes </span>
-                        </p>
-                        <p class="comment-text"> {{ r.comment }} </p>
-                        <p class="comment-options">
-                          <a @click="likeReplyComment(c.id, r.id)"> <svg-icon icon-class="star" /> Like </a>
-                        </p>
-                      </div>
                     </el-card>
                   </el-row>
+
+                  <el-dialog title="Create Comment" :visible.sync="showCreateCommentDialog">
+                    <textarea class="comment-textarea" placeholder="Write your comment here" column="100" rows="10" v-model="createCommentContent"></textarea>
+                    <div>
+                      <el-button style="margin-top:10px;" @click="postComment(ed.key)"><svg-icon icon-class="edit"/> Publish Comment </el-button>
+                    </div>
+                  </el-dialog>
+
+                  
                 
                 </el-card>
               
@@ -139,26 +149,11 @@
       </el-input>  
     </el-dialog>
 
-   <el-dialog title="Create Comment" :visible.sync="showCreateCommentDialog">
-      <textarea class="comment-textarea" placeholder="Write your comment here" cols="100" rows="10" v-model="createCommentContent"></textarea>
-      <div>
-        <el-button style="margin-top:10px;" @click="createComment()"><svg-icon icon-class="edit"/> Publish Comment </el-button>
-      </div>
-    </el-dialog>
-
-    <el-dialog title="Reply Comment" :visible.sync="showReplyCommentDialog">
-      <textarea class="comment-textarea" placeholder="Write your comment here" cols="100" rows="10" v-model="replyCommentContent"></textarea>
-      <div> 
-        <el-button style="margin-top:10px;" @click="replyComment(replyCommentId)"><svg-icon icon-class="edit"/> Reply </el-button>
-      </div>
-    </el-dialog>
-
   </div>
    
 </template>
 
 <script>
-import Tinymce from '@/components/Tinymce'
 import LineChart from './components/LineChart'
 import LineChartDetailed from './components/LineChartDetailed'
 import LineChartComparison from './components/LineChartComparison'
@@ -177,19 +172,17 @@ export default {
     LineChartDetailed,
     LineChart,
     RaddarChart,
-    Tinymce,
   },
   data() {
     return {
       chartData: {},
       showBuyEquipmentDialog: false,
       showCreateCommentDialog: false,
-      showReplyCommentDialog: false,
+      showEditCommentDialog: false,
       buyamountinput: '',
       select: '',
       createCommentContent: '',
-      replyCommentContent: '',
-      replyCommentId: '',
+      editCommentContent: '',
       // equipmentData is expected to be: 
       // [
       //   {
@@ -212,21 +205,31 @@ export default {
       comparisonData: {equipmentData: []},
       activeTab: 'JPY',
       articleList: null,
-      commentList: null
+      commentList: {},
+      postCommentDict: {
+        "comment": "",
+      },
+      editCommentDict: {
+        "comment": "",
+      },
     }
   },
   async created() {
     this.returnArticleList()
-    this.returnCommentList()
     var equipmentList = await this.getEquipmentList()
+    this.getCommentList(equipmentList)
     // Fill the equipmentData with equipment list
     equipmentList.forEach(function(equipmentKey) {
       this.equipmentData.push({key: equipmentKey.code})
     }, this)
     var equipmentValues = await this.getEquipmentValues(equipmentList) 
+    console.log(this.commentList)
     this.createRadarChartData(equipmentValues)
     this.equipmentData = equipmentValues
-    
+
+    console.log('equipmentData is: ')
+    console.log(this.equipmentData)
+
     this.comparisonData.equipmentData = this.equipmentData
   },
   methods: {
@@ -281,64 +284,19 @@ export default {
       ]
     },
 
-    returnCommentList() {
-      this.commentList = [
-        {
-          id: 1,
-          timestamp: 1024316325463,
-          likes: 5,
-          author: 'irmakguzey',
-          comment: 'That’s the findings of Natixis Global Asset Management’s annual Global Portfolio Barometer, which has found that UK portfolios with significant non-sterling assets saw average performance of more than 13 per cent.',
-          replies: [
-            {
-              id: 1,
-              timestamp: 1024316325463,
-              likes: 1,
-              author: 'sadullahgultekin',
-              comment: 'I think you are quite correct!'
-            },
-            {
-              id: 2,
-              timestamp: 1024316325463,
-              likes: 0,
-              author: 'irmakguzey',
-              comment: 'Thank you!'
-            },
-          ]
-        },
-        {
-          id: 2,
-          timestamp: 1056316325463,
-          likes: 54,
-          author: 'sadullahgultekin',
-          comment: 'Matthew Riley, head of research at the portfolio research and consulting group, says: “A substantial part of the explanation is currency risk which is no surprise since currency moves in 2016 were the highest since 2008 and had a large impact on the surveyed portfolios.',
-          replies: []
-        },
-        {
-          id: 3,
-          timestamp: 1234567890123,
-          likes: 15,
-          author: 'burakyuksel',
-          comment: 'For example, he says, a UK investor with unhedged US equity exposure (in other words, without making compensating investments to counteract the risk) would have gained an extra 19 per cent return in 2016 due to the depreciation of the Pound versus the Dollar.\"For eurozone equities, this would have been around 16 per cent, and for Japanese equities this would have been 23 per cent. Currency impact was also seen in allocation funds, EM debt and high yield debt funds, which are often not hedged by advisers.\”',
-          replies: []
-        },
-        {
-          id: 4,
-          timestamp: 1024457825463,
-          likes: 500,
-          author: 'irmakguzey',
-          comment: 'A lot of people. Foreign exchange is most commonly known as Forex and Forex is the world’s most traded market. According to CityIndex there’s an average turnover in excess of US$5.3 trillion every single day. That’s 4.24 trillion pounds at time of writing, although as will be seen that can change. A lot of different people are trading, from large companies to part-time traders operating out of their bedrooms, something that only became possible with the proliferation of the internet.',
-          replies: []
-        },
-        {
-          id: 5,
-          timestamp: 3456789341267,
-          likes: 234,
-          author: 'burakyuksel',
-          comment: 'What drives currency movements? Most people already know that the values of currencies shift, that’s why exchange rates change. And the changes in those rates are determined by multitude of traders buying currencies with other currencies and making judgements on what each is worth in relation to each other. Prices can change at incredible speed in response to news and global events. Traders look at key factors, including political and economic stability, currency intervention, monetary policy and major events such as natural disasters. How does it work? When trading Forex, currencies come in pairs, for example, sterling/US dollar. The trader predicts how the exchange rate between the two currencies will change. So, if the trader believes that US dollars will strengthen against the pound then they buy dollars, which means they are also ditching their pounds. If they are right then the value of their currency rises and they can sell for a profit. If their hunch was wrong then they lose. For example, the GBP/USD rate shows the number of dollars one pound can buy. If a trader believes the pound will increase in value against the dollar then they use dollars to buy pounds. If the exchange rate rises then they can sell the pounds back for a profit. One of the reasons Forex trading is so popular with hobbyist investors is that the markets are open pretty much 24 hours a day, following the different countries’ time zones. Will I make any money? Forex is risky. It’s so risky that many commentators have likened home traders to professional gamblers, arguing that the idea an individual can reliably predict the movements of currencies is nonsense. There are an abundance of platforms and guides and books and investment tutorials that suggest it’s possible to make a small fortune trading currencies. However, spend any time reading forums and there are hoards of bedroom Forex traders losing money day after day. It can be very expensive to make currency transactions and individual traders usually don’t have a large enough pot to make anything other than small gains.',
-          replies: []
-        },
-      ]
+        // Comment List will be received for all of the equipment
+    async getCommentList(equipmentList) {
+      var commentList = {}
+      equipmentList.forEach(async function(e) {
+        try {
+          await this.$store.dispatch('comment/getCommentList', e.code.toLowerCase())
+          var res = this.$store.getters.commentQueryResult
+          commentList[e.code] = res
+        } catch (error) {
+          console.log(error)
+        }
+      }, this)
+      this.commentList = commentList
     },
 
     // Promise for getting equipments list 
@@ -371,6 +329,7 @@ export default {
             low: [],
             current: [],
           }
+          equipmentValues[equipmentValues.length-1].comments = this.commentList[res.equipment.code]
           res.historicalValues.forEach(function(val) {
             equipmentValues[equipmentValues.length-1].data.open.push(val.open)
             equipmentValues[equipmentValues.length-1].data.close.push(val.close)
@@ -448,60 +407,6 @@ export default {
       })
     },
 
-    //  TODO: This should be done at the backend
-    likeComment(commentId) {
-      this.commentList.forEach(function(comment) {
-        if (comment.id == commentId) {
-          comment.likes += 1;
-        }
-      }, this)
-    },
-
-    likeReplyComment(commentId, replyId) {
-      this.commentList.forEach(function(comment) {
-        if (comment.id == commentId) {
-          comment.replies.forEach(function(reply){
-            if (reply.id == replyId) {
-              reply.likes += 1;
-            }
-          })
-        }
-      }, this)
-    },
-
-    // TODO: This should be done at the backend
-    replyComment(commentId) {
-      this.commentList.forEach(function(comment) {
-        if (comment.id == commentId) {
-          var newReply = {
-            id: comment.replies.length+1,
-            timestamp: Date.now(),
-            likes: 0,
-            author: 'current-user',
-            comment: this.replyCommentContent
-          }
-          comment.replies.push(newReply)
-        }
-      }, this)
-        this.showReplyCommentDialog = false
-        this.replyCommentContent = ''
-    },
-
-    // TODO connect this to backend
-    createComment() {
-      var newComment = {
-        id: this.commentList.length+1,
-        timestamp: Date.now(),
-        likes: 0,
-        author: 'current-user', // TODO: change this with backend added
-        comment: this.createCommentContent,
-        replies: []
-      }
-      this.commentList.push(newComment)
-      this.showCreateCommentDialog = false
-      this.createCommentContent = ''
-    },
-
     changeBaseofEquipment(equipmentLabel) {
       this.equipmentData.forEach(function(currency) {
         if (currency.label == equipmentLabel) {
@@ -514,7 +419,148 @@ export default {
           }
         }
       }, this)
-    }
+    },
+
+    readArticle(equipmentLabel) {
+      this.$notify({
+        title: 'Success',
+        message: 'Directing you to the articles about ' + equipmentLabel,
+        type: 'success',
+        duration: 2000
+      })
+    },
+
+    postComment(equipmentCode) {
+      this.postCommentDict["comment"] =  this.createCommentContent
+      // Posting to backend
+      this.$store.dispatch('comment/postComment', {"code": equipmentCode, "commentDict": this.postCommentDict}).then(() => {
+        this.showCreateCommentDialog = false
+        this.createCommentContent = ''
+        this.$message.success('Comment is posted successfully!')
+        
+        var res = this.$store.getters.commentQueryResult
+        this.equipmentData.forEach(function(e) {
+          if (e.key == equipmentCode) {
+            e.comments.push(res)
+          }
+        }, this)
+
+      }).catch(err => {
+        console.log(err)
+      })
+    },
+
+    editComment(equipmentCode, commentId) {
+      // Posting to backend
+      this.editCommentDict["comment"] = this.editCommentContent
+      this.$store.dispatch('comment/editComment', {"commentId": commentId, "commentDict": this.editCommentDict}).then(() => {
+        
+        var that = this
+        this.equipmentData.forEach(function(e) {
+          if (e.key == equipmentCode) {
+            e.comments.forEach(function(c) {
+              if (c.id == commentId) {
+                c.comment = that.editCommentContent
+              }
+            })
+          }
+        })
+
+        this.showEditCommentDialog = false
+        this.editCommentContent = ''
+        this.$message.success('Comment is edited successfully!')
+      }).catch(err => {
+        console.log(err)
+      })
+    },
+
+    async deleteComment(equipmentCode, commentId) {
+      var that = this
+      this.$store.dispatch('comment/deleteComment', commentId).then(async function() {
+        that.$message.success('Comment deleted!')
+        that.equipmentData.forEach(function(e) {
+          if (e.key == equipmentCode) {
+            e.comments.forEach(function(comment) {
+              if (comment.id == commentId) {
+                comment.comment = "[This comment is deleted by the user...]"
+              }
+            })
+          }
+        }, this)
+      }).catch(err => {
+        console.log(err)
+      })
+        
+    }, 
+
+    likeComment(equipmentCode, commentId) {
+      this.$store.dispatch('comment/voteComment', {"commentId": commentId, "voteType": "up"}).then(response => {
+        this.$message.success('Comment liked!')
+        this.equipmentData.forEach(function(e) {
+          if (e.key == equipmentCode) {
+            e.comments.forEach(function(comment) {
+              if (comment.id == commentId) {
+                comment.likes += 1
+                comment.status = "LIKED"
+              }
+            })
+          }
+        }, this)
+      }).catch(err => {
+        console.log(err)
+      })
+    },
+
+    dislikeComment(equipmentCode, commentId) {
+      // Post to backend
+      this.$store.dispatch('comment/voteComment', {"commentId": commentId, "voteType": "down"}).then(response => {
+        this.$message.success('Comment disliked!')
+        this.equipmentData.forEach(function(e) {
+          if (e.key == equipmentCode) {
+            e.comments.forEach(function(comment) {
+              if (comment.id == commentId) {
+                comment.dislikes += 1
+                comment.status = "DISLIKED"
+              }
+            })
+          }
+        }, this)
+      }).catch(err => {
+        console.log(err)
+      })
+    },
+
+    revokeComment(equipmentCode, commentId) {
+      var lastStatus = ""
+      this.equipmentData.forEach(function(e) {
+        if (e.key == equipmentCode) {
+          e.comments.forEach(function(comment) {
+            if (comment.id == commentId) {
+              lastStatus = comment.status
+            }
+          })
+        }
+      }, this)
+      console.log('lastStatus is revokeComment : ' + lastStatus)
+      this.$store.dispatch('comment/revokeVote', commentId).then(response => {
+        this.$message.success('Last vote revoked!')
+        this.equipmentData.forEach(function(e) {
+          if (e.key == equipmentCode) {
+            e.comments.forEach(function(comment) {
+              if (comment.id == commentId) {
+                if (lastStatus == "LIKED") {
+                  comment.likes -= 1
+                } else if (lastStatus == "DISLIKED") {
+                  comment.dislikes -= 1
+                } 
+              }
+            })
+          }
+        }, this)
+      }).catch(err => {
+        console.log(err)
+      })
+    },
   }
 }
 </script>
@@ -553,12 +599,12 @@ export default {
   color: #696969
 }
 
-.star {
-  background-color: #696969;
-}
-
 .comment-textarea {
   resize: none;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 100%;
 }
 
 </style>
