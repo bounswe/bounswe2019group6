@@ -461,10 +461,7 @@ export default {
       // Posting to backend
       this.editCommentDict["comment"] = this.editCommentContent
       this.$store.dispatch('comment/editComment', {"commentId": commentId, "commentDict": this.editCommentDict}).then(() => {
-        this.showEditCommentDialog = false
-        this.editCommentContent = ''
-        this.$message.success('Comment is edited successfully!')
-
+        
         var that = this
         this.equipmentData.forEach(function(e) {
           if (e.key == equipmentCode) {
@@ -476,29 +473,31 @@ export default {
           }
         })
 
+        this.showEditCommentDialog = false
+        this.editCommentContent = ''
+        this.$message.success('Comment is edited successfully!')
       }).catch(err => {
         console.log(err)
       })
     },
 
-    deleteComment(equipmentCode, commentId) {
-      this.$store.dispatch('comment/deleteComment', commentId).then(response => {
-        this.$message.success('Comment deleted!')
-        this.equipmentData.forEach(function(e) {
+    async deleteComment(equipmentCode, commentId) {
+      var that = this
+      this.$store.dispatch('comment/deleteComment', commentId).then(async function() {
+        that.$message.success('Comment deleted!')
+        that.equipmentData.forEach(function(e) {
           if (e.key == equipmentCode) {
-            var i = 0
             e.comments.forEach(function(comment) {
               if (comment.id == commentId) {
-                // e.comments.splice(i, 1) // delete 1 element, starting from index i
-                comment = null
+                comment.comment = "[This comment is deleted by the user...]"
               }
-              i += 1
             })
           }
         }, this)
       }).catch(err => {
         console.log(err)
       })
+        
     }, 
 
     likeComment(equipmentCode, commentId) {
