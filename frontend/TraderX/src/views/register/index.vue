@@ -47,11 +47,23 @@
         </el-form-item>
 
         <el-tooltip
-          v-model="capsTooltip"
-          content="Caps lock is ON"
+          v-model="isPasswordFocused"
+          v-if="!googleSignedIn"
           placement="right"
           manual
         >
+          <div slot="content">
+            * Minimum 6 characters
+            <br>
+            * At least a lowercase letter (a-z)
+            <br>
+            * At least an uppercase letter (A-Z)
+            <br>
+            * At least a digit (0-9)
+            <br>
+            * At least a special character (@#$%^&+=_.)
+            <br>
+          </div>
           <el-form-item v-if="!googleSignedIn" prop="password">
             <span class="svg-container">
               <svg-icon icon-class="password" />
@@ -65,8 +77,8 @@
               name="password"
               tabindex="3"
               autocomplete="on"
-              @keyup.native="checkCapslock"
-              @blur="capsTooltip = false"
+              @focus="isPasswordFocused = true"
+              @blur="isPasswordFocused = false"
               @keyup.enter.native="handleSignup"
             />
             <span
@@ -241,7 +253,7 @@ export default {
         email: [{ required: true, trigger: 'blur', validator: validateEmail }]
       },
       passwordType: 'password',
-      capsTooltip: false,
+      isPasswordFocused: false,
       loading: false,
       showDialog: false,
       redirect: undefined,
@@ -310,18 +322,6 @@ export default {
     // window.removeEventListener('storage', this.afterQRScan)
   },
   methods: {
-    checkCapslock({ shiftKey, key } = {}) {
-      if (key && key.length === 1) {
-        if (shiftKey && (key >= 'a' && key <= 'z') || !shiftKey && (key >= 'A' && key <= 'Z')) {
-          this.capsTooltip = true
-        } else {
-          this.capsTooltip = false
-        }
-      }
-      if (key === 'CapsLock' && this.capsTooltip === true) {
-        this.capsTooltip = false
-      }
-    },
     showPwd() {
       if (this.passwordType === 'password') {
         this.passwordType = ''

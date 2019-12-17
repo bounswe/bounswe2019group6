@@ -66,6 +66,20 @@ export function getAssetInfo() {
   })
 }
 
+export function getMyAllPortfolios() {
+  return request({
+    url: '/portfolio/getAll',
+    method: 'get',
+  })
+}
+
+export function getAllEquipmentOfPortfolio(portfolioName) {
+  return request({
+    url: '/portfolio/get?portfolioName=' + portfolioName,
+    method: 'get',
+  })
+}
+
 export function createPortfolio(query) {
   return request({
     url: '/portfolio/create',
@@ -77,7 +91,7 @@ export function createPortfolio(query) {
 export function deletePortfolio(query) {
   return request({
     url: '/portfolio/delete',
-    method: 'post',
+    method: 'delete',
     params: query,
   })
 }
@@ -92,8 +106,15 @@ export function addEquipmentToPortfolio(query) {
 
 export function deleteEquipmentFromPortfolio(query) {
   return request({
-    url: '/portfolio/delete',
-    method: 'post',
+    url: '/portfolio/discard',
+    method: 'delete',
     params: query,
+  })
+}
+
+export function getAllTransactions(user) {
+  return request({
+    url: '/transaction/user/'+user,
+    method: 'get',
   })
 }

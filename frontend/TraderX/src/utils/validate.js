@@ -39,7 +39,7 @@ export function validLocation(str) {
  * @returns {Boolean}
  */
 export function validPassword(str) {
-  return /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\S+$).{6,}$/.test(str)
+  return /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=_.])(?=\S+$).{6,}$/.test(str)
 }
 
 /**

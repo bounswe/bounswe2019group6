@@ -123,7 +123,6 @@ export default {
           }
           this.followText = this.isNotFollowing ? "Follow" : this.isFollowing ? "Unfollow" : 'Requested'
         }).catch(() => {
-          console.log("errorrr in unfollowing user")
         })
       }
     },
