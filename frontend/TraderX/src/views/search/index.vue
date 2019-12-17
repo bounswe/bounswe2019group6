@@ -7,6 +7,7 @@
             <el-option label="User" value="user"></el-option>
             <el-option label="Trading Equipment" value="equipment"></el-option>
             <el-option label="Article" value="article"></el-option> 
+            <el-option label="Event" value="event"></el-option> 
           </el-select>
           <el-button slot="append" icon="el-icon-search" @click.native.prevent="handleSearch">Search</el-button>
         </el-input>
@@ -71,6 +72,27 @@
           </el-table-column>
         </el-table>
       </div>
+      <div class="article" :style=eventVisibility>
+        <el-table ref="articleTable" :data="searchEventResultToShow" style="width: 100%">
+          <el-table-column prop="event" label="Event">
+            <template slot-scope="scope">{{ scope.row.event }}</template>
+          </el-table-column>
+          <el-table-column prop="date" label="Date">
+            <template slot-scope="scope">{{ scope.row.date }}</template>
+          </el-table-column>
+          <el-table-column prop="country" label="Country">
+            <template slot-scope="scope">{{ scope.row.country }}</template>
+          </el-table-column>
+          <el-table-column prop="forecast" label="Prev, Actual, Forecast">
+            <template slot-scope="scope">{{ scope.row.forecast }}</template>
+          </el-table-column>
+          <el-table-column fixed="right" width="120">
+            <template slot-scope="scope">
+              <el-rate v-model="importanceValues[scope.$index]" :colors="colors" disabled> </el-rate> 
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
     </div>
   </div>
 </template>
@@ -100,10 +122,15 @@ export default {
       searchEquipmentResultToShow: [],
       searchArticleResult: [],
       searchArticleResultToShow: [],
+      searchEventResult: [],
+      searchEventResultToShow: [],
+      colors: ['#99A9BF', '#F7BA2A', '#FF9900'],
+      importanceValues: [],
       selectedFilter: "user",
       userVisibility: "display: block",
       equipmentVisibility: "display: none",
       articleVisibility: "display: none",
+      eventVisibility: "display: none",
     }
   },
   created() {
@@ -130,15 +157,36 @@ export default {
       });
       this.searchResult = temp
     })
+    this.getAllEvents()
     this.getAllArticles()
     this.getCurrencyList()
     this.getCryptoList()
     this.getStocksList()
   },
-  mounted() {
-
-  },
   methods: {
+    getAllEvents(){
+      this.$store.dispatch('search/getEvents').then(() => {
+        var res = this.$store.getters.allEvents
+        console.log(res)
+        for(var i = 0; i < res.length; i++){
+          this.searchEventResult.push({
+            "event" : res[i].Event,
+            "date" : res[i].Date,
+            "country" : res[i].Country,
+            "forecast" : res[i].Previous + " - " + res[i].Actual + " - " + res[i].Forecast,
+          })
+          this.searchEventResultToShow.push({
+            "event" : res[i].Event,
+            "date" : res[i].Date,
+            "country" : res[i].Country,
+            "forecast" : res[i].Previous + " - " + res[i].Actual + " - " + res[i].Forecast,
+          })
+          this.importanceValues.push(res[i].Importance)
+        }
+      }).catch(error => {
+        console.log(error)
+      }) 
+    },
     showArticle(article) {
       this.$router.push({ path: `/view/${article.id}` })
     },
@@ -235,14 +283,22 @@ export default {
         this.equipmentVisibility = "display: none"
         this.articleVisibility = "display: none"
         this.userVisibility = "display: block"
+        this.eventVisibility = "display: none"
       } else if (this.selectedFilter == "equipment") {
         this.equipmentVisibility = "display: block"
         this.userVisibility = "display: none"
         this.articleVisibility = "display: none"
+        this.eventVisibility = "display: none"
       } else if (this.selectedFilter == "article") {
         this.equipmentVisibility = "display: none"
         this.userVisibility = "display: none"
         this.articleVisibility = "display: block"
+        this.eventVisibility = "display: none"
+      } else if (this.selectedFilter == "event") {
+        this.equipmentVisibility = "display: none"
+        this.userVisibility = "display: none"
+        this.articleVisibility = "display: none"
+        this.eventVisibility = "display: block"
       }
     },
     showUserProfile(user) {
@@ -250,7 +306,7 @@ export default {
     },
     takeFollowUnfollowAction(user) {
       if(user.isNotFollowing){
-        this.$store.dispatch('user/followUser', {'username' : user.name}).then(response => {
+        this.$store.dispatch('user/followUser', {'username' : user.name}).then(() => {
           user.isNotFollowing = false
           if (user.privacy == 'Private'){
             this.$message.success('Follow Request Is Sent')
@@ -314,9 +370,11 @@ export default {
         this.searchEquipmentResultToShow = this.searchEquipmentResult.filter(equipment => equipment.equipmentName.includes(this.searchText.toUpperCase()))
       } else if (this.selectedFilter == "article"){
         this.searchArticleResultToShow = this.searchArticleResult.filter(article => article.title.toUpperCase().includes(this.searchText.toUpperCase()))
+      } else if (this.selectedFilter == "event"){
+        this.searchEventResultToShow = this.searchEventResult.filter(event => event.event.toUpperCase().includes(this.searchText.toUpperCase()))
       }
     } 
-  } 
+  }  
 }
 </script>
 

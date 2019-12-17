@@ -40,7 +40,6 @@ export default {
     getEvents() {
       this.$store.dispatch('search/getEvents').then(() => {
         var res = this.$store.getters.allEvents
-        console.log(res)
         for(var i = 0; i < res.length; i++){
           this.eventData.push({
             "event" : res[i].Event,
@@ -54,7 +53,8 @@ export default {
       }).catch(error => {
         console.log(error)
       }) 
-    },}
+    }
+  }
 }
 </script>
 

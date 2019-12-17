@@ -235,8 +235,8 @@ export const constantRoutes = [
       {
         path: 'index',
         component: () => import('@/views/events/index'),
-        name: 'View Events',
-        meta: { title: 'View Events', icon: 'international', noCache: true }
+        name: 'Events',
+        meta: { title: 'Events', icon: 'international', noCache: true }
       }
     ]
   },
