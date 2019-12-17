@@ -55,8 +55,6 @@
 </template>
 <script>
   import { getToken } from '@/utils/auth' // get token from cookie
-  import { becomeBasic, becomeTrader } from '@/api/user'
-  import { depositMoney } from '@/api/equipment'
 
   export default {
     props: {
@@ -84,7 +82,7 @@
         istraderloadmoney: this.user.roles[0] == 'ROLE_TRADER' ? true : false,
         traderibanseen: false,
         ibanshow: false,
-        selectedFilter: "USD"
+        selectedFilter: "USD",
         isPasswordFocused: false
       };
     },

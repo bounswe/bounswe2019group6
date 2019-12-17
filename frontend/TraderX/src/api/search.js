@@ -35,3 +35,10 @@ export function getArticleByUserName(username) {
     method: 'get',
   })
 }
+
+export function getEvents() {
+  return request({
+    url: '/events',
+    method: 'get',
+  })
+}
