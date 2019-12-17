@@ -1,5 +1,7 @@
 <template>
-  <div />
+  <div>
+    <p>lololo</p>
+  </div>
 </template>
 
 <script>
@@ -9,7 +11,9 @@ export default {
   data() {
     return {}
   },
-  created() {},
+  created() {
+    this.getEvents()
+  },
   mounted() {
   },
   methods: {

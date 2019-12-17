@@ -227,6 +227,20 @@ export const constantRoutes = [
     ]
   },
   {
+    path: '/events',
+    component: Layout,
+    redirect: '/events/index',
+    hidden: false,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/events/index'),
+        name: 'View Events',
+        meta: { title: 'View Events', icon: 'international', noCache: true }
+      }
+    ]
+  },
+  {
     path: '/write',
     component: Layout,
     redirect: '/write/index',
