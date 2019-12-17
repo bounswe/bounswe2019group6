@@ -1,6 +1,22 @@
 <template>
   <div>
-    <p>lololo</p>
+    <div style="margin-top: 30px; margin-bottom: 50px; margin-left: 60px; margin-right: 60px">
+      <el-table
+        :data="eventData"
+        :default-sort = "{prop: 'date', order: 'descending'}"
+        stripe
+        style="width: 100%">
+        <el-table-column prop="event" label="Event" sortable> </el-table-column>
+        <el-table-column prop="date" label="Date" sortable> </el-table-column>
+        <el-table-column prop="country" label="Country" sortable> </el-table-column>
+        <el-table-column prop="forecast" label="Prev, Actual, Forecast" sortable> </el-table-column>
+        <el-table-column label="Importance" sortable> 
+          <template slot-scope="scope">
+            <el-rate v-model="importanceValues[scope.$index]" :colors="colors" disabled> </el-rate> 
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
   </div>
 </template>
 
@@ -9,7 +25,11 @@ export default {
   name: 'Events',
   props: {},
   data() {
-    return {}
+    return {
+      eventData: [],
+      importanceValues: [],
+      colors: ['#99A9BF', '#F7BA2A', '#FF9900']
+    }
   },
   created() {
     this.getEvents()
@@ -20,7 +40,16 @@ export default {
     getEvents() {
       this.$store.dispatch('search/getEvents').then(() => {
         var res = this.$store.getters.allEvents
-        console.log(res)  
+        console.log(res)
+        for(var i = 0; i < res.length; i++){
+          this.eventData.push({
+            "event" : res[i].Event,
+            "date" : res[i].Date,
+            "country" : res[i].Country,
+            "forecast" : res[i].Previous + " - " + res[i].Actual + " - " + res[i].Forecast,
+          })
+          this.importanceValues.push(res[i].Importance)
+        }
         
       }).catch(error => {
         console.log(error)
