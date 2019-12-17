@@ -130,7 +130,7 @@
 
                   
                 
-                </el-card>a
+                </el-card>
               
               
               </div>
