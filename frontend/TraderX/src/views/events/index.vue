@@ -9,7 +9,12 @@
         <el-table-column prop="event" label="Event" sortable> </el-table-column>
         <el-table-column prop="date" label="Date" sortable> </el-table-column>
         <el-table-column prop="country" label="Country" sortable> </el-table-column>
-        <el-table-column prop="forecast" label="Prev, Actual, Forecast" sortable> </el-table-column>
+
+        <el-table-column prop="prev" label="Prev" width="80%"></el-table-column>
+        <el-table-column prop="actual" label="Actual" width="80%"> </el-table-column>
+        <el-table-column prop="forecast" label="Forecast" width="80%"> </el-table-column>
+
+
         <el-table-column label="Importance" sortable> 
           <template slot-scope="scope">
             <el-rate v-model="importanceValues[scope.$index]" :colors="colors" disabled> </el-rate> 
@@ -45,7 +50,9 @@ export default {
             "event" : res[i].Event,
             "date" : res[i].Date,
             "country" : res[i].Country,
-            "forecast" : res[i].Previous + " - " + res[i].Actual + " - " + res[i].Forecast,
+            "prev" : res[i].Previous,
+            "actual" : res[i].Actual,
+            "forecast" : res[i].Forecast
           })
           this.importanceValues.push(res[i].Importance)
         }

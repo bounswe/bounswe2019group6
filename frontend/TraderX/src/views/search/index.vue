@@ -83,7 +83,13 @@
           <el-table-column prop="country" label="Country">
             <template slot-scope="scope">{{ scope.row.country }}</template>
           </el-table-column>
-          <el-table-column prop="forecast" label="Prev, Actual, Forecast">
+          <el-table-column prop="prev" label="Prev" width="80%">
+            <template slot-scope="scope">{{ scope.row.prev }}</template>
+          </el-table-column>
+          <el-table-column prop="actual" label="Actual" width="80%">
+            <template slot-scope="scope">{{ scope.row.actual }}</template>
+          </el-table-column>
+          <el-table-column prop="forecast" label="Forecast" width="80%">
             <template slot-scope="scope">{{ scope.row.forecast }}</template>
           </el-table-column>
           <el-table-column fixed="right" width="120">
@@ -173,13 +179,17 @@ export default {
             "event" : res[i].Event,
             "date" : res[i].Date,
             "country" : res[i].Country,
-            "forecast" : res[i].Previous + " - " + res[i].Actual + " - " + res[i].Forecast,
+            "prev" : res[i].Previous,
+            "actual" : res[i].Actual,
+            "forecast" : res[i].Forecast,
           })
           this.searchEventResultToShow.push({
             "event" : res[i].Event,
             "date" : res[i].Date,
             "country" : res[i].Country,
-            "forecast" : res[i].Previous + " - " + res[i].Actual + " - " + res[i].Forecast,
+            "prev" : res[i].Previous,
+            "actual" : res[i].Actual,
+            "forecast" : res[i].Forecast,
           })
           this.importanceValues.push(res[i].Importance)
         }
