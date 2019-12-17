@@ -2,9 +2,28 @@
   <div>
     <el-collapse v-model="activeNames">
       <el-collapse-item title="Password" name="1">
-        <el-input placeholder="Please enter new password" v-model="passwordinput">
-          <el-button slot="append" @click="updatePassword(passwordinput)">Update</el-button>
-        </el-input>
+        <el-tooltip v-model="isPasswordFocused" placement="left" manual>
+          <div slot="content">
+            * Minimum 6 characters
+            <br>
+            * At least a lowercase letter (a-z)
+            <br>
+            * At least an uppercase letter (A-Z)
+            <br>
+            * At least a digit (0-9)
+            <br>
+            * At least a special character (@#$%^&+=_.)
+            <br>
+          </div>
+          <el-input
+            placeholder="Please enter new password"
+            v-model="passwordinput"
+            @focus="isPasswordFocused = true"
+            @blur="isPasswordFocused = false"
+          >
+            <el-button slot="append" @click="updatePassword(passwordinput)">Update</el-button>
+          </el-input>
+        </el-tooltip>
       </el-collapse-item>
       <el-collapse-item title="IBAN" name="2" v-if="ibanshow">
         <el-input placeholder="Please enter new IBAN" v-model="newibaninput">
@@ -66,6 +85,7 @@
         traderibanseen: false,
         ibanshow: false,
         selectedFilter: "USD"
+        isPasswordFocused: false
       };
     },
     methods: {

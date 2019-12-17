@@ -16,12 +16,6 @@
           <el-card>
             <el-tabs v-model="activeTab">
               <el-tab-pane
-                label="Portfolio"
-                name="portfolio"
-              >
-                <portfolio :username="this.user.username"/>
-              </el-tab-pane>
-              <el-tab-pane
                 label="My Investments"
                 name="myinvestments"
               >
@@ -34,13 +28,19 @@
                 <my-transactions/>
               </el-tab-pane>
               <el-tab-pane
+                label="Portfolio"
+                name="portfolio"
+              >
+                <portfolio :username="this.user.username"/>
+              </el-tab-pane>
+              <el-tab-pane
                 label="My Articles"
                 name="articles"
               >
                 <articles />
               </el-tab-pane>
               <el-tab-pane
-                label="EditProfile"
+                label="Edit Profile"
                 name="editprofile"
               >
                 <editprofile :user="user" v-if="this.user.username"/>
@@ -69,7 +69,7 @@ export default {
   data() {
     return {
       user: {},
-      activeTab: 'portfolio'
+      activeTab: 'myinvestments'
     }
   },
   computed: {
@@ -90,7 +90,7 @@ export default {
         console.log(error)
       })
     },
-      
+
   },
   mounted() {
   }
