@@ -36,7 +36,7 @@
 <script>
 
 import CoolCard from '@/components/CoolCard'
-import { createPortfolio, deletePortfolio, addEquipmentToPortfolio, deleteEquipmentFromPortfolio } from '@/api/equipment'
+import { getMyAllPortfolios, createPortfolio, deletePortfolio, addEquipmentToPortfolio, deleteEquipmentFromPortfolio } from '@/api/equipment'
 
 export default {
   props: {
@@ -57,40 +57,52 @@ export default {
       isSelf: this.$route.path.split('/')[1] == 'profile' ? true : false
     }
   },
+  created() {
+    this.getAllPortfolios()
+  },
   methods: {
+    getAllPortfolios() {
+      this.$store.dispatch('equipment/getMyAllPortfolios').then(() => {
+        for(var i = 0; i < this.$store.getters.allPortfolios.length; i++) {
+          this.all_portfolios.push({
+            portfolioName : this.$store.getters.allPortfolios[i].portfolioName,
+          })
+        }
+      }).catch(error => {
+        console.log(error)
+      })
+    },
     handleCreatePortfolio(){
       if (this.createPortfolioForm.portfolioName == '') {
         this.$message.error("Portfolio Name Can Not Be Empty")
       } else {
-        // this.$store.dispatch('equipment/createPortfolio', { "username": this.$store.getters.userInfo.username, "portfolioname": this.createPortfolioForm.portfolioName }).then(() => {
+        this.$store.dispatch('equipment/createPortfolio', { portfolioName: this.createPortfolioForm.portfolioName }).then(() => {
           this.showCreateDialog = false,
           this.all_portfolios.push({
             portfolioName : this.createPortfolioForm.portfolioName,
           })
+          this.createPortfolioForm.portfolioName = ""
           this.$notify({ title: 'Success', message: 'Portfolio is posted', type: 'success', duration: 2000 }) 
-        // }).catch(error => {
-        //   console.log("errorrr in iban change")
-        //   console.log(error)
-        // })
+         }).catch(error => {
+           console.log(error)
+         })
+      }
+    },
+    handleDeletePortfolio(){
+      if (this.deletePortfolioForm.portfolioName == '') {
+        this.$message.error("Portfolio Name Can Not Be Empty")
+      } else {
+        this.$store.dispatch('equipment/deletePortfolio', { portfolioName: this.deletePortfolioForm.portfolioName }).then(() => {
+          this.all_portfolios = this.all_portfolios.filter(portfolio => portfolio.portfolioName != this.deletePortfolioForm.portfolioName);
+          this.showDeleteDialog = false;
+          this.deletePortfolioForm.portfolioName = ""
+          this.$notify({ title: 'Success', message: 'Portfolio is deleted', type: 'success', duration: 2000 }) 
+        }).catch(error => {
+          console.log(error)
+        })
       }
     }
   },
-  handleDeletePortfolio(){
-    if (this.deletePortfolioForm.portfolioName == '') {
-      this.$message.error("Portfolio Name Can Not Be Empty")
-    } else {
-      // this.$store.dispatch('equipment/createPortfolio', { "username": this.$store.getters.userInfo.username, "portfolioname": this.createPortfolioForm.portfolioName }).then(() => {
-        this.showCreateDialog = false,
-        this.all_portfolios = this.all_portfolios.filter(portfolio => portfolio.portfolioName != this.deletePortfolioForm.portfolioName);
-        
-        this.$notify({ title: 'Success', message: 'Portfolio is deleted', type: 'success', duration: 2000 }) 
-      // }).catch(error => {
-      //   console.log("errorrr in iban change")
-      //   console.log(error)
-      // })
-    }
-  }
-  
 }
 </script>
 

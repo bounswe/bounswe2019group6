@@ -27,16 +27,38 @@
           <el-card>
             <el-tabs v-model="activeTab">
               <el-tab-pane
-                label="Portfolio"
-                name="portfolio"
-              >
-                <portfolio />
-              </el-tab-pane>
-              <el-tab-pane
-                label="Article"
+                label="Articles"
                 name="articles"
               >
-                <articles />
+                <div style="margin-top: 10px">
+                  <el-table
+                    :data="tableData"
+                    :default-sort = "{prop: 'date', order: 'descending'}"
+                    stripe
+                    style="width: 100%">
+                    <el-table-column
+                      prop="id"
+                      label="ID"
+                      sortable
+                      width="60">
+                    </el-table-column>
+                    <el-table-column
+                      prop="title"
+                      label="Title"
+                      sortable>
+                    </el-table-column>
+                    <el-table-column
+                      prop="timestamp"
+                      label="Date"
+                      sortable>
+                    </el-table-column>
+                    <el-table-column fixed="right" width="120">
+                      <template slot-scope="scope">
+                        <el-button @click="HandleRedirect(tableData[scope.$index])" type="text" round>See Article</el-button>
+                      </template>
+                    </el-table-column>
+                  </el-table>
+                </div>
               </el-tab-pane>
             </el-tabs>
           </el-card>
@@ -51,20 +73,20 @@
 import { mapGetters } from 'vuex'
 import UserCard from '@/views/profile/components/UserCard'
 import Portfolio from '@/views/profile/components/Portfolio'
-import Articles from '@/views/profile/components/Articles'
 import PrivateAccount from '@/views/profile/components/PrivateAccount'
 import { getUser } from '@/api/user'
 
 export default {
   name: 'UserProfile',
-  components: { UserCard, Portfolio, Articles, PrivateAccount },
+  components: { UserCard, Portfolio, PrivateAccount },
   data() {
     return {
       user: {},
-      activeTab: 'portfolio',
+      activeTab: 'articles',
       visibility: 'visibility: hidden',
       privacyDisplay: 'display: none',
-      infoTabDisplay: 'display: none'
+      infoTabDisplay: 'display: none',
+      tableData: []
     }
   },
   computed: {
@@ -80,10 +102,25 @@ export default {
       this.visibility = 'visibility: visible'
       this.privacyDisplay = this.user.isPrivate && this.user.followingStatus != 'FOLLOWING' ? 'display: block': 'display: none'
       this.infoTabDisplay = !this.user.isPrivate || this.user.followingStatus == 'FOLLOWING'  ? 'display: block': 'display: none'
+      this.getUserArticle()
     })
   },
   methods: {
-    
+    getUserArticle(){
+      if(!this.user.isPrivate){
+        this.$store.dispatch('search/getArticleByUserName', this.$route.path.split('/')[2]).then(() => {
+          for(var i = 0; i < this.$store.getters.userArticle.length; i++){
+            this.tableData.push({
+              "timestamp" : this.$store.getters.userArticle[i].createdAt,
+              "title" : this.$store.getters.userArticle[i].header,
+              "id" : this.$store.getters.userArticle[i].id
+            }) 
+          } 
+        }).catch(err => {
+          console.log(err)
+        })
+      }
+    }
   }
 }
 </script>

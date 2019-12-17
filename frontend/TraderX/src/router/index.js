@@ -199,6 +199,48 @@ export const constantRoutes = [
     ]
   },
   {
+    path: '/article',
+    component: Layout,
+    redirect: '/article/index',
+    hidden: false,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/article/index'),
+        name: 'Article',
+        meta: { title: 'Article', icon: 'documentation', noCache: true }
+      }
+    ]
+  },
+  {
+    path: '/view/:articleid',
+    component: Layout,
+    redirect: '/view/:articleid/index',
+    hidden: true,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/view-article/index'),
+        name: 'View Article',
+        meta: { title: 'View Article', noCache: true }
+      }
+    ]
+  },
+  {
+    path: '/write',
+    component: Layout,
+    redirect: '/write/index',
+    hidden: true,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/write-article/index'),
+        name: 'Write Article',
+        meta: { title: 'Write Article', noCache: true }
+      }
+    ]
+  },
+  {
     path: '/user/:username/profile',
     component: Layout,
     redirect: '/user/:username/profile',
