@@ -22,7 +22,7 @@ export default {
     },
     height: {
       type: String,
-      default: '500px',
+      default: '300px',
     },
     chartData: {
       type: Object,
@@ -71,7 +71,7 @@ export default {
           }
         },
         radar: {
-          radius: '66%',
+          radius: '60%',
           center: ['50%', '42%'],
           splitNumber: 8,
           splitArea: {
@@ -84,12 +84,20 @@ export default {
               shadowOffsetY: 15
             }
           },
+          axisLabel: {
+            color: function(value, index){
+              return 'rgb(90,75,72)'
+            }
+          },
           indicator: indicatorData
         },
         legend: {
           left: 'center',
           bottom: '10',
-          data: legendData
+          data: legendData,
+          textStyle: {
+            fontSize: 10
+          }
         },
         series: [{
           type: 'radar',

@@ -1,5 +1,6 @@
 import { getEquipment, listEquipment, getAllCurrencies, getAllCryptoCurrencies, getAllStocks, depositMoney, 
-        buyEquipment, sellEquipment, getAssetInfo, createPortfolio, deletePortfolio, addEquipmentToPortfolio, deleteEquipmentFromPortfolio} from '@/api/equipment'
+        buyEquipment, sellEquipment, getAssetInfo, getMyAllPortfolios, createPortfolio, deletePortfolio, 
+        addEquipmentToPortfolio, deleteEquipmentFromPortfolio, getAllEquipmentOfPortfolio, getAllTransactions } from '@/api/equipment'
 
 const state = {
   equipmentQueryResult : {
@@ -19,7 +20,16 @@ const mutations = {
   },
   SET_STOCK_RESULT: (state, result) => {
     state.stockResult = result
-  }
+  },
+  SET_PORTFOLIO_RESULT: (state, result) => {
+    state.allPortfolios = result
+  },
+  SET_EQUIPMENT_RESULT: (state, result) => {
+    state.allEquipments = result
+  },
+  SET_TRANSACTION_RESULT: (state, result) => {
+    state.transaction = result
+  },
 }
 
 const actions = {
@@ -122,6 +132,17 @@ const actions = {
       })
     })
   },
+  getMyAllPortfolios({ commit }) {
+    return new Promise((resolve, reject) => {
+      getMyAllPortfolios().then(response => {
+        const { data } = response
+        commit('SET_PORTFOLIO_RESULT', data)
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
   createPortfolio({ commit }, username, portfolioname) {
     return new Promise((resolve, reject) => {
       createPortfolio(username, portfolioname).then(response => {
@@ -144,6 +165,17 @@ const actions = {
       })
     })
   },
+  getAllEquipmentOfPortfolio({ commit }, portfolioName) {
+    return new Promise((resolve, reject) => {
+      getAllEquipmentOfPortfolio(portfolioName).then(response => {
+        const { data } = response
+        commit('SET_EQUIPMENT_RESULT', data)
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
   addEquipmentToPortfolio({ commit }, username, portfolioname, equipmentname) {
     return new Promise((resolve, reject) => {
       addEquipmentToPortfolio(username, portfolioname, equipmentname).then(response => {
@@ -160,6 +192,17 @@ const actions = {
       deleteEquipmentFromPortfolio(username, portfolioname, equipmentname).then(response => {
         const { data } = response
         commit('SET_QUERY_RESULT', data)
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  getAllTransactions({ commit }, username) {
+    return new Promise((resolve, reject) => {
+      getAllTransactions(username).then(response => {
+        const { data } = response
+        commit('SET_TRANSACTION_RESULT', data)
         resolve()
       }).catch(error => {
         reject(error)

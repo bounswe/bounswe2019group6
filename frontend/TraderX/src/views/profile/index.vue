@@ -22,19 +22,25 @@
                 <my-investments/>
               </el-tab-pane>
               <el-tab-pane
+                label="My Transactions"
+                name="mytransactions"
+              >
+                <my-transactions/>
+              </el-tab-pane>
+              <el-tab-pane
                 label="Portfolio"
                 name="portfolio"
               >
                 <portfolio :username="this.user.username"/>
               </el-tab-pane>
               <el-tab-pane
-                label="Article"
+                label="My Articles"
                 name="articles"
               >
                 <articles />
               </el-tab-pane>
               <el-tab-pane
-                label="EditProfile"
+                label="Edit Profile"
                 name="editprofile"
               >
                 <editprofile :user="user" v-if="this.user.username"/>
@@ -55,10 +61,11 @@ import Articles from './components/Articles'
 import Editprofile from './components/Editprofile'
 import PrivateAccount from './components/PrivateAccount'
 import MyInvestments from '@/components/MyInvestments'
+import MyTransactions from '@/components/MyTransactions'
 
 export default {
   name: 'Profile',
-  components: { UserCard, Portfolio, Articles, Editprofile, PrivateAccount, MyInvestments },
+  components: { UserCard, Portfolio, Articles, Editprofile, PrivateAccount, MyInvestments, MyTransactions },
   data() {
     return {
       user: {},
@@ -83,7 +90,7 @@ export default {
         console.log(error)
       })
     },
-      
+
   },
   mounted() {
   }

@@ -1,20 +1,28 @@
 <template>
 
   <div class="trading-eqipment-list-container">
-    <el-row class='row' v-for="te in tradingEquipments" v-bind:key="te.label" :gutter="20" style="padding:16px 16px 0;margin-bottom:32px;">
-      <el-col class='te-type-column' :span="5" :xs="25">
-        <el-card class='te-type-container'>
+    <el-row class='row' v-for="te in tradingEquipments" :key="te.label" :gutter="20" style="padding:10px 10px 0px;margin-bottom:10px;">
+      <el-col class='te-type-column' :span="8" :xs="25">
+        <el-card class='te-type-container' style="padding: 10px 10px 0px;">
           <h1 class='te-type-text'>{{ te.label }}</h1>
+          <el-card style="margin-top:50px;" class='raddar-chart-container'>
+            <raddar-chart :chart-data="te.chartData"/>
+          </el-card>
+            <div style="margin-top:20px;">
+              <div  class="te-radar-info-text">Categories are calculated as follows;</div>
+              <div  class="te-radar-info-text"><b>Stabilitity:</b> 1 / [ sum( | average - ith data | / average ) / 100 ] --> i:[0,100]</div>
+              <div  class="te-radar-info-text"><b>Growth:</b> sum( ith data - (i+1)th data ) / 100 --> i:[0,99]</div>
+            </div>
         </el-card>
       </el-col>
 
-      <el-col :span="20" :xs="25" >
+      <el-col :span="17" :xs="25" >
         <el-card>
           <el-tabs v-model="te.activeTab" >
             <el-tab-pane class='te-tab-pane' v-for="t in te.data" :key="t.key" :label="t.label" :name="t.key" :type="t.key">
               <div v-if="te.activeTab==t.key">
-                <p class="te-info-text">Last 100 days' American Dollar / {{ t.label }} is as follows:</p>
-                <div class='chart-wrapper'>
+                <p class="te-info-text">Last 100 days' {{ t.label }} / American Dollar is as follows:</p>
+                <div style="margin-top:50px;margin-bottom:50px" class='chart-wrapper'>
                   <line-chart :type="t.key" :chart-data="t.data"/>
                 </div>
                 <el-button class='learn-more-button' @click="learnMoreAboutEquipment(te.label)"><svg-icon style="margin-right:10px" icon-class="chart" />Learn More About Equipment</el-button>
@@ -49,43 +57,48 @@
 
 <script>
 import LineChart from './components/LineChart'
-// import { param } from '../../utils'
-// import { buyEquipment } from '@/api/equipment'
+import RaddarChart from './components/RaddarChart'
+
+// The usual sorting in javascript sorts alphabetically which causes mistake in our code
+const numberSort = function (a,b) {
+    return a - b;
+};
 
 export default {
   name: 'DashboardAdmin',
   components: {
-    LineChart
+    LineChart,
+    RaddarChart
   },
   data() {
     return {
-      tradingEquipments : [
-        {label: 'Money Currencies', data: []},
-        {label: 'Cryptocurrencies', data: []},
-        {label: 'Stocks', data: []}
-      ],
+      tradingEquipments: [],
       currencyList: [],
       cryptoList: [],
       stocksList: [],
       showDialog: false,
       buyElem: "",
       buyamountinput: "",
-      select: ""
+      select: "",
     }
   },
   async created() {
+    this.tradingEquipments.push({label: 'Money Currencies'})
+    this.tradingEquipments.push({label: 'Crytocurrencies'})
+    this.tradingEquipments.push({label: 'Stocks'})
+
     this.currencyList = await this.getCurrencyList()
-    this.addKeyToTradingEquipments(this.currencyList, 0)
     this.cryptoList = await this.getCryptoList()
-    this.addKeyToTradingEquipments(this.cryptoList, 1)
     this.stocksList = await this.getStocksList()
-    this.addKeyToTradingEquipments(this.stocksList, 2)
+
     var currencyData = await this.getEquipmentData(this.currencyList)
-    this.addDataToTradingEquipments(currencyData, 0)
+    this.addDataToTradingEquipments(this.currencyList.length, currencyData, 0)
     var cryptoData = await this.getEquipmentData(this.cryptoList)
-    this.addDataToTradingEquipments(cryptoData, 1)
+    this.addDataToTradingEquipments(this.cryptoList.length, cryptoData, 1)
     var stocksData = await this.getEquipmentData(this.stocksList)
-    this.addDataToTradingEquipments(stocksData, 2)
+    this.addDataToTradingEquipments(this.stocksList.length, stocksData, 2)
+
+    this.createRadarChartData()
   },
 
   methods: {
@@ -133,6 +146,7 @@ export default {
     // equipmentType is 0,1 or 2. 0 indicating Money Currencies, 1 indicating CryptoCurrencies, 2 indicating Stocks
     addKeyToTradingEquipments(equipmentList, equipmentType) {
       // Wait until the list is pulled properly
+      this.tradingEquipments[equipmentType].data = []
       if (equipmentList.length == 0) {
         setTimeout(() => {
           this.addKeyToTradingEquipments(equipmentList, equipmentType)
@@ -173,21 +187,108 @@ export default {
       return equipmentData
     },
 
-    addDataToTradingEquipments(equipmentData, equipmentType) {
+    async returnEquipmentData(equipmentList, equipmentType) {
+      this.tradingEquipments[equipmentType].data = []
+      var that = this
+      equipmentList.forEach(async function(e) {
+        try{
+          await that.$store.dispatch('equipment/getEquipment', e.code.toLowerCase())
+          var res = that.$store.getters.equipmentQueryResult
+          if (that.tradingEquipments[equipmentType].data.length == 0) {
+            that.tradingEquipments[equipmentType].activeTab = e.code
+          }
+          that.tradingEquipments[equipmentType].data.push({})
+          that.tradingEquipments[equipmentType].data[that.tradingEquipments[equipmentType].data.length-1].key = e.code
+          that.tradingEquipments[equipmentType].data[that.tradingEquipments[equipmentType].data.length-1].label = res.equipment.name
+          that.tradingEquipments[equipmentType].data[that.tradingEquipments[equipmentType].data.length-1].data = {
+            open: [],
+            current: []
+          }
+
+          res.historicalValues.forEach((val) => {
+            that.tradingEquipments[equipmentType].data[that.tradingEquipments[equipmentType].data.length-1].data.open.push(val.open)
+            that.tradingEquipments[equipmentType].data[that.tradingEquipments[equipmentType].data.length-1].data.current.push(res.equipment.currentValue)
+          })
+        } catch (error) {
+          console.log(error)
+        }
+      })
+    },
+
+    addDataToTradingEquipments(equipmentSize, equipmentData, equipmentType) {
       // In order to decrease the latency the data is put to trading equipments as soon as it is pulled
       // And if it is not pulled properly the method is called again
+      if (equipmentData.length < equipmentSize) {
+        setTimeout(() => {
+          this.addDataToTradingEquipments(equipmentSize, equipmentData, equipmentType)
+        }, 200)
+      }
+      this.tradingEquipments[equipmentType].data = []
       for (let i = 0; i < equipmentData.length; i++) {
         if (i == 0){
           this.tradingEquipments[equipmentType].activeTab = equipmentData[i].key
         }
+        this.tradingEquipments[equipmentType].data.push({})
         this.tradingEquipments[equipmentType].data[i].key = equipmentData[i].key
         this.tradingEquipments[equipmentType].data[i].label = equipmentData[i].label
         this.tradingEquipments[equipmentType].data[i].data = equipmentData[i].data
       }
-      if (equipmentData.length != this.tradingEquipments[equipmentType].data.length) {
+    },
+
+    createRadarChartData() {
+      console.log('in createRadarChartData')
+      if (this.tradingEquipments[0].data.length < this.currencyList.length ||
+          this.tradingEquipments[1].data.length < this.cryptoList.length ||
+          this.tradingEquipments[2].data.length < this.stocksList.length) {
         setTimeout(() => {
-          this.addDataToTradingEquipments(equipmentData, equipmentType)
-        }, 200)
+          this.createRadarChartData()
+        }, 300)
+      } else {
+        this.tradingEquipments.forEach(function (te) {
+          te.chartData = {}
+
+          var stabilities = [] // calculate stability of each trading equipment
+          var growth = [] // calculate growth rate for each equipment
+          var values = []
+          var legendData = [] // For getting legendData
+          var graphData = []
+
+          const equipmentSize = te.data.length
+          
+          for (let i = 0; i < equipmentSize; i++) {
+            let valueAverage = 0
+            te.data[i].data.open.forEach(function(val) {
+              valueAverage += val / te.data[i].data.open.length
+            })
+            let stability = Math.abs(valueAverage - te.data[i].data.open[0]) / te.data[i].data.open.length
+            let growthRate = 0
+            for (let j = 0; j < te.data[i].data.open.length-1; j++) {
+              stability += (Math.abs(valueAverage - te.data[i].data.open[j+1]) / valueAverage) / te.data[i].data.open.length
+              growthRate += (te.data[i].data.open[j] - te.data[i].data.open[j+1]) / te.data[i].data.open.length
+            }
+            stabilities.push(1/stability)
+            growth.push(growthRate)
+            values.push(te.data[i].data.current[0])
+            legendData.push(te.data[i].label)
+            graphData.push({value: [1/stability, growthRate, te.data[i].data.current[0]], name: te.data[i].label})
+          }
+          stabilities.sort(numberSort)
+          growth.sort(numberSort)
+          values.sort(numberSort)
+          for (let i = 0; i < equipmentSize; i++) {
+            graphData[i].value = [stabilities.indexOf(graphData[i].value[0])+1, growth.indexOf(graphData[i].value[1])+1, values.indexOf(graphData[i].value[2])+1]
+          }
+
+          var indicatorData = [
+            { name: 'Stability', max: Math.max(stabilities)},
+            { name: 'Growth', max: Math.max(growth)},
+            { name: 'Value', max: Math.max(values)}
+          ]
+
+          te.chartData.legendData = legendData
+          te.chartData.graphData = graphData
+          te.chartData.indicatorData = indicatorData
+        })
       }
     },
 
@@ -245,6 +346,12 @@ $light_blue: #0c96e5;
 
   .te-info-text {
     color: $dark_gray;
+    font-size: 0.8vw;
+  }
+
+  .te-radar-info-text {
+  color: $dark_gray;
+  font-size: 0.7vw;
   }
 
 }
