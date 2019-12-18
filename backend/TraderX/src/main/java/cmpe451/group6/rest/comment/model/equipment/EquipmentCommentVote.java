@@ -1,12 +1,11 @@
-package cmpe451.group6.rest.comment.model;
+package cmpe451.group6.rest.comment.model.equipment;
 
 import cmpe451.group6.authorization.model.User;
-import cmpe451.group6.rest.equipment.model.Equipment;
 
 import javax.persistence.*;
 
 @Entity
-public class CommentVote {
+public class EquipmentCommentVote {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -24,13 +23,13 @@ public class CommentVote {
     @Column
     private boolean upvote;
 
-    public CommentVote(EquipmentComment equipmentComment, User owner, boolean upvote) {
+    public EquipmentCommentVote(EquipmentComment equipmentComment, User owner, boolean upvote) {
         this.equipmentComment = equipmentComment;
         this.owner = owner;
         this.upvote = upvote;
     }
 
-    public CommentVote() {
+    public EquipmentCommentVote() {
     }
 
     public User getOwner() {

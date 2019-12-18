@@ -1,4 +1,4 @@
-package cmpe451.group6.rest.comment.model;
+package cmpe451.group6.rest.comment.model.equipment;
 
 
 import cmpe451.group6.authorization.model.User;

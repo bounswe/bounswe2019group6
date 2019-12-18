@@ -1,8 +1,8 @@
-package cmpe451.group6.rest.comment.model;
+package cmpe451.group6.rest.comment.model.article;
 
 import java.util.Date;
 
-public class CommentResponseDTO {
+public class ArticleCommentResponseDTO {
 
     private int id;
 
@@ -12,7 +12,7 @@ public class CommentResponseDTO {
 
     private String author;
 
-    private String equipment;
+    private int articleId;
 
     private int likes;
 
@@ -20,12 +20,12 @@ public class CommentResponseDTO {
 
     private VoteStatus status;
 
-    public CommentResponseDTO(int id, Date lastModifiedTime, String comment, String author, String equipment,int likes, int dislikes ,VoteStatus status) {
+    public ArticleCommentResponseDTO(int id, Date lastModifiedTime, String comment, String author, int articleId, int likes, int dislikes , VoteStatus status) {
         this.id = id;
         this.lastModifiedTime = lastModifiedTime;
         this.comment = comment;
         this.author = author;
-        this.equipment = equipment;
+        this.articleId = articleId;
         this.likes = likes;
         this.dislikes = dislikes;
         this.status = status;
@@ -63,12 +63,12 @@ public class CommentResponseDTO {
         this.author = author;
     }
 
-    public String getEquipment() {
-        return equipment;
+    public int getArticleId() {
+        return articleId;
     }
 
-    public void setEquipment(String equipment) {
-        this.equipment = equipment;
+    public void setArticleId(int articleId) {
+        this.articleId = articleId;
     }
 
     public int getLikes() {
