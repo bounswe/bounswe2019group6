@@ -24,6 +24,7 @@ import com.traderx.ui.search.UserSearchSkeletonRecyclerViewAdapter
 import com.traderx.util.Helper
 import com.traderx.util.Injection
 import com.traderx.viewmodel.AuthUserViewModel
+import com.traderx.viewmodel.CommentableViewModel
 import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
@@ -32,7 +33,7 @@ class CommentFragment(
     private val commentsSingle: Single<ArrayList<CommentResponse>>,
     private val deleteComp: (id: Int) -> Completable,
     private val editComp: (id: Int, message: String) -> Completable,
-    private val createComp: (message: String) -> Completable,
+    private val createComp: (message: String) -> Single<CommentResponse>,
     private val voteComp: (id: Int, vote: VoteType) -> Completable,
     private val revokeComp: (id: Int) -> Completable
 ) : Fragment() {
@@ -253,8 +254,8 @@ class CommentFragment(
 
             disposable.add(
                 createComp(commentEditText.text.toString())
-                    .compose(Helper.applyCompletableSchedulers())
-                    .doOnComplete {
+                    .compose(Helper.applySingleSchedulers())
+                    .doFinally {
                         isCommenting = false
                     }.subscribe({
                         Snackbar.make(
@@ -265,7 +266,11 @@ class CommentFragment(
 
                         commentEditText.setText("")
                         isCommenting = false
-                        refreshComments()
+
+                        val adapter = recyclerView.adapter
+                        if(adapter is CommentRecyclerViewAdapter) {
+                            adapter.addItem(it)
+                        }
                     }, { ErrorHandler.handleError(it, context as Context) })
             )
         }
