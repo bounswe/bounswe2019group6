@@ -8,16 +8,16 @@ import android.widget.TextView
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.traderx.R
-import com.traderx.api.response.UserAll
-import kotlinx.android.synthetic.main.item_user_search.view.*
+import com.traderx.db.User
+import kotlinx.android.synthetic.main.item_user.view.*
 
 class UserSearchRecyclerViewAdapter(
-    private val mValues: List<UserAll>
+    private val mValues: List<User>
 ) : RecyclerView.Adapter<UserSearchRecyclerViewAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_user_search, parent, false)
+            .inflate(R.layout.item_user, parent, false)
         return ViewHolder(view)
     }
 
