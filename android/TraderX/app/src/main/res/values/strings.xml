@@ -69,6 +69,7 @@
     <!--    Actions-->
     <string name="become_trader">Become a Trader</string>
     <string name="enter_iban_for_trader">Enter Your IBAN to Become Trader</string>
+    <string name="create_alert">Create Alert</string>
     <string name="alert_create_success">Alert is created successfully</string>
     <string name="alert_delete_success">Alert is deleted successfully</string>
     <string name="create_comment">Create a comment</string>
