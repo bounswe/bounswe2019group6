@@ -12,6 +12,8 @@
     <string name="title_transaction">Transaction</string>
     <string name="title_my_transactions">My Transactions</string>
     <string name="title_my_portfolio">My Portfolio</string>
+    <string name="title_articles">Articles</string>
+    <string name="title_my_articles">My Articles</string>
 
     <string name="welcome_back">Welcome Back</string>
     <!--    Fields-->
@@ -49,6 +51,7 @@
     <string name="stocks">Stocks</string>
     <string name="save">Save</string>
     <string name="create">Create</string>
+    <string name="edit">Edit</string>
     <string name="buy">Buy</string>
     <string name="sell">Sell</string>
     <string name="above">Above</string>
@@ -61,6 +64,8 @@
     <string name="alert_type">Alert Type</string>
     <string name="amount">Amount</string>
     <string name="delete">Delete</string>
+    <string name="tags">Tags</string>
+    <string name="tags_diff">Tags: </string>
     <!--    Actions-->
     <string name="become_trader">Become a Trader</string>
     <string name="enter_iban_for_trader">Enter Your IBAN to Become Trader</string>
@@ -74,12 +79,20 @@
     <string name="comment_dislike">Comment is disliked</string>
     <string name="comment_like">Comment is liked</string>
     <string name="comment_already_voted">Comment is already liked or disliked</string>
+    <string name="article_delete_success">Article is successfully deleted</string>
+
+    <string name="article_create">Article Create</string>
+    <string name="article_edit">Article Edit</string>
 
     <!--    Symbols-->
     <string name="try_value">₺ %.4f</string>
     <string name="eur_value">€ %.4f</string>
     <string name="usd_value">$ %.4f</string>
 
+    <!--    Article-->
+    <string name="article_header_error">Header is not valid</string>
+    <string name="article_body_error">Body is not valid</string>
+    <string name="article_tags_error">Tags is not valid</string>
     <!--    Alert-->
     <string name="amount_or_limit_empty">Amount or Limit is empty</string>
     <string name="alert_phrase">%1$s when %2$s %3$s$ than %4$s</string>

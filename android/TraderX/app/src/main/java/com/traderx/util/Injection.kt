@@ -21,7 +21,7 @@ object Injection {
         return ViewModelFactory(dataSource, networkSource)
     }
 
-    fun provideArticleUserViewModelFactory(context: Context): ViewModelFactory {
+    fun provideArticleViewModelFactory(context: Context): ViewModelFactory {
         val dataSource = provideArticleDao(context)
         val networkSource = ApiService.getInstance(context)
 
