@@ -34,8 +34,8 @@ class EquipmentViewModel(
         return networkSource.getEquipment(code)
     }
 
-    fun getComments(code: String): Single<ArrayList<CommentResponse>> {
-        return networkSource.getEquipmentComments(code)
+    override fun getComments(code: Any): Single<ArrayList<CommentResponse>> {
+        return networkSource.getEquipmentComments(code as String)
     }
 
     fun getAlerts(): Single<ArrayList<AlertResponse>> {
@@ -46,8 +46,8 @@ class EquipmentViewModel(
         return networkSource.createAlert(alert)
     }
 
-    override fun createComment(code: String, comment: String): Single<CommentResponse> {
-        return networkSource.createComment(code, CommentRequest(comment))
+    override fun createComment(code: Any, comment: String): Single<CommentResponse> {
+        return networkSource.createComment(code as String, CommentRequest(comment))
     }
 
     override fun editComment(id: Int, message: String): Completable {
@@ -62,7 +62,7 @@ class EquipmentViewModel(
         return networkSource.revokeComment(id)
     }
 
-    override fun deleteAlert(id: Int): Completable {
+    fun deleteAlert(id: Int): Completable {
         return networkSource.deleteAlert(id)
     }
 

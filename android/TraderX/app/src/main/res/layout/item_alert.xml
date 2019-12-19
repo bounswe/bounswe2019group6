@@ -25,9 +25,7 @@
             android:textSize="17.3sp"
             android:text="@string/code" />
 
-
     </LinearLayout>
-
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -49,7 +47,6 @@
         </LinearLayout>
 
     </LinearLayout>
-
 
 </LinearLayout>
 

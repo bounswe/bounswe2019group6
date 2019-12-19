@@ -87,7 +87,7 @@ class CommentFragment(
 
     private fun refreshComments() {
         disposable.add(
-            authUserViewModel.userOrNew()
+            authUserViewModel.userOrNew(context as Context)
                 .compose(Helper.applySingleSchedulers())
                 .subscribe({ user ->
                     disposable.add(

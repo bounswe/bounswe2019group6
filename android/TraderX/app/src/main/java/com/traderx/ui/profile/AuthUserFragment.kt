@@ -114,6 +114,13 @@ class AuthUserFragment : Fragment() {
             }
         }
 
+        root.findViewById<LinearLayout>(R.id.my_articles_action)?.let {
+            it.setOnClickListener {
+                if(::user.isInitialized) {
+                    findNavController().navigate(AuthUserFragmentDirections.actionNavigationAuthUserToNavigationMyArticles(user.username))
+                }
+            }
+        }
 
         root.findViewById<ImageView>(R.id.action_menu)?.let { imageView ->
             imageView.setOnClickListener {
