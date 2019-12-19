@@ -22,7 +22,7 @@ import com.traderx.R
 import com.traderx.api.ErrorHandler
 import com.traderx.api.response.AssetResponse
 import com.traderx.api.response.EquipmentResponse
-import com.traderx.enum.EquipmentType
+import com.traderx.type.EquipmentType
 import com.traderx.util.FragmentTitleEmitters
 import com.traderx.util.FragmentTitleListeners
 import com.traderx.util.Helper

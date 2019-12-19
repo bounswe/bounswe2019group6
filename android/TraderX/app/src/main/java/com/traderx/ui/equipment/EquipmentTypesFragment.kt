@@ -10,7 +10,7 @@ import android.widget.LinearLayout
 import androidx.navigation.fragment.findNavController
 
 import com.traderx.R
-import com.traderx.enum.EquipmentType
+import com.traderx.type.EquipmentType
 
 /**
  * A simple [Fragment] subclass.
