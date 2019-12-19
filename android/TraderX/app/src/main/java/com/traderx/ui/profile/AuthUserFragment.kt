@@ -21,7 +21,7 @@ import com.traderx.api.ApiService
 import com.traderx.api.ErrorHandler
 import com.traderx.api.RequestService
 import com.traderx.db.User
-import com.traderx.enum.Role
+import com.traderx.type.Role
 import com.traderx.ui.auth.signup.SignUpValidator
 import com.traderx.util.Helper
 import com.traderx.util.Injection

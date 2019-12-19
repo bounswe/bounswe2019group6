@@ -5,8 +5,8 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.traderx.R
-import com.traderx.enum.FollowingStatus
-import com.traderx.enum.Role
+import com.traderx.type.FollowingStatus
+import com.traderx.type.Role
 
 @Entity(
     tableName = "user"

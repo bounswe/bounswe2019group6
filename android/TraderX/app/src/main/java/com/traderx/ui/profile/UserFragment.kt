@@ -20,7 +20,7 @@ import com.traderx.R
 import com.traderx.api.ErrorHandler
 import com.traderx.api.response.SuccessResponse
 import com.traderx.db.User
-import com.traderx.enum.FollowingStatus
+import com.traderx.type.FollowingStatus
 import com.traderx.util.Helper
 import com.traderx.util.Injection
 import com.traderx.viewmodel.AuthUserViewModel

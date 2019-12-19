@@ -82,7 +82,7 @@
             app:destination="@id/navigation_equipment" />
         <argument
             android:name="equipment_type"
-            app:argType="com.traderx.enum.EquipmentType" />
+            app:argType="com.traderx.type.EquipmentType" />
     </fragment>
 
     <fragment

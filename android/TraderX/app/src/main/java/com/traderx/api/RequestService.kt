@@ -92,7 +92,7 @@ interface RequestService {
     fun getEquipmentComments(@Path("code") code: String): Single<ArrayList<CommentResponse>>
 
     @POST(ApiEndpoint.COMMENT_EQUIPMENT_POST)
-    fun createComment(@Path("code") code: String, @Body comment: CommentRequest): Completable
+    fun createComment(@Path("code") code: String, @Body comment: CommentRequest): Single<CommentResponse>
 
     @POST(ApiEndpoint.COMMENT_EDIT)
     fun editComment(@Path("id") id: Int, @Body comment: CommentRequest): Completable

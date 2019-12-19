@@ -16,7 +16,7 @@ import io.reactivex.Single
 class EquipmentViewModel(
     private val dataSource: EquipmentDao,
     private val networkSource: RequestService
-) : BaseViewModel() {
+) : BaseViewModel(), CommentableViewModel {
 
     fun getCurrencyEquipments(): Flowable<EquipmentsResponse> {
         return networkSource.getCurrencyEquipments().map { it }.toFlowable()
@@ -46,27 +46,27 @@ class EquipmentViewModel(
         return networkSource.createAlert(alert)
     }
 
-    fun createComment(code: String, comment: String): Completable {
+    override fun createComment(code: String, comment: String): Single<CommentResponse> {
         return networkSource.createComment(code, CommentRequest(comment))
     }
 
-    fun editComment(id: Int, message: String): Completable {
+    override fun editComment(id: Int, message: String): Completable {
         return networkSource.editComment(id, CommentRequest(message))
     }
 
-    fun voteComment(id: Int, voteType: VoteType): Completable {
+    override fun voteComment(id: Int, voteType: VoteType): Completable {
         return networkSource.voteComment(id, voteType.request)
     }
 
-    fun revokeComment(id: Int): Completable {
+    override fun revokeComment(id: Int): Completable {
         return networkSource.revokeComment(id)
     }
 
-    fun deleteAlert(id: Int): Completable {
+    override fun deleteAlert(id: Int): Completable {
         return networkSource.deleteAlert(id)
     }
 
-    fun deleteComment(id: Int): Completable {
+    override fun deleteComment(id: Int): Completable {
         return networkSource.deleteComment(id)
     }
 }
