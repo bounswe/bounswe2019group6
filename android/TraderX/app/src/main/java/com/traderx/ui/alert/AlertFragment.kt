@@ -17,8 +17,8 @@ import com.google.android.material.snackbar.Snackbar
 import com.traderx.R
 import com.traderx.api.ErrorHandler
 import com.traderx.api.request.AlertRequest
-import com.traderx.enum.AlertType
-import com.traderx.enum.TransactionType
+import com.traderx.type.AlertType
+import com.traderx.type.TransactionType
 import com.traderx.util.FragmentTitleEmitters
 import com.traderx.util.Helper
 import com.traderx.util.Injection

@@ -35,6 +35,23 @@
     </fragment>
 
     <fragment
+        android:id="@+id/navigation_my_articles"
+        android:name="com.traderx.ui.article.MyArticlesFragment"
+        android:label="@string/article"
+        tools:layout="@layout/fragment_my_articles">
+        <action
+            android:id="@+id/action_navigation_my_articles_to_navigation_article_create"
+            app:destination="@id/navigation_article_create" />
+        <action
+            android:id="@+id/action_navigation_my_articles_to_navigation_article"
+            app:destination="@id/navigation_article" />
+        <argument
+            android:name="username"
+            app:argType="string"
+            app:nullable="true" />
+    </fragment>
+
+    <fragment
         android:id="@+id/navigation_alerts"
         android:name="com.traderx.ui.alert.AlertsFragment"
         android:label="@string/alert"
@@ -82,7 +99,7 @@
             app:destination="@id/navigation_equipment" />
         <argument
             android:name="equipment_type"
-            app:argType="com.traderx.enum.EquipmentType" />
+            app:argType="com.traderx.type.EquipmentType" />
     </fragment>
 
     <fragment
@@ -143,19 +160,53 @@
         android:id="@+id/navigation_articles"
         android:name="com.traderx.ui.article.ArticlesFragment"
         android:label="@string/article"
-        tools:layout="@layout/fragment_articles" />
+        tools:layout="@layout/fragment_articles" >
+        <action
+            android:id="@+id/action_navigation_articles_to_navigation_article"
+            app:destination="@id/navigation_article" />
+        <action
+            android:id="@+id/action_navigation_articles_to_navigation_article_create"
+            app:destination="@id/navigation_article_create" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_article"
         android:name="com.traderx.ui.article.ArticleFragment"
         android:label="Article"
-        tools:layout="@layout/fragment_article" />
+        tools:layout="@layout/fragment_article" >
+        <argument
+            android:name="id"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_navigation_article_to_navigation_article_edit"
+            app:destination="@id/navigation_article_edit" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_article_create"
         android:name="com.traderx.ui.article.ArticleCreateFragment"
         android:label="@string/article"
-        tools:layout="@layout/fragment_article_create" />
+        tools:layout="@layout/fragment_article_create" >
+        <action
+            android:id="@+id/action_navigation_article_create_to_navigation_articles"
+            app:destination="@id/navigation_articles" />
+        <action
+            android:id="@+id/action_navigation_article_create_to_navigation_my_articles"
+            app:destination="@id/navigation_my_articles" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_article_edit"
+        android:name="com.traderx.ui.article.ArticleEditFragment"
+        android:label="@string/article"
+        tools:layout="@layout/fragment_article_create">
+        <argument
+            android:name="id"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_navigation_article_edit_to_navigation_my_articles"
+            app:destination="@id/navigation_my_articles" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_user_search"
@@ -193,6 +244,9 @@
         <action
             android:id="@+id/action_navigation_auth_user_to_navigation_portfolios"
             app:destination="@id/navigation_portfolio" />
+        <action
+            android:id="@+id/action_navigation_auth_user_to_navigation_my_articles"
+            app:destination="@id/navigation_my_articles" />
     </fragment>
 
     <fragment
@@ -218,8 +272,6 @@
         android:name="com.traderx.ui.profile.AuthUserEditFragment"
         android:label="@string/title_user_edit"
         tools:layout="@layout/fragment_auth_user_edit" />
-
-
 
     <fragment
         android:id="@+id/navigation_portfolios"

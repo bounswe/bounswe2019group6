@@ -82,7 +82,7 @@ class EquipmentFragment : Fragment(), FragmentTitleEmitters {
             }
         }
 
-        root.findViewById<FloatingActionButton>(R.id.alert_action)?.let {
+        root.findViewById<Button>(R.id.alert_action)?.let {
             it.setOnClickListener {
                 findNavController().navigate(
                     EquipmentFragmentDirections.actionNavigationEquipmentToNavigationAlert(

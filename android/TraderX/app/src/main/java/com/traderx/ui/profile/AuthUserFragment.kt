@@ -21,7 +21,7 @@ import com.traderx.api.ApiService
 import com.traderx.api.ErrorHandler
 import com.traderx.api.RequestService
 import com.traderx.db.User
-import com.traderx.enum.Role
+import com.traderx.type.Role
 import com.traderx.ui.auth.signup.SignUpValidator
 import com.traderx.util.Helper
 import com.traderx.util.Injection
@@ -114,6 +114,13 @@ class AuthUserFragment : Fragment() {
             }
         }
 
+        root.findViewById<LinearLayout>(R.id.my_articles_action)?.let {
+            it.setOnClickListener {
+                if(::user.isInitialized) {
+                    findNavController().navigate(AuthUserFragmentDirections.actionNavigationAuthUserToNavigationMyArticles(user.username))
+                }
+            }
+        }
 
         root.findViewById<ImageView>(R.id.action_menu)?.let { imageView ->
             imageView.setOnClickListener {

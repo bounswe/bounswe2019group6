@@ -78,6 +78,11 @@ class CommentRecyclerViewAdapter(
         }
     }
 
+    fun addItem(commentResponse: CommentResponse) {
+        comments.add(commentResponse)
+        notifyItemInserted(comments.size - 1)
+    }
+
     private fun updateItem(id: Int, message: String) {
         val index = comments.indexOfFirst { item -> item.id == id }
         if (index != -1) {

@@ -1,6 +1,5 @@
 package com.traderx.ui.article
 
-
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -18,15 +17,19 @@ import com.github.razir.progressbutton.showProgress
 import com.traderx.R
 import com.traderx.api.ErrorHandler
 import com.traderx.api.request.ArticleRequest
+import com.traderx.db.Article
 import com.traderx.util.FragmentTitleEmitters
 import com.traderx.util.Helper
 import com.traderx.util.Injection
 import com.traderx.viewmodel.ArticleViewModel
 import io.reactivex.disposables.CompositeDisposable
 
-class ArticleCreateFragment : Fragment(), FragmentTitleEmitters {
+class ArticleEditFragment : Fragment(), FragmentTitleEmitters {
+    private var articleId: Int = 0
+
     private lateinit var articleViewModel: ArticleViewModel
 
+    private lateinit var article: Article
     private lateinit var header: EditText
     private lateinit var tags: EditText
     private lateinit var body: EditText
@@ -35,10 +38,20 @@ class ArticleCreateFragment : Fragment(), FragmentTitleEmitters {
 
     private val disposable = CompositeDisposable()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.let {
+            articleId = it.getInt(ARTICLE_ID)
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        // Inflate the layout for this fragment
+        val view = inflater.inflate(R.layout.fragment_article_create, container, false)
+
         setFragmentTitle(context, getString(R.string.article_create))
 
         val articleViewModelProvider =
@@ -47,26 +60,36 @@ class ArticleCreateFragment : Fragment(), FragmentTitleEmitters {
         articleViewModel = ViewModelProvider(this, articleViewModelProvider)
             .get(ArticleViewModel::class.java)
 
-        // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_article_create, container, false)
-
         header = view.findViewById(R.id.header)
         tags = view.findViewById(R.id.tags)
         body = view.findViewById(R.id.body)
         warning = view.findViewById(R.id.warning)
         warningLayout = view.findViewById(R.id.warning_layout)
 
+        disposable.add(
+            articleViewModel.getArticle(articleId)
+                .compose(Helper.applySingleSchedulers())
+                .subscribe({
+                    article = it
+                    header.setText(article.header)
+                    body.setText(article.body)
+                    tags.setText(article.tags.joinToString { it })
+                }, { ErrorHandler.handleError(it, context as Context) })
+        )
+
         view.findViewById<Button>(R.id.create_action)?.let { button ->
+            button.text = getString(R.string.edit)
             button.setOnClickListener {
-                createArticle(button)
+                if (::article.isInitialized) {
+                    editArticle(button)
+                }
             }
         }
 
         return view
     }
 
-    private fun createArticle(button: Button) {
-
+    private fun editArticle(button: Button) {
         if (button.isProgressActive()) {
             return
         }
@@ -87,7 +110,8 @@ class ArticleCreateFragment : Fragment(), FragmentTitleEmitters {
         button.showProgress()
 
         disposable.add(
-            articleViewModel.createArticle(
+            articleViewModel.editArticle(
+                articleId,
                 ArticleRequest(
                     header.text.toString(),
                     parseTags(tags.text.toString()),
@@ -99,14 +123,9 @@ class ArticleCreateFragment : Fragment(), FragmentTitleEmitters {
                     clearWarning()
                 }
                 .subscribe({
-                    findNavController().navigate(
-                        ArticleCreateFragmentDirections.actionNavigationArticleCreateToNavigationMyArticles(
-                            null
-                        )
-                    )
+                    findNavController().navigate(ArticleEditFragmentDirections.actionNavigationArticleEditToNavigationMyArticles(null))
                 }, { ErrorHandler.handleError(it, context as Context) })
         )
-
     }
 
     private fun parseTags(tags: String): List<String> {
@@ -123,4 +142,7 @@ class ArticleCreateFragment : Fragment(), FragmentTitleEmitters {
         warningLayout.visibility = View.GONE
     }
 
+    companion object {
+        const val ARTICLE_ID = "id"
+    }
 }
