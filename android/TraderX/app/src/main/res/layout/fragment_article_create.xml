@@ -87,7 +87,7 @@
                 android:ems="10"
                 android:gravity="start|top"
                 android:inputType="textMultiLine"
-                android:maxLines="20"
+                android:maxLines="10"
                 android:minLines="10"
                 android:padding="15dp"
                 android:hint="@string/article" />
