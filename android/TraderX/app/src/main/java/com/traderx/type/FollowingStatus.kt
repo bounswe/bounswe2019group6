@@ -1,4 +1,4 @@
-package com.traderx.enum
+package com.traderx.type
 
 enum class FollowingStatus(val value: String?) {
     NOT_FOLLOWING("NOT_FOLLOWING"),
