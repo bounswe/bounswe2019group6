@@ -146,7 +146,7 @@ public class AlertService {
                 case NOTIFY:
                     notificationType = NotificationType.ALERT_NOTIFY;
                     String status = alert.getAlertType() == AlertType.ABOVE ? "exceeded" : "dropped below";
-                    message = String.format("Limit %.2f has been %s for %s", amount, status, code);
+                    message = String.format("Limit %.2f has been %s for %s", alert.getLimitValue(), status, code);
                     break;
             }
         } catch (Exception e) {
