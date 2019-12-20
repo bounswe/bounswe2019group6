@@ -1,5 +1,5 @@
 import { login, getInfo, logout, register, confirm, resetPassword, renew, unfollowUser,
-   followUser, setProfilePublic, setProfilePrivate, changeIBAN, updatePassword, becomeBasic, becomeTrader } from '@/api/user'
+   followUser, setProfilePublic, setProfilePrivate, changeIBAN, updatePassword, becomeBasic, becomeTrader, getNotifications } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
 
@@ -35,6 +35,9 @@ const mutations = {
   SET_ROLES: (state, roles) => {
     state.roles = roles
   },
+  SET_NOTIFICATIONS: (state, notifications) => {
+    state.notifications = notifications
+  },
   // TODO these are deprecated but keep useful ones
   SET_INTRODUCTION: (state, introduction) => {
     state.introduction = introduction
@@ -42,6 +45,7 @@ const mutations = {
   SET_AVATAR: (state, avatar) => {
     state.avatar = avatar
   }
+
 }
 
 const actions = {
@@ -224,6 +228,18 @@ const actions = {
       })
     })
   },
+
+  getNotifications({ commit }) {
+    return new Promise((resolve, reject) => {
+      getNotifications().then(response => {
+        commit('SET_NOTIFICATIONS', response.data)
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  
 
   updatePassword({ commit }, password) {
     return new Promise((resolve, reject) => {

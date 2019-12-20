@@ -122,3 +122,10 @@ export function becomeTrader(iban) {
     params: iban
   })
 }
+
+export function getNotifications() {
+  return request({
+    url: '/notification/news',
+    method: 'get',
+  })
+}

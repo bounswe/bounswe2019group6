@@ -14,13 +14,9 @@
 
     <div class="right-menu">
       <template v-if="device!=='mobile'">
-        <!-- <search
-          id="header-search"
-          class="right-menu-item"
-        /> 
-
-        <error-log class="errLog-container right-menu-item hover-effect" />
-        -->
+        <el-badge value="new" class="item" style="margin-top: -25px; margin-right: 40px;">
+          <el-button size="small" type="primary" icon="el-icon-bell"></el-button>
+        </el-badge>
       </template>
 
       <el-dropdown
@@ -58,19 +54,17 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
-import ErrorLog from '@/components/ErrorLog'
-import Screenfull from '@/components/Screenfull'
-import SizeSelect from '@/components/SizeSelect'
-import Search from '@/components/HeaderSearch'
 
 export default {
+  data() {
+    return {
+      isAllNew : false,
+      notifications : [],
+    }
+  },
   components: {
     Breadcrumb,
     Hamburger,
-    ErrorLog,
-    Screenfull,
-    SizeSelect,
-    Search
   },
   computed: {
     ...mapGetters([
@@ -79,7 +73,19 @@ export default {
       'device'
     ]),
   },
+  created() {
+    this.getNotifications()
+  },
   methods: {
+    getNotifications(){
+      this.$store.dispatch('user/getNotifications').then(() => {
+        var res = this.$store.getters.notifications
+        this.notifications = res
+        console.log(res)
+      }).catch(error => {
+        console.log(error)
+      }) 
+    },
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
     },
