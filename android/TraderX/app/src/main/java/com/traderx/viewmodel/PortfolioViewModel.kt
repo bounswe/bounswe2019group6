@@ -1,6 +1,7 @@
 package com.traderx.viewmodel
 
 import com.traderx.api.RequestService
+import com.traderx.api.response.EquipmentResponse
 import com.traderx.api.response.PortfolioResponse
 import com.traderx.db.Equipment
 import io.reactivex.Completable
@@ -22,7 +23,7 @@ class PortfolioViewModel(
         return networkSource.getPortfolios()
     }
 
-    fun getPortfolio(name: String): Single<List<Equipment>> {
+    fun getPortfolio(name: String): Single<ArrayList<EquipmentResponse.Equipment>> {
         return networkSource.getPortfolio(name)
     }
 

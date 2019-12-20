@@ -113,9 +113,9 @@ interface RequestService {
     fun createPortfolio(@Query("portfolioName")  portfolioName: String): Completable
 
     @GET(ApiEndpoint.GET_PORTFOLIO)
-    fun getPortfolio(@Query("portfolioName") portfolioName: String): Single<List<Equipment>>
+    fun getPortfolio(@Query("portfolioName") portfolioName: String): Single<ArrayList<EquipmentResponse.Equipment>>
 
-    @POST(ApiEndpoint.ADD_TO_PORTFOLIO)
+    @POST(ApiEndpoint.ADD_MANY_TO_PORTFOLIO)
     fun addToPortfolio(
         @Query("portfolioName") portfolioName: String,
         @Body codes : List<String>
@@ -128,7 +128,7 @@ interface RequestService {
     @DELETE(ApiEndpoint.DELETE_PORTFOLIO)
     fun delPortfolio(@Query("portfolioName") portfolioName: String): Completable
 
-    @POST(ApiEndpoint.DELETE_FROM_PORTFOLIO)
+    @DELETE(ApiEndpoint.DELETE_FROM_PORTFOLIO)
     fun delFromPortfolio(
         @Query("portfolioName") portfolioName: String,
         @Query("code") equipment: String

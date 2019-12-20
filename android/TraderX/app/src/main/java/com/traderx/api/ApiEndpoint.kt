@@ -46,7 +46,7 @@ object ApiEndpoint {
     const val GET_ALL_PORTFOLIO: String = "$API_URI/portfolio/getAll"
     const val ADD_PORTFOLIO: String = "$API_URI/portfolio/create"
     const val ADD_TO_PORTFOLIO: String = "$API_URI/portfolio/add"
-    const val ADD_ALL_TO_PORTFOLIO: String = "$API_URI/portfolio/equipments"
+    const val ADD_MANY_TO_PORTFOLIO: String = "$API_URI/portfolio/equipments"
     const val DELETE_PORTFOLIO: String = "$API_URI/portfolio/delete"
     const val DELETE_FROM_PORTFOLIO: String = "$API_URI/portfolio/discard"
 
