@@ -211,4 +211,11 @@ public class FollowService {
         notificationService.createNotification(dao.getFollowee(),notificationType,new String[]{requesterUsername});
         return "Success";
     }
+
+    public void acceptAllRequests(String username) {
+        followRepository.findByFollowee_UsernameAndFollowStatus(username,FollowStatus.PENDING).forEach(f->{
+            f.setFollowStatus(FollowStatus.APPROVED);
+            followRepository.save(f);
+        });
+    }
 }

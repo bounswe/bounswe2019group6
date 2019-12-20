@@ -83,6 +83,7 @@ public class UserService {
     User user = userRepository.findByUsername(username);
     user.setIsPrivate(false);
     userRepository.save(user);
+    followService.acceptAllRequests(username);
     return "Profile has been set as public";
   }
 
