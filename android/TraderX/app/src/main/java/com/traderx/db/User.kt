@@ -5,8 +5,8 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.traderx.R
-import com.traderx.enum.FollowingStatus
-import com.traderx.enum.Role
+import com.traderx.type.FollowingStatus
+import com.traderx.type.Role
 
 @Entity(
     tableName = "user"
@@ -43,5 +43,11 @@ data class User(
         FollowingStatus.NOT_FOLLOWING.value -> context.getString(R.string.follow)
         FollowingStatus.PENDING.value ->context.getString(R.string.pending)
         else -> ""
+    }
+
+    companion object {
+        fun newInstance(username: String): User {
+            return User(1, username, "", 0f, 0f, listOf(), false, 0, 0, 0, 0, null, null)
+        }
     }
 }

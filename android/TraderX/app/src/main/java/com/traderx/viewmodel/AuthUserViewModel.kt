@@ -1,6 +1,7 @@
 package com.traderx.viewmodel
 
 import android.content.Context
+import android.util.Log
 import com.traderx.api.ErrorHandler
 import com.traderx.api.RequestService
 import com.traderx.api.response.AssetResponse
@@ -39,6 +40,10 @@ class AuthUserViewModel(
             localUser().doOnError { ErrorHandler.handleUserViewError(it, context) }
                 .subscribeOn(Schedulers.io())
         }
+    }
+
+    fun userOrNew(context: Context): Single<User> {
+        return user(context).onErrorReturnItem(User.newInstance(""))
     }
 
     fun deleteUser(): Completable {

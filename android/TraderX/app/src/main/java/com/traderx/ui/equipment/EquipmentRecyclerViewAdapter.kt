@@ -10,7 +10,7 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.traderx.R
 import com.traderx.api.response.EquipmentsResponse
-import com.traderx.enum.EquipmentType
+import com.traderx.type.EquipmentType
 import kotlinx.android.synthetic.main.item_equipment.view.*
 
 class EquipmentRecyclerViewAdapter(
@@ -34,13 +34,13 @@ class EquipmentRecyclerViewAdapter(
         holder.value.text = when (type) {
             EquipmentType.STOCK -> context.getString(
                 R.string.usd_value,
-                equipments[position].data.currentValue.toHalf().toString()
+                equipments[position].data.currentValue
             )
             EquipmentType.CRYPTO_CURRENCY -> context.getString(
                 R.string.usd_value,
-                equipments[position].data.currentValue.toHalf().toString()
+                equipments[position].data.currentValue
             )
-            else -> equipments[position].data.currentValue.toHalf().toString()
+            else -> String.format("%.4f", equipments[position].data.currentValue)
         }
 
         holder.stock.text = equipments[position].data.currentStock.toString()

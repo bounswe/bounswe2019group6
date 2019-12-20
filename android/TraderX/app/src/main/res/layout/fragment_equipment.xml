@@ -256,6 +256,14 @@
                 android:text="@string/buy"
                 android:textColor="#fbfbfb" />
 
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/alert_action"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="19.3dp"
+                android:text="@string/create_alert"
+                android:textColor="#fbfbfb" />
+
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -281,23 +289,13 @@
 
                 </LinearLayout>
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/comment_list"
+                <FrameLayout
+                    android:id="@+id/comments"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"/>
+
             </LinearLayout>
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/alert_action"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:src="@drawable/ic_add_alert_24px"
-        android:tint="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,7 +1,7 @@
 package com.traderx.api.response
 
-import com.traderx.enum.AlertType
-import com.traderx.enum.TransactionType
+import com.traderx.type.AlertType
+import com.traderx.type.TransactionType
 
 data class AlertResponse(
     val id: Int,

@@ -1,8 +1,6 @@
 package com.traderx.api
 
-import com.traderx.api.request.AlertRequest
-import com.traderx.api.request.LoginRequest
-import com.traderx.api.request.SignUpRequest
+import com.traderx.api.request.*
 import com.traderx.api.response.*
 import com.traderx.db.Article
 import com.traderx.db.Equipment
@@ -65,16 +63,40 @@ interface RequestService {
     fun updateUser(@Path("status") status: String): Completable
 
     @GET(ApiEndpoint.ARTICLE)
-    fun getArticle(@Path("articleId") articleId: Int): Single<Article>
+    fun getArticle(@Path("id") articleId: Int): Single<Article>
 
     @GET(ApiEndpoint.ARTICLES)
-    fun getArticles(): Single<List<Article>>
+    fun getArticles(): Single<ArrayList<Article>>
 
-    @POST(ApiEndpoint.INSERT_ARTICLE)
-    fun insertArticle(@Body article: Article): Completable
+    @POST(ApiEndpoint.ARTICLE_CREATE)
+    fun createArticle(@Body article: ArticleRequest): Completable
 
-    @DELETE(ApiEndpoint.INSERT_ARTICLE)
-    fun deleteArticle(articleId: Int): Completable
+    @POST(ApiEndpoint.ARTICLE_EDIT)
+    fun editArticle(@Query("id") id: Int, @Body article: ArticleRequest): Completable
+
+    @POST(ApiEndpoint.ARTICLE_DELETE)
+    fun deleteArticle(@Query("id") articleId: Int): Completable
+
+    @GET(ApiEndpoint.ARTICLE_USER_ARTICLES)
+    fun getUserArticles(@Path("username") username: String): Single<ArrayList<Article>>
+
+    @GET(ApiEndpoint.COMMENT_ARTICLE)
+    fun getArticleComments(@Path("id") id: Int): Single<ArrayList<CommentResponse>>
+
+    @POST(ApiEndpoint.COMMENT_ARTICLE_INSERT)
+    fun createCommentArticle(@Path("id") id: Int, @Body comment: CommentRequest): Single<CommentResponse>
+
+    @POST(ApiEndpoint.COMMENT_ARTICLE_EDIT)
+    fun editCommentArticle(@Path("id") id: Int, @Body comment: CommentRequest): Completable
+
+    @POST(ApiEndpoint.COMMENT_ARTICLE_VOTE)
+    fun voteCommentArticle(@Path("id") id: Int, @Path("type") vote: String): Completable
+
+    @DELETE(ApiEndpoint.COMMENT_ARTICLE_REVOKE)
+    fun revokeCommentArticle(@Path("id") id: Int): Completable
+
+    @DELETE(ApiEndpoint.COMMENT_ARTICLE_DELETE)
+    fun deleteCommentArticle(@Path("id") id: Int): Completable
 
     @GET(ApiEndpoint.EQUIPMENT)
     fun getEquipment(@Path("name") code: String): Single<EquipmentResponse>
@@ -89,10 +111,25 @@ interface RequestService {
     fun getStockEquipments(): Single<EquipmentsResponse>
 
     @GET(ApiEndpoint.COMMENT_EQUIPMENT)
-    fun getEquipmentComments(@Path("code") code: String): Single<List<CommentResponse>>
+    fun getEquipmentComments(@Path("code") code: String): Single<ArrayList<CommentResponse>>
+
+    @POST(ApiEndpoint.COMMENT_EQUIPMENT_POST)
+    fun createComment(@Path("code") code: String, @Body comment: CommentRequest): Single<CommentResponse>
+
+    @POST(ApiEndpoint.COMMENT_EDIT)
+    fun editComment(@Path("id") id: Int, @Body comment: CommentRequest): Completable
+
+    @POST(ApiEndpoint.COMMENT_VOTE)
+    fun voteComment(@Path("id") id: Int, @Path("vote") vote: String): Completable
+
+    @DELETE(ApiEndpoint.COMMENT_REVOKE)
+    fun revokeComment(@Path("id") id: Int): Completable
 
     @POST(ApiEndpoint.TRANSACTION_BUY)
     fun postTransactionBuy(@Query("code") code: String, @Query("amount") amount: Double): Completable
+
+    @DELETE(ApiEndpoint.COMMENT_DELETE)
+    fun deleteComment(@Path("id") id: Int): Completable
 
     @GET(ApiEndpoint.TRANSACTIONS)
     fun getTransactions(@Path("username") username: String): Single<List<TransactionsResponse>>
@@ -110,7 +147,7 @@ interface RequestService {
     fun deleteAlert(@Query("id") id: Int): Completable
 
     @POST(ApiEndpoint.ADD_PORTFOLIO)
-    fun createPortfolio(@Query("portfolioName")  portfolioName: String): Completable
+    fun createPortfolio(@Query("portfolioName") portfolioName: String): Completable
 
     @GET(ApiEndpoint.GET_PORTFOLIO)
     fun getPortfolio(@Query("portfolioName") portfolioName: String): Single<ArrayList<EquipmentResponse.Equipment>>
@@ -133,6 +170,4 @@ interface RequestService {
         @Query("portfolioName") portfolioName: String,
         @Query("code") equipment: String
     ): Completable
-
-
 }
