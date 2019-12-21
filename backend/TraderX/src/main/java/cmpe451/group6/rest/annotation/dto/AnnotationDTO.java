@@ -4,11 +4,11 @@ import java.sql.Timestamp;
 
 public class AnnotationDTO {
 
-    private int id;
+    private Integer id;
 
     private String annotatorUsername;
 
-    private int articleId;
+    private Integer articleId;
 
     private String annotationText;
 
@@ -20,7 +20,7 @@ public class AnnotationDTO {
 
     private Timestamp updatedAt;
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -36,7 +36,7 @@ public class AnnotationDTO {
         this.annotatorUsername = annotatorUsername;
     }
 
-    public int getArticleId() {
+    public Integer getArticleId() {
         return articleId;
     }
 
