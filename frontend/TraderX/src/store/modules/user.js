@@ -1,6 +1,7 @@
 import { login, getInfo, logout, register, confirm, resetPassword, renew, unfollowUser,
    followUser, setProfilePublic, setProfilePrivate, changeIBAN, updatePassword, 
-   becomeBasic, becomeTrader, getNotifications, acceptFollowRequest, declineFollowRequest } from '@/api/user'
+   becomeBasic, becomeTrader, getNotifications, acceptFollowRequest, declineFollowRequest,
+   readAllNotifications } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
 
@@ -261,6 +262,15 @@ const actions = {
     })
   },
   
+  readAllNotifications({ commit }) {
+    return new Promise((resolve, reject) => {
+      readAllNotifications().then(response => {
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
 
   updatePassword({ commit }, password) {
     return new Promise((resolve, reject) => {

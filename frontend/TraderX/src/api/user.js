@@ -145,3 +145,10 @@ export function getNotifications() {
     method: 'get',
   })
 }
+
+export function readAllNotifications() {
+  return request({
+    url: '/notification/read',
+    method: 'post',
+  })
+}

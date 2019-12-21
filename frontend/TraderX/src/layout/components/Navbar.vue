@@ -16,74 +16,87 @@
       
 
       <el-dropdown
+        @command="markNotificationsAsNotNew"
         class="right-menu-item hover-effect"
-        trigger="click"
-        @click="markNotificationsAsNotNew()"
-      >
+        trigger="click">
         <el-badge :value="this.isThereNew ? 'new' : '' " class="item" style="margin-top: 7px; margin-right: 40px;">
           <el-button type="primary" icon="el-icon-bell"></el-button>
         </el-badge>
         <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item v-for="notif in this.notifications" :key="notif.type"> 
+          <el-dropdown-item v-for="(notif, index) in this.notifications" :key="index" :command="index"> 
             <div v-if="notif.type=='FOLLOW_REQUESTED'">
-              <span style="float:left; ">
-                <p>Follow Requst From: <b>{{ notif.payload.username }}</b></p>
-              </span>
-              <span style="float:right">
-                <el-button style="margin-left:10px; margin-top:10px" type="primary" @click="AcceptFollowRequest(notif.payload.username)">Accept</el-button>
-                <el-button style="margin-left:10px; margin-top:10px" type="danger" @click="DeclineFollowRequest(notif.payload.username)">Decline</el-button>
-              </span>
+              <div>
+                <span style="float:left; ">
+                  <p>Follow Requst From: <b>{{ notif.payload.username }}</b></p>
+                </span>
+                <span style="float:right">
+                  <el-button style="margin-left:10px; margin-top:10px" type="primary" @click="AcceptFollowRequest(notif.payload.username)">Accept</el-button>
+                  <el-button style="margin-left:10px; margin-top:10px" type="danger" @click="DeclineFollowRequest(notif.payload.username)">Decline</el-button>
+                </span>
+              </div>
             </div>
             <div v-if="notif.type=='FOLLOWED'" >
-              <p>You started to follow <b>{{ notif.payload.username }}</b></p>
+              <div>
+                <p>You started to follow <b>{{ notif.payload.username }}</b></p>
+              </div>
             </div>
             <div v-if="notif.type=='FOLLOW_REQUEST_ACCEPTED'">
-              <p>Your follow request to <b>{{ notif.payload.username }}</b> is accepted</p>
+              <div>
+                <p>Your follow request to <b>{{ notif.payload.username }}</b> is accepted</p>
+              </div>
             </div>
             <div v-if="notif.type=='FOLLOW_REQUEST_DENIED'">
-              <p>Your follow request to <b>{{ notif.payload.username }}</b> is denied</p>
+              <div>
+                <p>Your follow request to <b>{{ notif.payload.username }}</b> is denied</p>
+              </div>
             </div>
             <div v-if="notif.type=='ALERT_TRANSACTION_SUCCESS'">
-              <span style="float:left; ">
-                <p>{{ notif.type }} </p>
-              </span>
-              <span style="float:right">
-                <el-popover ref="popover" placement="left" width="400" trigger="hover">
-                  <p>Code: {{ notif.patload.code }}</p>
-                  <p>Amont: {{ notif.patload.amount }}</p>
-                  <p>Limit: {{ notif.patload.limit }}</p>
-                  <p>Type: {{ notif.patload.type }}</p>
-                  <p>Message: {{ notif.patload.message }}</p>
-                </el-popover>
-              </span>
+              <div>
+                <span style="float:left; ">
+                  <p>{{ notif.type }} </p>
+                </span>
+                <span style="float:right">
+                  <el-popover ref="popover" placement="left" width="400" trigger="hover">
+                    <p>Code: {{ notif.patload.code }}</p>
+                    <p>Amont: {{ notif.patload.amount }}</p>
+                    <p>Limit: {{ notif.patload.limit }}</p>
+                    <p>Type: {{ notif.patload.type }}</p>
+                    <p>Message: {{ notif.patload.message }}</p>
+                  </el-popover>
+                </span>
+              </div>
             </div>
             <div v-if="notif.type=='ALERT_TRANSACTION_FAIL'">
-              <span style="float:left; ">
-                <p>{{ notif.type }} </p>
-              </span>
-              <span style="float:right">
-                <el-popover ref="popover" placement="left" width="400" trigger="hover">
-                  <p>Code: {{ notif.patload.code }}</p>
-                  <p>Amont: {{ notif.patload.amount }}</p>
-                  <p>Limit: {{ notif.patload.limit }}</p>
-                  <p>Type: {{ notif.patload.type }}</p>
-                  <p>Message: {{ notif.patload.message }}</p>
-                </el-popover>
-              </span>
+              <div>
+                <span style="float:left; ">
+                  <p>{{ notif.type }} </p>
+                </span>
+                <span style="float:right">
+                  <el-popover ref="popover" placement="left" width="400" trigger="hover">
+                    <p>Code: {{ notif.patload.code }}</p>
+                    <p>Amont: {{ notif.patload.amount }}</p>
+                    <p>Limit: {{ notif.patload.limit }}</p>
+                    <p>Type: {{ notif.patload.type }}</p>
+                    <p>Message: {{ notif.patload.message }}</p>
+                  </el-popover>
+                </span>
+              </div>
             </div>
             <div v-if="notif.type=='ALERT_NOTIFY'">
-              <span style="float:left; ">
-                <p>{{ notif.type }} </p>
-              </span>
-              <span style="float:right">
-                <el-popover ref="popover" placement="left" width="400" trigger="hover">
-                  <p>Code: {{ notif.patload.code }}</p>
-                  <p>Amont: {{ notif.patload.amount }}</p>
-                  <p>Limit: {{ notif.patload.limit }}</p>
-                  <p>Type: {{ notif.patload.type }}</p>
-                  <p>Message: {{ notif.patload.message }}</p>
-                </el-popover>
-              </span>
+              <div>
+                <span style="float:left; ">
+                  <p>{{ notif.type }} </p>
+                </span>
+                <span style="float:right">
+                  <el-popover ref="popover" placement="left" width="400" trigger="hover">
+                    <p>Code: {{ notif.patload.code }}</p>
+                    <p>Amont: {{ notif.patload.amount }}</p>
+                    <p>Limit: {{ notif.patload.limit }}</p>
+                    <p>Type: {{ notif.patload.type }}</p>
+                    <p>Message: {{ notif.patload.message }}</p>
+                  </el-popover>
+                </span>
+              </div>
             </div>
           </el-dropdown-item>
         </el-dropdown-menu>
@@ -147,6 +160,13 @@ export default {
     this.getNotifications()
   },
   methods: {
+    markNotificationsAsNotNew(){
+      this.$store.dispatch('user/readAllNotifications').then(() => {
+
+      }).catch(error => {
+        console.log(error)
+      }) 
+    },
     AcceptFollowRequest(name){
       this.$store.dispatch('user/acceptFollowRequest',  {'username' : name}).then(() => {
         this.$message({ title: 'Success', message: 'Follow Request Is Accepted', type: 'success', duration: 2000 }) 
@@ -169,7 +189,6 @@ export default {
             this.isThereNew = true
           }
         }
-        console.log(this.notifications)
       }).catch(error => {
         console.log(error)
       }) 
