@@ -18,6 +18,7 @@
       <el-dropdown
         class="right-menu-item hover-effect"
         trigger="click"
+        @click="markNotificationsAsNotNew()"
       >
         <el-badge :value="this.isThereNew ? 'new' : '' " class="item" style="margin-top: 7px; margin-right: 40px;">
           <el-button type="primary" icon="el-icon-bell"></el-button>
@@ -29,7 +30,8 @@
                 <p>Follow Requst From: <b>{{ notif.payload.username }}</b></p>
               </span>
               <span style="float:right">
-                <el-button style="margin-left:10px; margin-top:10px" type="primary" @click="AcceptFollowRequest()">Accept</el-button>
+                <el-button style="margin-left:10px; margin-top:10px" type="primary" @click="AcceptFollowRequest(notif.payload.username)">Accept</el-button>
+                <el-button style="margin-left:10px; margin-top:10px" type="danger" @click="DeclineFollowRequest(notif.payload.username)">Decline</el-button>
               </span>
             </div>
             <div v-if="notif.type=='FOLLOWED'" >
@@ -145,8 +147,19 @@ export default {
     this.getNotifications()
   },
   methods: {
-    AcceptFollowRequest(){
-
+    AcceptFollowRequest(name){
+      this.$store.dispatch('user/acceptFollowRequest',  {'username' : name}).then(() => {
+        this.$message({ title: 'Success', message: 'Follow Request Is Accepted', type: 'success', duration: 2000 }) 
+      }).catch(error => {
+        console.log(error)
+      }) 
+    },
+    DeclineFollowRequest(name){
+      this.$store.dispatch('user/declineFollowRequest', {'username' : name}).then(() => {
+        this.$message({ title: 'Success', message: 'Follow Request Is Declined', type: 'success', duration: 2000 }) 
+      }).catch(error => {
+        console.log(error)
+      }) 
     },
     getNotifications(){
       this.$store.dispatch('user/getNotifications').then(() => {

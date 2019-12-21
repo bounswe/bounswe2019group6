@@ -1,5 +1,6 @@
 import { login, getInfo, logout, register, confirm, resetPassword, renew, unfollowUser,
-   followUser, setProfilePublic, setProfilePrivate, changeIBAN, updatePassword, becomeBasic, becomeTrader, getNotifications } from '@/api/user'
+   followUser, setProfilePublic, setProfilePrivate, changeIBAN, updatePassword, 
+   becomeBasic, becomeTrader, getNotifications, acceptFollowRequest, declineFollowRequest } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
 
@@ -191,6 +192,26 @@ const actions = {
       unfollowUser(username).then(response => {
         // const { data } = response
         // commit('SET_USER_SEARCH_RESULT', data)
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+
+  acceptFollowRequest({ commit }, username) {
+    return new Promise((resolve, reject) => {
+      acceptFollowRequest(username).then(response => {
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+
+  declineFollowRequest({ commit }, username) {
+    return new Promise((resolve, reject) => {
+      declineFollowRequest(username).then(response => {
         resolve()
       }).catch(error => {
         reject(error)

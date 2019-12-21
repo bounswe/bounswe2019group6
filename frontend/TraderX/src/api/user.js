@@ -78,6 +78,22 @@ export function followUser(username) {
   })
 }
 
+export function acceptFollowRequest(username) {
+  return request({
+    url: '/follow/request/accept',
+    method: 'post',
+    params: username
+  })
+}
+
+export function declineFollowRequest(username) {
+  return request({
+    url: '/follow/request/decline',
+    method: 'post',
+    params: username
+  })
+}
+
 export function setProfilePublic() {
   return request({
     url: '/users/set_profile/public',
