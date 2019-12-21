@@ -13,11 +13,21 @@
     />
 
     <div class="right-menu">
-      <template v-if="device!=='mobile'">
-        <el-badge value="new" class="item" style="margin-top: -25px; margin-right: 40px;">
-          <el-button size="small" type="primary" icon="el-icon-bell"></el-button>
+      
+
+      <el-dropdown
+        class="right-menu-item hover-effect"
+        trigger="click"
+      >
+        <el-badge :value="this.isThereNew ? 'new' : '' " class="item" style="margin-top: 7px; margin-right: 40px;">
+          <el-button type="primary" icon="el-icon-bell"></el-button>
         </el-badge>
-      </template>
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item v-for="notif in this.notifications"> 
+            <p>{{notif.type}}</p>
+          </el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
 
       <el-dropdown
         class="avatar-container right-menu-item hover-effect"
@@ -58,7 +68,7 @@ import Hamburger from '@/components/Hamburger'
 export default {
   data() {
     return {
-      isAllNew : false,
+      isThereNew : false,
       notifications : [],
     }
   },
@@ -79,9 +89,13 @@ export default {
   methods: {
     getNotifications(){
       this.$store.dispatch('user/getNotifications').then(() => {
-        var res = this.$store.getters.notifications
-        this.notifications = res
-        console.log(res)
+        this.notifications = this.$store.getters.notifications
+        for(var i = 0; i < this.notifications.length; i++){
+          if (this.notifications[i].isNew) {
+            this.isThereNew = true
+          }
+        }
+        console.log(this.notifications)
       }).catch(error => {
         console.log(error)
       }) 
