@@ -24,25 +24,65 @@
         </el-badge>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item v-for="notif in this.notifications" :key="notif.type"> 
-            <div v-if="notif.type=='FOLLOW_REQUESTED'" >
+            <div v-if="notif.type=='FOLLOW_REQUESTED'">
               <span style="float:left; ">
                 <p>Follow Requst From: <b>{{ notif.payload.username }}</b></p>
               </span>
               <span style="float:right">
-                <el-button style="margin-left:10px; margin-top:10px" type="primary">Accept</el-button>
+                <el-button style="margin-left:10px; margin-top:10px" type="primary" @click="AcceptFollowRequest()">Accept</el-button>
               </span>
             </div>
             <div v-if="notif.type=='FOLLOWED'" >
-              <div>
-                <p><b>{{notif.payload.username}}</b> started following you</p>
-              </div>
+              <p>You started to follow <b>{{ notif.payload.username }}</b></p>
             </div>
-            <div v-if="notif.type=='FOLLOW_REQUEST_ACCEPTED'" ></div>
-            <div v-if="notif.type=='FOLLOW_REQUEST_DENIED'" ></div>
-            <div v-if="notif.type=='ALERT_TRANSACTION_SUCCESS'" ></div>
-            <div v-if="notif.type=='ALERT_TRANSACTION_FAIL'" ></div>
-            <div v-if="notif.type=='ALERT_NOTIFY'" ></div>
-            
+            <div v-if="notif.type=='FOLLOW_REQUEST_ACCEPTED'">
+              <p>Your follow request to <b>{{ notif.payload.username }}</b> is accepted</p>
+            </div>
+            <div v-if="notif.type=='FOLLOW_REQUEST_DENIED'">
+              <p>Your follow request to <b>{{ notif.payload.username }}</b> is denied</p>
+            </div>
+            <div v-if="notif.type=='ALERT_TRANSACTION_SUCCESS'">
+              <span style="float:left; ">
+                <p>{{ notif.type }} </p>
+              </span>
+              <span style="float:right">
+                <el-popover ref="popover" placement="left" width="400" trigger="hover">
+                  <p>Code: {{ notif.patload.code }}</p>
+                  <p>Amont: {{ notif.patload.amount }}</p>
+                  <p>Limit: {{ notif.patload.limit }}</p>
+                  <p>Type: {{ notif.patload.type }}</p>
+                  <p>Message: {{ notif.patload.message }}</p>
+                </el-popover>
+              </span>
+            </div>
+            <div v-if="notif.type=='ALERT_TRANSACTION_FAIL'">
+              <span style="float:left; ">
+                <p>{{ notif.type }} </p>
+              </span>
+              <span style="float:right">
+                <el-popover ref="popover" placement="left" width="400" trigger="hover">
+                  <p>Code: {{ notif.patload.code }}</p>
+                  <p>Amont: {{ notif.patload.amount }}</p>
+                  <p>Limit: {{ notif.patload.limit }}</p>
+                  <p>Type: {{ notif.patload.type }}</p>
+                  <p>Message: {{ notif.patload.message }}</p>
+                </el-popover>
+              </span>
+            </div>
+            <div v-if="notif.type=='ALERT_NOTIFY'">
+              <span style="float:left; ">
+                <p>{{ notif.type }} </p>
+              </span>
+              <span style="float:right">
+                <el-popover ref="popover" placement="left" width="400" trigger="hover">
+                  <p>Code: {{ notif.patload.code }}</p>
+                  <p>Amont: {{ notif.patload.amount }}</p>
+                  <p>Limit: {{ notif.patload.limit }}</p>
+                  <p>Type: {{ notif.patload.type }}</p>
+                  <p>Message: {{ notif.patload.message }}</p>
+                </el-popover>
+              </span>
+            </div>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
@@ -105,6 +145,9 @@ export default {
     this.getNotifications()
   },
   methods: {
+    AcceptFollowRequest(){
+
+    },
     getNotifications(){
       this.$store.dispatch('user/getNotifications').then(() => {
         this.notifications = this.$store.getters.notifications
