@@ -24,7 +24,25 @@
         </el-badge>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item v-for="notif in this.notifications" :key="notif.type"> 
-            <p>{{notif.type}}</p>
+            <div v-if="notif.type=='FOLLOW_REQUESTED'" >
+              <span style="float:left; ">
+                <p>Follow Requst From: <b>{{ notif.payload.username }}</b></p>
+              </span>
+              <span style="float:right">
+                <el-button style="margin-left:10px; margin-top:10px" type="primary">Accept</el-button>
+              </span>
+            </div>
+            <div v-if="notif.type=='FOLLOWED'" >
+              <div>
+                <p><b>{{notif.payload.username}}</b> started following you</p>
+              </div>
+            </div>
+            <div v-if="notif.type=='FOLLOW_REQUEST_ACCEPTED'" ></div>
+            <div v-if="notif.type=='FOLLOW_REQUEST_DENIED'" ></div>
+            <div v-if="notif.type=='ALERT_TRANSACTION_SUCCESS'" ></div>
+            <div v-if="notif.type=='ALERT_TRANSACTION_FAIL'" ></div>
+            <div v-if="notif.type=='ALERT_NOTIFY'" ></div>
+            
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
