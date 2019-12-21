@@ -4,6 +4,7 @@ import com.traderx.AppConfig
 
 object ApiEndpoint {
     const val API_URI: String = AppConfig.API_HOST
+    const val ANNOTATION_URI: String = AppConfig.ANNOTATION_HOST
     const val COMMENT_URI: String = "$API_URI/comment"
     const val FOLLOW_URI: String = "$API_URI/follow"
     const val FOLLOW_USER: String = "$FOLLOW_URI/follow"
@@ -31,6 +32,8 @@ object ApiEndpoint {
     const val ARTICLE_USER_ARTICLES: String = "$ARTICLE_URI/byUsername/{username}"
     const val ARTICLE_EDIT: String = "$ARTICLE_URI/edit"
     const val ARTICLE_DELETE: String = "$ARTICLE_URI/delete"
+    const val ANNOTATION_ARTICLE: String = "$ANNOTATION_URI/article/{id}"
+    const val ANNOTATION_ARTICLE_CREATE: String = "$ANNOTATION_URI/article"
     const val COMMENT_ARTICLE: String = "$COMMENT_URI/article/{id}"
     const val COMMENT_ARTICLE_INSERT: String = "$COMMENT_URI/article/post/{id}"
     const val COMMENT_ARTICLE_EDIT: String = "$COMMENT_URI/article/edit/{id}"

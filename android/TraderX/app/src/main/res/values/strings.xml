@@ -64,6 +64,7 @@
     <string name="alert_type">Alert Type</string>
     <string name="amount">Amount</string>
     <string name="delete">Delete</string>
+    <string name="annotate">Annotate</string>
     <string name="tags">Tags</string>
     <string name="tags_diff">Tags: </string>
     <!--    Actions-->
@@ -90,6 +91,8 @@
     <string name="eur_value">€ %.4f</string>
     <string name="usd_value">$ %.4f</string>
 
+    <!--    Annotation-->
+    <string name="annotation_not_valid_text">Your annotation is not valid</string>
     <!--    Article-->
     <string name="article_header_error">Header is not valid</string>
     <string name="article_body_error">Body is not valid</string>

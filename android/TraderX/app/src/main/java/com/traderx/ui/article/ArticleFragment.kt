@@ -3,6 +3,7 @@ package com.traderx.ui.article
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,20 +13,29 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.github.razir.progressbutton.hideProgress
+import com.github.razir.progressbutton.isProgressActive
+import com.github.razir.progressbutton.showProgress
+import com.google.android.material.snackbar.Snackbar
 import com.traderx.R
 import com.traderx.api.ErrorHandler
+import com.traderx.api.request.AnnotationRequest
 import com.traderx.api.response.CommentResponse
 import com.traderx.db.Article
+import com.traderx.selectabletextview.SelectableTextView
 import com.traderx.ui.comment.CommentFragment
+import com.traderx.util.FragmentTitleEmitters
 import com.traderx.util.Helper
 import com.traderx.util.Injection
 import com.traderx.viewmodel.ArticleViewModel
 import com.traderx.viewmodel.AuthUserViewModel
 import io.reactivex.disposables.CompositeDisposable
 
-class ArticleFragment : Fragment() {
+class ArticleFragment : Fragment(), FragmentTitleEmitters {
     companion object {
         private const val ARTICLE_ID = "id"
+        private const val DEFAULT_SELECTION_LEN = 5
+
     }
 
     private lateinit var articleViewModel: ArticleViewModel
@@ -35,11 +45,14 @@ class ArticleFragment : Fragment() {
     private lateinit var authUsername: String
     private lateinit var article: Article
     private lateinit var header: TextView
-    private lateinit var body: TextView
+    private lateinit var body: SelectableTextView
     private lateinit var tags: TextView
     private lateinit var username: TextView
     private lateinit var createdAt: TextView
     private lateinit var editButton: Button
+
+    private var touchX = 0
+    private var touchY = 0
 
     private val disposable = CompositeDisposable()
 
@@ -58,13 +71,14 @@ class ArticleFragment : Fragment() {
         val authUserViewModelFactory = Injection.provideAuthUserViewModelFactory(context as Context)
         authUserViewModel =
             ViewModelProvider(this, authUserViewModelFactory).get(AuthUserViewModel::class.java)
-
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        setFragmentTitle(context, getString(R.string.article))
+
         val root = inflater.inflate(R.layout.fragment_article, container, false)
 
         disposable.add(
@@ -83,6 +97,8 @@ class ArticleFragment : Fragment() {
         username = root.findViewById(R.id.username)
         createdAt = root.findViewById(R.id.created_at)
 
+        selectionAttach()
+
         editButton = root.findViewById<Button>(R.id.article_edit_action).also {
             it.setOnClickListener {
                 findNavController().navigate(
@@ -100,6 +116,14 @@ class ArticleFragment : Fragment() {
                     authUsername = it.username
                     checkEditable()
                 }, {})
+        )
+
+        disposable.add(
+            articleViewModel.getAnnotations(articleId)
+                .compose(Helper.applySingleSchedulers())
+                .subscribe(
+                    { Log.d("Annotation", it[0].text) },
+                    { ErrorHandler.handleError(it, context as Context) })
         )
 
         root.findViewById<FrameLayout>(R.id.comments)?.let {
@@ -132,9 +156,85 @@ class ArticleFragment : Fragment() {
         return root
     }
 
+    override fun onDetach() {
+        super.onDetach()
+
+        body.hideCursor()
+    }
+
+    private fun selectionAttach() {
+        body.setDefaultSelectionColor(0x40FF00FF)
+
+        body.setOnLongClickListener {
+            setFragmentActionButton(context, getString(R.string.annotate)) {
+                annotateText(it)
+            }
+
+            showSelectionCursors(touchX, touchY)
+
+            true
+        }
+
+        body.setOnClickListener {
+            body.hideCursor()
+            hideFragmentActionButton(context)
+        }
+
+        body.setOnTouchListener { _, event ->
+            touchX = event.x.toInt()
+            touchY = event.y.toInt()
+            false
+        }
+    }
+
+    private fun showSelectionCursors(x: Int, y: Int) {
+        val start = body.getPreciseOffset(x, y)
+
+        if (start > -1) {
+            var end = start + DEFAULT_SELECTION_LEN
+            if (end >= body.text.length) {
+                end = body.text.length - 1
+            }
+            body.showSelectionControls(start, end)
+        }
+    }
+
+    private fun annotateText(button: Button) {
+        var valid = false
+
+        when {
+            !AnnotationValidator.validateText("Testing") -> showWarning(getString(R.string.annotation_not_valid_text))
+            else -> valid = true
+        }
+
+        if (!valid || button.isProgressActive()) {
+            return
+        }
+
+        button.showProgress()
+
+        disposable.add(
+            articleViewModel.createAnnotation(
+                AnnotationRequest(
+                    "Testing",
+                    body.cursorSelection.start,
+                    body.cursorSelection.end
+                )
+            )
+                .compose(Helper.applyCompletableSchedulers())
+                .doOnComplete { button.hideProgress(R.string.annotate) }
+                .subscribe({}, { ErrorHandler.handleError(it, context as Context) })
+        )
+    }
+
+    private fun showWarning(warning: String) {
+        Snackbar.make(requireView(), warning, Snackbar.LENGTH_SHORT).show()
+    }
+
     private fun checkEditable() {
-        if(::authUsername.isInitialized && ::article.isInitialized) {
-            editButton.visibility = if(authUsername == article.username) View.VISIBLE else View.GONE
+        if (::authUsername.isInitialized && ::article.isInitialized) {
+            editButton.visibility =
+                if (authUsername == article.username) View.VISIBLE else View.GONE
         }
     }
 

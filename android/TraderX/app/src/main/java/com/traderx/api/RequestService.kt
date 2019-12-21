@@ -166,4 +166,10 @@ interface RequestService {
         @Query("portfolioName") portfolioName: String,
         @Query("code") equipment: String
     ): Completable
+
+    @GET(ApiEndpoint.ANNOTATION_ARTICLE)
+    fun getArticleAnnotations(@Path("id") id: Int): Single<ArrayList<AnnotationResponse>>
+
+    @POST(ApiEndpoint.ANNOTATION_ARTICLE_CREATE)
+    fun createArticleAnnotation(@Body annotation: AnnotationRequest): Completable
 }

@@ -206,10 +206,10 @@ public class SelectableTextView extends AppCompatTextView {
      * @param end   the end offset
      */
     public void showSelectionControls(int start, int end) {
-        assert (start >= 0);
-        assert (end >= 0);
-        assert (start < getText().length());
-        assert (end < getText().length());
+        if ((start < 0)) throw new AssertionError();
+        if ((end < 0)) throw new AssertionError();
+        if ((start >= getText().length())) throw new AssertionError();
+        if ((end >= getText().length())) throw new AssertionError();
 
         mSelectionController.show(start, end);
     }
