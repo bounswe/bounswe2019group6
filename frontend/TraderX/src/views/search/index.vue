@@ -38,11 +38,11 @@
           <el-table-column prop="name" label="Equipment Name">
             <template slot-scope="scope">{{ scope.row.equipmentName }}</template>
           </el-table-column>
-          <el-table-column prop="value" label="Current Value">
-            <template slot-scope="scope">{{ scope.row.currentValue }}</template>
+          <el-table-column prop="value" label="Current Value ($)">
+            <template slot-scope="scope">{{ scope.row.currentValue }} $</template>
           </el-table-column>
           <el-table-column prop="stock" label="Current Stock">
-            <template slot-scope="scope">{{ scope.row.currentStock }}</template>
+            <template slot-scope="scope">{{ scope.row.currentStock }} available</template>
           </el-table-column>
           <el-table-column fixed="right" width="120">
             <template slot-scope="scope">
@@ -176,11 +176,10 @@ export default {
     getAllEvents(){
       this.$store.dispatch('search/getEvents').then(() => {
         var res = this.$store.getters.allEvents
-        console.log(res)
         for(var i = 0; i < res.length; i++){
           this.searchEventResult.push({
             "event" : res[i].Event,
-            "date" : res[i].Date,
+            "date" : res[i].Date.replace("T", " "),
             "country" : res[i].Country,
             "prev" : res[i].Previous,
             "actual" : res[i].Actual,
@@ -188,7 +187,7 @@ export default {
           })
           this.searchEventResultToShow.push({
             "event" : res[i].Event,
-            "date" : res[i].Date,
+            "date" : res[i].Date.replace("T", " "),
             "country" : res[i].Country,
             "prev" : res[i].Previous,
             "actual" : res[i].Actual,
@@ -208,13 +207,13 @@ export default {
         for(var i = 0; i < this.$store.getters.articleSearchResult.length; i++){
           this.searchArticleResult.push({
             "author" : this.$store.getters.articleSearchResult[i].username,
-            "timestamp" : this.$store.getters.articleSearchResult[i].createdAt,
+            "timestamp" : this.$store.getters.articleSearchResult[i].createdAt.substring(0, this.$store.getters.articleSearchResult[i].createdAt.length - 2),
             "title" : this.$store.getters.articleSearchResult[i].header,
             "id" : this.$store.getters.articleSearchResult[i].id
           })
           this.searchArticleResultToShow.push({
             "author" : this.$store.getters.articleSearchResult[i].username,
-            "timestamp" : this.$store.getters.articleSearchResult[i].createdAt,
+            "timestamp" : this.$store.getters.articleSearchResult[i].createdAt.substring(0, this.$store.getters.articleSearchResult[i].createdAt.length - 2),
             "title" : this.$store.getters.articleSearchResult[i].header,
             "id" : this.$store.getters.articleSearchResult[i].id
           })
