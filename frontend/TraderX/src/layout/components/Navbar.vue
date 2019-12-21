@@ -23,7 +23,7 @@
           <el-button type="primary" icon="el-icon-bell"></el-button>
         </el-badge>
         <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item v-for="notif in this.notifications"> 
+          <el-dropdown-item v-for="notif in this.notifications" :key="notif.type"> 
             <p>{{notif.type}}</p>
           </el-dropdown-item>
         </el-dropdown-menu>

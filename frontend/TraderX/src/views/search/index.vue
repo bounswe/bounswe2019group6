@@ -140,29 +140,7 @@ export default {
     }
   },
   created() {
-    var currentUserName = this.$store.state.user.name
-    this.$store.dispatch('search/getAllUsers').then(() => {
-      var res = this.$store.getters.userSearchResult
-      var temp = []
-      res.forEach(function (user) {
-        var followText = user.followingStatus == 'NOT_FOLLOWING' ? "Follow" : user.followingStatus == 'FOLLOWING' ? "Unfollow" : 'Requested'
-        var isFollowing = user.followingStatus == 'FOLLOWING' ? true : false
-        var isNotFollowing = user.followingStatus == 'NOT_FOLLOWING' ? true : false
-        var isPending = user.followingStatus == 'PENDING' ? true : false
-        if (currentUserName != user.username) {
-          temp.push({
-            name: user.username,
-            privacy : user.isPrivate ? "Private" : 'Public',
-            role : user.roles[0] == "ROLE_TRADER" ? "Trader" : "Basic",
-            followText : followText,
-            isFollowing : isFollowing,
-            isNotFollowing : isNotFollowing,
-            isPending : isPending,
-          })
-        }
-      });
-      this.searchResult = temp
-    })
+    this.getAllUsers()
     this.getAllEvents()
     this.getAllArticles()
     this.getCurrencyList()
@@ -170,6 +148,31 @@ export default {
     this.getStocksList()
   },
   methods: {
+    getAllUsers(){
+      var currentUserName = this.$store.state.user.name
+      this.$store.dispatch('search/getAllUsers').then(() => {
+        var res = this.$store.getters.userSearchResult
+        var temp = []
+        res.forEach(function (user) {
+          var followText = user.followingStatus == 'NOT_FOLLOWING' ? "Follow" : user.followingStatus == 'FOLLOWING' ? "Unfollow" : 'Requested'
+          var isFollowing = user.followingStatus == 'FOLLOWING' ? true : false
+          var isNotFollowing = user.followingStatus == 'NOT_FOLLOWING' ? true : false
+          var isPending = user.followingStatus == 'PENDING' ? true : false
+          if (currentUserName != user.username) {
+            temp.push({
+              name: user.username,
+              privacy : user.isPrivate ? "Private" : 'Public',
+              role : user.roles[0] == "ROLE_TRADER" ? "Trader" : "Basic",
+              followText : followText,
+              isFollowing : isFollowing,
+              isNotFollowing : isNotFollowing,
+              isPending : isPending,
+            })
+          }
+        });
+        this.searchResult = temp
+      })
+    },
     getAllEvents(){
       this.$store.dispatch('search/getEvents').then(() => {
         var res = this.$store.getters.allEvents
@@ -379,9 +382,10 @@ export default {
       } else if (this.selectedFilter == "equipment"){
         this.searchEquipmentResultToShow = this.searchEquipmentResult.filter(equipment => equipment.equipmentName.includes(this.searchText.toUpperCase()))
       } else if (this.selectedFilter == "article"){
-        this.searchArticleResultToShow = this.searchArticleResult.filter(article => article.title.toUpperCase().includes(this.searchText.toUpperCase()))
+        this.searchArticleResultToShow = this.searchArticleResult.filter(article => (article.title.toUpperCase().includes(this.searchText.toUpperCase())) || (article.author.toUpperCase().includes(this.searchText.toUpperCase())))
       } else if (this.selectedFilter == "event"){
-        this.searchEventResultToShow = this.searchEventResult.filter(event => event.event.toUpperCase().includes(this.searchText.toUpperCase()))
+        console.log(this.searchEventResult)
+        this.searchEventResultToShow = this.searchEventResult.filter(event => event.event.toUpperCase().includes(this.searchText.toUpperCase()) || event.country.toUpperCase().includes(this.searchText.toUpperCase()))
       }
     } 
   }  
