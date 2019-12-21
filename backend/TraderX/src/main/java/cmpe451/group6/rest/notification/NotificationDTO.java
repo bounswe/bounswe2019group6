@@ -17,6 +17,8 @@ public class NotificationDTO implements Serializable {
     private NotificationType type;
     @ApiModelProperty(position = 3, required = true)
     private Map<String, String> payload = new HashMap<String, String>();
+    @ApiModelProperty(position = 4, required = true)
+    private Integer id;
 
     public NotificationDTO() {
     }
@@ -26,6 +28,7 @@ public class NotificationDTO implements Serializable {
         this.isNew = notification.getIsNew();
         this.type = notification.getType();
         this.payload = notification.getPayload();
+        this.id = notification.getId();
     }
 
     public Date getCreated() {
@@ -58,5 +61,21 @@ public class NotificationDTO implements Serializable {
 
     public void setPayload(Map<String, String> payload) {
         this.payload = payload;
+    }
+
+    public boolean isNew() {
+        return isNew;
+    }
+
+    public void setNew(boolean aNew) {
+        isNew = aNew;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 }

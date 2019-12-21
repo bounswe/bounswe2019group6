@@ -42,13 +42,25 @@ public class NotificationController {
         return notificationService.getAllNews(util.unwrapUsername(req));
     }
 
+    @PostMapping("/read/by_id")
+    @ResponseStatus(HttpStatus.OK)
+    @ApiOperation(value = "Mark particular notification as not new.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = GlobalExceptionHandlerController.GENERIC_ERROR_RESPONSE),
+            @ApiResponse(code = 412, message = "Notification is owned by other user."),
+            @ApiResponse(code = 406, message = "No such notification is found.")})
+    public void clearById(@RequestParam(value="id") int id, HttpServletRequest req) {
+        notificationService.read(util.unwrapUsername(req),id);
+    }
+
     @PostMapping("/read")
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Mark new notifications as not new.")
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = GlobalExceptionHandlerController.GENERIC_ERROR_RESPONSE)})
-    public void clear(HttpServletRequest req) {
-         notificationService.readAll(util.unwrapUsername(req));
+    public void clear(@RequestParam(value="include_requests", required = false, defaultValue = "true")
+                                     boolean include_requests, HttpServletRequest req) {
+         notificationService.readAll(util.unwrapUsername(req),include_requests);
     }
 
     @DeleteMapping("/delete")
