@@ -36,6 +36,13 @@ export function getArticleByUserName(username) {
   })
 }
 
+export function getMyArticleByUserName(username) {
+  return request({
+    url: '/article/byUsername/'+username,
+    method: 'get',
+  })
+}
+
 export function getEvents() {
   return request({
     url: '/events',

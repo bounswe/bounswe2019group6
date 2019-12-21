@@ -40,18 +40,15 @@
                       prop="id"
                       label="ID"
                       sortable
-                      width="60">
-                    </el-table-column>
+                      width="60"/>
                     <el-table-column
                       prop="title"
                       label="Title"
-                      sortable>
-                    </el-table-column>
+                      sortable/>
                     <el-table-column
                       prop="timestamp"
                       label="Date"
-                      sortable>
-                    </el-table-column>
+                      sortable/>
                     <el-table-column fixed="right" width="120">
                       <template slot-scope="scope">
                         <el-button @click="HandleRedirect(tableData[scope.$index])" type="text" round>See Article</el-button>
@@ -72,13 +69,12 @@
 
 import { mapGetters } from 'vuex'
 import UserCard from '@/views/profile/components/UserCard'
-import Portfolio from '@/views/profile/components/Portfolio'
 import PrivateAccount from '@/views/profile/components/PrivateAccount'
 import { getUser } from '@/api/user'
 
 export default {
   name: 'UserProfile',
-  components: { UserCard, Portfolio, PrivateAccount },
+  components: { UserCard, PrivateAccount },
   data() {
     return {
       user: {},
