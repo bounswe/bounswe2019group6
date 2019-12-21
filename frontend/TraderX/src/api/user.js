@@ -139,7 +139,14 @@ export function becomeTrader(iban) {
   })
 }
 
-export function getNotifications() {
+export function getAllNotifications() {
+  return request({
+    url: '/notification',
+    method: 'get',
+  })
+}
+
+export function getNewNotifications() {
   return request({
     url: '/notification/news',
     method: 'get',
