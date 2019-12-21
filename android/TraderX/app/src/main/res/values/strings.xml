@@ -181,5 +181,10 @@
     <string name="my_trades">My Trades</string>
     <string name="date">Date</string>
     <string name="type">Type</string>
+    <string name="portfolio">Portfolio</string>
+
+    <string name="delete_portfolio">Portfolio is deleted</string>
+    <string name="add">Add</string>
+    <string name="portfolio_name">Portfolio Name</string>
 
 </resources>
