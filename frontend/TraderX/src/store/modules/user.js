@@ -1,7 +1,7 @@
 import { login, getInfo, logout, register, confirm, resetPassword, renew, unfollowUser,
    followUser, setProfilePublic, setProfilePrivate, changeIBAN, updatePassword, 
    becomeBasic, becomeTrader, getAllNotifications, getNewNotifications, acceptFollowRequest, declineFollowRequest,
-   readAllNotifications } from '@/api/user'
+   readAllNotifications, createPrediction } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
 
@@ -306,6 +306,16 @@ const actions = {
   becomeTrader({ commit }, iban) {
     return new Promise((resolve, reject) => {
       becomeTrader(iban).then(() => {
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+
+  createPrediction({ commit }, code, type) {
+    return new Promise((resolve, reject) => {
+      createPrediction(code, type).then(() => {
         resolve()
       }).catch(error => {
         reject(error)

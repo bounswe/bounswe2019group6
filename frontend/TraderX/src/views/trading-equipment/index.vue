@@ -27,6 +27,7 @@
                 </div>
                 <el-button class='learn-more-button' @click="learnMoreAboutEquipment(te.label)"><svg-icon style="margin-right:10px" icon-class="chart" />Learn More About Equipment</el-button>
                 <el-button class='buy-button' @click="showDialog=true; buyElem=te.label"><svg-icon style="margin-right:10px" icon-class="shopping" />Buy Equipment</el-button>
+                <el-button class='prediction-button' @click="showPredictionDialog=true; predElem=te.label"><svg-icon style="margin-right:10px" icon-class="shopping" />Make Prediction</el-button>
               </div>
             </el-tab-pane>
           </el-tabs>
@@ -49,13 +50,34 @@
         </el-select>
         <el-button slot="append" @click="buyEquipment()">Buy</el-button>
       </el-input>  
-    </el-dialog>   
+    </el-dialog>
+
+    <el-dialog title="Select Trading Equipment" :visible.sync="showPredictionDialog">
+      <el-select style="width:120px" v-model="selectPredElem" placeholder="Select">
+        <div v-if="this.predElem=='Money Currencies'">
+          <el-option v-for="(item, index) in this.currencyList" :key="index" :label="item.code" :value="item.code"></el-option>
+        </div>
+        <div v-if="this.predElem=='Cryptocurrencies'">
+          <el-option v-for="(item, index) in this.cryptoList" :key="index" :label="item.code" :value="item.code"></el-option>
+        </div>
+        <div v-if="this.predElem=='Stocks'">
+          <el-option v-for="(item, index) in this.stocksList" :key="index" :label="item.code" :value="item.code"></el-option>
+        </div>
+      </el-select>
+      <el-select style="width:120px" v-model="selectPredType" placeholder="Select">
+        <el-option value="Increase">Increase</el-option>
+        <el-option value="Decrease">Decrease</el-option>
+        <el-option value="Stable">Stable</el-option>
+      </el-select>
+      <el-button @click="makePrediction()">Make Prediction</el-button>
+    </el-dialog>
 
   </div>
 
 </template>
 
 <script>
+// [ 'increase' | 'decrease' | 'stable' ]
 import LineChart from './components/LineChart'
 import RaddarChart from './components/RaddarChart'
 
@@ -77,9 +99,13 @@ export default {
       cryptoList: [],
       stocksList: [],
       showDialog: false,
+      showPredictionDialog: false,
+      predElem : "",
       buyElem: "",
       buyamountinput: "",
       select: "",
+      selectPredElem : "",
+      selectPredType : "",
     }
   },
   async created() {
@@ -102,8 +128,15 @@ export default {
   },
 
   methods: {
+    makePrediction(){
+      this.$store.dispatch('user/createPrediction', {'code' : this.selectPredElem, "type" : this.selectPredType}).then(() => {
+        this.$message.success('Prediction Is Created Successfully!')
+      }).catch(err => {
+        console.log(err)
+      })
+    },
     buyEquipment() {
-      this.$store.dispatch('equipment/buyEquipment', {'code' : this.select, "amount" : this.buyamountinput}).then(response => {
+      this.$store.dispatch('equipment/buyEquipment', {'code' : this.select, "amount" : this.buyamountinput}).then(() => {
         this.$message.success('Equipment Is Bought Successfully!')
       }).catch(err => {
         console.log(err)

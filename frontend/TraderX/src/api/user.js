@@ -159,3 +159,11 @@ export function readAllNotifications() {
     method: 'post',
   })
 }
+
+export function createPrediction(query) {
+  return request({
+    url: '/prediction/create',
+    method: 'post',
+    params: query
+  })
+}
