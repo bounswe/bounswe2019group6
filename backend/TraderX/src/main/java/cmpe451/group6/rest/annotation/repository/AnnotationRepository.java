@@ -12,4 +12,6 @@ public interface AnnotationRepository extends JpaRepository<Annotation, Integer>
 
     List<Annotation> findAllByArticleId(int articleId);
 
+    Annotation findById(int annotationId);
+
 }

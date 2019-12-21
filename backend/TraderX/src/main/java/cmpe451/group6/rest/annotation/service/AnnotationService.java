@@ -1,11 +1,13 @@
 package cmpe451.group6.rest.annotation.service;
 
+import cmpe451.group6.authorization.exception.CustomException;
 import cmpe451.group6.rest.annotation.model.Annotation;
 import cmpe451.group6.rest.annotation.repository.AnnotationRepository;
 import cmpe451.group6.rest.annotation.dto.AnnotationDTO;
 import cmpe451.group6.authorization.model.User;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -19,9 +21,6 @@ public class AnnotationService {
 
     @Autowired
     AnnotationRepository annotationRepository;
-
-    @Autowired
-    private UserRepository userRepository;
 
     public Map<String, Object> getAnnotation(int id) {
 
@@ -90,7 +89,7 @@ public class AnnotationService {
 
     }
 
-    public Annotation createAnnotation(AnnotationDTO annotationDTO) {
+    public String createAnnotation(AnnotationDTO annotationDTO) {
 
         Annotation annotation = new Annotation();
 
@@ -104,7 +103,7 @@ public class AnnotationService {
         annotation.setUpdatedAt(Timestamp.valueOf(localDateTime));
         annotationRepository.save(annotation);
 
-        return annotation;
+        return "Annotation is created!";
 
     }
 
@@ -114,7 +113,7 @@ public class AnnotationService {
 
             throw new CustomException("Annotation does not exist", HttpStatus.PRECONDITION_FAILED);
 
-        } else if (annotation.getAnnotatorUsername() != requesterName) {
+        } else if (!annotation.getAnnotatorUsername().equals(requesterName)) {
 
             throw new CustomException("A user can not delete others' annotations", HttpStatus.PRECONDITION_FAILED);
 
@@ -122,17 +121,18 @@ public class AnnotationService {
 
         annotationRepository.delete(annotation);
 
-        return "Annotation is deleted successfully!";
+        return "Annotation is deleted!";
 
     }
 
-    public Annotation updateAnnotation(AnnotationDTO annotationDTO) {
+    public String updateAnnotation(AnnotationDTO annotationDTO, String requesterName) {
+
         Annotation annotation = annotationRepository.findById(annotationDTO.getId());
         if (annotation == null) {
 
             throw new CustomException("Annotation does not exist", HttpStatus.PRECONDITION_FAILED);
 
-        } else if (annotation.getAnnotatorUsername() != requesterName) {
+        } else if (!annotation.getAnnotatorUsername().equals(requesterName)) {
 
             throw new CustomException("A user can not delete others' annotations", HttpStatus.PRECONDITION_FAILED);
 
@@ -142,13 +142,14 @@ public class AnnotationService {
 
         annotation.setAnnotationText(annotationDTO.getAnnotationText());
         annotation.setPosStart(annotationDTO.getPosStart());
+        annotation.setPosEnd(annotationDTO.getPosEnd());
 
         LocalDateTime localDateTime = LocalDateTime.now();
         annotation.setUpdatedAt(Timestamp.valueOf(localDateTime));
 
         annotationRepository.save(annotation);
 
-        return annotation;
+        return "Annotation is updated!";
 
     }
 
