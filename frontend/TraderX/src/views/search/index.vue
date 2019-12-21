@@ -383,7 +383,6 @@ export default {
       } else if (this.selectedFilter == "article"){
         this.searchArticleResultToShow = this.searchArticleResult.filter(article => (article.title.toUpperCase().includes(this.searchText.toUpperCase())) || (article.author.toUpperCase().includes(this.searchText.toUpperCase())))
       } else if (this.selectedFilter == "event"){
-        console.log(this.searchEventResult)
         this.searchEventResultToShow = this.searchEventResult.filter(event => event.event.toUpperCase().includes(this.searchText.toUpperCase()) || event.country.toUpperCase().includes(this.searchText.toUpperCase()))
       }
     } 

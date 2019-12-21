@@ -167,6 +167,7 @@ export default {
               this.inputdata["tags"] = ["t1", "t2"]
               this.$store.dispatch('search/writeArticle', this.inputdata ).then(() => {
               this.$notify({ title: 'Success', message: 'Article is posted', type: 'success', duration: 2000 }) 
+              this.$router.push({ path: `/profile/index` })
             }).catch(err => {
               console.log(err)
             })

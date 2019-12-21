@@ -30,8 +30,10 @@
                   <p>Follow Requst From: <b>{{ notif.payload.username }}</b></p>
                 </span>
                 <span style="float:right">
-                  <el-button style="margin-left:10px; margin-top:10px" type="primary" @click="AcceptFollowRequest(notif.payload.username)">Accept</el-button>
-                  <el-button style="margin-left:10px; margin-top:10px" type="danger" @click="DeclineFollowRequest(notif.payload.username)">Decline</el-button>
+                  <el-button-group>
+                    <el-button style="margin-left:10px; margin-top:10px" type="primary" @click="AcceptFollowRequest(notif.payload.username)">Accept</el-button>
+                    <el-button style="margin-left:10px; margin-top:10px" type="danger" @click="DeclineFollowRequest(notif.payload.username)">Decline</el-button>
+                  </el-button-group>
                 </span>
               </div>
             </div>
@@ -162,7 +164,7 @@ export default {
   methods: {
     markNotificationsAsNotNew(){
       this.$store.dispatch('user/readAllNotifications').then(() => {
-
+        this.isThereNew = false
       }).catch(error => {
         console.log(error)
       }) 
@@ -182,7 +184,7 @@ export default {
       }) 
     },
     getNotifications(){
-      this.$store.dispatch('user/getNotifications').then(() => {
+      this.$store.dispatch('user/getAllNotifications').then(() => {
         this.notifications = this.$store.getters.notifications
         for(var i = 0; i < this.notifications.length; i++){
           if (this.notifications[i].isNew) {

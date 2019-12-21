@@ -236,7 +236,6 @@ export default {
     },
 
     createRadarChartData() {
-      console.log('in createRadarChartData')
       if (this.tradingEquipments[0].data.length < this.currencyList.length ||
           this.tradingEquipments[1].data.length < this.cryptoList.length ||
           this.tradingEquipments[2].data.length < this.stocksList.length) {
