@@ -97,3 +97,20 @@ export function deleteEquipmentFromPortfolio(query) {
     params: query,
   })
 }
+
+export function setAlert(data) {
+  return request({
+    url: '/alert/set',
+    method: 'post',
+    data
+  })
+}
+
+export function deleteAlert(query) {
+  return request({
+    url: '/alert/remove',
+    method: 'delete',
+    params: query
+  })
+
+}

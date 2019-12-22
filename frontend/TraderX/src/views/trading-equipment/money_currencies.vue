@@ -41,10 +41,8 @@
                   <el-row gutter="50">
                     <el-col :span="7">
                       <el-card>
-                        <el-form>
-                          <el-form-item label="Code">
-                            <el-input v-model="alertForm.code"></el-input>
-                          </el-form-item>
+                        <el-form ref="alertForm">
+                          <h3>Set order for: {{activeTab}}</h3>
                           <el-form-item label="Alert Type">
                             <el-radio-group v-model="alertForm.alertType" size="medium">
                               <el-radio border label="Above"></el-radio>
@@ -64,8 +62,7 @@
                             <el-input-number v-model="alertForm.amount"></el-input-number>
                           </el-form-item>
                           <el-form-item>
-                            <el-button type="primary" @click="onSubmit">Create</el-button>
-                            <el-button>Cancel</el-button>
+                            <el-button type="primary" @click="setAlert">Set</el-button>
                           </el-form-item>
                         </el-form>
                       </el-card>
@@ -95,6 +92,18 @@
                           <el-table-column
                             prop="amount"
                             label="Amount">
+                          </el-table-column>
+                          <el-table-column
+                            label="Action">
+                            <template slot-scope="scope">
+                            <el-button
+                              size="mini"
+                              @click="editAlert(scope.row)">Edit</el-button>
+                            <el-button
+                              size="mini"
+                              type="danger"
+                              @click="deleteAlert(scope.row)">Delete</el-button>
+                          </template>
                           </el-table-column>
                         </el-table>
                       </el-card>
@@ -195,6 +204,15 @@ export default {
     LineChart,
     RaddarChart,
   },
+  watch: {
+    activeTab: function (currentTab) {
+        this.alertForm.code = currentTab
+        this.alertForm.alertType = ""
+        this.alertForm.transactionType = ""
+        this.alertForm.limit = ""
+        this.alertForm.amount = ""
+    }
+  },
   data() {
     return {
       alertForm: {
@@ -206,6 +224,7 @@ export default {
       },
       alerts: [
           {
+              id: 1,
               code: 'Red',
               alertType: 'Below',
               limit: 5.72,
@@ -213,6 +232,7 @@ export default {
               amount: 1000
           },
           {
+              id: 2,
               code: 'Blue',
               alertType: 'Below',
               limit: 5.72,
@@ -220,6 +240,7 @@ export default {
               amount: 72
           },
           {
+              id: 2,
               code: 'Yellow',
               alertType: 'Above',
               limit: 5.72,
@@ -227,6 +248,7 @@ export default {
               amount: 100
           },
           {
+              id: 3,
               code: 'White',
               alertType: 'Below',
               limit: 6.00,
@@ -465,6 +487,37 @@ export default {
         type: 'success',
         duration: 2000
       })
+    },
+
+    setAlert() {
+      console.log("setting alert")
+      console.log(this.$refs.alertForm)
+    },
+
+    editAlert(row) {
+        if (row.id == null) {
+            this.$notify({
+                title: "Error",
+                message: "Cannot find order, please refresh the page and try again",
+                type: 'error',
+                duration: 2000
+            })
+        } else {
+          console.log(row.id)
+        }
+    },
+
+    deleteAlert(row) {
+        if (row.id == null) {
+            this.$notify({
+                title: "Error",
+                message: "Cannot find order, please refresh the page and try again",
+                type: 'error',
+                duration: 2000
+            })
+        } else {
+
+        }
     }
   }
 }
