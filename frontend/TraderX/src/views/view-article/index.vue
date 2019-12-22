@@ -11,8 +11,8 @@
           <div class="author-wrapper" style="float: left">
             <p style="font-size: 20px"><b>{{ this.author }}</b></p>
           </div>
-        </a>         
-        
+        </a>
+
         <div style="float: right">
           <p style="font-size: 20px">Publish Time: <b>{{ this.date }}</b></p>
         </div>
@@ -20,7 +20,7 @@
           <img id="articleImage" class="annotatable" :src="articleImageUrl">
         </div>
         <div class="body-wrapper" style="float: right; padding-top: 30px; padding-bottom: 30px">
-          <p style="font-size: 21px">{{ this.body }}</p>
+          <p id="articleText" class="articleText" style="font-size: 21px">{{ this.body }}</p>
         </div>
       </div>
     </div>
@@ -44,12 +44,22 @@ export default {
       body : "This is the body text, i don't know what to write, my hands are writing words, asdasdasdasds, haaaaaaandssssss",
       articleImageUrl : "https://i.sozcu.com.tr/wp-content/uploads/2019/12/09/iecrop/sis-bursa-sis-iha1_10228788_16_9_1575927508-880x495.jpg",
       imageWidth: "",
-      imageHeight: ""
+      imageHeight: "",
+      annotator_app: {}
     }
   },
-  created() {},
+  created() {
+  },
   mounted() {
-    var articleImage = document.getElementById('articleImage'); 
+    // Text annotation mock
+    this.annotator_app = new annotator.App();
+    this.annotator_app.include(annotator.ui.main, {
+      element: document.querySelector(".articleText")
+    });
+    this.annotator_app.include(this.textAnnotatorModule)
+    this.annotator_app.start()
+
+    var articleImage = document.getElementById('articleImage');
     this.imageWidth = articleImage.clientWidth;
     this.imageHeight = articleImage.clientHeight;
 
@@ -57,13 +67,13 @@ export default {
     // this.addAnnotationToImage()
     var that = this
     anno.addHandler('onAnnotationCreated', function(annotation){
-      that.createAnnotationHandler(annotation)
+      that.createImageAnnotationHandler(annotation)
     })
     anno.addHandler('onAnnotationUpdated', function(annotation) {
-      that.updateAnnotationHandler(annotation)
+      that.updateImageAnnotationHandler(annotation)
     })
     anno.addHandler('onAnnotationRemoved', function(annotation) {
-      that.deleteAnnotationHandler(annotation)
+      that.deleteImageAnnotationHandler(annotation)
     })
     this.getAnnotationList()
   },
@@ -96,7 +106,7 @@ export default {
       }
     },
 
-    createAnnotationHandler(annotation) {
+    createImageAnnotationHandler(annotation) {
       var newAnnotation = {
         "articleId" : parseInt(this.$route.params.articleid),
         "content" : annotation.text,
@@ -108,13 +118,13 @@ export default {
         "imgH": this.imageHeight * annotation.shapes[0].geometry.height
       }
       createAnnotation(newAnnotation).then(response => {
-          console.log(response)
+          annotation.id = response.data.id
       }).catch(error => {
           console.log(error)
       })
     },
 
-    updateAnnotationHandler(annotation) {
+    updateImageAnnotationHandler(annotation) {
       var updatedAnnotation = {
         "articleId" : parseInt(this.$route.params.articleid),
         "content" : annotation.text,
@@ -133,7 +143,7 @@ export default {
       })
     },
 
-    deleteAnnotationHandler(annotation) {
+    deleteImageAnnotationHandler(annotation) {
       deleteAnnotation({ "id" : annotation.id }).then(response => {
           console.log(response)
       }).catch(error => {
@@ -147,13 +157,89 @@ export default {
           console.log(response)
           var that = this
           response.data.forEach((backendAnnotation) => {
-            that.addAnnotationToImage(backendAnnotation)
+            if (backendAnnotation.targetType === "Image") {
+              that.addAnnotationToImage(backendAnnotation)
+            } else {
+              that.addAnnotationToText(backendAnnotation)
+            }
           })
       }).catch(error => {
           console.log(error)
       })
     },
 
+    textAnnotatorModule() {
+      var that = this
+      return {
+        annotationCreated: function (annotation) {
+          that.createTextAnnotationHandler(annotation)
+        },
+        annotationUpdated: function (annotation) {
+          that.updateTextAnnotationHandler(annotation)
+        },
+        annotationDeleted: function (annotation) {
+          that.deleteTextAnnotationHandler(annotation)
+        }
+      }
+    },
+
+    addAnnotationToText(backendAnnotation) {
+      var newAnnotation = {
+        "id": backendAnnotation.id,
+        "text" : backendAnnotation.body.value,
+        "ranges": [
+          {
+            "startOffset": backendAnnotation.posStart,
+            "endOffset": backendAnnotation.posEnd
+          }
+        ]
+      }
+
+      // TODO load newAnnotation to Text
+    },
+
+    createTextAnnotationHandler(annotation) {
+      var newAnnotation = {
+        "articleId" : parseInt(this.$route.params.articleid),
+        "content" : annotation.text,
+        "bodyType": "Text",
+        "targetType": "Text",
+        "posStart": annotation.ranges[0].startOffset,
+        "posEnd": annotation.ranges[0].endOffset
+      }
+
+      createAnnotation(newAnnotation).then(response => {
+          annotation.id = response.data.id
+      }).catch(error => {
+          console.log(error)
+      })
+    },
+
+    updateTextAnnotationHandler(annotation) {
+      var updatedAnnotation = {
+          "articleId" : parseInt(this.$route.params.articleid),
+          "content" : annotation.text,
+          "id" : annotation.id,
+          "bodyType": "Text",
+          "targetType": "Text",
+          "posStart": annotation.ranges[0].startOffset,
+          "posEnd": annotation.ranges[0].endOffset
+      }
+
+      updateAnnotation(updatedAnnotation).then(response => {
+          console.log(response)
+      }).catch(error => {
+          console.log(error)
+      })
+    },
+
+    deleteTextAnnotationHandler(annotation) {
+      deleteAnnotation({ "id" : annotation.id }).then(response => {
+          console.log(response)
+      }).catch(error => {
+          console.log(error)
+      })
+    }
   }
 }
 </script>
@@ -162,6 +248,7 @@ export default {
 
 .article-wrapper {
   text-align: -webkit-center;
+  text-align: -moz-center;
 }
 
 .user-avatar {
