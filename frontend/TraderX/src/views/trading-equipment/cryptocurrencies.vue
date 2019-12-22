@@ -18,7 +18,7 @@
                 </div>
 
                 <el-button class='change-base-button' @click="changeBaseofEquipment(ed.label)"><svg-icon style="margin-right:10px" icon-class="chart" />Change the Base</el-button>
-                <el-button class='buy-button' @click="showDialog=true"><svg-icon style="margin-right:10px" icon-class="shopping" />Buy Equipment</el-button>
+                <el-button class='buy-button' @click="showBuyEquipmentDialog=true"><svg-icon style="margin-right:10px" icon-class="shopping" />Buy Equipment</el-button>
               
                 <el-card class='container-in-tab'>
                   <p> alerts comes here </p>
@@ -73,7 +73,46 @@
                 </el-card>
 
                 <el-card class='container-in-tab'>
-                  <p> comments comes here </p>
+                  <h4> Comments about {{ ed.label }} </h4>
+                  <el-button class='create-comment' style="margin-top:20px;margin-bottom:20px;" @click="showCreateCommentDialog=true">
+                    <svg-icon style="margin-right:10px" icon-class="edit" /> Write Comment </el-button>
+                  
+                  <el-row class='row' v-for="c in ed.comments" :key="c.id" :gutter="20" style="padding:16px 16px 0;margin-bottom:20px;">
+                    <el-card class='comment-container'>
+                      <p>
+                        <span class="comment-author"> {{ c.author }} </span>
+                        <span class="comment-time"> {{ c.lastModifiedTime | parseTime('{y}-{m}-{d} {h}:{i}') }} - </span>
+                        <span class="comment-options"> {{ c.likes }} Likes - </span>
+                        <span class="comment-options"> {{ c.dislikes }} Dislikes </span>
+                      </p>
+                      <p class="comment-text"> {{ c.comment }} </p>
+                      <p class="comment-options">
+                        <a :class="{liked: c.status === 'LIKED'}" @click="likeComment(ed.key, c.id)"><i class="el-icon-arrow-up"/> Like </a> 
+                        <a :class="{disliked: c.status === 'DISLIKED'}" @click="dislikeComment(ed.key, c.id)"><i class="el-icon-arrow-down"/> Dislike </a> |
+                        <a @click="revokeComment(ed.key, c.id)"> Revoke Vote </a> |
+                        <a class="delete-text" @click="deleteComment(ed.key, c.id)"><i class="el-icon-delete"/> Delete Comment </a> |
+                        <a class="delete-text" @click="showEditCommentDialog=true;editCommentContent=c.comment"><i class="el-icon-edit"/> Edit Comment </a>
+
+                        <el-dialog title="Edit Comment" :visible.sync="showEditCommentDialog">
+                          <textarea class="comment-textarea" column="100" rows="10" v-model="editCommentContent"></textarea>
+                          <div>
+                            <el-button style="margin-top:10px;" @click="editComment(ed.key, c.id)"><svg-icon icon-class="edit"/> Edit Comment </el-button>
+                          </div>
+                        </el-dialog>
+
+                      </p>
+                    </el-card>
+                  </el-row>
+
+                  <el-dialog title="Create Comment" :visible.sync="showCreateCommentDialog">
+                    <textarea class="comment-textarea" placeholder="Write your comment here" column="100" rows="10" v-model="createCommentContent"></textarea>
+                    <div>
+                      <el-button style="margin-top:10px;" @click="postComment(ed.key)"><svg-icon icon-class="edit"/> Publish Comment </el-button>
+                    </div>
+                  </el-dialog>
+
+                  
+                
                 </el-card>
               
               
@@ -83,7 +122,7 @@
       </el-card>
     </el-row>
 
-    <el-dialog title="Select Trading Equipment" :visible.sync="showDialog">
+     <el-dialog title="Select Trading Equipment" :visible.sync="showBuyEquipmentDialog">
       <el-input placeholder="Please enter an amount" v-model="buyamountinput" class="input-with-select">
         <el-select style="width:120px" v-model="select" slot="prepend" placeholder="Select">
           <div>
@@ -116,17 +155,32 @@ export default {
   },
   data() {
     return {
-      equipmentData: [],
-      activeTab: 'BTC',
-      showDialog: false,
+      chartData: {},
+      showBuyEquipmentDialog: false,
+      showCreateCommentDialog: false,
+      showEditCommentDialog: false,
       buyamountinput: '',
       select: '',
-      articleList: null
+      createCommentContent: '',
+      editCommentContent: '',
+      equipmentData: [],
+      comparisonData: {equipmentData: []},
+      activeTab: 'JPY',
+      articleList: null,
+      commentList: {},
+      postCommentDict: {
+        "comment": "",
+      },
+      editCommentDict: {
+        "comment": "",
+      },
+      showDialog: false,
     }
   },
   async created() {
     this.returnArticleList()
     var equipmentList = await this.getEquipmentList()
+    this.getCommentList(equipmentList)
     // Fill the equipmentData with equipment list
     equipmentList.forEach(function(equipmentKey) {
       this.equipmentData.push({key: equipmentKey.code})
@@ -187,6 +241,21 @@ export default {
       ]
     },
 
+        // Comment List will be received for all of the equipment
+    async getCommentList(equipmentList) {
+      var commentList = {}
+      equipmentList.forEach(async function(e) {
+        try {
+          await this.$store.dispatch('comment/getCommentList', e.code.toLowerCase())
+          var res = this.$store.getters.commentQueryResult
+          commentList[e.code] = res
+        } catch (error) {
+          console.log(error)
+        }
+      }, this)
+      this.commentList = commentList
+    },
+
     // Promise for getting equipments list 
     async getEquipmentList() {
       try {
@@ -217,6 +286,7 @@ export default {
             low: [],
             current: [],
           }
+          equipmentValues[equipmentValues.length-1].comments = this.commentList[res.equipment.code]
           res.historicalValues.forEach(function(val) {
             equipmentValues[equipmentValues.length-1].data.open.push(val.open)
             equipmentValues[equipmentValues.length-1].data.close.push(val.close)
@@ -253,7 +323,149 @@ export default {
           }
         }
       }, this)
-    }
+    },
+
+    readArticle(equipmentLabel) {
+      this.$notify({
+        title: 'Success',
+        message: 'Directing you to the articles about ' + equipmentLabel,
+        type: 'success',
+        duration: 2000
+      })
+    },
+
+    postComment(equipmentCode) {
+      this.postCommentDict["comment"] =  this.createCommentContent
+      // Posting to backend
+      this.$store.dispatch('comment/postComment', {"code": equipmentCode, "commentDict": this.postCommentDict}).then(() => {
+        this.showCreateCommentDialog = false
+        this.createCommentContent = ''
+        this.$message.success('Comment is posted successfully!')
+        
+        var res = this.$store.getters.commentQueryResult
+        this.equipmentData.forEach(function(e) {
+          if (e.key == equipmentCode) {
+            e.comments.push(res)
+          }
+        }, this)
+
+      }).catch(err => {
+        console.log(err)
+      })
+    },
+
+    editComment(equipmentCode, commentId) {
+      // Posting to backend
+      this.editCommentDict["comment"] = this.editCommentContent
+      this.$store.dispatch('comment/editComment', {"commentId": commentId, "commentDict": this.editCommentDict}).then(() => {
+        
+        var that = this
+        this.equipmentData.forEach(function(e) {
+          if (e.key == equipmentCode) {
+            e.comments.forEach(function(c) {
+              if (c.id == commentId) {
+                c.comment = that.editCommentContent
+              }
+            })
+          }
+        })
+
+        this.showEditCommentDialog = false
+        this.editCommentContent = ''
+        this.$message.success('Comment is edited successfully!')
+      }).catch(err => {
+        console.log(err)
+      })
+    },
+
+    async deleteComment(equipmentCode, commentId) {
+      var that = this
+      this.$store.dispatch('comment/deleteComment', commentId).then(async function() {
+        that.$message.success('Comment deleted!')
+        that.equipmentData.forEach(function(e) {
+          if (e.key == equipmentCode) {
+            e.comments.forEach(function(comment) {
+              if (comment.id == commentId) {
+                comment.comment = "[This comment is deleted by the user...]"
+              }
+            })
+          }
+        }, this)
+      }).catch(err => {
+        console.log(err)
+      })
+        
+    }, 
+
+    likeComment(equipmentCode, commentId) {
+      this.$store.dispatch('comment/voteComment', {"commentId": commentId, "voteType": "up"}).then(response => {
+        this.$message.success('Comment liked!')
+        this.equipmentData.forEach(function(e) {
+          if (e.key == equipmentCode) {
+            e.comments.forEach(function(comment) {
+              if (comment.id == commentId) {
+                comment.likes += 1
+                comment.status = "LIKED"
+              }
+            })
+          }
+        }, this)
+      }).catch(err => {
+        console.log(err)
+      })
+    },
+
+    dislikeComment(equipmentCode, commentId) {
+      // Post to backend
+      this.$store.dispatch('comment/voteComment', {"commentId": commentId, "voteType": "down"}).then(response => {
+        this.$message.success('Comment disliked!')
+        this.equipmentData.forEach(function(e) {
+          if (e.key == equipmentCode) {
+            e.comments.forEach(function(comment) {
+              if (comment.id == commentId) {
+                comment.dislikes += 1
+                comment.status = "DISLIKED"
+              }
+            })
+          }
+        }, this)
+      }).catch(err => {
+        console.log(err)
+      })
+    },
+
+    revokeComment(equipmentCode, commentId) {
+      var lastStatus = ""
+      this.equipmentData.forEach(function(e) {
+        if (e.key == equipmentCode) {
+          e.comments.forEach(function(comment) {
+            if (comment.id == commentId) {
+              lastStatus = comment.status
+            }
+          })
+        }
+      }, this)
+      console.log('lastStatus is revokeComment : ' + lastStatus)
+      this.$store.dispatch('comment/revokeVote', commentId).then(response => {
+        this.$message.success('Last vote revoked!')
+        this.equipmentData.forEach(function(e) {
+          if (e.key == equipmentCode) {
+            e.comments.forEach(function(comment) {
+              if (comment.id == commentId) {
+                if (lastStatus == "LIKED") {
+                  comment.likes -= 1
+                } else if (lastStatus == "DISLIKED") {
+                  comment.dislikes -= 1
+                }
+                comment.status = "NOT_COMMENTED" 
+              }
+            })
+          }
+        }, this)
+      }).catch(err => {
+        console.log(err)
+      })
+    },
   }
 }
 </script>
@@ -264,4 +476,47 @@ export default {
     margin-top: 30px;
 }
 
+.comment-time {
+  font-weight: normal;
+  font-size: 8pt;
+  color:#696969;
+}
+
+.comment-author {
+  font-weight: bold;
+  font-size: 11pt;
+}
+
+.comment-text {
+  font-weight: normal;
+  font-size: 10pt;
+  color: #404040;
+  white-space: pre-line;
+}
+
+.comment-options {
+  font-weight: normal;
+  font-size: 9pt;
+  color: #696969
+}
+
+.disliked{
+  font-weight: normal;
+  font-size: 9pt;
+  color: red;
+}
+
+.liked {
+  font-weight: normal;
+  font-size: 9pt;
+  color: green;
+}
+
+.comment-textarea {
+  resize: none;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 100%;
+}
 </style>
