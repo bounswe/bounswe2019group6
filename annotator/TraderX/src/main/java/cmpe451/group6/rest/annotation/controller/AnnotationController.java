@@ -57,8 +57,8 @@ public class AnnotationController {
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_TRADER') or hasRole('ROLE_BASIC')")
     @ApiOperation(value = "Create an annotation for an article")
     @ApiResponses(value = { @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE) })
-    public StringResponseWrapper createAnnotation(@RequestBody AnnotationDTO annotationDTO, HttpServletRequest req) {
-        return new StringResponseWrapper(annotationService.createAnnotation(annotationDTO, util.unwrapUsername(req)));
+    public int createAnnotation(@RequestBody AnnotationDTO annotationDTO, HttpServletRequest req) {
+        return annotationService.createAnnotation(annotationDTO, util.unwrapUsername(req));
     }
 
     @DeleteMapping("/delete")
