@@ -184,7 +184,7 @@ export default {
       // ]
       equipmentData: [],
       comparisonData: {equipmentData: []},
-      activeTab: 'JPY',
+      activeTab: 'ORCL',
       articleList: null,
       commentList: {},
       postCommentDict: {

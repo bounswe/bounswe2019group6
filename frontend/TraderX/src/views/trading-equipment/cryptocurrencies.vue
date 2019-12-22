@@ -165,7 +165,7 @@ export default {
       editCommentContent: '',
       equipmentData: [],
       comparisonData: {equipmentData: []},
-      activeTab: 'JPY',
+      activeTab: 'ETC',
       articleList: null,
       commentList: {},
       postCommentDict: {
