@@ -1,10 +1,16 @@
 <template>
   <div class="app-container">
     <el-table :data="predictionData" stripe style="width: 100%">
-      <el-table-column prop="code" label="Code"> </el-table-column>
+      <el-table-column prop="code" label="Code" width="90%"> </el-table-column>
+      <el-table-column prop="isSucceeded" label="Success" width="90%"> </el-table-column>
       <el-table-column prop="predType" label="Type"> </el-table-column>
-      <el-table-column prop="isSucceeded" label="Success"> </el-table-column>
       <el-table-column prop="date" label="Date"> </el-table-column>
+      <el-table-column>
+        <el-button-group>
+          <el-button type="danger" @click="deletePrediction()">Delete</el-button>
+          <el-button type="warning" @click="editPrediction()">Edit</el-button>
+        </el-button-group>
+      </el-table-column>
     </el-table>
   </div>
 </template>
@@ -20,10 +26,15 @@ export default {
     this.getMyPredictions()
   },
   methods: {
+    deletePrediction(){
+
+    },
+    editPrediction(){
+
+    },
     getMyPredictions(){
       console.log(this.$store.getters.userInfo.username)
       this.$store.dispatch('user/getPredictionList', this.$store.getters.userInfo.username).then(() => {
-        console.log(this.$store.getters.predictionList)
         var res = this.$store.getters.predictionList.predictions
         for(var i = 0; i < res.length; i++) {
           var d = new Date(res[i].predictionDay).toDateString()
