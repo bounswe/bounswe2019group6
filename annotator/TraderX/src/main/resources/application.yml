@@ -1,0 +1,39 @@
+spring:
+  datasource:
+    url: jdbc:mysql://main_db_url:3306/cmpe451?allowPublicKeyRetrieval=true&useSSH=false
+    username: user
+    password: password
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+    annotator:
+      url: jdbc:mysql://annotator_db_url:3306/cmpe451?allowPublicKeyRetrieval=true&useSSH=false
+      username: user
+      password: password
+      driver-class-name: com.mysql.cj.jdbc.Driver
+
+  tomcat:
+    max-wait: 20000
+    max-active: 50
+    max-idle: 20
+    min-idle: 15
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        format_sql: true
+        id:
+          new_generator_mappings: false
+
+server:
+  port: 8080 # Default application port
+  url: http://localhost
+
+security:
+  jwt:
+    token:
+      secret-key: secret-key
+      expire-length: 3600000 # 1 hour  duration by default (in miliseconds)
+  alpha-api-key1: "***************"
+  alpha-api-key2: "***************"
