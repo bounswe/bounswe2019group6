@@ -25,10 +25,6 @@ public class Group6AnnotatorService  {
   public static void main(String[] args) {
     SpringApplication.run(Group6AnnotatorService.class, args);
   }
-
-
-
-
   @Bean(name="threadPoolTaskExecutor")
   public TaskExecutor threadPoolTaskExecutor() {
     ThreadPoolTaskExecutor threadPoolTaskExecutor = new ThreadPoolTaskExecutor();

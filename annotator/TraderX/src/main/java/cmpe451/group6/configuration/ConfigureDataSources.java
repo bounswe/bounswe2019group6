@@ -1,6 +1,5 @@
 package cmpe451.group6.configuration;
 
-import org.springframework.context.annotation.Configuration;
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;

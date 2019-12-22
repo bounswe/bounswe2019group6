@@ -29,11 +29,4 @@ password: root
 mvn spring-boot:run
 ```
 
-#### Step5: Verify the application is running:
-
-```
-curl -X GET localhost:8080/trial/public
-```
-
-
 
