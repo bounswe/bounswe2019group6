@@ -1,8 +1,5 @@
 package cmpe451.group6.authorization.dto;
 
-import java.util.List;
-
-import cmpe451.group6.authorization.model.Role;
 import io.swagger.annotations.ApiModelProperty;
 
 public class UserDataDTO {

@@ -5,7 +5,6 @@ import cmpe451.group6.rest.annotation.dto.AnnotationDTO;
 import cmpe451.group6.rest.annotation.model.Annotation;
 import cmpe451.group6.rest.annotation.repository.AnnotationRepository;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -18,9 +17,9 @@ import java.util.Map;
 @Service
 public class AnnotationService {
 
-    final  AnnotationRepository annotationRepository;
+    final AnnotationRepository annotationRepository;
 
-    public AnnotationService(AnnotationRepository annotationRepository) {
+    public AnnotationService(  AnnotationRepository annotationRepository) {
         this.annotationRepository = annotationRepository;
     }
 
@@ -37,7 +36,7 @@ public class AnnotationService {
     }
 
     public List<Map<String, Object>> getAllAnnotations() {
-        List<Map<String, Object>> list = new ArrayList<>();
+        final List<Map<String, Object>> list = new ArrayList<>();
         annotationRepository.findAll().forEach(annotation -> list.add(toAnnotationModel(annotation)));
         return list;
     }
@@ -158,11 +157,7 @@ public class AnnotationService {
     }
 
     public String deleteAnotationsOfArticle(int articleId) {
-
-        annotationRepository.findAllByArticleId(articleId).forEach(annotation -> {
-            annotationRepository.delete(annotation);
-        });
-
+        annotationRepository.delete(annotationRepository.findAllByArticleId(articleId));
         return "All annotations of article with id: " + articleId + " are deleted!";
 
     }

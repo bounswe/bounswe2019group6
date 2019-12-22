@@ -1,19 +1,22 @@
-package cmpe451.group6.authorization.security;
+package cmpe451.group6.authorization.service;
 
 import cmpe451.group6.authorization.model.User;
+import cmpe451.group6.authorization.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import cmpe451.group6.authorization.repository.UserRepository;
-
 @Service
 public class CustomizedUserDetails implements UserDetailsService {
 
   @Autowired
-  private UserRepository userRepository;
+  private final UserRepository userRepository;
+
+  public CustomizedUserDetails(UserRepository userRepository) {
+    this.userRepository = userRepository;
+  }
 
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

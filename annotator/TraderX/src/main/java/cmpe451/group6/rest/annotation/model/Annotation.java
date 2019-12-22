@@ -1,5 +1,7 @@
 package cmpe451.group6.rest.annotation.model;
 
+import org.springframework.beans.factory.annotation.Qualifier;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 

@@ -10,9 +10,9 @@ import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 
 import cmpe451.group6.authorization.exception.CustomException;
+import cmpe451.group6.authorization.service.CustomizedUserDetails;
 import cmpe451.group6.authorization.model.Role;
 import cmpe451.group6.authorization.service.HazelcastService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -62,7 +62,7 @@ public class JwtTokenProvider {
     }
 
     Claims claims = Jwts.claims().setSubject(username);
-    claims.put("auth", roles.stream().map(s -> new SimpleGrantedAuthority(s.getAuthority())).filter(Objects::nonNull).collect(Collectors.toList()));
+    claims.put("auth", roles.stream().map(s -> new SimpleGrantedAuthority(s.getAuthority())).collect(Collectors.toList()));
 
     Date now = new Date();
     Date validity = new Date(now.getTime() + validityInMilliseconds);
