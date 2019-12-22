@@ -11,13 +11,7 @@
           <div class="author-wrapper" style="float: left">
             <p style="font-size: 20px"><b>{{ this.author }}</b></p>
           </div>
-        </a>
-
-        <div id="annotation">
-          <!-- <button @click="drawing = !drawing">{{drawing ? "stop" : "drawing" }}</button> -->
-          
-        </div>
-          
+        </a>         
         
         <div style="float: right">
           <p style="font-size: 20px">Publish Time: <b>{{ this.date }}</b></p>
@@ -34,16 +28,12 @@
 </template>
 
 <script>
-import PanThumb from '@/components/PanThumb'
 import annotator from 'annotator'
-import VAnnotator from 'vue-annotator'
 import 'annotorious'
+import { getAnnotationList, createAnnotation, updateAnnotation, deleteAnnotation } from '@/api/annotation'
 
 export default {
-  components: { 
-    PanThumb,
-    VAnnotator
-  },
+  components: { },
   name: 'ViewArticle',
   props: {},
   data() {
@@ -52,55 +42,98 @@ export default {
       title : "This is the title",
       author: "enozcan",
       body : "This is the body text, i don't know what to write, my hands are writing words, asdasdasdasds, haaaaaaandssssss",
-      articleImageUrl : "https://i.sozcu.com.tr/wp-content/uploads/2019/12/09/iecrop/sis-bursa-sis-iha1_10228788_16_9_1575927508-880x495.jpg"
+      articleImageUrl : "https://i.sozcu.com.tr/wp-content/uploads/2019/12/09/iecrop/sis-bursa-sis-iha1_10228788_16_9_1575927508-880x495.jpg",
+      imageWidth: "",
+      imageHeight: ""
     }
   },
   created() {
     // Text annotation mock
-    var anotator_app = new annotator.App();
-    anotator_app.include(annotator.ui.main);
-    anotator_app
-    .start()
-    .then(function () {
-        anotator_app.annotations.load();
-    });
+    // var anotator_app = new annotator.App();
+    // anotator_app.include(annotator.ui.main);
+    // anotator_app
+    // .start()
+    // .then(function () {
+    //     anotator_app.annotations.load();
+    // });
   },
   mounted() {
-    anno.makeAnnotatable(document.getElementById('articleImage'));
-    this.createMockAnnotation()
+    var articleImage = document.getElementById('articleImage'); 
+    this.imageWidth = articleImage.clientWidth;
+    this.imageHeight = articleImage.clientHeight;
+
+    anno.makeAnnotatable(articleImage);
+    // this.addAnnotationToImage()
+    var that = this
+    anno.addHandler('onAnnotationCreated', function(annotation){
+      that.createAnnotation(annotation)
+    })
+    this.getAnnotationList()
   },
   methods: {
     redirectToUser() {
       this.$router.push({ path: `/user/${this.author}/profile` })
     },
     // Create a temp annotation
-    createMockAnnotation() {
-      var myAnnotation = {
-          /** The URL of the image where the annotation should go **/
-          src : this.articleImageUrl,
-
-          /** The annotation text **/
-          text : 'My annotation',
-
-          /** The annotation shape **/
-          shapes : [{
-              /** The shape type **/
-              type : 'rect',
-              /** The shape geometry (relative coordinates) **/
-              geometry : {
-                height: 0.30707070707070705,
-                width: 0.1318181818181818,
-                x: 0.48863636363636365,
-                y: 0.044444444444444446,
-              }
-          }]
+    addAnnotationToImage(backendAnnotation) {
+      var newAnnotation = {
+        src : this.articleImageUrl,
+        text : backendAnnotation.body.value,
+        shapes : [{
+          type : 'rect',
+          geometry : this.renderGeometry(backendAnnotation.target.id)
+        }]
       }
-
-      anno.addAnnotation(myAnnotation)
-
+      anno.addAnnotation(newAnnotation)
     },
 
+    renderGeometry(geometryStr) {
+      var geometryValStr = geometryStr.split('=')[1]
+      var geometryArr = geometryValStr.split(',')
+      console.log(geometryArr)
+      return {
+        x: parseFloat(geometryArr[0]) / this.imageWidth,
+        y: parseFloat(geometryArr[1]) / this.imageHeight,
+        width: parseFloat(geometryArr[2]) / this.imageWidth,
+        height: parseFloat(geometryArr[3]) / this.imageHeight
+      }
+    },
 
+    createAnnotation(annotation) {
+      // console.log(annotation)
+
+      var newAnnotation = {
+        "articleId" : parseInt(this.$route.params.articleid),
+        "content" : annotation.text,
+        "bodyType": "Text",
+        "targetType": "Image",
+        "imgX": this.imageWidth * annotation.shapes[0].geometry.x,
+        "imgY": this.imageHeight * annotation.shapes[0].geometry.y,
+        "imgW": this.imageWidth * annotation.shapes[0].geometry.width,
+        "imgH": this.imageHeight * annotation.shapes[0].geometry.height
+      }
+      console.log(newAnnotation)
+
+      // Connect this to the backend
+      createAnnotation(newAnnotation).then(response => {
+          console.log(response)
+      }).catch(error => {
+          console.log(error)
+      })
+    },
+
+    getAnnotationList() {
+      var articleId = parseInt(this.$route.params.articleid)
+      getAnnotationList(articleId).then(response => {
+          console.log(response)
+          var that = this
+          response.data.forEach((backendAnnotation) => {
+            that.addAnnotationToImage(backendAnnotation)
+          })
+      }).catch(error => {
+          console.log(error)
+      })
+    },
 
   }
 }
