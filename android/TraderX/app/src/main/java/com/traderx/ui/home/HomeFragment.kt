@@ -30,6 +30,12 @@ class HomeFragment : Fragment() {
             }
         }
 
+        root.findViewById<LinearLayout>(R.id.home_event_action)?.let {
+            it.setOnClickListener {
+                findNavController().navigate(HomeFragmentDirections.actionNavigationHomeToNavigationEvent())
+            }
+        }
+
         return root
     }
 }
