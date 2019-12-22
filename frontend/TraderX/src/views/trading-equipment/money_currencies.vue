@@ -43,22 +43,22 @@
                       <el-card>
                         <el-form ref="alertForm">
                           <h3>Set order for: {{activeTab}}</h3>
-                          <el-form-item label="Alert Type">
+                          <el-form-item label="When:">
                             <el-radio-group v-model="alertForm.alertType" size="medium">
                               <el-radio border label="Above"></el-radio>
                               <el-radio border label="Below"></el-radio>
                             </el-radio-group>
                           </el-form-item>
-                          <el-form-item label="Limit">
+                          <el-form-item label="Threshold Value:">
                             <el-input-number v-model="alertForm.limit"></el-input-number>
                           </el-form-item>
-                          <el-form-item label="Transaction Type">
+                          <el-form-item label="Transaction Type:">
                             <el-radio-group v-model="alertForm.transactionType" size="medium">
                               <el-radio border label="Buy"></el-radio>
                               <el-radio border label="Sell"></el-radio>
                             </el-radio-group>
                           </el-form-item>
-                          <el-form-item label="Amount">
+                          <el-form-item label="Amount:">
                             <el-input-number v-model="alertForm.amount"></el-input-number>
                           </el-form-item>
                           <el-form-item>
@@ -98,11 +98,11 @@
                             <template slot-scope="scope">
                             <el-button
                               size="mini"
-                              @click="editAlert(scope.row)">Edit</el-button>
+                              @click="editAlert(scope.row, scope.$index)">Edit</el-button>
                             <el-button
                               size="mini"
                               type="danger"
-                              @click="deleteAlert(scope.row)">Delete</el-button>
+                              @click="deleteAlert(scope.row, scope.$index)">Delete</el-button>
                           </template>
                           </el-table-column>
                         </el-table>
@@ -190,6 +190,7 @@ import LineChartDetailed from './components/LineChartDetailed'
 import LineChartComparison from './components/LineChartComparison'
 import RaddarChart from './components/RaddarChart'
 import { buyEquipment } from '@/api/equipment'
+import { setAlert, editAlert, deleteAlert } from "../../api/equipment";
 
 // The usual sorting in javascript sorts alphabetically which causes mistake in our code
 const numberSort = function (a,b) {
@@ -490,34 +491,48 @@ export default {
     },
 
     setAlert() {
-      console.log("setting alert")
-      console.log(this.$refs.alertForm)
+      var that = this
+
+      setAlert(this.alertForm).then(response => {
+        console.log(response)
+        that.alerts.push(that.alertForm)
+      }).catch(error => {
+        console.log(error)
+      })
     },
 
-    editAlert(row) {
-        if (row.id == null) {
-            this.$notify({
-                title: "Error",
-                message: "Cannot find order, please refresh the page and try again",
-                type: 'error',
-                duration: 2000
-            })
-        } else {
-          console.log(row.id)
-        }
+    editAlert(row, index) {
+      if (row.id == null) {
+        this.$notify({
+            title: "Error",
+            message: "Cannot find order, please refresh the page and try again",
+            type: 'error',
+            duration: 2000
+        })
+      } else {
+        var that = this
+        // TODO edit alert with alertForm created in dialog
+      }
     },
 
-    deleteAlert(row) {
-        if (row.id == null) {
-            this.$notify({
-                title: "Error",
-                message: "Cannot find order, please refresh the page and try again",
-                type: 'error',
-                duration: 2000
-            })
-        } else {
+    deleteAlert(row, index) {
+      if (row.id == null) {
+        this.$notify({
+            title: "Error",
+            message: "Cannot find order, please refresh the page and try again",
+            type: 'error',
+            duration: 2000
+        })
+      } else {
+        var that = this
 
-        }
+        deleteAlert({ 'id' : row.id }).then(response => {
+            console.log(response)
+            that.alerts.splice(index, 1)
+        }).catch(error => {
+            console.log(error)
+        })
+      }
     }
   }
 }

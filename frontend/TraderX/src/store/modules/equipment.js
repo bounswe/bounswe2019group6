@@ -1,5 +1,5 @@
-import { getEquipment, listEquipment, getAllCurrencies, getAllCryptoCurrencies, getAllStocks, depositMoney, 
-        buyEquipment, sellEquipment, getAssetInfo, createPortfolio, deletePortfolio, addEquipmentToPortfolio, deleteEquipmentFromPortfolio} from '@/api/equipment'
+import { getEquipment, listEquipment, getAllCurrencies, getAllCryptoCurrencies, getAllStocks, depositMoney,
+        buyEquipment, sellEquipment, getAssetInfo, createPortfolio, deletePortfolio, addEquipmentToPortfolio, deleteEquipmentFromPortfolio, setAlert, deleteAlert } from '@/api/equipment'
 
 const state = {
   equipmentQueryResult : {
@@ -166,6 +166,24 @@ const actions = {
       })
     })
   },
+  setAlert({ commit }, alert) {
+    return new Promise((resolve, reject) => {
+      setAlert(alert).then(response => {
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  deleteAlert({ commit }, id) {
+    return new Promise((resolve, reject) => {
+      deleteAlert(id).then(response => {
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  }
 }
 
 export default {
