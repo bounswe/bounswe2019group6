@@ -66,7 +66,13 @@ export default {
     // this.addAnnotationToImage()
     var that = this
     anno.addHandler('onAnnotationCreated', function(annotation){
-      that.createAnnotation(annotation)
+      that.createAnnotationHandler(annotation)
+    })
+    anno.addHandler('onAnnotationUpdated', function(annotation) {
+      that.updateAnnotationHandler(annotation)
+    })
+    anno.addHandler('onAnnotationRemoved', function(annotation) {
+      that.deleteAnnotationHandler(annotation)
     })
     this.getAnnotationList()
   },
@@ -74,7 +80,6 @@ export default {
     redirectToUser() {
       this.$router.push({ path: `/user/${this.author}/profile` })
     },
-    // Create a temp annotation
     addAnnotationToImage(backendAnnotation) {
       var newAnnotation = {
         src : this.articleImageUrl,
@@ -82,7 +87,8 @@ export default {
         shapes : [{
           type : 'rect',
           geometry : this.renderGeometry(backendAnnotation.target.id)
-        }]
+        }],
+        id : backendAnnotation.id
       }
       anno.addAnnotation(newAnnotation)
     },
@@ -99,9 +105,7 @@ export default {
       }
     },
 
-    createAnnotation(annotation) {
-      // console.log(annotation)
-
+    createAnnotationHandler(annotation) {
       var newAnnotation = {
         "articleId" : parseInt(this.$route.params.articleid),
         "content" : annotation.text,
@@ -112,10 +116,34 @@ export default {
         "imgW": this.imageWidth * annotation.shapes[0].geometry.width,
         "imgH": this.imageHeight * annotation.shapes[0].geometry.height
       }
-      console.log(newAnnotation)
-
-      // Connect this to the backend
       createAnnotation(newAnnotation).then(response => {
+          console.log(response)
+      }).catch(error => {
+          console.log(error)
+      })
+    },
+
+    updateAnnotationHandler(annotation) {
+      var updatedAnnotation = {
+        "articleId" : parseInt(this.$route.params.articleid),
+        "content" : annotation.text,
+        "id" : annotation.id,
+        "bodyType": "Text",
+        "targetType": "Image",
+        "imgX": this.imageWidth * annotation.shapes[0].geometry.x,
+        "imgY": this.imageHeight * annotation.shapes[0].geometry.y,
+        "imgW": this.imageWidth * annotation.shapes[0].geometry.width,
+        "imgH": this.imageHeight * annotation.shapes[0].geometry.height
+      }
+      updateAnnotation(updatedAnnotation).then(response => {
+          console.log(response)
+      }).catch(error => {
+          console.log(error)
+      })
+    },
+
+    deleteAnnotationHandler(annotation) {
+      deleteAnnotation({ "id" : annotation.id }).then(response => {
           console.log(response)
       }).catch(error => {
           console.log(error)
@@ -152,10 +180,5 @@ export default {
   margin-right: 10px;
   border-radius: 50%;
 }
-
-#annotatable {
-  
-}
-
 
 </style>
