@@ -50,7 +50,6 @@ public class AnnotationService {
         return list;
     }
 
-    // textToText for now, will be parametrized for variations
     private Map<String, Object> toAnnotationModel(Annotation annotation) {
 
         JSONObject annotBaseJson = new JSONObject();
@@ -62,42 +61,77 @@ public class AnnotationService {
         annotBaseJson.put("created", annotation.getCreatedAt().toString().replace(" ", "T").substring(0, 19) + "Z");
         annotBaseJson.put("modified", annotation.getUpdatedAt().toString().replace(" ", "T").substring(0, 19) + "Z");
 
-        // TODO: will be parametrized later on, for other types of annotations
-
         JSONObject body = new JSONObject();
-        body.put("type", "Text");
-        body.put("value", annotation.getAnnotationText());
+
+        body.put("type", annotation.getBodyType());
+        body.put("value", annotation.getContent());
 
         annotBaseJson.put("body", body);
 
         JSONObject target = new JSONObject();
 
-        // TODO: will be parametrized later on, for other types of annotations
-        target.put("type", "Text");
-        target.put("id", annotation.getArticleId());
+        target.put("type", annotation.getTargetType());
 
-        JSONObject selector = new JSONObject();
+        if (annotation.getTargetType().equals("Text")) {
 
-        selector.put("type", "TextPositionSelector");
-        selector.put("start", annotation.getPosStart());
-        selector.put("end", annotation.getPosEnd());
+            target.put("id", annotation.getArticleId());
 
-        target.put("selector", selector);
+            JSONObject selector = new JSONObject();
+
+            selector.put("type", "TextPositionSelector");
+            selector.put("start", annotation.getPosStart());
+            selector.put("end", annotation.getPosEnd());
+
+            target.put("selector", selector);
+
+        } else if (annotation.getTargetType().equals("Image")) {
+
+            target.put("id", annotation.getArticleId() + "#xywh=" + annotation.getImgX() + "," + annotation.getImgY()
+                    + "," + annotation.getImgW() + "," + annotation.getImgH());
+
+        } else {
+
+            throw new CustomException("Target type is incorrect", HttpStatus.PRECONDITION_FAILED);
+        }
+
         annotBaseJson.put("target", target);
 
         return annotBaseJson.toMap();
 
     }
 
-    public String createAnnotation(AnnotationDTO annotationDTO) {
+    public String createAnnotation(AnnotationDTO annotationDTO, String requesterName) {
 
         Annotation annotation = new Annotation();
 
         annotation.setArticleId(annotationDTO.getArticleId());
-        annotation.setAnnotatorUsername(annotationDTO.getAnnotatorUsername());
-        annotation.setAnnotationText(annotationDTO.getAnnotationText());
-        annotation.setPosStart(annotationDTO.getPosStart());
-        annotation.setPosEnd(annotationDTO.getPosEnd());
+        annotation.setAnnotatorUsername(requesterName);
+        annotation.setContent(annotationDTO.getContent());
+        annotation.setBodyType(annotationDTO.getBodyType());
+        annotation.setTargetType(annotationDTO.getTargetType());
+
+        if (annotation.getTargetType().equals("Text")) {
+
+            annotation.setPosStart(annotationDTO.getPosStart());
+            annotation.setPosEnd(annotationDTO.getPosEnd());
+            annotation.setImgX(-1);
+            annotation.setImgY(-1);
+            annotation.setImgW(-1);
+            annotation.setImgH(-1);
+
+        } else if (annotation.getTargetType().equals("Image")) {
+
+            annotation.setPosStart(-1);
+            annotation.setPosEnd(-1);
+            annotation.setImgX(annotationDTO.getImgX());
+            annotation.setImgY(annotationDTO.getImgY());
+            annotation.setImgW(annotationDTO.getImgW());
+            annotation.setImgH(annotationDTO.getImgH());
+
+        } else {
+            throw new CustomException("Target type is incorrect", HttpStatus.PRECONDITION_FAILED);
+        }
+
         LocalDateTime localDateTime = LocalDateTime.now();
         annotation.setCreatedAt(Timestamp.valueOf(localDateTime));
         annotation.setUpdatedAt(Timestamp.valueOf(localDateTime));
@@ -125,6 +159,16 @@ public class AnnotationService {
 
     }
 
+    public String deleteAnotationsOfArticle(int articleId) {
+
+        annotationRepository.findAllByArticleId(articleId).forEach(annotation -> {
+            annotationRepository.delete(annotation);
+        });
+
+        return "All annotations of article with id: " + articleId + " are deleted!";
+
+    }
+
     public String updateAnnotation(AnnotationDTO annotationDTO, String requesterName) {
 
         Annotation annotation = annotationRepository.findById(annotationDTO.getId());
@@ -136,13 +180,23 @@ public class AnnotationService {
 
             throw new CustomException("A user can not delete others' annotations", HttpStatus.PRECONDITION_FAILED);
 
-        } else if (annotationDTO.getPosStart() == null || annotationDTO.getPosEnd() == null)
+        }
 
-            throw new CustomException("Selector is not defined porperly", HttpStatus.PRECONDITION_FAILED);
+        annotation.setContent(annotationDTO.getContent());
 
-        annotation.setAnnotationText(annotationDTO.getAnnotationText());
-        annotation.setPosStart(annotationDTO.getPosStart());
-        annotation.setPosEnd(annotationDTO.getPosEnd());
+        if (annotation.getTargetType().equals("Text")) {
+
+            annotation.setPosStart(annotationDTO.getPosStart());
+            annotation.setPosEnd(annotationDTO.getPosEnd());
+
+        } else {
+
+            annotation.setImgX(annotationDTO.getImgX());
+            annotation.setImgY(annotationDTO.getImgY());
+            annotation.setImgW(annotationDTO.getImgW());
+            annotation.setImgH(annotationDTO.getImgH());
+
+        }
 
         LocalDateTime localDateTime = LocalDateTime.now();
         annotation.setUpdatedAt(Timestamp.valueOf(localDateTime));

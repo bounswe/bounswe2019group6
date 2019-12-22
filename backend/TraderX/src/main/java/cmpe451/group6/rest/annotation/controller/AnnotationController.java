@@ -55,14 +55,16 @@ public class AnnotationController {
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.OK)
-    @ApiOperation(value = "Create an annotaation for an article")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_TRADER') or hasRole('ROLE_BASIC')")
+    @ApiOperation(value = "Create an annotation for an article")
     @ApiResponses(value = { @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE) })
-    public StringResponseWrapper createAnnotation(@RequestBody AnnotationDTO annotationDTO) {
-        return new StringResponseWrapper(annotationService.createAnnotation(annotationDTO));
+    public StringResponseWrapper createAnnotation(@RequestBody AnnotationDTO annotationDTO, HttpServletRequest req) {
+        return new StringResponseWrapper(annotationService.createAnnotation(annotationDTO, util.unwrapUsername(req)));
     }
 
-    @PostMapping("/delete")
+    @DeleteMapping("/delete")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_TRADER') or hasRole('ROLE_BASIC')")
     @ApiOperation(value = "Delete annotation")
     @ApiResponses(value = { @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE) })
     public StringResponseWrapper deleteAnnotation(@ApiParam("annotation id") @RequestParam int id,
@@ -70,8 +72,18 @@ public class AnnotationController {
         return new StringResponseWrapper(annotationService.deleteAnnotation(id, util.unwrapUsername(req)));
     }
 
+    @DeleteMapping("/delete/{articleId}")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @ApiOperation(value = "Delete all annotations of an article")
+    @ApiResponses(value = { @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE) })
+    public StringResponseWrapper deleteAnotationsOfArticle(@PathVariable int articleId) {
+        return new StringResponseWrapper(annotationService.deleteAnotationsOfArticle(articleId));
+    }
+
     @PostMapping("/update")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_TRADER') or hasRole('ROLE_BASIC')")
     @ApiOperation(value = "Update a your own annotation")
     @ApiResponses(value = { @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE) })
     public StringResponseWrapper updateAnnotation(@RequestBody AnnotationDTO annotationDTO, HttpServletRequest req) {

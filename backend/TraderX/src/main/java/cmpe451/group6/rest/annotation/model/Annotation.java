@@ -7,18 +7,16 @@ import java.sql.Timestamp;
 @Table(name = "annotation")
 public class Annotation {
 
-    // @Id
-    // @GeneratedValue(strategy = GenerationType.SEQUENCE, generator =
-    // "annotation_id_gen")
-    // @SequenceGenerator(name = "annotation_id_gen", sequenceName =
-    // "annotation_id_seq", allocationSize = 1)
-    // @Column(name = "id")
-    // private int id;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
+
+    @Column(name = "body_type")
+    private String bodyType;
+
+    @Column(name = "target_type")
+    private String targetType;
 
     @Column(name = "annotator_username")
     private String annotatorUsername;
@@ -26,14 +24,26 @@ public class Annotation {
     @Column(name = "article_id")
     private Integer articleId;
 
-    @Column(name = "annotation_text")
-    private String annotationText;
+    @Column(name = "content")
+    private String content;
 
     @Column(name = "pos_start")
     private Integer posStart;
 
     @Column(name = "pos_end")
     private Integer posEnd;
+
+    @Column(name = "imgX")
+    private Integer imgX;
+
+    @Column(name = "imgY")
+    private Integer imgY;
+
+    @Column(name = "imgW")
+    private Integer imgW;
+
+    @Column(name = "imgH")
+    private Integer imgH;
 
     @Column(name = "created_at")
     private Timestamp createdAt;
@@ -53,6 +63,22 @@ public class Annotation {
         this.id = id;
     }
 
+    public String getBodyType() {
+        return bodyType;
+    }
+
+    public void setBodyType(String bodyType) {
+        this.bodyType = bodyType;
+    }
+
+    public String getTargetType() {
+        return targetType;
+    }
+
+    public void setTargetType(String targetType) {
+        this.targetType = targetType;
+    }
+
     public String getAnnotatorUsername() {
         return annotatorUsername;
     }
@@ -69,12 +95,12 @@ public class Annotation {
         this.articleId = articleId;
     }
 
-    public String getAnnotationText() {
-        return annotationText;
+    public String getContent() {
+        return content;
     }
 
-    public void setAnnotationText(String annotationText) {
-        this.annotationText = annotationText;
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public Integer getPosStart() {
@@ -91,6 +117,38 @@ public class Annotation {
 
     public void setPosEnd(int posEnd) {
         this.posEnd = posEnd;
+    }
+
+    public Integer getImgX() {
+        return imgX;
+    }
+
+    public void setImgX(int imgX) {
+        this.imgX = imgX;
+    }
+
+    public Integer getImgY() {
+        return imgY;
+    }
+
+    public void setImgY(int imgY) {
+        this.imgY = imgY;
+    }
+
+    public Integer getImgW() {
+        return imgW;
+    }
+
+    public void setImgW(int imgW) {
+        this.imgW = imgW;
+    }
+
+    public Integer getImgH() {
+        return imgH;
+    }
+
+    public void setImgH(int imgH) {
+        this.imgH = imgH;
     }
 
     public Timestamp getCreatedAt() {

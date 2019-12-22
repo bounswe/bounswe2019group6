@@ -6,15 +6,27 @@ public class AnnotationDTO {
 
     private Integer id;
 
+    private String bodyType;
+
+    private String targetType;
+
     private String annotatorUsername;
 
     private Integer articleId;
 
-    private String annotationText;
+    private String content;
 
     private Integer posStart;
 
     private Integer posEnd;
+
+    private Integer imgX;
+
+    private Integer imgY;
+
+    private Integer imgW;
+
+    private Integer imgH;
 
     private Timestamp createdAt;
 
@@ -26,6 +38,22 @@ public class AnnotationDTO {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getBodyType() {
+        return bodyType;
+    }
+
+    public void setBodyType(String bodyType) {
+        this.bodyType = bodyType;
+    }
+
+    public String getTargetType() {
+        return targetType;
+    }
+
+    public void setTargetType(String targetType) {
+        this.targetType = targetType;
     }
 
     public String getAnnotatorUsername() {
@@ -44,12 +72,12 @@ public class AnnotationDTO {
         this.articleId = articleId;
     }
 
-    public String getAnnotationText() {
-        return annotationText;
+    public String getContent() {
+        return content;
     }
 
-    public void setAnnotationText(String annotationText) {
-        this.annotationText = annotationText;
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public Integer getPosStart() {
@@ -66,6 +94,38 @@ public class AnnotationDTO {
 
     public void setPosEnd(Integer posEnd) {
         this.posEnd = posEnd;
+    }
+
+    public Integer getImgX() {
+        return imgX;
+    }
+
+    public void setImgX(int imgX) {
+        this.imgX = imgX;
+    }
+
+    public Integer getImgY() {
+        return imgY;
+    }
+
+    public void setImgY(int imgY) {
+        this.imgY = imgY;
+    }
+
+    public Integer getImgW() {
+        return imgW;
+    }
+
+    public void setImgW(int imgW) {
+        this.imgW = imgW;
+    }
+
+    public Integer getImgH() {
+        return imgH;
+    }
+
+    public void setImgH(int imgH) {
+        this.imgH = imgH;
     }
 
     public Timestamp getCreatedAt() {
