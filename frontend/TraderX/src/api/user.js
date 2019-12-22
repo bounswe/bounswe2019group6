@@ -174,3 +174,11 @@ export function getPredictionList(username) {
     method: 'get',
   })
 }
+
+export function deletePrediction(id) {
+  return request({
+    url: '/prediction/delete',
+    method: 'delete',
+    params: id
+  })
+}
