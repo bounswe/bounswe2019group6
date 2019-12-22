@@ -2,28 +2,29 @@ package com.traderx.ui.article
 
 
 import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.method.LinkMovementMethod
+import android.text.style.BackgroundColorSpan
+import android.text.style.ClickableSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.github.razir.progressbutton.hideProgress
-import com.github.razir.progressbutton.isProgressActive
-import com.github.razir.progressbutton.showProgress
-import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.traderx.R
 import com.traderx.api.ErrorHandler
 import com.traderx.api.request.AnnotationRequest
-import com.traderx.api.response.CommentResponse
+import com.traderx.api.response.AnnotationResponse
 import com.traderx.db.Article
 import com.traderx.selectabletextview.SelectableTextView
-import com.traderx.ui.comment.CommentFragment
 import com.traderx.util.FragmentTitleEmitters
 import com.traderx.util.Helper
 import com.traderx.util.Injection
@@ -42,8 +43,9 @@ class ArticleFragment : Fragment(), FragmentTitleEmitters {
     private lateinit var authUserViewModel: AuthUserViewModel
 
     private var articleId: Int = 0
-    private lateinit var authUsername: String
     private lateinit var article: Article
+    private lateinit var annotations: ArrayList<AnnotationResponse>
+    private lateinit var authUsername: String
     private lateinit var header: TextView
     private lateinit var body: SelectableTextView
     private lateinit var tags: TextView
@@ -122,38 +124,70 @@ class ArticleFragment : Fragment(), FragmentTitleEmitters {
             articleViewModel.getAnnotations(articleId)
                 .compose(Helper.applySingleSchedulers())
                 .subscribe(
-                    { Log.d("Annotation", it[0].text) },
+                    {
+                        annotations = it
+                        showAnnotations()
+                    },
                     { ErrorHandler.handleError(it, context as Context) })
         )
 
-        root.findViewById<FrameLayout>(R.id.comments)?.let {
-            val commentFragment = CommentFragment(
-                articleViewModel.getComments(articleId)
-                    .compose(Helper.applySingleSchedulers<ArrayList<CommentResponse>>()),
-                { id ->
-                    articleViewModel.deleteComment(id)
-                },
-                { id, message ->
-                    articleViewModel.editComment(id, message)
-                },
-                { message ->
-                    articleViewModel.createComment(articleId, message)
-                },
-                { id, vote ->
-                    articleViewModel.voteComment(id, vote)
-                },
-                { id ->
-                    articleViewModel.revokeComment(id)
-                }
-            )
-
-            val fragmentTransaction = fragmentManager?.beginTransaction()
-
-            fragmentTransaction?.add(it.id, commentFragment, CommentFragment.TAG)
-            fragmentTransaction?.commit()
-        }
+//        root.findViewById<FrameLayout>(R.id.comments)?.let {
+//            val commentFragment = CommentFragment(
+//                articleViewModel.getComments(articleId)
+//                    .compose(Helper.applySingleSchedulers<ArrayList<CommentResponse>>()),
+//                { id ->
+//                    articleViewModel.deleteComment(id)
+//                },
+//                { id, message ->
+//                    articleViewModel.editComment(id, message)
+//                },
+//                { message ->
+//                    articleViewModel.createComment(articleId, message)
+//                },
+//                { id, vote ->
+//                    articleViewModel.voteComment(id, vote)
+//                },
+//                { id ->
+//                    articleViewModel.revokeComment(id)
+//                }
+//            )
+//
+//            val fragmentTransaction = fragmentManager?.beginTransaction()
+//
+//            fragmentTransaction?.add(it.id, commentFragment, CommentFragment.TAG)
+//            fragmentTransaction?.commit()
+//        }
 
         return root
+    }
+
+    private fun showAnnotations() {
+        if (::article.isInitialized && ::annotations.isInitialized) {
+            val spannableString = SpannableString(article.body)
+
+            for (i in 0..(annotations.size - 1)) {
+                val annotation = annotations[i]
+                spannableString.setSpan(
+                    BackgroundColorSpan(Color.argb(120, 50,50,180)),
+                    annotation.target.selector.start,
+                    annotation.target.selector.start + 1,
+                    Spannable.SPAN_EXCLUSIVE_INCLUSIVE
+                )
+                spannableString.setSpan(
+                    object: ClickableSpan() {
+                        override fun onClick(widget: View) {
+                            showAnnotationsListModal(i)
+                        }
+                    },
+                    annotation.target.selector.start,
+                    annotation.target.selector.end,
+                    Spannable.SPAN_EXCLUSIVE_INCLUSIVE
+                )
+            }
+
+            body.setText(spannableString)
+            body.setMovementMethod(LinkMovementMethod.getInstance());
+        }
     }
 
     override fun onDetach() {
@@ -167,7 +201,14 @@ class ArticleFragment : Fragment(), FragmentTitleEmitters {
 
         body.setOnLongClickListener {
             setFragmentActionButton(context, getString(R.string.annotate)) {
-                annotateText(it)
+                val articleAnnotateModal = ArticleAnnotateCreateModal { modal, annotation ->
+                    annotateText(modal, annotation)
+                }
+
+                articleAnnotateModal.show(
+                    fragmentManager as FragmentManager,
+                    ArticleAnnotateCreateModal.TAG
+                )
             }
 
             showSelectionCursors(touchX, touchY)
@@ -199,36 +240,36 @@ class ArticleFragment : Fragment(), FragmentTitleEmitters {
         }
     }
 
-    private fun annotateText(button: Button) {
-        var valid = false
+    private fun showAnnotationsListModal(i: Int) {
+        val annotationList = ArrayList<AnnotationResponse>()
 
-        when {
-            !AnnotationValidator.validateText("Testing") -> showWarning(getString(R.string.annotation_not_valid_text))
-            else -> valid = true
-        }
+        annotationList.add(annotations[i])
 
-        if (!valid || button.isProgressActive()) {
-            return
-        }
+        val articleAnnotateListModal = ArticleAnnotateListModal(authUsername, annotationList)
 
-        button.showProgress()
+        articleAnnotateListModal.show(
+            fragmentManager as FragmentManager,
+            ArticleAnnotateListModal.TAG
+        )
+    }
 
+    private fun annotateText(modal: BottomSheetDialogFragment, annotation: String) {
         disposable.add(
             articleViewModel.createAnnotation(
                 AnnotationRequest(
-                    "Testing",
+                    articleId,
+                    annotation,
                     body.cursorSelection.start,
                     body.cursorSelection.end
                 )
             )
                 .compose(Helper.applyCompletableSchedulers())
-                .doOnComplete { button.hideProgress(R.string.annotate) }
+                .doOnComplete {
+                    modal.dismiss()
+                    hideFragmentActionButton(context as Context)
+                }
                 .subscribe({}, { ErrorHandler.handleError(it, context as Context) })
         )
-    }
-
-    private fun showWarning(warning: String) {
-        Snackbar.make(requireView(), warning, Snackbar.LENGTH_SHORT).show()
     }
 
     private fun checkEditable() {
@@ -245,5 +286,6 @@ class ArticleFragment : Fragment(), FragmentTitleEmitters {
         username.text = article.username
         tags.text = article.tags.joinToString { it }
         username.text = article.username
+        showAnnotations()
     }
 }
