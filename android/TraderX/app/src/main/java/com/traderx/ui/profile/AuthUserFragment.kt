@@ -41,6 +41,7 @@ class AuthUserFragment : Fragment() {
     private lateinit var role: TextView
     private lateinit var followerCount: TextView
     private lateinit var followingCount: TextView
+    private lateinit var predictionSuccessRate: TextView
     private lateinit var profilePrivate: TextView
     private lateinit var becomeTraderLayout: LinearLayout
     private lateinit var requestService: RequestService
@@ -59,6 +60,7 @@ class AuthUserFragment : Fragment() {
         profilePrivate = root.findViewById(R.id.profile_private)
         followerCount = root.findViewById(R.id.profile_follower)
         followingCount = root.findViewById(R.id.profile_following)
+        predictionSuccessRate = root.findViewById(R.id.prediction_success_rate)
         becomeTraderLayout = root.findViewById(R.id.become_trader_action)
         becomeTraderLayout.setOnClickListener {
             becomeTrader(inflater)
@@ -116,8 +118,24 @@ class AuthUserFragment : Fragment() {
 
         root.findViewById<LinearLayout>(R.id.my_articles_action)?.let {
             it.setOnClickListener {
-                if(::user.isInitialized) {
-                    findNavController().navigate(AuthUserFragmentDirections.actionNavigationAuthUserToNavigationMyArticles(user.username))
+                if (::user.isInitialized) {
+                    findNavController().navigate(
+                        AuthUserFragmentDirections.actionNavigationAuthUserToNavigationMyArticles(
+                            user.username
+                        )
+                    )
+                }
+            }
+        }
+
+        root.findViewById<LinearLayout>(R.id.my_predictions_action)?.let {
+            it.setOnClickListener {
+                if (::user.isInitialized) {
+                    findNavController().navigate(
+                        AuthUserFragmentDirections.actionNavigationAuthUserToNavigationPrediction(
+                            user.username
+                        )
+                    )
                 }
             }
         }
@@ -156,6 +174,7 @@ class AuthUserFragment : Fragment() {
                     profilePrivate.text = it.localizedIsPrivate(context)
                     followerCount.text = it.followersCount.toString()
                     followingCount.text = it.followingsCount.toString()
+                    predictionSuccessRate.text = it.predictionStats?.successPercentage.toString()
 
                     if (user.role == Role.ROLE_BASIC.value) {
                         becomeTraderLayout.visibility = View.VISIBLE

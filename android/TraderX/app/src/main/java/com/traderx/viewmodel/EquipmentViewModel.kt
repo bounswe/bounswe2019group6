@@ -3,11 +3,9 @@ package com.traderx.viewmodel
 import com.traderx.api.RequestService
 import com.traderx.api.request.AlertRequest
 import com.traderx.api.request.CommentRequest
-import com.traderx.api.response.AlertResponse
-import com.traderx.api.response.CommentResponse
-import com.traderx.api.response.EquipmentResponse
-import com.traderx.api.response.EquipmentsResponse
+import com.traderx.api.response.*
 import com.traderx.db.EquipmentDao
+import com.traderx.type.PredictionType
 import com.traderx.type.VoteType
 import io.reactivex.Completable
 import io.reactivex.Flowable
@@ -68,5 +66,13 @@ class EquipmentViewModel(
 
     override fun deleteComment(id: Int): Completable {
         return networkSource.deleteComment(id)
+    }
+    
+    fun createPrediction(code: String, type: PredictionType): Completable {
+        return networkSource.createPrediction(code, type.value)
+    }
+
+    fun getPredictions(username: String): Single<PredictionResponse> {
+        return networkSource.getPredictions(username)
     }
 }

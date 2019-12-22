@@ -25,7 +25,8 @@ data class User(
     @ColumnInfo(name = "articlesCount") val articlesCount: Int,
     @ColumnInfo(name = "commentsCount") val commentsCount: Int,
     @ColumnInfo(name = "followingStatus") val followingStatus: String?,
-    @ColumnInfo(name = "iban") val iban: String?
+    @ColumnInfo(name = "iban") val iban: String?,
+    @ColumnInfo(name = "predictionStats") val predictionStats: PredictionStatus?
 ) {
     val role: String get() = roles[0]
 
@@ -38,16 +39,24 @@ data class User(
     fun localizedIsPrivate(context: Context): String =
         if (isPrivate) context.getString(R.string.sprivate) else context.getString(R.string.spublic)
 
-    fun localizedFollowingStatus(context: Context): String = when(followingStatus) {
+    fun localizedFollowingStatus(context: Context): String = when (followingStatus) {
         FollowingStatus.FOLLOWING.value -> context.getString(R.string.following)
         FollowingStatus.NOT_FOLLOWING.value -> context.getString(R.string.follow)
-        FollowingStatus.PENDING.value ->context.getString(R.string.pending)
+        FollowingStatus.PENDING.value -> context.getString(R.string.pending)
         else -> ""
     }
 
+    data class PredictionStatus(
+        val totalPredictions: Int,
+        val notEvaluated: Int,
+        val success: Int,
+        val fail: Int,
+        val successPercentage: Float
+    )
+
     companion object {
         fun newInstance(username: String): User {
-            return User(1, username, "", 0f, 0f, listOf(), false, 0, 0, 0, 0, null, null)
+            return User(1, username, "", 0f, 0f, listOf(), false, 0, 0, 0, 0, null, null, null)
         }
     }
 }
