@@ -33,6 +33,9 @@ class ViewModelFactory(private val dataSource: Any?, private val networkSource: 
             modelClass.isAssignableFrom(EventViewModel::class.java) -> EventViewModel(
                 networkSource
             ) as T
+            modelClass.isAssignableFrom(PortfolioViewModel::class.java) -> PortfolioViewModel(
+                networkSource
+            ) as T
             else -> throw IllegalArgumentException("Unknown ViewModel Class or dataSource")
         }
     }

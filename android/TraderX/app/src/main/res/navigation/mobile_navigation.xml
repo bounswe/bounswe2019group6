@@ -65,7 +65,7 @@
         android:id="@+id/navigation_alerts"
         android:name="com.traderx.ui.alert.AlertsFragment"
         android:label="@string/alert"
-        tools:layout="@layout/fragment_alerts"/>
+        tools:layout="@layout/fragment_alerts" />
 
     <fragment
         android:id="@+id/navigation_alert"
@@ -84,7 +84,7 @@
         android:id="@+id/navigation_transactions"
         android:name="com.traderx.ui.transaction.TransactionsFragment"
         android:label="@string/title_my_transactions"
-        tools:layout="@layout/fragment_transactions"/>
+        tools:layout="@layout/fragment_transactions" />
 
     <fragment
         android:id="@+id/navigation_transaction"
@@ -135,8 +135,8 @@
             app:argType="string" />
         <argument
             android:name="is_auth_user"
-            app:argType="boolean"
-            android:defaultValue="false" />
+            android:defaultValue="false"
+            app:argType="boolean" />
     </fragment>
 
     <fragment
@@ -152,8 +152,8 @@
             app:argType="string" />
         <argument
             android:name="is_auth_user"
-            app:argType="boolean"
-            android:defaultValue="false" />
+            android:defaultValue="false"
+            app:argType="boolean" />
     </fragment>
 
     <fragment
@@ -253,7 +253,7 @@
             app:destination="@id/navigation_alerts" />
         <action
             android:id="@+id/action_navigation_auth_user_to_navigation_portfolios"
-            app:destination="@id/navigation_portfolio" />
+            app:destination="@id/navigation_portfolios" />
         <action
             android:id="@+id/action_navigation_auth_user_to_navigation_my_articles"
             app:destination="@id/navigation_my_articles" />
@@ -286,24 +286,28 @@
     <fragment
         android:id="@+id/navigation_portfolios"
         android:name="com.traderx.ui.portfolio.PortfoliosFragment"
-        android:label="My Portfolio"
-        tools:layout="@layout/fragment_portfolio">
+        android:label="Portfolios"
+        tools:layout="@layout/fragment_portfolios">
         <action
             android:id="@+id/action_navigation_portfolio_to_details"
-            app:destination="@id/navigation_portfolio" />
+            app:destination="@id/navigation_portfolio_detail" />
+    </fragment>
+
+
+
+    <fragment
+        android:id="@+id/navigation_portfolio_detail"
+        android:name="com.traderx.ui.portfolio.PortfolioFragment"
+        android:label="Portfolio"
+        tools:layout="@layout/fragment_portfolio">
         <argument
             android:name="portfolio_name"
             app:argType="string" />
-        <argument
-            android:name="is_auth_user"
-            app:argType="boolean"
-            android:defaultValue="false" />
-    </fragment>
+        <action
+            android:id="@+id/action_navigation_equipments_to_navigation_equipment"
+            app:destination="@id/navigation_equipment" />
 
-    <fragment
-        android:id="@+id/navigation_portfolio"
-        android:name="com.traderx.ui.portfolio.PortfoliosFragment"
-        android:label="Portfolio"
-        tools:layout="@layout/fragment_portfolio" />
+
+    </fragment>
 
 </navigation>
