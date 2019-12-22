@@ -47,16 +47,7 @@ export default {
       imageHeight: ""
     }
   },
-  created() {
-    // Text annotation mock
-    // var anotator_app = new annotator.App();
-    // anotator_app.include(annotator.ui.main);
-    // anotator_app
-    // .start()
-    // .then(function () {
-    //     anotator_app.annotations.load();
-    // });
-  },
+  created() {},
   mounted() {
     var articleImage = document.getElementById('articleImage'); 
     this.imageWidth = articleImage.clientWidth;
