@@ -7,6 +7,7 @@ const getters = {
   token: state => state.user.token,
   userInfo: state => state.user.userInfo,
   notifications: state => state.user.notifications,
+  predictionList: state => state.user.predictionList,
   userSearchResult: state => state.search.userSearchResult,
   articleSearchResult: state => state.search.articleSearchResult,
   articleWriteResult: state => state.search.articleWriteResult,

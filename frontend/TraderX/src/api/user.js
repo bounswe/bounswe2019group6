@@ -167,3 +167,10 @@ export function createPrediction(query) {
     params: query
   })
 }
+
+export function getPredictionList(username) {
+  return request({
+    url: '/prediction/list/'+username,
+    method: 'get',
+  })
+}
