@@ -93,7 +93,7 @@ public class PredictionController {
             @ApiResponse(code = 406, message = "No such user.")})
     public ListResponseWrapper getAll(@ApiParam("Username") @PathVariable String username,
                                       HttpServletRequest req) {
-        return new ListResponseWrapper(username,predictionService.getPredictions(username, util.unwrapUsername(req).equals(username)));
+        return new ListResponseWrapper(username,predictionService.getPredictions(username));
     }
 
     @GetMapping("/list/{username}/{code}")
@@ -106,7 +106,7 @@ public class PredictionController {
     public ListResponseWrapper getAll(@ApiParam("Username") @PathVariable String username,
                                       @ApiParam("Equipment Code") @PathVariable String code,
                                       HttpServletRequest req) {
-        return new ListResponseWrapper(username,predictionService.getPredictions(username, code, util.unwrapUsername(req).equals(username)));
+        return new ListResponseWrapper(username,predictionService.getPredictions(username, code));
     }
 
     private Prediction.PredictionType stringToType(String type_s){

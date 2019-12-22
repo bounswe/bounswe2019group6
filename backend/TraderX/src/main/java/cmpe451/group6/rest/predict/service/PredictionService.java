@@ -84,21 +84,21 @@ public class PredictionService {
         return "Prediction is deleted.";
     }
 
-    public List<PredictionDTO> getPredictions(String username, String code, boolean queryingSelf){
+    public List<PredictionDTO> getPredictions(String username, String code){
         // TODO : May be check for profile privacy ?
         if(!userRepository.existsByUsername(username) || !equipmentRepository.existsByCode(code))
             throw new CustomException("No such equipment/user", HttpStatus.NOT_ACCEPTABLE); // 406
         List<Prediction> predictionsList = predictionRepository.findByUser_UsernameAndEquipment_Code(username,code);
         return predictionsList.stream().map(p ->
-                new PredictionDTO(queryingSelf ? p.getId() : null , p.getEquipment().getCode(),p.getPredictionType(),p.getSuccess(),
+                new PredictionDTO(p.getId(), p.getEquipment().getCode(),p.getPredictionType(),p.getSuccess(),
                         p.getPredictionDate())).collect(Collectors.toList());
     }
 
-    public List<PredictionDTO> getPredictions(String username, boolean queryingSelf){
+    public List<PredictionDTO> getPredictions(String username){
         // TODO : May be check for profile privacy ?
         List<Prediction> predictionsList = predictionRepository.findByUser_Username(username);
         return predictionsList.stream().map(p ->
-                new PredictionDTO(queryingSelf ? p.getId() : null,p.getEquipment().getCode(),p.getPredictionType(),p.getSuccess(),
+                new PredictionDTO(p.getId(),p.getEquipment().getCode(),p.getPredictionType(),p.getSuccess(),
                         p.getPredictionDate())).collect(Collectors.toList());
     }
 
