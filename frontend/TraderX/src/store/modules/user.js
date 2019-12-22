@@ -1,7 +1,7 @@
 import { login, getInfo, logout, register, confirm, resetPassword, renew, unfollowUser,
    followUser, setProfilePublic, setProfilePrivate, changeIBAN, updatePassword, 
    becomeBasic, becomeTrader, getAllNotifications, getNewNotifications, acceptFollowRequest, declineFollowRequest,
-   readAllNotifications, createPrediction, getPredictionList, deletePrediction } from '@/api/user'
+   readAllNotifications, createPrediction, getPredictionList, deletePrediction, editPrediction } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
 
@@ -340,6 +340,16 @@ const actions = {
   deletePrediction({ commit }, id) {
     return new Promise((resolve, reject) => {
       deletePrediction(id).then(() => {
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },  
+
+  editPrediction({ commit }, id, type) {
+    return new Promise((resolve, reject) => {
+      editPrediction(id, type).then(() => {
         resolve()
       }).catch(error => {
         reject(error)

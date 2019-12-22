@@ -5,8 +5,8 @@
       <el-table-column prop="isSucceeded" label="Success" width="90%"> </el-table-column>
       <el-table-column prop="predType" label="Type"> </el-table-column>
       <el-table-column prop="date" label="Date"> </el-table-column>
-      <el-table-column>
-        <el-button-group slot-scope="scope">
+      <el-table-column prop="isEditDeleteAvailable">
+        <el-button-group slot-scope="scope" v-if="predictionData[scope.$index].isEditDeleteAvailable">
           <el-button type="danger" @click="deletePrediction(predictionData[scope.$index])">Delete</el-button>
           <el-button type="warning" @click="editPredictionDialog=true; currentElem=predictionData[scope.$index]">Edit</el-button>
         </el-button-group>
@@ -42,7 +42,6 @@ export default {
     deletePrediction(pred){
       this.$store.dispatch('user/deletePrediction', { "id" : pred.id }).then(() => {
         this.predictionData = this.predictionData.filter(prediction => prediction.id != pred.id)
-        this.$message.success('Delete Yeeeeaaayhh!')
       }).catch(err => {
         console.log(err)
       })
@@ -52,11 +51,11 @@ export default {
       var pred = this.currentElem
       console.log(type)
       console.log(pred)
-      // this.$store.dispatch('user/editPrediction', { id : pred.predictionId, type: type }).then(() => {
-      //   this.$message.success('Editttt Yeeeeaaayhh!')
-      // }).catch(err => {
-      //   console.log(err)
-      // })
+      this.$store.dispatch('user/editPrediction', { id : pred.id, type: type.toLowerCase() }).then(() => {
+        this.$message.success('Editttt Yeeeeaaayhh!')
+      }).catch(err => {
+        console.log(err)
+      })
     },
     getMyPredictions(){
       this.$store.dispatch('user/getPredictionList', this.$store.getters.userInfo.username).then(() => {
@@ -68,8 +67,9 @@ export default {
             "id": res[i].predictionId,
             "code": res[i].equipmentCode,
             "predType": res[i].predictionType,
-            "isSucceeded": res[i].isSucceeded ? 'Success' : 'Fail',
+            "isSucceeded": res[i].isSucceeded ? 'Success' : (!res[i].isSucceeded) ? 'Fail' : '',
             "date": d,
+            "isEditDeleteAvailable" : res[i].isSucceeded === null ? true : false,
           })
         }
       }).catch(err => {

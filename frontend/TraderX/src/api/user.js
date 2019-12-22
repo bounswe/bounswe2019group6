@@ -182,3 +182,11 @@ export function deletePrediction(id) {
     params: id
   })
 }
+
+export function editPrediction(query) {
+  return request({
+    url: '/prediction/edit',
+    method: 'post',
+    params: query
+  })
+}
