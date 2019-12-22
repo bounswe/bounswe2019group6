@@ -22,6 +22,16 @@
     </fragment>
 
     <fragment
+        android:id="@+id/navigation_prediction"
+        android:name="com.traderx.ui.prediction.PredictionsFragment"
+        android:label="@string/title_my_predictions"
+        tools:layout="@layout/fragment_predictions">
+        <argument
+            android:name="username"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
         android:id="@+id/navigation_event"
         android:name="com.traderx.ui.event.EventFragment"
         android:label="@string/event"
@@ -257,6 +267,9 @@
         <action
             android:id="@+id/action_navigation_auth_user_to_navigation_my_articles"
             app:destination="@id/navigation_my_articles" />
+        <action
+            android:id="@+id/action_navigation_auth_user_to_navigation_prediction"
+            app:destination="@id/navigation_prediction" />
     </fragment>
 
     <fragment

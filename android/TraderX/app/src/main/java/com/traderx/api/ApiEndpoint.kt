@@ -65,4 +65,7 @@ object ApiEndpoint {
     const val DELETE_PORTFOLIO: String = "$API_URI/portfolio/delete"
     const val DELETE_FROM_PORTFOLIO: String = "$API_URI/portfolio/discard"
     const val EVENTS: String = "$API_URI/events"
+    const val PREDICTION_URI: String = "$API_URI/prediction"
+    const val PREDICTION_CREATE: String = "$PREDICTION_URI/create"
+    const val PREDICTION_USER_ALL: String = "$PREDICTION_URI/list/{username}"
 }

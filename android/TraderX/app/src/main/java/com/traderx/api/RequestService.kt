@@ -173,4 +173,10 @@ interface RequestService {
 
     @GET(ApiEndpoint.EVENTS)
     fun getEvents(): Single<List<EventResponse>>
+
+    @POST(ApiEndpoint.PREDICTION_CREATE)
+    fun createPrediction(@Query("code") code: String, @Query("type") type: String): Completable
+
+    @GET(ApiEndpoint.PREDICTION_USER_ALL)
+    fun getPredictions(@Path("username") username: String): Single<PredictionResponse>
 }

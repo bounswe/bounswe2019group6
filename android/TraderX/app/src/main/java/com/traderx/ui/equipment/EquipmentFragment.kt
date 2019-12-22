@@ -7,15 +7,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.FrameLayout
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
 import com.traderx.R
 import com.traderx.api.ErrorHandler
 import com.traderx.api.response.CommentResponse
 import com.traderx.api.response.EquipmentResponse
+import com.traderx.type.PredictionType
 import com.traderx.type.VoteType
 import com.traderx.ui.comment.CommentFragment
 import com.traderx.util.FragmentTitleEmitters
@@ -28,6 +31,7 @@ import lecho.lib.hellocharts.model.Line
 import lecho.lib.hellocharts.model.LineChartData
 import lecho.lib.hellocharts.model.PointValue
 import lecho.lib.hellocharts.view.LineChartView
+import retrofit2.HttpException
 
 class EquipmentFragment : Fragment(), FragmentTitleEmitters {
     private var equipmentCode: String? = null
@@ -89,6 +93,24 @@ class EquipmentFragment : Fragment(), FragmentTitleEmitters {
                         equipmentCode ?: ""
                     )
                 )
+            }
+        }
+
+        root.findViewById<ImageView>(R.id.increase_prediction_action)?.let { view ->
+            view.setOnClickListener {
+                makePrediction(PredictionType.INCREASE)
+            }
+        }
+
+        root.findViewById<ImageView>(R.id.decrease_prediction_action)?.let { view ->
+            view.setOnClickListener {
+                makePrediction(PredictionType.DECREASE)
+            }
+        }
+
+        root.findViewById<ImageView>(R.id.stable_prediction_action)?.let { view ->
+            view.setOnClickListener {
+                makePrediction(PredictionType.STABLE)
             }
         }
 
@@ -172,6 +194,30 @@ class EquipmentFragment : Fragment(), FragmentTitleEmitters {
         v.set(v.left, max * (1.05f), v.right, min / (1.1f))
         chart.maximumViewport = v
         chart.currentViewport = v
+    }
+
+    private fun makePrediction(type: PredictionType) {
+        disposable.add(
+            equipmentViewModel.createPrediction(equipmentCode ?: "", type)
+                .compose(Helper.applyCompletableSchedulers())
+                .subscribe({
+                    Snackbar.make(
+                        requireView(),
+                        getString(R.string.make_prediction_success),
+                        Snackbar.LENGTH_SHORT
+                    ).show()
+                }, {
+                    if(it is HttpException && it.code() == 406) {
+                        Snackbar.make(
+                            requireView(),
+                            getString(R.string.make_prediction_already_error),
+                            Snackbar.LENGTH_SHORT
+                        ).show()
+                    } else {
+                        ErrorHandler.handleError(it, context as Context)
+                    }
+                })
+        )
     }
 
     companion object {
