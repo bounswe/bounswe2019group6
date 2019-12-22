@@ -8,6 +8,7 @@ import cmpe451.group6.rest.article.dto.ArticleDTO;
 import cmpe451.group6.rest.article.dto.ArticleInfoDTO;
 import cmpe451.group6.rest.article.model.Article;
 import cmpe451.group6.rest.article.repository.ArticleRepository;
+import cmpe451.group6.rest.comment.repository.article.ArticleCommentRepository;
 import cmpe451.group6.rest.follow.service.FollowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,6 +26,9 @@ public class ArticleService {
 
     @Autowired
     private ArticleRepository articleRepository;
+
+    @Autowired
+    private ArticleCommentRepository articleCommentRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -122,6 +126,7 @@ public class ArticleService {
         if(!article.getUser().getUsername().equals(requesterName)){
             throw new CustomException("The requester user is not owner of the article", HttpStatus.PRECONDITION_FAILED);
         }
+        articleCommentRepository.deleteAllByArticle_Id(article.getId());
         articleRepository.delete(article);
         return true;
     }

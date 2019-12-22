@@ -3,6 +3,7 @@ package cmpe451.group6.rest.comment.repository.article;
 import cmpe451.group6.rest.comment.model.article.ArticleComment;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 public interface ArticleCommentRepository extends JpaRepository<ArticleComment,Integer> {
@@ -18,5 +19,8 @@ public interface ArticleCommentRepository extends JpaRepository<ArticleComment,I
     ArticleComment findById(int id);
 
     int countByAuthor_Username(String username);
+
+    @Transactional
+    void deleteAllByArticle_Id(int id);
 
 }
