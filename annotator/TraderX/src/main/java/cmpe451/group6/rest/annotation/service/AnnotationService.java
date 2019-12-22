@@ -97,7 +97,7 @@ public class AnnotationService {
 
     }
 
-    public String createAnnotation(AnnotationDTO annotationDTO, String requesterName) {
+    public int createAnnotation(AnnotationDTO annotationDTO, String requesterName) {
 
         Annotation annotation = new Annotation();
 
@@ -134,7 +134,7 @@ public class AnnotationService {
         annotation.setUpdatedAt(Timestamp.valueOf(localDateTime));
         annotationRepository.save(annotation);
 
-        return "Annotation is created!";
+        return annotation.getId();
 
     }
 
