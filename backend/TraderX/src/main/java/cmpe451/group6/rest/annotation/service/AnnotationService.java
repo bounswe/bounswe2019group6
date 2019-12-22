@@ -91,7 +91,7 @@ public class AnnotationService {
 
         } else {
 
-            throw new CustomException("Target type is incorrect", HttpStatus.PRECONDITION_FAILED);
+            throw new CustomException("Target type is incorrect Use \"Image\" or \"Text\" only", HttpStatus.PRECONDITION_FAILED);
         }
 
         annotBaseJson.put("target", target);
@@ -129,7 +129,7 @@ public class AnnotationService {
             annotation.setImgH(annotationDTO.getImgH());
 
         } else {
-            throw new CustomException("Target type is incorrect", HttpStatus.PRECONDITION_FAILED);
+            throw new CustomException("Target type is incorrect Use \"Image\" or \"Text\" only", HttpStatus.PRECONDITION_FAILED);
         }
 
         LocalDateTime localDateTime = LocalDateTime.now();
