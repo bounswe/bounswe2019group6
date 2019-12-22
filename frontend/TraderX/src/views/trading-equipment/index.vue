@@ -52,7 +52,7 @@
       </el-input>  
     </el-dialog>
 
-    <el-dialog title="Select Trading Equipment" :visible.sync="showPredictionDialog">
+    <el-dialog title="Make Prediction" :visible.sync="showPredictionDialog">
       <el-select style="width:120px" v-model="selectPredElem" placeholder="Select">
         <div v-if="this.predElem=='Money Currencies'">
           <el-option v-for="(item, index) in this.currencyList" :key="index" :label="item.code" :value="item.code"></el-option>
@@ -64,12 +64,12 @@
           <el-option v-for="(item, index) in this.stocksList" :key="index" :label="item.code" :value="item.code"></el-option>
         </div>
       </el-select>
-      <el-select style="width:120px" v-model="selectPredType" placeholder="Select">
+      <el-select style="width:120px; margin-left: 40px" v-model="selectPredType" placeholder="Select">
         <el-option value="Increase">Increase</el-option>
         <el-option value="Decrease">Decrease</el-option>
         <el-option value="Stable">Stable</el-option>
       </el-select>
-      <el-button @click="makePrediction()">Make Prediction</el-button>
+      <el-button style="margin-left: 40px" @click="makePrediction()">Make Prediction</el-button>
     </el-dialog>
 
   </div>
@@ -129,7 +129,7 @@ export default {
 
   methods: {
     makePrediction(){
-      this.$store.dispatch('user/createPrediction', {'code' : this.selectPredElem, "type" : this.selectPredType}).then(() => {
+      this.$store.dispatch('user/createPrediction', {'code' : this.selectPredElem, "type" : this.selectPredType.toLowerCase()}).then(() => {
         this.$message.success('Prediction Is Created Successfully!')
       }).catch(err => {
         console.log(err)
@@ -228,16 +228,19 @@ export default {
           await that.$store.dispatch('equipment/getEquipment', e.code.toLowerCase())
           var res = that.$store.getters.equipmentQueryResult
           if (that.tradingEquipments[equipmentType].data.length == 0) {
+            // eslint-disable-next-line require-atomic-updates
             that.tradingEquipments[equipmentType].activeTab = e.code
           }
           that.tradingEquipments[equipmentType].data.push({})
+          // eslint-disable-next-line require-atomic-updates
           that.tradingEquipments[equipmentType].data[that.tradingEquipments[equipmentType].data.length-1].key = e.code
+          // eslint-disable-next-line require-atomic-updates
           that.tradingEquipments[equipmentType].data[that.tradingEquipments[equipmentType].data.length-1].label = res.equipment.name
+          // eslint-disable-next-line require-atomic-updates
           that.tradingEquipments[equipmentType].data[that.tradingEquipments[equipmentType].data.length-1].data = {
             open: [],
             current: []
           }
-
           res.historicalValues.forEach((val) => {
             that.tradingEquipments[equipmentType].data[that.tradingEquipments[equipmentType].data.length-1].data.open.push(val.open)
             that.tradingEquipments[equipmentType].data[that.tradingEquipments[equipmentType].data.length-1].data.current.push(res.equipment.currentValue)
