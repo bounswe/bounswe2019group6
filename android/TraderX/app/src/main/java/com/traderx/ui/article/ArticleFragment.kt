@@ -13,18 +13,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.traderx.R
 import com.traderx.api.ErrorHandler
 import com.traderx.api.request.AnnotationRequest
 import com.traderx.api.response.AnnotationResponse
+import com.traderx.api.response.CommentResponse
 import com.traderx.db.Article
 import com.traderx.selectabletextview.SelectableTextView
+import com.traderx.type.AnnotationType
+import com.traderx.ui.comment.CommentFragment
 import com.traderx.util.FragmentTitleEmitters
 import com.traderx.util.Helper
 import com.traderx.util.Injection
@@ -120,43 +123,34 @@ class ArticleFragment : Fragment(), FragmentTitleEmitters {
                 }, {})
         )
 
-        disposable.add(
-            articleViewModel.getAnnotations(articleId)
-                .compose(Helper.applySingleSchedulers())
-                .subscribe(
-                    {
-                        annotations = it
-                        showAnnotations()
-                    },
-                    { ErrorHandler.handleError(it, context as Context) })
-        )
+        root.findViewById<FrameLayout>(R.id.comments)?.let {
+            val commentFragment = CommentFragment(
+                articleViewModel.getComments(articleId)
+                    .compose(Helper.applySingleSchedulers<ArrayList<CommentResponse>>()),
+                { id ->
+                    articleViewModel.deleteComment(id)
+                },
+                { id, message ->
+                    articleViewModel.editComment(id, message)
+                },
+                { message ->
+                    articleViewModel.createComment(articleId, message)
+                },
+                { id, vote ->
+                    articleViewModel.voteComment(id, vote)
+                },
+                { id ->
+                    articleViewModel.revokeComment(id)
+                }
+            )
 
-//        root.findViewById<FrameLayout>(R.id.comments)?.let {
-//            val commentFragment = CommentFragment(
-//                articleViewModel.getComments(articleId)
-//                    .compose(Helper.applySingleSchedulers<ArrayList<CommentResponse>>()),
-//                { id ->
-//                    articleViewModel.deleteComment(id)
-//                },
-//                { id, message ->
-//                    articleViewModel.editComment(id, message)
-//                },
-//                { message ->
-//                    articleViewModel.createComment(articleId, message)
-//                },
-//                { id, vote ->
-//                    articleViewModel.voteComment(id, vote)
-//                },
-//                { id ->
-//                    articleViewModel.revokeComment(id)
-//                }
-//            )
-//
-//            val fragmentTransaction = fragmentManager?.beginTransaction()
-//
-//            fragmentTransaction?.add(it.id, commentFragment, CommentFragment.TAG)
-//            fragmentTransaction?.commit()
-//        }
+            val fragmentTransaction = fragmentManager?.beginTransaction()
+
+            fragmentTransaction?.add(it.id, commentFragment, CommentFragment.TAG)
+            fragmentTransaction?.commit()
+        }
+
+        refreshAnnotations()
 
         return root
     }
@@ -167,14 +161,19 @@ class ArticleFragment : Fragment(), FragmentTitleEmitters {
 
             for (i in 0..(annotations.size - 1)) {
                 val annotation = annotations[i]
+
+                if (annotation.target.selector.start >= annotation.target.selector.end || annotation.target.selector.end >= article.body.length) {
+                    continue
+                }
+
                 spannableString.setSpan(
-                    BackgroundColorSpan(Color.argb(120, 50,50,180)),
+                    BackgroundColorSpan(Color.argb(120, 50, 50, 220)),
                     annotation.target.selector.start,
                     annotation.target.selector.start + 1,
                     Spannable.SPAN_EXCLUSIVE_INCLUSIVE
                 )
                 spannableString.setSpan(
-                    object: ClickableSpan() {
+                    object : ClickableSpan() {
                         override fun onClick(widget: View) {
                             showAnnotationsListModal(i)
                         }
@@ -201,9 +200,22 @@ class ArticleFragment : Fragment(), FragmentTitleEmitters {
 
         body.setOnLongClickListener {
             setFragmentActionButton(context, getString(R.string.annotate)) {
-                val articleAnnotateModal = ArticleAnnotateCreateModal { modal, annotation ->
-                    annotateText(modal, annotation)
-                }
+                val articleAnnotateModal = ArticleAnnotateCreateModal({ annotation ->
+                    articleViewModel.createAnnotation(
+                        AnnotationRequest(
+                            articleId,
+                            annotation,
+                            AnnotationType.TEXT.value,
+                            AnnotationType.TEXT.value,
+                            body.cursorSelection.start,
+                            body.cursorSelection.end
+                        )
+                    )
+                }, {
+                    hideFragmentActionButton(context as Context)
+                    refreshAnnotations()
+                    body.hideCursor()
+                }, requireView())
 
                 articleAnnotateModal.show(
                     fragmentManager as FragmentManager,
@@ -240,12 +252,29 @@ class ArticleFragment : Fragment(), FragmentTitleEmitters {
         }
     }
 
-    private fun showAnnotationsListModal(i: Int) {
+    private fun showAnnotationsListModal(index: Int) {
         val annotationList = ArrayList<AnnotationResponse>()
+        val currentAnnotationStart = annotations[index].target.selector.start
+        val currentAnnotationEnd = annotations[index].target.selector.end
+        for (i in 0..(annotations.size - 1)) {
+            val annotation = annotations[i]
 
-        annotationList.add(annotations[i])
+            if ((annotation.target.selector.start >= currentAnnotationStart - 2 &&
+                        annotation.target.selector.start <= currentAnnotationEnd + 2) ||
+                (annotation.target.selector.end >= currentAnnotationStart - 2 &&
+                        annotation.target.selector.end <= currentAnnotationEnd + 2)
+            ) {
+                annotationList.add(annotation)
+            }
+        }
 
-        val articleAnnotateListModal = ArticleAnnotateListModal(authUsername, annotationList)
+        val articleAnnotateListModal =
+            ArticleAnnotateListModal(authUsername, annotationList) { id ->
+                val index = annotations.find { it.id == id }
+                if (index != null) annotations.remove(index)
+                showAnnotations()
+                articleViewModel.deleteAnnotation(id)
+            }
 
         articleAnnotateListModal.show(
             fragmentManager as FragmentManager,
@@ -253,22 +282,16 @@ class ArticleFragment : Fragment(), FragmentTitleEmitters {
         )
     }
 
-    private fun annotateText(modal: BottomSheetDialogFragment, annotation: String) {
+    private fun refreshAnnotations() {
         disposable.add(
-            articleViewModel.createAnnotation(
-                AnnotationRequest(
-                    articleId,
-                    annotation,
-                    body.cursorSelection.start,
-                    body.cursorSelection.end
-                )
-            )
-                .compose(Helper.applyCompletableSchedulers())
-                .doOnComplete {
-                    modal.dismiss()
-                    hideFragmentActionButton(context as Context)
-                }
-                .subscribe({}, { ErrorHandler.handleError(it, context as Context) })
+            articleViewModel.getAnnotations(articleId)
+                .compose(Helper.applySingleSchedulers())
+                .subscribe(
+                    {
+                        annotations = it
+                        showAnnotations()
+                    },
+                    { ErrorHandler.handleError(it, context as Context) })
         )
     }
 

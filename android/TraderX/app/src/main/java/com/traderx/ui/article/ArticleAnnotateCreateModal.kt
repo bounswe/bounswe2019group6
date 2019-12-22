@@ -1,5 +1,7 @@
 package com.traderx.ui.article
 
+import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,13 +11,21 @@ import android.widget.EditText
 import com.github.razir.progressbutton.isProgressActive
 import com.github.razir.progressbutton.showProgress
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.android.material.snackbar.Snackbar
 import com.traderx.R
+import com.traderx.api.ErrorHandler
+import com.traderx.util.Helper
+import io.reactivex.Completable
+import io.reactivex.disposables.CompositeDisposable
 
 class ArticleAnnotateCreateModal(
-    val onCreate: (modal: BottomSheetDialogFragment, annotation: String) -> Unit
-    ) : BottomSheetDialogFragment() {
+    val onCreate: (annotation: String) -> Completable,
+    val onCreateSucces: () -> Unit,
+    val parentView: View
+) : BottomSheetDialogFragment() {
 
     private lateinit var annotation: EditText
+    private val disposable = CompositeDisposable()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -31,10 +41,21 @@ class ArticleAnnotateCreateModal(
                 if (AnnotationValidator.validateText(annotation.text.toString())) {
                     if (!button.isProgressActive()) {
                         button.showProgress()
-                        onCreate(this, annotation.text.toString())
+                        disposable.add(
+                            onCreate(annotation.text.toString())
+                                .compose(Helper.applyCompletableSchedulers())
+                                .doOnComplete(onCreateSucces)
+                                .subscribe({
+                                    dismiss()
+
+                                    Snackbar.make(
+                                        parentView,
+                                        getString(R.string.annotation_create_success),
+                                        Snackbar.LENGTH_SHORT
+                                    ).show()
+                                }, { ErrorHandler.handleError(it, context as Context) })
+                        )
                     }
-                } else {
-                    //ERROR
                 }
             }
         }

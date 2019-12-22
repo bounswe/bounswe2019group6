@@ -87,6 +87,8 @@
     <string name="comment_like">Comment is liked</string>
     <string name="comment_already_voted">Comment is already liked or disliked</string>
     <string name="article_delete_success">Article is successfully deleted</string>
+    <string name="annotation_create_success">Annotation is successfully created</string>
+    <string name="annotation_delete_success">Annotation is successfully deleted</string>
 
     <string name="article_create">Article Create</string>
     <string name="article_edit">Article Edit</string>

@@ -180,7 +180,7 @@ interface RequestService {
     @GET(ApiEndpoint.ANNOTATION_ARTICLE)
     fun getArticleAnnotation(@Path("id") id: Int): Single<AnnotationResponse>
 
-    @POST(ApiEndpoint.ANNOTATION_ARTICLE_DELETE)
+    @DELETE(ApiEndpoint.ANNOTATION_ARTICLE_DELETE)
     fun deleteArticleAnnotation(@Query("id") id: Int): Completable
 
     @POST(ApiEndpoint.ANNOTATION_ARTICLE_CREATE)

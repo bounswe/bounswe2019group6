@@ -46,15 +46,15 @@
                     android:tint="@color/edit"
                     app:srcCompat="@drawable/ic_delete_24px" />
 
-                <ImageView
-                    android:id="@+id/edit_action"
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginEnd="5dp"
-                    android:layout_weight="1"
-                    android:tint="@color/edit"
-                    app:srcCompat="@drawable/ic_edit_24px" />
+<!--                <ImageView-->
+<!--                    android:id="@+id/edit_action"-->
+<!--                    android:layout_width="18dp"-->
+<!--                    android:layout_height="18dp"-->
+<!--                    android:layout_marginStart="5dp"-->
+<!--                    android:layout_marginEnd="5dp"-->
+<!--                    android:layout_weight="1"-->
+<!--                    android:tint="@color/edit"-->
+<!--                    app:srcCompat="@drawable/ic_edit_24px" />-->
 
             </LinearLayout>
 

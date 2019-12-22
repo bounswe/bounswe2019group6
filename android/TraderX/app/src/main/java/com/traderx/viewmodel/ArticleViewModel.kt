@@ -77,4 +77,8 @@ class ArticleViewModel(
     fun createAnnotation(annotation: AnnotationRequest): Completable {
         return networkSource.createArticleAnnotation(annotation)
     }
+
+    fun deleteAnnotation(id: Int): Completable {
+        return networkSource.deleteArticleAnnotation(id)
+    }
 }
