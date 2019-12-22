@@ -106,7 +106,7 @@ public class ArticleService {
             throw new CustomException("Body cannot be null!", HttpStatus.PRECONDITION_FAILED);
 
         List<String> tags = articleInfoDTO.getTags();
-
+        String imageUrl = articleInfoDTO.getImageUrl();
         User user = userRepository.findByUsername(requesterName);
 
         Article temp = new Article();
@@ -114,6 +114,7 @@ public class ArticleService {
         temp.setBody(body);
         temp.setTags(tags);
         temp.setUser(user);
+        temp.setImageUrl(imageUrl);
         articleRepository.save(temp);
         return true;
     }
@@ -150,6 +151,8 @@ public class ArticleService {
 
         List<String> tags = articleInfoDTO.getTags();
 
+        String imageUrl = articleInfoDTO.getImageUrl();
+
         User user = userRepository.findByUsername(requesterName);
 
         Article temp = new Article();
@@ -157,6 +160,7 @@ public class ArticleService {
         temp.setBody(body);
         temp.setTags(tags);
         temp.setUser(user);
+        temp.setImageUrl(imageUrl);
         articleRepository.save(temp);
         return true;
     }

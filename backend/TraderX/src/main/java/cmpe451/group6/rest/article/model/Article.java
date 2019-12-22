@@ -31,6 +31,12 @@ public class Article implements Serializable {
     @Column(nullable = false, name = "createdAt", updatable = false, columnDefinition = " datetime default NOW() ")
     private Date createdAt;
 
+    @Column(nullable = true)
+    private String imageUrl;
+
+
+
+
     @PrePersist
     public void addTimestamp() {
         createdAt = new Date();
@@ -82,5 +88,13 @@ public class Article implements Serializable {
 
     public void setTags(List<String> tags) {
         this.tags = tags;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

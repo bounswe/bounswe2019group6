@@ -19,6 +19,8 @@ public class ArticleDTO {
     private List<String> tags;
     @ApiModelProperty(position = 4, required = true)
     private String createdAt;
+    @ApiModelProperty(position = 5, required = true)
+    private String imageUrl;
 
 
     public int getId() {
@@ -67,5 +69,13 @@ public class ArticleDTO {
 
     public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

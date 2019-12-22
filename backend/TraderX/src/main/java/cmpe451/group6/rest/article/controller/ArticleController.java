@@ -43,7 +43,7 @@ public class ArticleController {
     @ApiOperation(value = "Gets all articles of user (public or private but following). ", response = ArticleDTO.class)
     @ApiResponses(value = { @ApiResponse(code = 400, message = GENERIC_ERROR_RESPONSE),
             @ApiResponse(code = 406, message = "User's profile is not public and requester is not following")})
-    public List<ArticleDTO> getArticles(@ApiParam( "Username" ) @PathVariable String username,
+    public List<ArticleDTO> getArticlesByUsername(@ApiParam( "Username" ) @PathVariable String username,
                                      HttpServletRequest req) {
         return articleService.getArticlesByUser(username, util.unwrapUsername(req));
     }
