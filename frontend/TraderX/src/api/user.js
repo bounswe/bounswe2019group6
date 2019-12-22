@@ -175,6 +175,13 @@ export function getPredictionList(username) {
   })
 }
 
+export function getUserPredictionList(username) {
+  return request({
+    url: '/prediction/list/'+username,
+    method: 'get',
+  })
+}
+
 export function deletePrediction(id) {
   return request({
     url: '/prediction/delete',

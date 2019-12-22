@@ -1,7 +1,7 @@
 import { login, getInfo, logout, register, confirm, resetPassword, renew, unfollowUser,
    followUser, setProfilePublic, setProfilePrivate, changeIBAN, updatePassword, 
    becomeBasic, becomeTrader, getAllNotifications, getNewNotifications, acceptFollowRequest, declineFollowRequest,
-   readAllNotifications, createPrediction, getPredictionList, deletePrediction, editPrediction } from '@/api/user'
+   readAllNotifications, createPrediction, getPredictionList, deletePrediction, editPrediction, getUserPredictionList } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
 
@@ -42,6 +42,9 @@ const mutations = {
   },
   SET_PREDICTION_LIST: (state, predictionList) => {
     state.predictionList = predictionList
+  },
+  SET_USER_PREDICTION_LIST: (state, predictionList) => {
+    state.userPredictionList = userPredictionList
   },
   // TODO these are deprecated but keep useful ones
   SET_INTRODUCTION: (state, introduction) => {
@@ -330,6 +333,17 @@ const actions = {
     return new Promise((resolve, reject) => {
       getPredictionList(username).then(response => {
         commit('SET_PREDICTION_LIST', response.data)
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+
+  getUserPredictionList({ commit }, username) {
+    return new Promise((resolve, reject) => {
+      getUserPredictionList(username).then(response => {
+        commit('SET_USER_PREDICTION_LIST', response.data)
         resolve()
       }).catch(error => {
         reject(error)

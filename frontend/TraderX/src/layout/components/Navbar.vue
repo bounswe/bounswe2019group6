@@ -26,13 +26,13 @@
           <el-dropdown-item v-for="(notif, index) in this.notifications" :key="index" :command="index"> 
             <div v-if="notif.type=='FOLLOW_REQUESTED'">
               <div>
-                <span style="float:left; ">
+                <span style="float:left">
                   <p>Follow Requst From: <b>{{ notif.payload.username }}</b></p>
                 </span>
                 <span style="float:right">
                   <el-button-group>
                     <el-button style="margin-left:10px; margin-top:10px" type="primary" @click="AcceptFollowRequest(notif.payload.username)">Accept</el-button>
-                    <el-button style="margin-left:10px; margin-top:10px" type="danger" @click="DeclineFollowRequest(notif.payload.username)">Decline</el-button>
+                    <el-button style="margin-top:10px" type="danger" @click="DeclineFollowRequest(notif.payload.username)">Decline</el-button>
                   </el-button-group>
                 </span>
               </div>
@@ -184,7 +184,7 @@ export default {
       }) 
     },
     getNotifications(){
-      this.$store.dispatch('user/getAllNotifications').then(() => {
+      this.$store.dispatch('user/getNewNotifications').then(() => {
         this.notifications = this.$store.getters.notifications
         for(var i = 0; i < this.notifications.length; i++){
           if (this.notifications[i].isNew) {

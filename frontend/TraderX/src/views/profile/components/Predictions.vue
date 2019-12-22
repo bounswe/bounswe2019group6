@@ -12,7 +12,6 @@
         </el-button-group>
       </el-table-column>
     </el-table>
-
     <el-dialog title="Edit Prediction" :visible.sync="editPredictionDialog">
       <el-select style="width:120px; margin-left: 40px" v-model="selectPredType" placeholder="Select">
         <el-option value="Increase">Increase</el-option>
@@ -21,7 +20,6 @@
       </el-select>
       <el-button style="margin-left: 40px" type="warning" @click="editPrediction()">Edit Prediction</el-button>
     </el-dialog>
-
   </div>
 </template>
 
@@ -37,8 +35,12 @@ export default {
   },
   created(){
     this.getMyPredictions()
+    this.getMyStats()
   },
   methods: {
+    getMyStats(){
+      
+    },
     deletePrediction(pred){
       this.$store.dispatch('user/deletePrediction', { "id" : pred.id }).then(() => {
         this.predictionData = this.predictionData.filter(prediction => prediction.id != pred.id)
@@ -49,8 +51,6 @@ export default {
     editPrediction(){
       var type = this.selectPredType
       var pred = this.currentElem
-      console.log(type)
-      console.log(pred)
       this.$store.dispatch('user/editPrediction', { id : pred.id, type: type.toLowerCase() }).then(() => {
         this.$message.success('Editttt Yeeeeaaayhh!')
       }).catch(err => {
@@ -60,7 +60,6 @@ export default {
     getMyPredictions(){
       this.$store.dispatch('user/getPredictionList', this.$store.getters.userInfo.username).then(() => {
         var res = this.$store.getters.predictionList.predictions
-        console.log(res)
         for(var i = 0; i < res.length; i++) {
           var d = new Date(res[i].predictionDay).toDateString()
           this.predictionData.push({
