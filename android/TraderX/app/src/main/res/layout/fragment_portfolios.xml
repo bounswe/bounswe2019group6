@@ -4,19 +4,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:name="com.traderx.ui.portfolio.PortfolioDFragment"
-    tools:context=".ui.portfolio.PortfolioFragment">
+    android:name="com.traderx.ui.portfolio.PortfoliosFragment"
+    tools:context=".ui.portfolio.PortfoliosFragment">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/portfolio_equipment_list"
+        android:id="@+id/portfolio_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         app:layoutManager="LinearLayoutManager"
-        tools:listitem="@layout/item_portfolio_equipment" />
+        tools:listitem="@layout/item_portfolio" />
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/portfolio_equipment_add"
+        android:id="@+id/portfolio_add_action"
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:layout_marginEnd="16dp"

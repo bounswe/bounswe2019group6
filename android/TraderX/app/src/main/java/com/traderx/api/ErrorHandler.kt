@@ -22,6 +22,7 @@ class ErrorHandler<T> {
         fun handleError(error: Throwable, context: Context): Boolean {
             Log.e(TAG, error.javaClass.name)
             Log.e(TAG, error.message)
+            error.printStackTrace()
 
             return when (error) {
                 is HttpException -> handleHttpException(error, context)
@@ -47,8 +48,7 @@ class ErrorHandler<T> {
             if (error is ConnectException) {
                 AlertDialog.Builder(context)
                     .setMessage(context.getString(R.string.connection_error))
-                    .setPositiveButton("Ok", DialogInterface.OnClickListener { dialog, id ->
-                    }).create().show()
+                    .setPositiveButton("Ok", { dialog, id -> }).create().show()
 
                 return true
             }

@@ -14,6 +14,7 @@
     <string name="title_my_portfolio">My Portfolio</string>
     <string name="title_articles">Articles</string>
     <string name="title_my_articles">My Articles</string>
+    <string name="title_events">Events</string>
 
     <string name="welcome_back">Welcome Back</string>
     <!--    Fields-->
@@ -67,6 +68,10 @@
     <string name="annotate">Annotate</string>
     <string name="tags">Tags</string>
     <string name="tags_diff">Tags: </string>
+    <string name="importance">Importance</string>
+    <string name="country">Country</string>
+    <string name="event">Event</string>
+
     <!--    Actions-->
     <string name="become_trader">Become a Trader</string>
     <string name="enter_iban_for_trader">Enter Your IBAN to Become Trader</string>
@@ -184,5 +189,10 @@
     <string name="my_trades">My Trades</string>
     <string name="date">Date</string>
     <string name="type">Type</string>
+    <string name="portfolio">Portfolio</string>
+
+    <string name="delete_portfolio">Portfolio is deleted</string>
+    <string name="add">Add</string>
+    <string name="portfolio_name">Portfolio Name</string>
 
 </resources>
