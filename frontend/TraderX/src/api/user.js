@@ -175,6 +175,13 @@ export function getPredictionList(username) {
   })
 }
 
+export function getMyStats(username) {
+  return request({
+    url: '/prediction/stats/'+username,
+    method: 'get',
+  })
+}
+
 export function getUserPredictionList(username) {
   return request({
     url: '/prediction/list/'+username,

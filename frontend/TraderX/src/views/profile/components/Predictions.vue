@@ -35,12 +35,8 @@ export default {
   },
   created(){
     this.getMyPredictions()
-    this.getMyStats()
   },
   methods: {
-    getMyStats(){
-      
-    },
     deletePrediction(pred){
       this.$store.dispatch('user/deletePrediction', { "id" : pred.id }).then(() => {
         this.predictionData = this.predictionData.filter(prediction => prediction.id != pred.id)

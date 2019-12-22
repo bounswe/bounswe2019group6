@@ -1,7 +1,8 @@
 import { login, getInfo, logout, register, confirm, resetPassword, renew, unfollowUser,
    followUser, setProfilePublic, setProfilePrivate, changeIBAN, updatePassword, 
    becomeBasic, becomeTrader, getAllNotifications, getNewNotifications, acceptFollowRequest, declineFollowRequest,
-   readAllNotifications, createPrediction, getPredictionList, deletePrediction, editPrediction, getUserPredictionList } from '@/api/user'
+   readAllNotifications, createPrediction, getPredictionList, deletePrediction, editPrediction, getUserPredictionList,
+   getMyStats } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
 
@@ -43,9 +44,13 @@ const mutations = {
   SET_PREDICTION_LIST: (state, predictionList) => {
     state.predictionList = predictionList
   },
-  SET_USER_PREDICTION_LIST: (state, predictionList) => {
+  SET_USER_PREDICTION_LIST: (state, userPredictionList) => {
     state.userPredictionList = userPredictionList
   },
+  SET_MY_STATS: (state, myStats) => {
+    state.myStats = myStats
+  },
+  
   // TODO these are deprecated but keep useful ones
   SET_INTRODUCTION: (state, introduction) => {
     state.introduction = introduction
@@ -333,6 +338,17 @@ const actions = {
     return new Promise((resolve, reject) => {
       getPredictionList(username).then(response => {
         commit('SET_PREDICTION_LIST', response.data)
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+
+  getMyStats({ commit }, username) {
+    return new Promise((resolve, reject) => {
+      getMyStats(username).then(response => {
+        commit('SET_MY_STATS', response.data)
         resolve()
       }).catch(error => {
         reject(error)
