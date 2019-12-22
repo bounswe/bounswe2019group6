@@ -90,6 +90,7 @@ public class ArticleCommentService {
         if(comment == null) throw new CustomException("No such comment found", HttpStatus.PRECONDITION_FAILED);
         if(!claimerUsername.equals(comment.getAuthor().getUsername()))
             throw new CustomException("Cannot delete other's comment", HttpStatus.NOT_ACCEPTABLE);
+        articleCommentVoteRepository.deleteAllByArticleComment_Id(commentId);
         commentRepository.delete(commentId);
     }
 
