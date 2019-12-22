@@ -1,6 +1,6 @@
 package cmpe451.group6.rest.article.model;
 
-import cmpe451.group6.authorization.model.User;;
+import cmpe451.group6.authorization.model.User;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
