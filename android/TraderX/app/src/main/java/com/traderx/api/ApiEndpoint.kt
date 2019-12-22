@@ -62,5 +62,5 @@ object ApiEndpoint {
     const val ADD_TO_PORTFOLIO: String = "$API_URI/portfolio/addToPortfolio"
     const val DELETE_PORTFOLIO: String = "$API_URI/portfolio/delete"
     const val DELETE_FROM_PORTFOLIO: String = "$API_URI/portfolio/deleteFromPortfolio"
-
+    const val EVENTS: String = "$API_URI/events"
 }

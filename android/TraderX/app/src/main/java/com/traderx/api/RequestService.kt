@@ -166,4 +166,7 @@ interface RequestService {
         @Query("portfolioName") portfolioName: String,
         @Query("code") equipment: String
     ): Completable
+
+    @GET(ApiEndpoint.EVENTS)
+    fun getEvents(): Single<List<EventResponse>>
 }

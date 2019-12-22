@@ -16,7 +16,17 @@
         <action
             android:id="@+id/action_navigation_home_to_navigation_equipment_types"
             app:destination="@id/navigation_equipment_types" />
+        <action
+            android:id="@+id/action_navigation_home_to_navigation_event"
+            app:destination="@id/navigation_event" />
     </fragment>
+
+    <fragment
+        android:id="@+id/navigation_event"
+        android:name="com.traderx.ui.event.EventFragment"
+        android:label="@string/event"
+        tools:layout="@layout/fragment_event"
+        />
 
     <fragment
         android:id="@+id/navigation_equipment"
