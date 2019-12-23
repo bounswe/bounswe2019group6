@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/navigation_home"
+        android:id="@+id/navigation_event"
         android:icon="@drawable/ic_home_black_24dp"
         android:title="@string/title_home" />
 
@@ -10,6 +10,11 @@
         android:id="@+id/navigation_equipment_types"
         android:icon="@drawable/ic_dashboard_black_24dp"
         android:title="@string/title_trader_equipment" />
+
+    <item
+        android:id="@+id/navigation_articles"
+        android:icon="@drawable/ic_library_books_24px"
+        android:title="@string/title_articles" />
 
     <item
         android:id="@+id/navigation_user_search"
