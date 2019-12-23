@@ -19,26 +19,37 @@
         app:menu="@menu/bottom_nav_menu" />
 
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/activity_bar_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:orientation="vertical"
-        android:padding="28.7dp"
-        android:visibility="gone"
+        android:padding="15dp"
+        android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/activity_bar_text"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="20dp"
             android:textColor="@color/txt_color"
-            android:textSize="17.3sp" />
+            android:textSize="20sp" />
 
-    </LinearLayout>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/activity_bar_button"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:visibility="invisible" />
+
+    </RelativeLayout>
 
     <fragment
         android:id="@+id/nav_host_fragment"

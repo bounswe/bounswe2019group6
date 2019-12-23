@@ -178,6 +178,21 @@ interface RequestService {
     @GET(ApiEndpoint.EVENTS)
     fun getEvents(): Single<List<EventResponse>>
 
+    @GET(ApiEndpoint.ANNOTATION_ARTICLE_ALL)
+    fun getArticleAnnotations(@Path("id") id: Int): Single<ArrayList<AnnotationResponse>>
+
+    @GET(ApiEndpoint.ANNOTATION_ARTICLE)
+    fun getArticleAnnotation(@Path("id") id: Int): Single<AnnotationResponse>
+
+    @DELETE(ApiEndpoint.ANNOTATION_ARTICLE_DELETE)
+    fun deleteArticleAnnotation(@Query("id") id: Int): Completable
+
+    @POST(ApiEndpoint.ANNOTATION_ARTICLE_CREATE)
+    fun createArticleAnnotation(@Body annotation: AnnotationRequest): Completable
+
+    @POST(ApiEndpoint.ANNOTATION_ARTICLE_UPDATE)
+    fun updateArticleAnnotation(@Query("id") id: Int): Completable
+
     @POST(ApiEndpoint.PREDICTION_CREATE)
     fun createPrediction(@Query("code") code: String, @Query("type") type: String): Completable
 

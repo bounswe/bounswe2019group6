@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@+id/navigation_event">
 
     <fragment
         android:id="@+id/navigation_home"
@@ -35,8 +35,7 @@
         android:id="@+id/navigation_event"
         android:name="com.traderx.ui.event.EventFragment"
         android:label="@string/event"
-        tools:layout="@layout/fragment_event"
-        />
+        tools:layout="@layout/fragment_event" />
 
     <fragment
         android:id="@+id/navigation_equipment"
@@ -180,7 +179,7 @@
         android:id="@+id/navigation_articles"
         android:name="com.traderx.ui.article.ArticlesFragment"
         android:label="@string/article"
-        tools:layout="@layout/fragment_articles" >
+        tools:layout="@layout/fragment_articles">
         <action
             android:id="@+id/action_navigation_articles_to_navigation_article"
             app:destination="@id/navigation_article" />
@@ -193,7 +192,7 @@
         android:id="@+id/navigation_article"
         android:name="com.traderx.ui.article.ArticleFragment"
         android:label="Article"
-        tools:layout="@layout/fragment_article" >
+        tools:layout="@layout/fragment_article">
         <argument
             android:name="id"
             app:argType="integer" />
@@ -206,7 +205,7 @@
         android:id="@+id/navigation_article_create"
         android:name="com.traderx.ui.article.ArticleCreateFragment"
         android:label="@string/article"
-        tools:layout="@layout/fragment_article_create" >
+        tools:layout="@layout/fragment_article_create">
         <action
             android:id="@+id/action_navigation_article_create_to_navigation_articles"
             app:destination="@id/navigation_articles" />
@@ -311,7 +310,6 @@
             android:id="@+id/action_navigation_portfolio_to_details"
             app:destination="@id/navigation_portfolio_detail" />
     </fragment>
-
 
 
     <fragment

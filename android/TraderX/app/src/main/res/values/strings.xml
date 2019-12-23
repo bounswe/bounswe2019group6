@@ -7,6 +7,7 @@
     <string name="title_news">News</string>
     <string name="title_home">Home</string>
     <string name="title_trader_equipment">Equipments</string>
+    <string name="title_equipment_types">Equipment Types</string>
     <string name="title_profile">Profile</string>
     <string name="title_user_edit">Edit Profile</string>
     <string name="title_transaction">Transaction</string>
@@ -107,6 +108,8 @@
     <string name="eur_value">€ %.4f</string>
     <string name="usd_value">$ %.4f</string>
 
+    <!--    Annotation-->
+    <string name="annotation_not_valid_text">Your annotation is not valid</string>
     <!--    Article-->
     <string name="article_header_error">Header is not valid</string>
     <string name="article_body_error">Body is not valid</string>

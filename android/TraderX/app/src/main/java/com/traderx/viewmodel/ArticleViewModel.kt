@@ -1,8 +1,10 @@
 package com.traderx.viewmodel
 
 import com.traderx.api.RequestService
+import com.traderx.api.request.AnnotationRequest
 import com.traderx.api.request.ArticleRequest
 import com.traderx.api.request.CommentRequest
+import com.traderx.api.response.AnnotationResponse
 import com.traderx.api.response.CommentResponse
 import com.traderx.api.response.ImageResponse
 import com.traderx.db.Article
@@ -72,5 +74,17 @@ class ArticleViewModel(
 
     fun editArticle(id: Int, articleRequest: ArticleRequest): Completable {
         return networkSource.editArticle(id, articleRequest)
+    }
+
+    fun getAnnotations(id: Int): Single<ArrayList<AnnotationResponse>> {
+        return networkSource.getArticleAnnotations(id)
+    }
+
+    fun createAnnotation(annotation: AnnotationRequest): Completable {
+        return networkSource.createArticleAnnotation(annotation)
+    }
+
+    fun deleteAnnotation(id: Int): Completable {
+        return networkSource.deleteArticleAnnotation(id)
     }
 }
