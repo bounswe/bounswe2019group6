@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
@@ -66,6 +67,10 @@ class ArticleEditFragment : Fragment(), FragmentTitleEmitters {
         warning = view.findViewById(R.id.warning)
         warningLayout = view.findViewById(R.id.warning_layout)
 
+        view.findViewById<LinearLayout>(R.id.image_add_layout)?.let {
+            it.visibility = View.GONE
+        }
+
         disposable.add(
             articleViewModel.getArticle(articleId)
                 .compose(Helper.applySingleSchedulers())
@@ -116,7 +121,7 @@ class ArticleEditFragment : Fragment(), FragmentTitleEmitters {
                     header.text.toString(),
                     parseTags(tags.text.toString()),
                     body.text.toString(),
-                    article.url
+                    article.imageUrl
                 )
             )
                 .compose(Helper.applyCompletableSchedulers())
