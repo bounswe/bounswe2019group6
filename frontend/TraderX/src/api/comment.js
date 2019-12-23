@@ -1,13 +1,13 @@
 import request from '@/utils/request'
 
-export function getCommentList(equipmentCode) {
+export function getEquipmentCommentList(equipmentCode) {
   return request({
     url: '/comment/equipment/' + equipmentCode,
     method: 'get'
   })
 }
 
-export function deleteComment(commentId) {
+export function deleteEquipmentComment(commentId) {
     return request({
         url: '/comment/equipment/delete/' + commentId,
         method: 'delete',
@@ -15,7 +15,7 @@ export function deleteComment(commentId) {
 }
 
 // data: {comment = 'str'}
-export function editComment(id, data) {
+export function editEquipmentComment(id, data) {
     return request({
         url: '/comment/equipment/edit/' + id,
         method: 'post',
@@ -24,7 +24,7 @@ export function editComment(id, data) {
 }
 
 // data = {comment = 'str'}
-export function postComment(code, data) {
+export function postEquipmentComment(code, data) {
     return request({
         url: '/comment/equipment/post/' + code,
         method: 'post',
@@ -32,17 +32,60 @@ export function postComment(code, data) {
     })
 }
 
-export function revokeVote(commentId) {
-    console.log('commentId in revokeVote: ' + commentId)
+export function revokeEquipmentVote(commentId) {
     return request({
         url: '/comment/equipment/revoke/' + commentId,
         method: 'delete',
     })
 }
 
-export function voteComment(commentId, voteType) {
+export function voteEquipmentComment(commentId, voteType) {
     return request({
         url: '/comment/equipment/vote/' + commentId + '/' + voteType,
         method: 'post',
     })
 }
+
+export function getArticleCommentList(articleId) {
+    return request({
+      url: '/comment/article/' + articleId,
+      method: 'get'
+    })
+  }
+  
+  export function deleteArticleComment(commentId) {
+      return request({
+          url: '/comment/article/delete/' + commentId,
+          method: 'delete',
+      })
+  }
+  
+  export function editArticleComment(articleId, data) {
+      return request({
+          url: '/comment/article/edit/' + articleId,
+          method: 'post',
+          data,
+      })
+  }
+  
+  export function postArticleComment(articleId, data) {
+      return request({
+          url: '/comment/article/post/' + articleId,
+          method: 'post',
+          data
+      })
+  }
+  
+  export function revokeArticleVote(commentId) {
+      return request({
+          url: '/comment/article/revoke/' + commentId,
+          method: 'delete',
+      })
+  }
+  
+  export function voteArticleComment(commentId, voteType) {
+      return request({
+          url: '/comment/article/vote/' + commentId + '/' + voteType,
+          method: 'post',
+      })
+  }
