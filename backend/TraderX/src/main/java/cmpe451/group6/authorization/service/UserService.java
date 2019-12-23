@@ -8,9 +8,11 @@ import cmpe451.group6.authorization.dto.TokenWrapperDTO;
 import cmpe451.group6.authorization.dto.UserResponseDTO;
 import cmpe451.group6.authorization.model.RegistrationStatus;
 import cmpe451.group6.authorization.model.Role;
-import cmpe451.group6.rest.comment.service.EquipmentCommentService;
+import cmpe451.group6.rest.article.repository.ArticleRepository;
+import cmpe451.group6.rest.comment.service.equipment.EquipmentCommentService;
 import cmpe451.group6.rest.follow.model.FollowStatus;
 import cmpe451.group6.rest.follow.service.FollowService;
+import cmpe451.group6.rest.predict.service.PredictionService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -47,6 +49,15 @@ public class UserService {
   @Autowired
   private EquipmentCommentService equipmentCommentService;
 
+  @Autowired
+  private EquipmentCommentService articleCommentService;
+
+  @Autowired
+  private ArticleRepository articleRepository;
+
+  @Autowired
+  private PredictionService predictionService;
+
   public void deleteUser(String username) {
     User user = userRepository.findByUsername(username);
     if (user == null) {
@@ -72,6 +83,7 @@ public class UserService {
     User user = userRepository.findByUsername(username);
     user.setIsPrivate(false);
     userRepository.save(user);
+    followService.acceptAllRequests(username);
     return "Profile has been set as public";
   }
 
@@ -185,8 +197,10 @@ public class UserService {
     response.setFollowersCount(followService.getFollowersCount(profileOwner.getUsername()));
     response.setFollowingsCount(followService.getFollowingsCount(profileOwner.getUsername()));
     response.setFollowingStatus(convertStatus(status));
-    response.setArticlesCount(0); // not active yet
-    response.setCommentsCount(equipmentCommentService.getCommentsCount(profileOwner.getUsername()));
+    response.setArticlesCount(articleRepository.countByUser_username(profileOwner.getUsername()));
+    response.setPredictionStats(predictionService.getStats(profileOwner.getUsername()));
+    response.setCommentsCount(equipmentCommentService.getCommentsCount(profileOwner.getUsername()) +
+            articleCommentService.getCommentsCount(profileOwner.getUsername()));
     return response;
   }
 

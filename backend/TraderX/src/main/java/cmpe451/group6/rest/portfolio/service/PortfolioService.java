@@ -5,13 +5,14 @@ import cmpe451.group6.authorization.repository.UserRepository;
 import cmpe451.group6.authorization.model.User;
 import cmpe451.group6.rest.portfolio.dto.PortfolioResponseDTO;
 import cmpe451.group6.rest.portfolio.dto.PortfolioEquipmentDTO;
+import cmpe451.group6.rest.portfolio.dto.PortfolioNamesDTO;
 import cmpe451.group6.rest.equipment.model.Equipment;
 import cmpe451.group6.rest.portfolio.model.Portfolio;
 import cmpe451.group6.rest.equipment.repository.EquipmentRepository;
 import cmpe451.group6.rest.equipment.repository.HistoricalValueRepository;
 import cmpe451.group6.rest.equipment.service.EquipmentService;
 import cmpe451.group6.rest.portfolio.repository.PortfolioRepository;
-import cmpe451.group6.rest.follow.service.FollowService;;
+import cmpe451.group6.rest.follow.service.FollowService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,7 +30,7 @@ public class PortfolioService {
 
     @Autowired
     EquipmentService equipmentService;
-    
+
     @Autowired
     PortfolioService portfolioService;
 
@@ -150,6 +151,43 @@ public class PortfolioService {
     }
 
     /**
+     * Adds the specified equipments to the specified portfolio
+     *
+     * @param username
+     * @param portfolioName
+     * @param codes
+     * @return status message
+     */
+    public String addManyToPortfolio(String username, String portfolioName, List<String> codes) {
+
+        final User user = userRepository.findByUsername(username);
+        if (user == null) {
+            throw new CustomException("There is no user named " + username + ".", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        final Portfolio targetPortfolio = portfolioRepository.getPortfolioOfUser(username, portfolioName);
+
+        if (targetPortfolio == null) {
+            throw new CustomException("Portfolio with the name " + portfolioName + " does not exist",
+                    HttpStatus.PRECONDITION_FAILED);
+        }
+
+        final List<Equipment> equipments = equipmentRepository.findByCodeIn(codes);
+        if (equipments == null || equipments.isEmpty()) {
+            throw new CustomException("There is no equipment with given codes", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        final List<Equipment> equipmentList = targetPortfolio.getEquipmentsList();
+        equipments.stream().filter(equipment -> !equipmentList.contains(equipment)).forEach(equipmentList::add);
+
+        targetPortfolio.setEquipmentsList(equipmentList);
+        portfolioRepository.save(targetPortfolio);
+
+        return ("The equipments are successfully added to the portfolio: " + portfolioName);
+
+    }
+
+    /**
      * Discards the specified equipment from the specified portfolio
      * 
      * @param username
@@ -203,12 +241,9 @@ public class PortfolioService {
      * @return class containing "equipmentsInPortfolio "list consisting of
      *         PortfolioEquipmentDTO's
      */
-    public PortfolioResponseDTO getPortfolio(String username, String portfolioName) {
+    public List<PortfolioEquipmentDTO> getPortfolio(String username, String portfolioName) {
 
-        User user = userRepository.findByUsername(username);
-        if (user == null) {
-            throw new CustomException("There is no user named " + username + ".", HttpStatus.NOT_ACCEPTABLE);
-        }
+
 
         Portfolio portfolioToGet = portfolioRepository.getPortfolioOfUser(username, portfolioName);
 
@@ -217,7 +252,7 @@ public class PortfolioService {
                     HttpStatus.PRECONDITION_FAILED);
         }
 
-        List<PortfolioEquipmentDTO> portfolioDtoList = new ArrayList<PortfolioEquipmentDTO>();
+        final List<PortfolioEquipmentDTO> portfolioDtoList = new ArrayList<PortfolioEquipmentDTO>();
 
         String code;
         double currentValue, currentStock, dailyChange, predictionRate;
@@ -235,7 +270,7 @@ public class PortfolioService {
                     predictionRate));
         }
 
-        return new PortfolioResponseDTO(portfolioDtoList);
+        return  portfolioDtoList;
 
     }
 
@@ -286,6 +321,31 @@ public class PortfolioService {
             return portfolioList;
 
         }
+
+    }
+
+    /**
+     * Returns a list consisting of names of portfolios of "requester"
+     * 
+     * @param requesterName
+     * @return List of Strings
+     */
+    public List<PortfolioNamesDTO> getSelfPortfolios(String requesterName) {
+
+        User requester = userRepository.findByUsername(requesterName);
+
+        if (requester == null) {
+            throw new CustomException("The requester named " + requesterName + " does not exist.",
+                    HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        List<PortfolioNamesDTO> portfolioNames = new ArrayList<PortfolioNamesDTO>();
+        // return portfolioRepository.getPortfolioNamesOfUser(requesterName);
+
+        portfolioRepository.getPortfolioNamesOfUser(requesterName)
+                .forEach(item -> portfolioNames.add(new PortfolioNamesDTO(item)));
+
+        return portfolioNames;
 
     }
 

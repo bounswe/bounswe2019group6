@@ -1,6 +1,6 @@
-package cmpe451.group6.rest.comment.repository;
+package cmpe451.group6.rest.comment.repository.equipment;
 
-import cmpe451.group6.rest.comment.model.EquipmentComment;
+import cmpe451.group6.rest.comment.model.equipment.EquipmentComment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 

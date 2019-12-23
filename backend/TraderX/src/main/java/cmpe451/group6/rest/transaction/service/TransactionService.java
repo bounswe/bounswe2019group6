@@ -1,6 +1,7 @@
 package cmpe451.group6.rest.transaction.service;
 
 import cmpe451.group6.authorization.exception.CustomException;
+import cmpe451.group6.authorization.model.Role;
 import cmpe451.group6.rest.portfolio.model.Portfolio;
 import cmpe451.group6.rest.portfolio.repository.PortfolioRepository;
 import cmpe451.group6.rest.asset.model.Asset;
@@ -132,6 +133,7 @@ public class TransactionService {
 
     public boolean buyAsset(String requesterName, String code, double amount) {
         User user = userRepository.findByUsername(requesterName);
+        Role userRole = user.getRoles().get(0);
         if (user == null) {
             throw new CustomException("There is no user named " + requesterName + ".", HttpStatus.NOT_ACCEPTABLE);
         }
@@ -140,27 +142,29 @@ public class TransactionService {
             throw new CustomException("There is no equipment with code " + code + ".", HttpStatus.NOT_ACCEPTABLE);
         }
 
-        Asset asset = assetRepository.getAsset(requesterName, EquipmentConfig.BASE_CURRENCY_CODE);
-        if (asset == null) {
-            throw new CustomException("The user has no money in application.", HttpStatus.PRECONDITION_FAILED);
-        }
-
         if( amount < 0 ){
             throw new CustomException("The amount of investment cannot be negative value", HttpStatus.PRECONDITION_FAILED);
         }
 
-        double neededMoney = (double) (amount * equipment.getCurrentValue());
-        double usersMoney = asset.getAmount();
-        if (neededMoney > usersMoney) {
-            throw new CustomException("The user doesn't have enough money to buy " + amount + " " + code + ".",
-                    HttpStatus.PRECONDITION_FAILED);
+        if(userRole != Role.ROLE_BASIC) {
+            Asset asset = assetRepository.getAsset(requesterName, EquipmentConfig.BASE_CURRENCY_CODE);
+            if (asset == null) {
+                throw new CustomException("The user has no money in application.", HttpStatus.PRECONDITION_FAILED);
+            }
+            double neededMoney = (double) (amount * equipment.getCurrentValue());
+            double usersMoney = asset.getAmount();
+            if (neededMoney > usersMoney) {
+                throw new CustomException("The user doesn't have enough money to buy " + amount + " " + code + ".",
+                        HttpStatus.PRECONDITION_FAILED);
+            }
+            // set remaining money
+            asset.setAmount(usersMoney - neededMoney);
+            assetRepository.save(asset);
+
         }
 
         // CAN BUY
 
-        // set remaining money
-        asset.setAmount(usersMoney - neededMoney);
-        assetRepository.save(asset);
 
         // check if the user already had asset of that type
         Asset alreadyHad = assetRepository.getAsset(requesterName, equipment.getCode());
@@ -187,6 +191,7 @@ public class TransactionService {
 
     public boolean sellAsset(String requesterName, String code, double amount) {
         User user = userRepository.findByUsername(requesterName);
+        Role userRole = user.getRoles().get(0);
         if (user == null) {
             throw new CustomException("There is no user named " + requesterName + ".", HttpStatus.NOT_ACCEPTABLE);
         }
@@ -211,15 +216,19 @@ public class TransactionService {
                     HttpStatus.NOT_ACCEPTABLE);
         }
 
-        // CAN SELL
-        Asset a = assetRepository.getAsset(requesterName, EquipmentConfig.BASE_CURRENCY_CODE);
-        double usersMoney = a.getAmount();
-        double newMoney = (double) (amount * equipment.getCurrentValue());
 
-        // set new money
-        Asset temp = assetRepository.getAsset(requesterName, EquipmentConfig.BASE_CURRENCY_CODE);
-        temp.setAmount(usersMoney + newMoney);
-        assetRepository.save(asset);
+        if(userRole != Role.ROLE_BASIC) {
+            // CAN SELL
+            Asset a = assetRepository.getAsset(requesterName, EquipmentConfig.BASE_CURRENCY_CODE);
+            double usersMoney = a.getAmount();
+            double newMoney = (double) (amount * equipment.getCurrentValue());
+
+            // set new money
+            Asset temp = assetRepository.getAsset(requesterName, EquipmentConfig.BASE_CURRENCY_CODE);
+            temp.setAmount(usersMoney + newMoney);
+            assetRepository.save(asset);
+
+        }
 
         // all sold
         if (amount == asset.getAmount()) {
@@ -235,6 +244,7 @@ public class TransactionService {
         Transaction newTransaction = new Transaction();
         newTransaction.setUser(user);
         newTransaction.setEquipment(equipment);
+        newTransaction.setAmount(amount);
         newTransaction.setTransactionType(TransactionType.SELL);
         TransactionRepository.save(newTransaction);
         return true;

@@ -1,11 +1,13 @@
 package cmpe451.group6.rest.equipment.service;
 
+import cmpe451.group6.rest.alert.service.AlertService;
 import cmpe451.group6.rest.equipment.alpha.api.*;
 import cmpe451.group6.rest.equipment.model.Equipment;
 import cmpe451.group6.rest.equipment.model.EquipmentType;
 import cmpe451.group6.rest.equipment.model.HistoricalValue;
 import cmpe451.group6.rest.equipment.repository.EquipmentRepository;
 import cmpe451.group6.rest.equipment.repository.HistoricalValueRepository;
+import cmpe451.group6.rest.predict.service.PredictionService;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,6 +35,12 @@ public class EquipmentUpdateService {
     @Autowired
     HistoricalValueRepository historicalValueRepository;
 
+    @Autowired
+    AlertService alertService;
+
+    @Autowired
+    PredictionService predictionService;
+
     private String apiKey1;
 
     private Logger logger = Logger.getLogger(EquipmentUpdateService.class.getName());
@@ -52,6 +60,11 @@ public class EquipmentUpdateService {
     }
 
     private void initBase(){
+        if (isInitialized(BASE_CURRENCY_CODE)) {
+            logger.info("Skipping base equipment initialization.");
+            return;
+        }
+
         Equipment equipment = new Equipment();
         equipment.setName(BASE_CURRENCY_NAME);
         equipment.setCode(BASE_CURRENCY_CODE);
@@ -73,6 +86,10 @@ public class EquipmentUpdateService {
         final boolean isStock = type == EquipmentType.STOCK;
 
         for (String equipment: equipments) {
+            if (isInitialized(equipment)) {
+                logger.info(String.format("Skipping equipment initialization: [%s]", equipment));
+                continue;
+            }
             // Init other currencies
             Map<String, String> data = getDataMap(restTemplate, isStock, equipment);
             saveSingleEquipment(data, type);
@@ -102,12 +119,18 @@ public class EquipmentUpdateService {
     // This is required since the service is limited by 5 calls per min for
     // an IP and using different apiKey makes no sense.
     // Call on start-up and on daily updates for each batch
-    void loadEquipmentHistory(String[] currencies, EquipmentType type){
+    // isInit is true only when called from run-once-cron jobs.
+    void loadEquipmentHistory(String[] currencies, EquipmentType type, boolean isInit){
         //isCryptoCurrency
         RestTemplate restTemplate = new RestTemplate();
 
         for (String currency: currencies) { // No need to load history for base currency.
             // Init other currencies
+            if (isInit && hasHistoryLoaded(currency)) {
+                logger.info(String.format("Skipping equipment history initialization: [%s]", currency));
+                predictionService.updatePredictions(currency); // TODO: Remove after debug
+                continue;
+            }
 
             final String uri,historyHeader, metaHeader;
             switch (type) {
@@ -178,7 +201,7 @@ public class EquipmentUpdateService {
             return;
         }
 
-        if(type == EquipmentType.CRYPTO_CURRENCY) {
+        if(type == EquipmentType.CRYPTO_CURRENCY || type == EquipmentType.CURRENCY) {
             // make value USD based.
             equipment.setCurrentValue(1/equipment.getCurrentValue());
         }
@@ -208,11 +231,12 @@ public class EquipmentUpdateService {
             throw new IllegalArgumentException("Invalid data from the API service");
         }
 
-        if(type == EquipmentType.CRYPTO_CURRENCY) {
+        if(type == EquipmentType.CRYPTO_CURRENCY || type == EquipmentType.CURRENCY) {
             // make value USD based.
             equipment.setCurrentValue(1/equipment.getCurrentValue());
         }
         equipmentRepository.save(equipment);
+        alertService.handleAlerts(code);
     }
 
 
@@ -264,11 +288,12 @@ public class EquipmentUpdateService {
                 e.printStackTrace();
                 continue;
             }
+            int rearrangeRate = type == EquipmentType.CURRENCY ? -1 : 1;
 
-            double low = Double.parseDouble(daily.getValue().get(lowHeader));
-            double high = Double.parseDouble(daily.getValue().get(highHeader));
-            double open = Double.parseDouble(daily.getValue().get(openHeader));
-            double close = Double.parseDouble(daily.getValue().get(closeHeader));
+            double low = Math.pow(Double.parseDouble(daily.getValue().get(lowHeader)),rearrangeRate);
+            double high = Math.pow(Double.parseDouble(daily.getValue().get(highHeader)),rearrangeRate);
+            double open = Math.pow(Double.parseDouble(daily.getValue().get(openHeader)),rearrangeRate);
+            double close = Math.pow(Double.parseDouble(daily.getValue().get(closeHeader)),rearrangeRate);
 
             HistoricalValue hw = new HistoricalValue(current,low,open,high,close,equipment);
             historicalValueRepository.save(hw);
@@ -280,6 +305,8 @@ public class EquipmentUpdateService {
 
         double predictRate = getNextPredictionRate(predictionList, equipment.getCurrentValue());
         equipment.setPredictionRate(predictRate);
+
+        predictionService.updatePredictions(code);
 
         equipmentRepository.save(equipment);
 
@@ -327,4 +354,11 @@ public class EquipmentUpdateService {
                 (isStock ? Stock3rdParty.header : Currency3rdPartyDTO.header);
     }
 
+    protected boolean isInitialized(String code){
+        return equipmentRepository.existsByCode(code);
+    }
+
+    protected boolean hasHistoryLoaded(String code){
+        return historicalValueRepository.existsByEquipment_Code(code);
+    }
 }

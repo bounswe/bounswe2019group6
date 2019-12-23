@@ -84,7 +84,7 @@ public class ScheduledUpdateService {
     public void initializeCurrencyHistoryBatch1(){
         // Initialize history only once on start up.
         try {
-            equipmentUpdateService.loadEquipmentHistory(EquipmentConfig.CURRENCIES_BATCH_1, EquipmentType.CURRENCY);
+            equipmentUpdateService.loadEquipmentHistory(EquipmentConfig.CURRENCIES_BATCH_1, EquipmentType.CURRENCY,true);
             logger.info("CURRENCIES_BATCH_1 history has been loaded.");
         } catch (Exception e) {
             logger.info("Error when CURRENCIES_BATCH_1 history load.");
@@ -95,7 +95,7 @@ public class ScheduledUpdateService {
     public void initializeCurrencyHistoryBatch2(){
         // Initialize history only once on start up.
         try {
-            equipmentUpdateService.loadEquipmentHistory(EquipmentConfig.CURRENCIES_BATCH_2, EquipmentType.CURRENCY);
+            equipmentUpdateService.loadEquipmentHistory(EquipmentConfig.CURRENCIES_BATCH_2, EquipmentType.CURRENCY,true);
             logger.info("CURRENCIES_BATCH_2 history has been loaded.");
         } catch (Exception e) {
             logger.info("Error when CURRENCIES_BATCH_2 history load.");
@@ -106,7 +106,7 @@ public class ScheduledUpdateService {
     public void initializeCryptoCurrencyHistoryBatch1(){
         // Initialize history only once on start up.
         try {
-            equipmentUpdateService.loadEquipmentHistory(EquipmentConfig.CRYPTO_CURRENCIES_BATCH_1, EquipmentType.CRYPTO_CURRENCY);
+            equipmentUpdateService.loadEquipmentHistory(EquipmentConfig.CRYPTO_CURRENCIES_BATCH_1, EquipmentType.CRYPTO_CURRENCY, true);
             logger.info("CRYPTO_CURRENCIES_BATCH_1 history has been loaded.");
         } catch (Exception e) {
             logger.info("Error when CRYPTO_CURRENCIES_BATCH_1 history load.");
@@ -117,7 +117,7 @@ public class ScheduledUpdateService {
     public void initializeCryptoCurrencyHistoryBatch2(){
         // Initialize history only once on start up.
         try {
-            equipmentUpdateService.loadEquipmentHistory(EquipmentConfig.CRYPTO_CURRENCIES_BATCH_2, EquipmentType.CRYPTO_CURRENCY);
+            equipmentUpdateService.loadEquipmentHistory(EquipmentConfig.CRYPTO_CURRENCIES_BATCH_2, EquipmentType.CRYPTO_CURRENCY, true);
             logger.info("CRYPTO_CURRENCIES_BATCH_2 history has been loaded.");
         } catch (Exception e) {
             logger.info("Error when CRYPTO_CURRENCIES_BATCH_1 history load.");
@@ -128,7 +128,7 @@ public class ScheduledUpdateService {
     public void initializeStockHistoryBatch1(){
         // Initialize history only once on start up.
         try {
-            equipmentUpdateService.loadEquipmentHistory(STOCKS_BATCH_1, EquipmentType.STOCK);
+            equipmentUpdateService.loadEquipmentHistory(STOCKS_BATCH_1, EquipmentType.STOCK, true);
             logger.info("STOCKS_BATCH_1 history has been loaded.");
         } catch (Exception e) {
             logger.info("Error when STOCKS_BATCH_1 history load.");
@@ -139,7 +139,7 @@ public class ScheduledUpdateService {
     public void initializeStockHistoryBatch2(){
         // Initialize history only once on start up.
         try {
-            equipmentUpdateService.loadEquipmentHistory(STOCKS_BATCH_2, EquipmentType.STOCK);
+            equipmentUpdateService.loadEquipmentHistory(STOCKS_BATCH_2, EquipmentType.STOCK, true );
             logger.info("STOCKS_BATCH_2 history has been loaded.");
         } catch (Exception e) {
             logger.info("Error when STOCKS_BATCH_2 history load.");
@@ -189,37 +189,37 @@ public class ScheduledUpdateService {
     @Scheduled(cron = "0 30 4 * * *")
     public void scheduledCurrencyHistoryUpdateBatch1(){
         // Update history everyday at 4:30 A.M.
-        equipmentUpdateService.loadEquipmentHistory(EquipmentConfig.CURRENCIES_BATCH_1, EquipmentType.CURRENCY);
+        equipmentUpdateService.loadEquipmentHistory(EquipmentConfig.CURRENCIES_BATCH_1, EquipmentType.CURRENCY, false);
     }
 
     @Scheduled(cron = "0 32 4 * * *")
     public void scheduledCurrencyHistoryUpdateBatch2(){
         // Update history everyday at 4:32 A.M.
-        equipmentUpdateService.loadEquipmentHistory(EquipmentConfig.CURRENCIES_BATCH_2, EquipmentType.CURRENCY);
+        equipmentUpdateService.loadEquipmentHistory(EquipmentConfig.CURRENCIES_BATCH_2, EquipmentType.CURRENCY,false);
     }
 
     @Scheduled(cron = "0 34 4 * * *")
     public void scheduledCryptoCurrencyHistoryUpdateBatch1(){
         // Update history everyday at 4:34 A.M.
-        equipmentUpdateService.loadEquipmentHistory(EquipmentConfig.CRYPTO_CURRENCIES_BATCH_1, EquipmentType.CRYPTO_CURRENCY);
+        equipmentUpdateService.loadEquipmentHistory(EquipmentConfig.CRYPTO_CURRENCIES_BATCH_1, EquipmentType.CRYPTO_CURRENCY,false);
     }
 
     @Scheduled(cron = "0 36 4 * * *")
     public void scheduledCryptoCurrencyHistoryUpdateBatch2(){
         // Update history everyday at 4:36 A.M.
-        equipmentUpdateService.loadEquipmentHistory(CRYPTO_CURRENCIES_BATCH_2, EquipmentType.CRYPTO_CURRENCY);
+        equipmentUpdateService.loadEquipmentHistory(CRYPTO_CURRENCIES_BATCH_2, EquipmentType.CRYPTO_CURRENCY,false);
     }
 
     @Scheduled(cron = "0 38 4 * * *")
     public void scheduledStockHistoryUpdateBatch1(){
         // Update history everyday at 4:38 A.M.
-        equipmentUpdateService.loadEquipmentHistory(STOCKS_BATCH_1, EquipmentType.STOCK);
+        equipmentUpdateService.loadEquipmentHistory(STOCKS_BATCH_1, EquipmentType.STOCK,false);
     }
 
     @Scheduled(cron = "0 40 4 * * *")
     public void scheduledStockHistoryUpdateBatch2(){
         // Update history everyday at 4:40 A.M.
-        equipmentUpdateService.loadEquipmentHistory(STOCKS_BATCH_2, EquipmentType.STOCK);
+        equipmentUpdateService.loadEquipmentHistory(STOCKS_BATCH_2, EquipmentType.STOCK,false);
     }
 
 }
