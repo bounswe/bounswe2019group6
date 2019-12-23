@@ -111,10 +111,6 @@ class TransactionFragment : Fragment(), FragmentTitleEmitters {
 
                     var toUsd = it.equipment.currentValue
 
-                    if (it.equipment.equipmentType == EquipmentType.CURRENCY) {
-                        toUsd = 1 / toUsd
-                    }
-
                     amountInUsd.setOnKeyListener { _, _, event ->
                         if (event.action == KeyEvent.ACTION_UP) {
                             applyRatio(amountInUsd, amount, 1 / toUsd)
