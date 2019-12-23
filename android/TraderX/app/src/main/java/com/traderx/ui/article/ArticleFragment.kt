@@ -317,7 +317,7 @@ class ArticleFragment : Fragment(), FragmentTitleEmitters {
         tags.text = article.tags.joinToString { it }
         username.text = article.username
         showAnnotations()
-        DownloadImageTask(image).execute(article.imageUrl)
+        article.imageUrl?.let { DownloadImageTask(image).execute(it) }
     }
 
     private class DownloadImageTask(private var bmImage: ImageView) :
