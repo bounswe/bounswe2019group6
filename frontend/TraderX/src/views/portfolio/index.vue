@@ -184,11 +184,10 @@ export default {
     async getAllEquipmentsOfThisPortfolio(){
       const portfolioName = this.$route.path.split('/')[3]
       await this.$store.dispatch('equipment/getAllEquipmentOfPortfolio', portfolioName ).then(() => {
-        console.log(this.$store.getters.allEquipments)
-        for(var i = 0; i < this.$store.getters.allEquipments.equipmentsInPortfolio.length; i++) {
-          var t_code = this.$store.getters.allEquipments.equipmentsInPortfolio[i].code
-          var t_currentVal = this.$store.getters.allEquipments.equipmentsInPortfolio[i].currentValue
-          var t_currentStock = this.$store.getters.allEquipments.equipmentsInPortfolio[i].currentStock
+        for(var i = 0; i < this.$store.getters.allEquipments.length; i++) {
+          var t_code = this.$store.getters.allEquipments[i].code
+          var t_currentVal = this.$store.getters.allEquipments[i].currentValue
+          var t_currentStock = this.$store.getters.allEquipments[i].currentStock
           var t_type = this.all_currency_codes.includes(t_code) ? "Currency" : 
                      this.all_crypto_codes.includes(t_code) ? "Crypto Currency" : "Stock"
           this.alreadyAddedTableData.push({

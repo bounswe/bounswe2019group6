@@ -255,6 +255,20 @@ export const constantRoutes = [
     ]
   },
   {
+    path: '/notifications',
+    component: Layout,
+    redirect: '/notifications/index',
+    hidden: true,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/notification/index'),
+        name: 'Notifications',
+        meta: { title: 'Notifications', noCache: true }
+      }
+    ]
+  },
+  {
     path: '/user/:username/profile',
     component: Layout,
     redirect: '/user/:username/profile',

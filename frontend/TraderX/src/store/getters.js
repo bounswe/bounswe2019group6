@@ -6,21 +6,25 @@ const getters = {
   cachedViews: state => state.tagsView.cachedViews,
   token: state => state.user.token,
   userInfo: state => state.user.userInfo,
+  notifications: state => state.user.notifications,
+  predictionList: state => state.user.predictionList,
+  userPredictionList: state => state.user.userPredictionList,
+  myStats: state => state.user.myStats,
   userSearchResult: state => state.search.userSearchResult,
   articleSearchResult: state => state.search.articleSearchResult,
   articleWriteResult: state => state.search.articleWriteResult,
   userArticle: state => state.search.userArticle,
+  myArticles: state => state.search.myArticles,
   allEvents: state => state.search.allEvents,
   equipmentQueryResult: state => state.equipment.equipmentQueryResult,
   currencyResult: state => state.equipment.currencyResult,
   cryptoCurrencyResult: state => state.equipment.cryptoCurrencyResult,
   stockResult: state => state.equipment.stockResult,
+  commentQueryResult: state => state.comment.commentQueryResult,
   allPortfolios: state => state.equipment.allPortfolios,
   allEquipments: state => state.equipment.allEquipments,
   transaction: state => state.equipment.transaction,
   
-  
-
   // TODO these are deprecated but we can keep useful ones
   roles: state => state.user.roles,
   avatar: state => state.user.avatar,

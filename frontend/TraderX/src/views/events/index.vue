@@ -48,7 +48,7 @@ export default {
         for(var i = 0; i < res.length; i++){
           this.eventData.push({
             "event" : res[i].Event,
-            "date" : res[i].Date,
+            "date" : res[i].Date.replace("T", " "),
             "country" : res[i].Country,
             "prev" : res[i].Previous,
             "actual" : res[i].Actual,

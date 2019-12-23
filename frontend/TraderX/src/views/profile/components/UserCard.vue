@@ -39,6 +39,8 @@
             <p><b>Following:</b> {{ user.followingsCount }}</p>
             <p :style=hidePrivateFields><b>Articles:</b> {{ user.articlesCount }}</p>
             <p :style=hidePrivateFields><b>Comments:</b> {{ user.commentsCount }}</p>
+            <p :style=hidePrivateFields><b>Prediction Rate:</b> {{ predictionRate }}%</p>
+            <p :style=hidePrivateFields><b>Prediction Num:</b> {{ predictionNumber }}</p>
           </div>
           <div class="user-type">
             <p><b>User Type:</b> {{ user.roles[0] == "ROLE_TRADER" ? "Trader" : "Basic" }}</p>
@@ -71,13 +73,16 @@ export default {
       followText : '',
       isSelf : true,
       hidePrivateFields: 'display: none',
-      showIban: 'display: block'
+      showIban: 'display: block',
+      predictionRate: 0,
+      predictionNumber: 0,
     }
   },
   async created() {
     if ((this.$route.path.split('/')[1]) == 'profile') {
       this.isSelf = true
       this.hidePrivateFields = 'display: block'
+      this.getMyStats()
     } else {
       this.isSelf = false
       await getUser((this.$route.path.split('/')[2])).then(response => {
@@ -93,6 +98,16 @@ export default {
     }
   },
   methods: {
+    getMyStats(){
+      this.$store.dispatch('user/getMyStats', this.$store.getters.userInfo.username).then(() => {
+        var res = this.$store.getters.myStats
+        this.predictionNumber = res.totalPredictions
+        this.predictionRate = res.successPercentage
+        console.log(res)
+      }).catch(err => {
+        console.log(err)
+      })
+    },
     takeFollowUnfollowAction() {
       if(this.isNotFollowing){
         this.$store.dispatch('user/followUser', {'username' : this.user.username}).then(response => {
