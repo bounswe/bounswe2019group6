@@ -36,7 +36,7 @@ class AlertFragment : Fragment(), FragmentTitleEmitters {
     private lateinit var equipmentViewModel: EquipmentViewModel
 
     private lateinit var amount: EditText
-    private var transactionType: TransactionType = TransactionType.BUY
+    private var orderType: TransactionType = TransactionType.BUY
     private var alertType: AlertType = AlertType.ABOVE
     private lateinit var limit: EditText
     private lateinit var warningLayout: LinearLayout
@@ -108,10 +108,10 @@ class AlertFragment : Fragment(), FragmentTitleEmitters {
 
             when (view.id) {
                 R.id.sell -> if (checked) {
-                    transactionType = TransactionType.SELL
+                    orderType = TransactionType.SELL
                 }
                 R.id.buy -> if (checked) {
-                    transactionType = TransactionType.BUY
+                    orderType = TransactionType.BUY
                 }
             }
         }
@@ -143,14 +143,13 @@ class AlertFragment : Fragment(), FragmentTitleEmitters {
         }
 
         button.showProgress()
-
         disposable.add(
             equipmentViewModel.createAlert(
                 AlertRequest(
                     code = equipmentCode ?: "",
                     amount = parseDouble(amount.text.toString()),
                     limit = parseDouble(limit.text.toString()),
-                    transactionType = transactionType.request,
+                    orderType = orderType.request,
                     alertType = alertType.request
                 )
             ).compose(Helper.applyCompletableSchedulers())
@@ -166,6 +165,7 @@ class AlertFragment : Fragment(), FragmentTitleEmitters {
 
                     findNavController().navigate(AlertFragmentDirections.actionNavigationAlertToNavigationAlerts())
                 }, {
+                    showError(it.message!!)
                     ErrorHandler.handleError(it, context as Context)
                 })
         )

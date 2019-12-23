@@ -80,7 +80,7 @@ class PortfolioFragment : Fragment(), FragmentTitleEmitters {
             disposable.addAll(
                 viewModel.getCryptoCurrencyEquipments().compose(Helper.applyFlowableSchedulers<EquipmentsResponse>())
                     .subscribe({
-                        equipments["Currency"] = it.equipments.map { e -> PortfolioEquipment(e.code, e.data, false) }
+                        equipments["Crypto Currency"] = it.equipments.map { e -> PortfolioEquipment(e.code, e.data, false) }
                     }, { ErrorHandler.handleError(it, context as Context) }),
                 viewModel.getStockEquipments().compose(Helper.applyFlowableSchedulers<EquipmentsResponse>())
                     .subscribe({
@@ -88,7 +88,7 @@ class PortfolioFragment : Fragment(), FragmentTitleEmitters {
                     }, { ErrorHandler.handleError(it, context as Context) }),
                 viewModel.getCurrencyEquipments().compose(Helper.applyFlowableSchedulers<EquipmentsResponse>())
                     .subscribe({
-                        equipments["Crypto Currency"] =  it.equipments.map { e -> PortfolioEquipment(e.code, e.data, false) }
+                        equipments["Currency"] =  it.equipments.map { e -> PortfolioEquipment(e.code, e.data, false) }
                     }, { ErrorHandler.handleError(it, context as Context) })
             )
         }

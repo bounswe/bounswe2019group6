@@ -5,5 +5,5 @@ data class AlertRequest (
     val limit: Double,
     val amount: Double,
     val alertType: String,
-    val transactionType: String
+    val orderType: String
 )
