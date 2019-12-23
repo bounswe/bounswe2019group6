@@ -13,16 +13,9 @@
     />
 
     <div class="right-menu">
-      <template v-if="device!=='mobile'">
-        <!-- <search
-          id="header-search"
-          class="right-menu-item"
-        /> 
-
-        <error-log class="errLog-container right-menu-item hover-effect" />
-        -->
-      </template>
-
+      <el-badge :value="this.isThereNew ? 'new' : '' " class="item" style="margin-top: -23px; margin-right:20px">
+        <el-button type="primary" icon="el-icon-bell" @click="redirectToNotification()"></el-button>
+      </el-badge>
       <el-dropdown
         class="avatar-container right-menu-item hover-effect"
         trigger="click"
@@ -58,19 +51,17 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
-import ErrorLog from '@/components/ErrorLog'
-import Screenfull from '@/components/Screenfull'
-import SizeSelect from '@/components/SizeSelect'
-import Search from '@/components/HeaderSearch'
 
 export default {
+  data() {
+    return {
+      isThereNew : false,
+      notifications : [],
+    }
+  },
   components: {
     Breadcrumb,
     Hamburger,
-    ErrorLog,
-    Screenfull,
-    SizeSelect,
-    Search
   },
   computed: {
     ...mapGetters([
@@ -79,7 +70,26 @@ export default {
       'device'
     ]),
   },
+  created() {
+    this.getNotifications()
+  },
   methods: {
+    getNotifications(){
+      this.$store.dispatch('user/getNewNotifications').then(() => {
+        this.notifications = this.$store.getters.notifications
+        if (this.notifications.length == 0){
+          this.isThereNew = false
+        } else {
+          this.isThereNew = true
+        }
+      }).catch(error => {
+        console.log(error)
+      }) 
+    },
+    redirectToNotification(){
+      this.isThereNew = false
+      this.$router.push({ path: `/notifications` })
+    },
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
     },

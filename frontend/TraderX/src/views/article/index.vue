@@ -1,9 +1,9 @@
 <template>
   <div class="app-container">
-    <div style="text-align: right; padding-right: 60px;">
+    <div style="text-align: right; padding-right: 60px; padding-top: 20px;">
       <el-button @click="createArticle()" type="primary"><svg-icon style="margin-right:10px; display:inline-block;" icon-class="documentation" />Write Article</el-button>
     </div>
-    <div style="margin-top: 10px">
+    <div style="margin-top: 30px; margin-bottom: 50px; margin-left: 60px; margin-right: 60px">
       <el-table
         :data="tableData"
         :default-sort = "{prop: 'date', order: 'descending'}"
@@ -18,6 +18,11 @@
         <el-table-column
           prop="title"
           label="Title"
+          sortable>
+        </el-table-column>
+        <el-table-column
+          prop="author"
+          label="Author"
           sortable>
         </el-table-column>
         <el-table-column
@@ -37,42 +42,40 @@
 
 <script>
 
+import { writeArticle } from '@/api/search'
+
 export default {
-  components: { },
-  props: {
-  },
+  name: 'Article',
   data() {
-    return { 
+    return {
       tableData: []
     }
   },
-  computed: {
-  },
   created() {
-    this.$store.dispatch('search/getMyArticleByUserName', this.$store.getters.userInfo.username).then(() => {
-      for(var i = 0; i < this.$store.getters.myArticles.length; i++){
-        this.tableData.push({
-          "timestamp" : this.$store.getters.myArticles[i].createdAt,
-          "title" : this.$store.getters.myArticles[i].header,
-          "id" : this.$store.getters.myArticles[i].id
-        })
-        
-      } 
-    }).catch(err => {
-      console.log(err)
-    })
+    this.getAllArticles()
   },
   methods: {
-    createArticle(){
-      this.$router.push({ path: `/write` })
-    },
     HandleRedirect(article) {
       this.$router.push({ path: `/view/${article.id}` })
     },
+    getAllArticles(){
+      this.$store.dispatch('search/getAllArticles').then(() => {
+        for(var i = 0; i < this.$store.getters.articleSearchResult.length; i++){
+          this.tableData.push({
+            "author" : this.$store.getters.articleSearchResult[i].username,
+            "timestamp" : this.$store.getters.articleSearchResult[i].createdAt.substring(0, this.$store.getters.articleSearchResult[i].createdAt.length - 2),
+            "title" : this.$store.getters.articleSearchResult[i].header,
+            "id" : this.$store.getters.articleSearchResult[i].id
+          })
+          
+        } 
+      }).catch(err => {
+        console.log(err)
+      })
+    },
+    createArticle(){
+      this.$router.push({ path: `/write` })
+    }
   }
 }
 </script>
-
-<style lang="scss" scoped>
-
-</style>
