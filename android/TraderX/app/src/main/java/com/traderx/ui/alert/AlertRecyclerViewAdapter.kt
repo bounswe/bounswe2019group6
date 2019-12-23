@@ -29,7 +29,7 @@ class AlertRecyclerViewAdapter(
         holder.code.text = alerts[position].code
         holder.alertPhrase.text = context.getString(
             R.string.alert_phrase,
-            alerts[position].transactionType.request,
+            alerts[position].orderType.request,
             alerts[position].alertType.request,
             alerts[position].limitValue.toString(),
             alerts[position].amount.toString()

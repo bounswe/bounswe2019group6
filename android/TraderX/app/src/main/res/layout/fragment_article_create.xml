@@ -1,108 +1,145 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:map="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".ui.article.ArticleCreateFragment">
 
-    <LinearLayout
+    <ScrollView
+        android:id="@+id/content"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:layout_marginBottom="72dp"
+        map:layout_constraintBottom_toTopOf="@id/create_action"
+        map:layout_constraintEnd_toEndOf="parent"
+        map:layout_constraintStart_toStartOf="parent"
+        map:layout_constraintTop_toTopOf="parent"
+        map:layout_constraintVertical_bias="0.0">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/warning_layout"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight=".1"
-            android:background="#970000"
-            android:visibility="gone">
+            android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/warning"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/warning_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textAlignment="center"
-                android:textColor="#FFFFFF"
-                map:layout_constraintBottom_toBottomOf="parent"
-                map:layout_constraintEnd_toEndOf="parent"
-                map:layout_constraintStart_toStartOf="parent"
-                map:layout_constraintTop_toTopOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                android:layout_weight=".1"
+                android:background="#970000"
+                android:visibility="gone">
 
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/StyledTilEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="28.7dp"
-            android:layout_marginRight="28.7dp"
-            android:textColor="@color/black">
+                <TextView
+                    android:id="@+id/warning"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:textColor="#FFFFFF"
+                    map:layout_constraintBottom_toBottomOf="parent"
+                    map:layout_constraintEnd_toEndOf="parent"
+                    map:layout_constraintStart_toStartOf="parent"
+                    map:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <EditText
-                android:id="@+id/header"
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/StyledTilEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight=".5"
-                android:padding="15dp"
-                android:ems="10"
-                android:inputType="textPersonName"
-                android:hint="@string/title" />
+                android:layout_marginLeft="28.7dp"
+                android:layout_marginRight="28.7dp"
+                android:textColor="@color/black">
 
-        </com.google.android.material.textfield.TextInputLayout>
+                <EditText
+                    android:id="@+id/header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".5"
+                    android:ems="10"
+                    android:hint="@string/title"
+                    android:inputType="textPersonName"
+                    android:padding="15dp" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/StyledTilEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="28.7dp"
-            android:layout_marginRight="28.7dp"
-            android:textColor="@color/black">
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <EditText
-                android:id="@+id/tags"
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/StyledTilEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight=".5"
-                android:ems="10"
-                android:hint="@string/tags"
-                android:inputType="textPersonName"
-                android:padding="15dp" />
+                android:layout_marginLeft="28.7dp"
+                android:layout_marginRight="28.7dp"
+                android:textColor="@color/black">
 
-        </com.google.android.material.textfield.TextInputLayout>
+                <EditText
+                    android:id="@+id/tags"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".5"
+                    android:ems="10"
+                    android:hint="@string/tags"
+                    android:inputType="textPersonName"
+                    android:padding="15dp" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/StyledTilEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="28.7dp"
-            android:layout_marginRight="28.7dp"
-            android:textColor="@color/black">
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <EditText
-                android:id="@+id/body"
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/StyledTilEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight=".8"
-                android:ems="10"
-                android:gravity="start|top"
-                android:inputType="textMultiLine"
-                android:maxLines="10"
-                android:minLines="10"
-                android:padding="15dp"
-                android:hint="@string/article" />
+                android:layout_marginLeft="28.7dp"
+                android:layout_marginRight="28.7dp"
+                android:textColor="@color/black">
 
-        </com.google.android.material.textfield.TextInputLayout>
+                <EditText
+                    android:id="@+id/body"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".8"
+                    android:ems="10"
+                    android:gravity="start|top"
+                    android:hint="@string/article"
+                    android:inputType="textMultiLine"
+                    android:maxLines="10"
+                    android:minLines="10"
+                    android:padding="15dp" />
 
-    </LinearLayout>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <LinearLayout
+                android:id="@+id/image_add_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/image_add_button"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/add_image_gallery" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/create_action"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_margin="19.3dp"
         android:text="@string/create"
         android:textAllCaps="false"
-        android:textColor="#fbfbfb" />
-</RelativeLayout>
+        android:textColor="#fbfbfb"
+        map:layout_constraintBottom_toBottomOf="parent"
+        map:layout_constraintEnd_toEndOf="parent"
+        map:layout_constraintStart_toStartOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

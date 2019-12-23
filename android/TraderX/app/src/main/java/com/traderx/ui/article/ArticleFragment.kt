@@ -3,6 +3,9 @@ package com.traderx.ui.article
 
 import android.content.Context
 import android.graphics.Color
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.os.AsyncTask
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
@@ -14,6 +17,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.FrameLayout
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -35,6 +39,7 @@ import com.traderx.viewmodel.ArticleViewModel
 import com.traderx.viewmodel.AuthUserViewModel
 import io.reactivex.disposables.CompositeDisposable
 
+
 class ArticleFragment : Fragment(), FragmentTitleEmitters {
     companion object {
         private const val ARTICLE_ID = "id"
@@ -46,6 +51,7 @@ class ArticleFragment : Fragment(), FragmentTitleEmitters {
     private lateinit var authUserViewModel: AuthUserViewModel
 
     private var articleId: Int = 0
+    private lateinit var image: ImageView
     private lateinit var article: Article
     private lateinit var annotations: ArrayList<AnnotationResponse>
     private lateinit var authUsername: String
@@ -100,6 +106,7 @@ class ArticleFragment : Fragment(), FragmentTitleEmitters {
         body = root.findViewById(R.id.body)
         tags = root.findViewById(R.id.tags)
         username = root.findViewById(R.id.username)
+        image = root.findViewById(R.id.image)
         createdAt = root.findViewById(R.id.created_at)
 
         selectionAttach()
@@ -310,5 +317,29 @@ class ArticleFragment : Fragment(), FragmentTitleEmitters {
         tags.text = article.tags.joinToString { it }
         username.text = article.username
         showAnnotations()
+        DownloadImageTask(image).execute(article.imageUrl)
+    }
+
+    private class DownloadImageTask(private var bmImage: ImageView) :
+        AsyncTask<String, Void, Bitmap>() {
+
+        override fun doInBackground(vararg urls: String): Bitmap? {
+            val urldisplay = urls[0]
+            var mIcon11: Bitmap? = null
+            try {
+                val `in` = java.net.URL(urldisplay).openStream()
+                mIcon11 = BitmapFactory.decodeStream(`in`)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+
+            return mIcon11
+        }
+
+        override fun onPostExecute(result: Bitmap) {
+            bmImage.setImageBitmap(result)
+        }
     }
 }
+
+

@@ -7,6 +7,7 @@ import com.traderx.db.Equipment
 import com.traderx.db.User
 import io.reactivex.Completable
 import io.reactivex.Single
+import okhttp3.MultipartBody
 import retrofit2.http.*
 
 
@@ -70,6 +71,10 @@ interface RequestService {
 
     @POST(ApiEndpoint.ARTICLE_CREATE)
     fun createArticle(@Body article: ArticleRequest): Completable
+
+    @Multipart
+    @POST(ApiEndpoint.ARTICLE_CREATE_IMAGE)
+    fun createArticleImage(@Part file: MultipartBody.Part): Single<ImageResponse>
 
     @POST(ApiEndpoint.ARTICLE_EDIT)
     fun editArticle(@Query("id") id: Int, @Body article: ArticleRequest): Completable
@@ -188,4 +193,10 @@ interface RequestService {
 
     @POST(ApiEndpoint.ANNOTATION_ARTICLE_UPDATE)
     fun updateArticleAnnotation(@Query("id") id: Int): Completable
+
+    @POST(ApiEndpoint.PREDICTION_CREATE)
+    fun createPrediction(@Query("code") code: String, @Query("type") type: String): Completable
+
+    @GET(ApiEndpoint.PREDICTION_USER_ALL)
+    fun getPredictions(@Path("username") username: String): Single<PredictionResponse>
 }
