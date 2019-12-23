@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.traderx.R
 import com.traderx.api.ErrorHandler
-import com.traderx.ui.search.UserSearchSkeletonRecyclerViewAdapter
+import com.traderx.ui.search.SearchSkeletonRecyclerViewAdapter
 import com.traderx.util.FragmentTitleEmitters
 import com.traderx.util.Helper
 import com.traderx.util.Injection
@@ -42,7 +42,7 @@ class EventFragment : Fragment(), FragmentTitleEmitters {
         val viewManager = LinearLayoutManager(context)
         recyclerView = view.findViewById<RecyclerView>(R.id.event_list).apply {
             layoutManager = viewManager
-            adapter = UserSearchSkeletonRecyclerViewAdapter(5)
+            adapter = SearchSkeletonRecyclerViewAdapter(5)
         }
 
         disposable.add(

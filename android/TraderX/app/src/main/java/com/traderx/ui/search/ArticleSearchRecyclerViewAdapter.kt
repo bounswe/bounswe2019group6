@@ -5,16 +5,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.navigation.NavDirections
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.traderx.R
-import com.traderx.db.User
+import com.traderx.api.response.ArticleSearchResponse
 import kotlinx.android.synthetic.main.item_user.view.*
 
-class UserSearchRecyclerViewAdapter(
-    private val mValues: List<User>
-) : RecyclerView.Adapter<UserSearchRecyclerViewAdapter.ViewHolder>() {
+class ArticleSearchRecyclerViewAdapter(
+    private val mValues: List<ArticleSearchResponse>
+) : RecyclerView.Adapter<ArticleSearchRecyclerViewAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -24,11 +23,11 @@ class UserSearchRecyclerViewAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = mValues[position]
-        holder.mUserNameView.text = item.username
+        holder.mUserNameView.text = item.header
 
         with(holder.mView) {
             setOnClickListener {
-                findNavController().navigate(SearchFragmentDirections.actionNavigationUserSearchToNavigationUser(item.username))
+                findNavController().navigate(SearchFragmentDirections.actionNavigationUserSearchToNavigationArticle(item.id))
             }
         }
     }

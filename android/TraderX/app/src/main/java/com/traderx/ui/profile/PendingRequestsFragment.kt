@@ -14,7 +14,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.traderx.R
 import com.traderx.api.ErrorHandler
 import com.traderx.api.response.FollowerResponse
-import com.traderx.ui.search.UserSearchSkeletonRecyclerViewAdapter
+import com.traderx.ui.search.SearchSkeletonRecyclerViewAdapter
 import com.traderx.util.FragmentTitleEmitters
 import com.traderx.util.FragmentTitleListeners
 import com.traderx.util.Helper
@@ -43,7 +43,7 @@ class PendingRequestsFragment : Fragment(), FragmentTitleEmitters {
 
         recyclerView = root.findViewById<RecyclerView>(R.id.pending_following_requests_list).apply {
             layoutManager = LinearLayoutManager(context)
-            adapter = UserSearchSkeletonRecyclerViewAdapter(5)
+            adapter = SearchSkeletonRecyclerViewAdapter(5)
         }
 
         disposable.add(

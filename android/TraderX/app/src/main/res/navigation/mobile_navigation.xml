@@ -230,12 +230,18 @@
 
     <fragment
         android:id="@+id/navigation_user_search"
-        android:name="com.traderx.ui.search.UserSearchFragment"
+        android:name="com.traderx.ui.search.SearchFragment"
         android:label="@string/search"
         tools:layout="@layout/fragment_search">
         <action
             android:id="@+id/action_navigation_user_search_to_navigation_user"
             app:destination="@id/navigation_user" />
+        <action
+            android:id="@+id/action_navigation_user_search_to_navigation_equipment"
+            app:destination="@id/navigation_equipment" />
+        <action
+            android:id="@+id/action_navigation_user_search_to_navigation_article"
+            app:destination="@id/navigation_article" />
     </fragment>
 
     <fragment
