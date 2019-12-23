@@ -106,11 +106,25 @@ export function setAlert(data) {
   })
 }
 
+export function getAlert() {
+  return request({
+    url: '/alert/get',
+    method: 'get',
+  })
+}
+
+export function editAlert(data) {
+  return request({
+    url: '/alert/edit',
+    method: 'post',
+    data
+  })
+}
+
 export function deleteAlert(query) {
   return request({
     url: '/alert/remove',
     method: 'delete',
     params: query
   })
-
 }

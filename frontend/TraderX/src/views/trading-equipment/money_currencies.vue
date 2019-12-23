@@ -19,7 +19,7 @@
       </el-card>
     </el-row>
 
-    <el-row :gutter="20" style="padding:16px 16px 0;margin-bottom:32px;">
+    <el-row style="padding:16px 16px 0;margin-bottom:32px;">
       <el-card>
         <el-tabs v-model="activeTab">
           <el-tab-pane class='te-tab-pane' v-for="ed in equipmentData" :key="ed.key" :label="ed.label" :name="ed.key" :type="ed.key">
@@ -40,22 +40,22 @@
                 <el-card class='container-in-tab'>
                   <el-row gutter="50">
                     <el-col :span="7">
-                      <el-card>
+                      <el-card style="height: 400px;">
                         <el-form ref="alertForm">
                           <h3>Set order for: {{activeTab}}</h3>
                           <el-form-item label="When:">
                             <el-radio-group v-model="alertForm.alertType" size="medium">
-                              <el-radio border label="Above"></el-radio>
-                              <el-radio border label="Below"></el-radio>
+                              <el-radio border label="above">Above</el-radio>
+                              <el-radio border label="below">Below</el-radio>
                             </el-radio-group>
                           </el-form-item>
                           <el-form-item label="Threshold Value:">
                             <el-input-number v-model="alertForm.limit"></el-input-number>
                           </el-form-item>
                           <el-form-item label="Transaction Type:">
-                            <el-radio-group v-model="alertForm.transactionType" size="medium">
-                              <el-radio border label="Buy"></el-radio>
-                              <el-radio border label="Sell"></el-radio>
+                            <el-radio-group v-model="alertForm.orderType" size="medium">
+                              <el-radio border label="buy">Buy</el-radio>
+                              <el-radio border label="sell">Sell</el-radio>
                             </el-radio-group>
                           </el-form-item>
                           <el-form-item label="Amount:">
@@ -71,7 +71,7 @@
                       <el-card>
                         <el-table
                           :data="alerts"
-                          height="250"
+                          height="360px"
                           style="width: 100%">
                           <el-table-column
                             prop="code"
@@ -82,11 +82,11 @@
                             label="Alert Type">
                           </el-table-column>
                           <el-table-column
-                            prop="limit"
+                            prop="limitValue"
                             label="Limit">
                           </el-table-column>
                           <el-table-column
-                            prop="transactionType"
+                            prop="orderType"
                             label="Transaction Type">
                           </el-table-column>
                           <el-table-column
@@ -98,7 +98,7 @@
                             <template slot-scope="scope">
                             <el-button
                               size="mini"
-                              @click="editAlert(scope.row, scope.$index)">Edit</el-button>
+                              @click="openEditAlertDialog(scope.row, scope.$index)">Edit</el-button>
                             <el-button
                               size="mini"
                               type="danger"
@@ -180,6 +180,28 @@
       </el-input>
     </el-dialog>
 
+    <el-dialog :show-close=false title="Edit Order" :visible.sync="showEditAlertDialog">
+      <el-form ref="alertEditForm">
+        <h3>Trading Equipment: {{currentAlert.code}}</h3>
+        <el-form-item label="When:">
+          <el-input disabled v-model="currentAlert.alertType"></el-input>
+        </el-form-item>
+        <el-form-item label="New Threshold Value:">
+          <el-input-number v-model="editAlertForm.newLimit"></el-input-number>
+        </el-form-item>
+        <el-form-item label="Transaction Type:">
+          <el-input disabled v-model="currentAlert.orderType"></el-input>
+        </el-form-item>
+        <el-form-item label="New Amount:">
+          <el-input-number v-model="editAlertForm.newAmount"></el-input-number>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" style="margin-right: 10px" @click="editAlert">Set</el-button>
+          <el-button type="danger" @click="showEditAlertDialog=false">Cancel</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
+
   </div>
 
 </template>
@@ -189,8 +211,7 @@ import LineChart from './components/LineChart'
 import LineChartDetailed from './components/LineChartDetailed'
 import LineChartComparison from './components/LineChartComparison'
 import RaddarChart from './components/RaddarChart'
-import { buyEquipment } from '@/api/equipment'
-import { setAlert, editAlert, deleteAlert } from "../../api/equipment";
+import { setAlert, getAlert, editAlert, deleteAlert } from "../../api/equipment";
 
 // The usual sorting in javascript sorts alphabetically which causes mistake in our code
 const numberSort = function (a,b) {
@@ -207,11 +228,9 @@ export default {
   },
   watch: {
     activeTab: function (currentTab) {
-        this.alertForm.code = currentTab
-        this.alertForm.alertType = ""
-        this.alertForm.transactionType = ""
-        this.alertForm.limit = ""
-        this.alertForm.amount = ""
+      this.alertForm = {}
+      this.alertForm.code = currentTab
+      this.getAlerts()
     }
   },
   data() {
@@ -219,53 +238,17 @@ export default {
       alertForm: {
           code: "",
           alertType: "",
-          transactionType: "",
+          orderType: "",
           limit: "",
           amount: ""
       },
-      alerts: [
-          {
-              id: 1,
-              code: 'Red',
-              alertType: 'Below',
-              limit: 5.72,
-              transactionType: "Buy",
-              amount: 1000
-          },
-          {
-              id: 2,
-              code: 'Blue',
-              alertType: 'Below',
-              limit: 5.72,
-              transactionType: "Buy",
-              amount: 72
-          },
-          {
-              id: 2,
-              code: 'Yellow',
-              alertType: 'Above',
-              limit: 5.72,
-              transactionType: "Sell",
-              amount: 100
-          },
-          {
-              id: 3,
-              code: 'White',
-              alertType: 'Below',
-              limit: 6.00,
-              transactionType: "Sell",
-              amount: 550
-          },
-          {
-              code: 'Brown',
-              alertType: 'Above',
-              limit: 5.12,
-              transactionType: "Buy",
-              amount: 10000
-          }
-      ],
+      alerts: [],
       chartData: {},
       showDialog: false,
+      showEditAlertDialog: false,
+      editAlertForm: {},
+      currentAlert: {},
+      currentIndex: 0,
       buyamountinput: '',
       select: '',
       // equipmentData is expected to be:
@@ -304,6 +287,8 @@ export default {
     this.equipmentData = equipmentValues
 
     this.comparisonData.equipmentData = this.equipmentData
+
+    this.getAlerts()
   },
   methods: {
 
@@ -490,18 +475,40 @@ export default {
       })
     },
 
+    getAlerts() {
+      var that = this
+      getAlert().then(response => {
+          console.log(response)
+          that.alerts = response.data
+          for (var i=0; i<that.alerts.length; i++){
+              var alertType = that.alerts[i].alertType.toLowerCase()
+              var orderType = that.alerts[i].orderType.toLowerCase()
+
+              console.log(alertType)
+
+              that.alerts[i].alertType = alertType.charAt(0).toUpperCase() + alertType.substr(1)
+              that.alerts[i].orderType = orderType.charAt(0).toUpperCase() + orderType.substr(1)
+          }
+      }).catch(error => {
+          console.log(error)
+      })
+    },
+
     setAlert() {
       var that = this
 
       setAlert(this.alertForm).then(response => {
         console.log(response)
-        that.alerts.push(that.alertForm)
+        that.getAlerts()
       }).catch(error => {
         console.log(error)
       })
+      this.alertForm = {}
+      this.alertForm.code = this.activeTab
     },
 
-    editAlert(row, index) {
+
+    openEditAlertDialog(row, index) {
       if (row.id == null) {
         this.$notify({
             title: "Error",
@@ -510,9 +517,28 @@ export default {
             duration: 2000
         })
       } else {
-        var that = this
-        // TODO edit alert with alertForm created in dialog
+        this.currentAlert = row
+        this.currentIndex = index
+        this.editAlertForm = {
+          'alertId': row.id,
+          'newAmount': row.amount,
+          'newLimit': row.limitValue
+        }
+        this.showEditAlertDialog = true
       }
+    },
+
+    editAlert() {
+      var that = this
+
+      editAlert(this.editAlertForm).then(response => {
+          console.log(response)
+          that.alerts[that.currentIndex].limitValue = that.editAlertForm.newLimit
+          that.alerts[that.currentIndex].amount = that.editAlertForm.newAmount
+      }).catch(error => {
+          console.log(error)
+      })
+      this.showEditAlertDialog = false
     },
 
     deleteAlert(row, index) {
