@@ -21,6 +21,13 @@ export function getAllArticles() {
   })
 }
 
+export function getArticleByID(id) {
+  return request({
+    url: '/article/byId/'+id,
+    method: 'get'
+  })
+}
+
 export function writeArticle(data) {
   return request({
     url: '/article/write',

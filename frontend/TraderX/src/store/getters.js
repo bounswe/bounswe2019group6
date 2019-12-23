@@ -14,6 +14,7 @@ const getters = {
   articleSearchResult: state => state.search.articleSearchResult,
   articleWriteResult: state => state.search.articleWriteResult,
   userArticle: state => state.search.userArticle,
+  oneArticle: state => state.search.oneArticle,
   myArticles: state => state.search.myArticles,
   allEvents: state => state.search.allEvents,
   equipmentQueryResult: state => state.equipment.equipmentQueryResult,

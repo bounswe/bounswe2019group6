@@ -30,17 +30,18 @@
           >
             Title
           </MDinput>
-        </el-form-item>        
+        </el-form-item>
+                
+        <el-input placeholder="Please input image URl" v-model="inputurl" style="margin-bottom:30px"></el-input>
 
         <el-form-item
           prop="content"
-          style="margin-bottom: 30px;"
+          style="margin-bottom: 30px;text-align:center"
         >
-          <Tinymce
-            ref="editor"
-            v-model="postForm.content"
-            :height="400"
-          />
+          <textarea 
+            class="comment-textarea" 
+            placeholder="Write your article here" 
+            cols="100" rows="25" v-model="postForm.content"></textarea>
         </el-form-item>
 
         <!-- <el-form-item prop="image_uri" style="margin-bottom: 30px;">
@@ -88,7 +89,8 @@ export default {
         "header": "",
         "body": "",
         "tags" : []
-      }
+      },
+      inputurl : "",
     }
   },
   computed: {
@@ -160,12 +162,13 @@ export default {
       } else {
         this.$refs.postForm.validate(valid => {
           if (valid) {
-              // TODO later send a request to backend from here
-              this.loading = true
-              this.inputdata["header"] = this.postForm.title
-              this.inputdata["body"] = this.postForm.content
-              this.inputdata["tags"] = ["t1", "t2"]
-              this.$store.dispatch('search/writeArticle', this.inputdata ).then(() => {
+            // TODO later send a request to backend from here
+            this.loading = true
+            this.inputdata["header"] = this.postForm.title
+            this.inputdata["body"] = this.postForm.content
+            this.inputdata["tags"] = ["t1", "t2"]
+            this.inputdata["imageUrl"] = this.inputurl
+            this.$store.dispatch('search/writeArticle', this.inputdata ).then(() => {
               this.$notify({ title: 'Success', message: 'Article is posted', type: 'success', duration: 2000 }) 
               this.$router.push({ path: `/profile/index` })
             }).catch(err => {

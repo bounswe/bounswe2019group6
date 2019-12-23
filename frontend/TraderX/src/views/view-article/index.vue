@@ -38,16 +38,18 @@ export default {
   props: {},
   data() {
     return {
-      date: "10.10.2020",
-      title : "This is the title",
-      author: "enozcan",
-      body : "This is the body text, i don't know what to write, my hands are writing words, asdasdasdasds, haaaaaaandssssss",
-      articleImageUrl : "https://i.sozcu.com.tr/wp-content/uploads/2019/12/09/iecrop/sis-bursa-sis-iha1_10228788_16_9_1575927508-880x495.jpg",
+      date: "",
+      title : "",
+      author: "",
+      body : "",
+      articleImageUrl : "",
       imageWidth: "",
       imageHeight: ""
     }
   },
-  created() {},
+  created() {
+    this.getArticleInfo()
+  },
   mounted() {
     var articleImage = document.getElementById('articleImage'); 
     this.imageWidth = articleImage.clientWidth;
@@ -68,6 +70,20 @@ export default {
     this.getAnnotationList()
   },
   methods: {
+    getArticleInfo(){
+      var id = this.$route.path.split('/')[2]
+      this.$store.dispatch('search/getArticleByID', id ).then(() => {
+        console.log("innn")
+        console.log(this.$store.getters.oneArticle)
+        this.date = this.$store.getters.oneArticle.createdAt
+        this.author = this.$store.getters.oneArticle.username
+        this.title = this.$store.getters.oneArticle.header
+        this.body = this.$store.getters.oneArticle.body
+        this.articleImageUrl = this.$store.getters.oneArticle.imageUrl
+      }).catch(err => {
+        console.log(err)
+      })
+    },
     redirectToUser() {
       this.$router.push({ path: `/user/${this.author}/profile` })
     },
