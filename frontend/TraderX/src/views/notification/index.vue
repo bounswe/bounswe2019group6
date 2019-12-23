@@ -10,8 +10,8 @@
       <el-table-column prop="code" label="Code" width="100"> </el-table-column>
       <el-table-column prop="amount" label="Amount" width="100"> </el-table-column>
       <el-table-column prop="limit" label="Limit" width="100"> </el-table-column>
-      <el-table-column prop="alertType" label="Allert Type" width="100"> </el-table-column>
-      <el-table-column prop="alertMessager" label="Allert Message" width="120"> </el-table-column>
+      <el-table-column prop="alertType" label="Alert Type" width="100"> </el-table-column>
+      <el-table-column prop="alertMessager" label="Alert Message" width="120"> </el-table-column>
       <el-table-column fixed="right" width="120">
         <template slot-scope="scope">
           <el-button-group v-if="notificationData[scope.$index].isThereAnswer">
@@ -44,7 +44,7 @@ export default {
         console.log("success")
       }).catch(error => {
         console.log(error)
-      }) 
+      })
     },
     getNotifications(){
       this.$store.dispatch('user/getNewNotifications').then(() => {
@@ -88,11 +88,11 @@ export default {
               "alertMessage": res[i].payload.message
             })
           }
-        } 
-        
+        }
+
       }).catch(error => {
         console.log(error)
-      }) 
+      })
     },
     AcceptFollowRequest(name, idx){
       this.$store.dispatch('user/acceptFollowRequest',  {'username' : name}).then(() => {
@@ -100,15 +100,15 @@ export default {
         this.markAsRead(idx)
       }).catch(error => {
         console.log(error)
-      }) 
+      })
     },
     DeclineFollowRequest(name, idx){
       this.$store.dispatch('user/declineFollowRequest', {'username' : name}).then(() => {
-        this.$message({ title: 'Success', message: 'Follow Request Is Declined', type: 'success', duration: 2000 }) 
+        this.$message({ title: 'Success', message: 'Follow Request Is Declined', type: 'success', duration: 2000 })
         this.markAsRead(idx)
       }).catch(error => {
         console.log(error)
-      }) 
+      })
     },
   }
 }

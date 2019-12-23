@@ -38,9 +38,10 @@
                             <el-radio-group v-model="alertForm.orderType" size="medium">
                               <el-radio border label="buy">Buy</el-radio>
                               <el-radio border label="sell">Sell</el-radio>
+                              <el-radio border label="notify">Notify</el-radio>
                             </el-radio-group>
                           </el-form-item>
-                          <el-form-item label="Amount:">
+                          <el-form-item label="Amount:" v-if="alertForm.orderType!='notify'">
                             <el-input-number v-model="alertForm.amount"></el-input-number>
                           </el-form-item>
                           <el-form-item>
@@ -315,8 +316,11 @@ export default {
     }, this)
     var equipmentValues = await this.getEquipmentValues(equipmentList)
     this.equipmentData = equipmentValues
-    this.activeTab = this.equipmentData[0].key
     this.getAlerts()
+  },
+  mounted() {
+    this.activeTab = this.equipmentData[0].key
+    this.editAlertForm.code = this.activeTab
   },
   methods: {
 
@@ -550,7 +554,6 @@ export default {
           console.log(error)
         })
       }
-    }
     },
 
     postComment(equipmentCode) {

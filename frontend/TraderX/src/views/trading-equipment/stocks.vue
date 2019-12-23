@@ -34,13 +34,14 @@
                           <el-form-item label="Threshold Value:">
                             <el-input-number v-model="alertForm.limit"></el-input-number>
                           </el-form-item>
-                          <el-form-item label="Transaction Type:">
+                          <el-form-item label="Order Type:">
                             <el-radio-group v-model="alertForm.orderType" size="medium">
                               <el-radio border label="buy">Buy</el-radio>
                               <el-radio border label="sell">Sell</el-radio>
+                              <el-radio border label="notify">Notify</el-radio>
                             </el-radio-group>
                           </el-form-item>
-                          <el-form-item label="Amount:">
+                          <el-form-item label="Amount:" v-if="alertForm.orderType!='notify'">
                             <el-input-number v-model="alertForm.amount"></el-input-number>
                           </el-form-item>
                           <el-form-item>
@@ -69,7 +70,7 @@
                           </el-table-column>
                           <el-table-column
                             prop="orderType"
-                            label="Transaction Type">
+                            label="Order Type">
                           </el-table-column>
                           <el-table-column
                             prop="amount"
@@ -210,7 +211,7 @@
         <el-form-item label="New Threshold Value:">
           <el-input-number v-model="editAlertForm.newLimit"></el-input-number>
         </el-form-item>
-        <el-form-item label="Transaction Type:">
+        <el-form-item label="Order Type:">
           <el-input disabled v-model="currentAlert.orderType"></el-input>
         </el-form-item>
         <el-form-item label="New Amount:">
@@ -266,7 +267,6 @@ export default {
       showCreateCommentDialog: false,
       showEditCommentDialog: false,
       equipmentData: [],
-      activeTab: 'AMZN',
       showDialog: false,
       showEditAlertDialog: false,
       editAlertForm: {},
@@ -317,8 +317,11 @@ export default {
     }, this)
     var equipmentValues = await this.getEquipmentValues(equipmentList)
     this.equipmentData = equipmentValues
-    this.activeTab = this.equipmentData[0].key
     this.getAlerts()
+  },
+  mounted() {
+    this.activeTab = this.equipmentData[0].key
+    this.alertForm.code = this.activeTab
   },
   methods: {
     // For now it returns mock data
@@ -477,6 +480,7 @@ export default {
 
     setAlert() {
       var that = this
+      this.alertForm.code = this.activeTab
 
       setAlert(this.alertForm).then(response => {
         console.log(response)
@@ -487,7 +491,6 @@ export default {
       this.alertForm = {}
       this.alertForm.code = this.activeTab
     },
-
 
     openEditAlertDialog(row, index) {
       if (row.id == null) {
@@ -540,7 +543,6 @@ export default {
           console.log(error)
         })
       }
-    }
     },
 
     readArticle(equipmentLabel) {
