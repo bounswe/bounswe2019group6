@@ -13,97 +13,9 @@
     />
 
     <div class="right-menu">
-      
-
-      <el-dropdown
-        @command="markNotificationsAsNotNew"
-        class="right-menu-item hover-effect"
-        trigger="click">
-        <el-badge :value="this.isThereNew ? 'new' : '' " class="item" style="margin-top: 7px; margin-right: 40px;">
-          <el-button type="primary" icon="el-icon-bell"></el-button>
-        </el-badge>
-        <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item v-for="(notif, index) in this.notifications" :key="index" :command="index"> 
-            <div v-if="notif.type=='FOLLOW_REQUESTED'">
-              <div>
-                <span style="float:left">
-                  <p>Follow Requst From: <b>{{ notif.payload.username }}</b></p>
-                </span>
-                <span style="float:right">
-                  <el-button-group>
-                    <el-button style="margin-left:10px; margin-top:10px" type="primary" @click="AcceptFollowRequest(notif.payload.username)">Accept</el-button>
-                    <el-button style="margin-top:10px" type="danger" @click="DeclineFollowRequest(notif.payload.username)">Decline</el-button>
-                  </el-button-group>
-                </span>
-              </div>
-            </div>
-            <div v-if="notif.type=='FOLLOWED'" >
-              <div>
-                <p>You started to follow <b>{{ notif.payload.username }}</b></p>
-              </div>
-            </div>
-            <div v-if="notif.type=='FOLLOW_REQUEST_ACCEPTED'">
-              <div>
-                <p>Your follow request to <b>{{ notif.payload.username }}</b> is accepted</p>
-              </div>
-            </div>
-            <div v-if="notif.type=='FOLLOW_REQUEST_DENIED'">
-              <div>
-                <p>Your follow request to <b>{{ notif.payload.username }}</b> is denied</p>
-              </div>
-            </div>
-            <div v-if="notif.type=='ALERT_TRANSACTION_SUCCESS'">
-              <div>
-                <span style="float:left; ">
-                  <p>{{ notif.type }} </p>
-                </span>
-                <span style="float:right">
-                  <el-popover ref="popover" placement="left" width="400" trigger="hover">
-                    <p>Code: {{ notif.patload.code }}</p>
-                    <p>Amont: {{ notif.patload.amount }}</p>
-                    <p>Limit: {{ notif.patload.limit }}</p>
-                    <p>Type: {{ notif.patload.type }}</p>
-                    <p>Message: {{ notif.patload.message }}</p>
-                  </el-popover>
-                </span>
-              </div>
-            </div>
-            <div v-if="notif.type=='ALERT_TRANSACTION_FAIL'">
-              <div>
-                <span style="float:left; ">
-                  <p>{{ notif.type }} </p>
-                </span>
-                <span style="float:right">
-                  <el-popover ref="popover" placement="left" width="400" trigger="hover">
-                    <p>Code: {{ notif.patload.code }}</p>
-                    <p>Amont: {{ notif.patload.amount }}</p>
-                    <p>Limit: {{ notif.patload.limit }}</p>
-                    <p>Type: {{ notif.patload.type }}</p>
-                    <p>Message: {{ notif.patload.message }}</p>
-                  </el-popover>
-                </span>
-              </div>
-            </div>
-            <div v-if="notif.type=='ALERT_NOTIFY'">
-              <div>
-                <span style="float:left; ">
-                  <p>{{ notif.type }} </p>
-                </span>
-                <span style="float:right">
-                  <el-popover ref="popover" placement="left" width="400" trigger="hover">
-                    <p>Code: {{ notif.patload.code }}</p>
-                    <p>Amont: {{ notif.patload.amount }}</p>
-                    <p>Limit: {{ notif.patload.limit }}</p>
-                    <p>Type: {{ notif.patload.type }}</p>
-                    <p>Message: {{ notif.patload.message }}</p>
-                  </el-popover>
-                </span>
-              </div>
-            </div>
-          </el-dropdown-item>
-        </el-dropdown-menu>
-      </el-dropdown>
-
+      <el-badge :value="this.isThereNew ? 'new' : '' " class="item" style="margin-top: -23px; margin-right:20px">
+        <el-button type="primary" icon="el-icon-bell" @click="redirectToNotification()"></el-button>
+      </el-badge>
       <el-dropdown
         class="avatar-container right-menu-item hover-effect"
         trigger="click"
@@ -162,38 +74,21 @@ export default {
     this.getNotifications()
   },
   methods: {
-    markNotificationsAsNotNew(){
-      this.$store.dispatch('user/readAllNotifications').then(() => {
-        this.isThereNew = false
-      }).catch(error => {
-        console.log(error)
-      }) 
-    },
-    AcceptFollowRequest(name){
-      this.$store.dispatch('user/acceptFollowRequest',  {'username' : name}).then(() => {
-        this.$message({ title: 'Success', message: 'Follow Request Is Accepted', type: 'success', duration: 2000 }) 
-      }).catch(error => {
-        console.log(error)
-      }) 
-    },
-    DeclineFollowRequest(name){
-      this.$store.dispatch('user/declineFollowRequest', {'username' : name}).then(() => {
-        this.$message({ title: 'Success', message: 'Follow Request Is Declined', type: 'success', duration: 2000 }) 
-      }).catch(error => {
-        console.log(error)
-      }) 
-    },
     getNotifications(){
       this.$store.dispatch('user/getNewNotifications').then(() => {
         this.notifications = this.$store.getters.notifications
-        for(var i = 0; i < this.notifications.length; i++){
-          if (this.notifications[i].isNew) {
-            this.isThereNew = true
-          }
+        if (this.notifications.length == 0){
+          this.isThereNew = false
+        } else {
+          this.isThereNew = true
         }
       }).catch(error => {
         console.log(error)
       }) 
+    },
+    redirectToNotification(){
+      this.isThereNew = false
+      this.$router.push({ path: `/notifications` })
     },
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
