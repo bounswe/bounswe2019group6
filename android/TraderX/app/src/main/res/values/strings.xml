@@ -107,6 +107,8 @@
     <string name="eur_value">€ %.4f</string>
     <string name="usd_value">$ %.4f</string>
 
+    <!--    Annotation-->
+    <string name="annotation_not_valid_text">Your annotation is not valid</string>
     <!--    Article-->
     <string name="article_header_error">Header is not valid</string>
     <string name="article_body_error">Body is not valid</string>
