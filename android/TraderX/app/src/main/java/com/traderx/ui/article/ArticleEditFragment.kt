@@ -115,7 +115,8 @@ class ArticleEditFragment : Fragment(), FragmentTitleEmitters {
                 ArticleRequest(
                     header.text.toString(),
                     parseTags(tags.text.toString()),
-                    body.text.toString()
+                    body.text.toString(),
+                    article.url
                 )
             )
                 .compose(Helper.applyCompletableSchedulers())

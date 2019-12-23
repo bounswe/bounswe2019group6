@@ -14,6 +14,7 @@ data class Article(
     @ColumnInfo(name = "header") val header: String,
     @ColumnInfo(name = "body") val body: String,
     @ColumnInfo(name = "tags") val tags: List<String>,
+    @ColumnInfo(name = "url") val url: String,
     @ColumnInfo(name = "createdAt") val createdAt: String
 )
 

@@ -67,6 +67,7 @@
     <string name="alert_type">Alert Type</string>
     <string name="amount">Amount</string>
     <string name="delete">Delete</string>
+    <string name="annotate">Annotate</string>
     <string name="tags">Tags</string>
     <string name="tags_diff">Tags: </string>
     <string name="importance">Importance</string>
@@ -90,6 +91,9 @@
     <string name="comment_like">Comment is liked</string>
     <string name="comment_already_voted">Comment is already liked or disliked</string>
     <string name="article_delete_success">Article is successfully deleted</string>
+    <string name="annotation_create_success">Annotation is successfully created</string>
+    <string name="annotation_delete_success">Annotation is successfully deleted</string>
+    <string name="add_image_gallery">Add Image From Gallery </string>
     <string name="make_prediction">Make a Prediction</string>
     <string name="make_prediction_success">Your prediction is successfully received</string>
     <string name="make_prediction_already_error">You have already a prediction about this Equipment</string>
@@ -106,6 +110,7 @@
     <string name="article_header_error">Header is not valid</string>
     <string name="article_body_error">Body is not valid</string>
     <string name="article_tags_error">Tags is not valid</string>
+    <string name="article_image_error">Image is not valid</string>
     <!--    Alert-->
     <string name="amount_or_limit_empty">Amount or Limit is empty</string>
     <string name="alert_phrase">%1$s when %2$s %3$s$ than %4$s</string>
