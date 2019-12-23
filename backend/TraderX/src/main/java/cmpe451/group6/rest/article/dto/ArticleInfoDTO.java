@@ -15,6 +15,9 @@ public class ArticleInfoDTO {
     @ApiModelProperty(position = 2)
     private List<String> tags;
 
+    @ApiModelProperty(position = 3)
+    private String imageUrl;
+
     public String getHeader() {
         return header;
     }
@@ -37,6 +40,14 @@ public class ArticleInfoDTO {
 
     public void setTags(List<String> tags) {
         this.tags = tags;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }
 

@@ -48,3 +48,9 @@ email:
   frontend_port: 3000 # TBD
   frontend_reset_path: renew_password # TBD, up to frontend team
   frontend_verification_path : register/confirm # decided on frontend side
+
+amazonProperties:
+  endpointUrl: ${ENDPOINT_URL}
+  accessKey: ${ACCESS_KEY}
+  secretKey: ${SECRET_KEY}
+  bucketName: ${BUCKET_NAME}
