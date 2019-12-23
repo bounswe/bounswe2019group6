@@ -2,9 +2,9 @@ package com.traderx.ui.article
 
 
 import android.content.Context
-import android.graphics.Color
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.os.AsyncTask
 import android.os.Bundle
 import android.text.Spannable
@@ -263,7 +263,13 @@ class ArticleFragment : Fragment(), FragmentTitleEmitters {
         val annotationList = ArrayList<AnnotationResponse>()
         val currentAnnotationStart = annotations[index].target.selector.start
         val currentAnnotationEnd = annotations[index].target.selector.end
+
+        annotationList.add(annotations[index])
         for (i in 0..(annotations.size - 1)) {
+            if (i == index) {
+                continue
+            }
+
             val annotation = annotations[i]
 
             if ((annotation.target.selector.start >= currentAnnotationStart - 2 &&
