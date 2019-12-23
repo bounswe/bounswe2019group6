@@ -112,9 +112,9 @@ const actions = {
         })
     },
 
-    editArticleComment({ commit }, {articleId, data}) {
+    editArticleComment({ commit }, {commentId, data}) {
         return new Promise((resolve, reject) => {
-            editArticleComment(articleId, data).then(response => {
+            editArticleComment(commentId, data).then(response => {
                 const { data } = response
                 commit('SET_QUERY_RESULT', data)
                 resolve()

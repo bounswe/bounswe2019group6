@@ -178,8 +178,6 @@ export default {
     },
 
     editArticleComment(commentId) {
-      // Posting to backend
-      // TODO: check this out -- gets invalid id error
       this.editArticleCommentDict["comment"] = this.editArticleCommentContent
       this.$store.dispatch('comment/editArticleComment', {"commentId": commentId, "data": this.editArticleCommentDict}).then(() => {
         var that = this
@@ -196,9 +194,9 @@ export default {
       })
     },
 
-    async deleteArticleComment(commentId) {
+    deleteArticleComment(commentId) {
       var that = this
-      this.$store.dispatch('comment/deleteArticleComment', commentId).then(async function() {
+      this.$store.dispatch('comment/deleteArticleComment', commentId).then(() => {
         that.$message.success('Comment deleted!')
         this.articleCommentList.forEach(function(c) {
           if (c.id == commentId) {
@@ -212,7 +210,7 @@ export default {
     }, 
 
     likeComment(commentId) {
-      this.$store.dispatch('comment/voteArticleComment', {"commentId": commentId, "voteType": "up"}).then(response => {
+      this.$store.dispatch('comment/voteArticleComment', {"commentId": commentId, "voteType": "up"}).then(() => {
         this.$message.success('Comment liked!')
         this.articleCommentList.forEach(function(c) {
           if (c.id == commentId) {
@@ -226,7 +224,7 @@ export default {
     },
 
     dislikeComment(commentId) {
-      this.$store.dispatch('comment/voteArticleComment', {"commentId": commentId, "voteType": "down"}).then(response => {
+      this.$store.dispatch('comment/voteArticleComment', {"commentId": commentId, "voteType": "down"}).then(() => {
         this.$message.success('Comment disliked!')
         this.articleCommentList.forEach(function(c) {
           if (c.id == commentId) {
@@ -247,7 +245,7 @@ export default {
         }
       })
       console.log('lastStatus is revokeComment : ' + lastStatus)
-      this.$store.dispatch('comment/revokeArticleVote', commentId).then(response => {
+      this.$store.dispatch('comment/revokeArticleVote', commentId).then(() => {
         this.$message.success('Last vote revoked!')
         this.articleCommentList.forEach(function(c) {
           if (c.id == commentId) {
