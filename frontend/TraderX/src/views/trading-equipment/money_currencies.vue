@@ -478,19 +478,19 @@ export default {
     getAlerts() {
       var that = this
       getAlert().then(response => {
-          console.log(response)
-          that.alerts = response.data
-          for (var i=0; i<that.alerts.length; i++){
-              var alertType = that.alerts[i].alertType.toLowerCase()
-              var orderType = that.alerts[i].orderType.toLowerCase()
+        console.log(response)
+        that.alerts = response.data
+        for (var i=0; i<that.alerts.length; i++){
+          var alertType = that.alerts[i].alertType.toLowerCase()
+          var orderType = that.alerts[i].orderType.toLowerCase()
 
-              console.log(alertType)
+          console.log(alertType)
 
-              that.alerts[i].alertType = alertType.charAt(0).toUpperCase() + alertType.substr(1)
-              that.alerts[i].orderType = orderType.charAt(0).toUpperCase() + orderType.substr(1)
-          }
+          that.alerts[i].alertType = alertType.charAt(0).toUpperCase() + alertType.substr(1)
+          that.alerts[i].orderType = orderType.charAt(0).toUpperCase() + orderType.substr(1)
+        }
       }).catch(error => {
-          console.log(error)
+        console.log(error)
       })
     },
 
@@ -511,10 +511,10 @@ export default {
     openEditAlertDialog(row, index) {
       if (row.id == null) {
         this.$notify({
-            title: "Error",
-            message: "Cannot find order, please refresh the page and try again",
-            type: 'error',
-            duration: 2000
+          title: "Error",
+          message: "Cannot find order, please refresh the page and try again",
+          type: 'error',
+          duration: 2000
         })
       } else {
         this.currentAlert = row
@@ -532,11 +532,11 @@ export default {
       var that = this
 
       editAlert(this.editAlertForm).then(response => {
-          console.log(response)
-          that.alerts[that.currentIndex].limitValue = that.editAlertForm.newLimit
-          that.alerts[that.currentIndex].amount = that.editAlertForm.newAmount
+        console.log(response)
+        that.alerts[that.currentIndex].limitValue = that.editAlertForm.newLimit
+        that.alerts[that.currentIndex].amount = that.editAlertForm.newAmount
       }).catch(error => {
-          console.log(error)
+        console.log(error)
       })
       this.showEditAlertDialog = false
     },
@@ -544,19 +544,19 @@ export default {
     deleteAlert(row, index) {
       if (row.id == null) {
         this.$notify({
-            title: "Error",
-            message: "Cannot find order, please refresh the page and try again",
-            type: 'error',
-            duration: 2000
+          title: "Error",
+          message: "Cannot find order, please refresh the page and try again",
+          type: 'error',
+          duration: 2000
         })
       } else {
         var that = this
 
         deleteAlert({ 'id' : row.id }).then(response => {
-            console.log(response)
-            that.alerts.splice(index, 1)
+          console.log(response)
+          that.alerts.splice(index, 1)
         }).catch(error => {
-            console.log(error)
+          console.log(error)
         })
       }
     }
@@ -567,7 +567,7 @@ export default {
 <style lang="scss" scoped>
 
 .raddar-chart-container {
-    margin-top: 10;
+    margin-top: 10px;
 }
 
 .container-in-tab {

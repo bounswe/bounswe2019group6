@@ -1,5 +1,5 @@
 import { getEquipment, listEquipment, getAllCurrencies, getAllCryptoCurrencies, getAllStocks, depositMoney,
-        buyEquipment, sellEquipment, getAssetInfo, createPortfolio, deletePortfolio, addEquipmentToPortfolio, deleteEquipmentFromPortfolio, setAlert, deleteAlert } from '@/api/equipment'
+        buyEquipment, sellEquipment, getAssetInfo, createPortfolio, deletePortfolio, addEquipmentToPortfolio, deleteEquipmentFromPortfolio } from '@/api/equipment'
 
 const state = {
   equipmentQueryResult : {
@@ -160,24 +160,6 @@ const actions = {
       deleteEquipmentFromPortfolio(username, portfolioname, equipmentname).then(response => {
         const { data } = response
         commit('SET_QUERY_RESULT', data)
-        resolve()
-      }).catch(error => {
-        reject(error)
-      })
-    })
-  },
-  setAlert({ commit }, alert) {
-    return new Promise((resolve, reject) => {
-      setAlert(alert).then(response => {
-        resolve()
-      }).catch(error => {
-        reject(error)
-      })
-    })
-  },
-  deleteAlert({ commit }, id) {
-    return new Promise((resolve, reject) => {
-      deleteAlert(id).then(response => {
         resolve()
       }).catch(error => {
         reject(error)
