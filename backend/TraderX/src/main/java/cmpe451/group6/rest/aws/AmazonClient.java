@@ -7,6 +7,8 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -54,7 +56,7 @@ public class AmazonClient {
                 .withCannedAcl(CannedAccessControlList.PublicRead));
     }
 
-    public String uploadFile(MultipartFile multipartFile) {
+    public ImageDTO uploadFile(MultipartFile multipartFile) {
 
         String fileUrl = "";
         try {
@@ -66,7 +68,9 @@ public class AmazonClient {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return fileUrl;
+        ImageDTO i = new ImageDTO();
+        i.setUrl(fileUrl);
+        return i;
     }
 
     public String deleteFileFromS3Bucket(String fileUrl) {
