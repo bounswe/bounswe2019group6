@@ -2,7 +2,7 @@ import { login, getInfo, logout, register, confirm, resetPassword, renew, unfoll
    followUser, setProfilePublic, setProfilePrivate, changeIBAN, updatePassword, 
    becomeBasic, becomeTrader, getAllNotifications, getNewNotifications, acceptFollowRequest, declineFollowRequest,
    readAllNotifications, createPrediction, getPredictionList, deletePrediction, editPrediction, getUserPredictionList,
-   getMyStats } from '@/api/user'
+   getMyStats, readNotificationByID } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
 
@@ -277,6 +277,16 @@ const actions = {
     return new Promise((resolve, reject) => {
       getNewNotifications().then(response => {
         commit('SET_NOTIFICATIONS', response.data)
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+
+  readNotificationByID({ commit }, id) {
+    return new Promise((resolve, reject) => {
+      readNotificationByID(id).then(() => {
         resolve()
       }).catch(error => {
         reject(error)

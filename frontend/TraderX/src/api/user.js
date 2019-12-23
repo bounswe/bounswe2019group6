@@ -153,6 +153,14 @@ export function getNewNotifications() {
   })
 }
 
+export function readNotificationByID(query) {
+  return request({
+    url: '/notification/read/by_id',
+    method: 'post',
+    params: query
+  })
+}
+
 export function readAllNotifications() {
   return request({
     url: '/notification/read',

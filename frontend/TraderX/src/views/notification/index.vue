@@ -1,22 +1,22 @@
 <template>
-  <div>
-    <el-table :data="notificationData" stripe style="width: 100%">
+  <div class="app-container">
+    <el-table :data="notificationData" stripe style="width: 100%; margin-top:40px">
       <el-table-column fixed="left" width="120">
         <template slot-scope="scope">
           <el-button @click.native.prevent="markAsRead(notificationData[scope.$index].id)" type="success" round>Read</el-button>
         </template>
       </el-table-column>
       <el-table-column prop="message" label="Message"> </el-table-column>
-      <el-table-column prop="code" label="Code"> </el-table-column>
-      <el-table-column prop="amount" label="Amount"> </el-table-column>
-      <el-table-column prop="limit" label="Limit"> </el-table-column>
-      <el-table-column prop="alertType" label="Allert Type"> </el-table-column>
-      <el-table-column prop="alertMessager" label="Allert Message"> </el-table-column>
+      <el-table-column prop="code" label="Code" width="100"> </el-table-column>
+      <el-table-column prop="amount" label="Amount" width="100"> </el-table-column>
+      <el-table-column prop="limit" label="Limit" width="100"> </el-table-column>
+      <el-table-column prop="alertType" label="Allert Type" width="100"> </el-table-column>
+      <el-table-column prop="alertMessager" label="Allert Message" width="120"> </el-table-column>
       <el-table-column fixed="right" width="120">
         <template slot-scope="scope">
           <el-button-group v-if="notificationData[scope.$index].isThereAnswer">
-            <el-button style="margin-top:10px" type="primary" @click="AcceptFollowRequest(notificationData[scope.$index].username)">Accept</el-button>
-            <el-button style="margin-top:10px" type="danger" @click="DeclineFollowRequest(notificationData[scope.$index].username)">Decline</el-button>
+            <el-button style="margin-top:10px" type="primary" @click="AcceptFollowRequest(notificationData[scope.$index].username, notificationData[scope.$index].id)">Accept</el-button>
+            <el-button style="margin-top:10px" type="danger" @click="DeclineFollowRequest(notificationData[scope.$index].username, notificationData[scope.$index].id)">Decline</el-button>
           </el-button-group>
         </template>
       </el-table-column>
@@ -40,6 +40,11 @@ export default {
   methods: {
     markAsRead(idx){
       console.log(idx)
+      this.$store.dispatch('user/readNotificationByID', {id : idx}).then(() => {
+        console.log("success")
+      }).catch(error => {
+        console.log(error)
+      }) 
     },
     getNotifications(){
       this.$store.dispatch('user/getNewNotifications').then(() => {
@@ -89,23 +94,18 @@ export default {
         console.log(error)
       }) 
     },
-    markNotificationsAsNotNew(){
-      this.$store.dispatch('user/readAllNotifications').then(() => {
-        this.isThereNew = false
-      }).catch(error => {
-        console.log(error)
-      }) 
-    },
-    AcceptFollowRequest(name){
+    AcceptFollowRequest(name, idx){
       this.$store.dispatch('user/acceptFollowRequest',  {'username' : name}).then(() => {
-        this.$message({ title: 'Success', message: 'Follow Request Is Accepted', type: 'success', duration: 2000 }) 
+        this.$message({ title: 'Success', message: 'Follow Request Is Accepted', type: 'success', duration: 2000 })
+        this.markAsRead(idx)
       }).catch(error => {
         console.log(error)
       }) 
     },
-    DeclineFollowRequest(name){
+    DeclineFollowRequest(name, idx){
       this.$store.dispatch('user/declineFollowRequest', {'username' : name}).then(() => {
         this.$message({ title: 'Success', message: 'Follow Request Is Declined', type: 'success', duration: 2000 }) 
+        this.markAsRead(idx)
       }).catch(error => {
         console.log(error)
       }) 
