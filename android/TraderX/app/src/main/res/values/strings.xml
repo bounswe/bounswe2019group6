@@ -75,6 +75,7 @@
     <string name="event">Event</string>
     <string name="success">Success</string>
     <string name="fail">Fail</string>
+    <string name="user">User</string>
 
     <!--    Actions-->
     <string name="become_trader">Become a Trader</string>

@@ -9,12 +9,13 @@ import androidx.navigation.NavDirections
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.traderx.R
-import com.traderx.db.User
 import kotlinx.android.synthetic.main.item_user.view.*
 
-class UserSearchRecyclerViewAdapter(
-    private val mValues: List<User>
-) : RecyclerView.Adapter<UserSearchRecyclerViewAdapter.ViewHolder>() {
+class SearchRecyclerViewAdapter(
+    private val mValues: List<String>,
+    private val findResult: (position: Int) -> String,
+    private val navDirections: ((result: String) -> NavDirections)?
+) : RecyclerView.Adapter<SearchRecyclerViewAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -24,11 +25,13 @@ class UserSearchRecyclerViewAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = mValues[position]
-        holder.mUserNameView.text = item.username
+        holder.mUserNameView.text = item
 
         with(holder.mView) {
             setOnClickListener {
-                findNavController().navigate(SearchFragmentDirections.actionNavigationUserSearchToNavigationUser(item.username))
+                navDirections?.let {
+                    findNavController().navigate(it(findResult(position)))
+                }
             }
         }
     }

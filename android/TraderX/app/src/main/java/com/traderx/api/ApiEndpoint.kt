@@ -69,4 +69,8 @@ object ApiEndpoint {
     const val PREDICTION_URI: String = "$API_URI/prediction"
     const val PREDICTION_CREATE: String = "$PREDICTION_URI/create"
     const val PREDICTION_USER_ALL: String = "$PREDICTION_URI/list/{username}"
+    const val SEARCH_URI: String = "$API_URI/search"
+    const val SEARCH_USERS: String = "$SEARCH_URI/user/byName"
+    const val SEARCH_ARTICLES: String = "$SEARCH_URI/article/byHeader"
+    const val SEARCH_EQUIPMENTS: String = "$SEARCH_URI/equipment/byName"
 }

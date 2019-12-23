@@ -8,9 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ExpandableListView
 import android.widget.ImageButton
-import android.widget.Toast
-import androidx.core.view.get
-import androidx.core.view.size
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,7 +18,7 @@ import com.traderx.api.ErrorHandler
 import com.traderx.api.response.EquipmentResponse
 import com.traderx.api.response.EquipmentsResponse
 import com.traderx.api.response.PortfolioEquipment
-import com.traderx.ui.search.UserSearchSkeletonRecyclerViewAdapter
+import com.traderx.ui.search.SearchSkeletonRecyclerViewAdapter
 import com.traderx.util.FragmentTitleEmitters
 import com.traderx.util.FragmentTitleListeners
 import com.traderx.util.Helper
@@ -72,7 +69,7 @@ class PortfolioFragment : Fragment(), FragmentTitleEmitters {
 
         recyclerView = root.findViewById<RecyclerView>(R.id.portfolio_equipment_list).apply {
             layoutManager = LinearLayoutManager(context)
-            adapter = UserSearchSkeletonRecyclerViewAdapter(5)
+            adapter = SearchSkeletonRecyclerViewAdapter(5)
         }
 
 

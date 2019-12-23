@@ -15,7 +15,7 @@ import com.traderx.R
 import com.traderx.api.ErrorHandler
 import com.traderx.api.response.FollowerResponse
 import com.traderx.api.response.SuccessResponse
-import com.traderx.ui.search.UserSearchSkeletonRecyclerViewAdapter
+import com.traderx.ui.search.SearchSkeletonRecyclerViewAdapter
 import com.traderx.util.FragmentTitleEmitters
 import com.traderx.util.FragmentTitleListeners
 import com.traderx.util.Helper
@@ -61,7 +61,7 @@ class FollowingsFragment : Fragment(), FragmentTitleEmitters {
 
         recyclerView = root.findViewById<RecyclerView>(R.id.followings_list).apply {
             layoutManager = LinearLayoutManager(context)
-            adapter = UserSearchSkeletonRecyclerViewAdapter(5)
+            adapter = SearchSkeletonRecyclerViewAdapter(5)
         }
 
         disposable.add(

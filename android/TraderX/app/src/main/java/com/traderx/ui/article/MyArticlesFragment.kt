@@ -16,7 +16,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.traderx.R
 import com.traderx.api.ErrorHandler
-import com.traderx.ui.search.UserSearchSkeletonRecyclerViewAdapter
+import com.traderx.ui.search.SearchSkeletonRecyclerViewAdapter
 import com.traderx.util.FragmentTitleEmitters
 import com.traderx.util.Helper
 import com.traderx.util.Injection
@@ -67,7 +67,7 @@ class MyArticlesFragment : Fragment(), FragmentTitleEmitters {
         viewManager = LinearLayoutManager(context)
         recyclerView = root.findViewById<RecyclerView>(R.id.article_list).apply {
             layoutManager = viewManager
-            adapter = UserSearchSkeletonRecyclerViewAdapter(5)
+            adapter = SearchSkeletonRecyclerViewAdapter(5)
         }
 
         root.findViewById<FloatingActionButton>(R.id.article_create_action)?.let {
