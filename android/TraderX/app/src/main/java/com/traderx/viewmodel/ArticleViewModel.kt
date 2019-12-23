@@ -4,12 +4,14 @@ import com.traderx.api.RequestService
 import com.traderx.api.request.ArticleRequest
 import com.traderx.api.request.CommentRequest
 import com.traderx.api.response.CommentResponse
+import com.traderx.api.response.ImageResponse
 import com.traderx.db.Article
 import com.traderx.db.ArticleDao
 import com.traderx.type.VoteType
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Single
+import okhttp3.MultipartBody
 
 class ArticleViewModel(
     private val dataSource: ArticleDao,
@@ -30,6 +32,10 @@ class ArticleViewModel(
 
     fun getUserArticles(username: String): Flowable<ArrayList<Article>> {
         return networkSource.getUserArticles(username).toFlowable()
+    }
+
+    fun createArticleImage(file: MultipartBody.Part): Single<ImageResponse> {
+        return networkSource.createArticleImage(file)
     }
 
     fun createArticle(articleRequest: ArticleRequest): Completable {

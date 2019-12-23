@@ -1,5 +1,6 @@
 package com.traderx.api
 
+import com.google.android.gms.common.api.Api
 import com.traderx.api.request.*
 import com.traderx.api.response.*
 import com.traderx.db.Article
@@ -7,6 +8,7 @@ import com.traderx.db.Equipment
 import com.traderx.db.User
 import io.reactivex.Completable
 import io.reactivex.Single
+import okhttp3.MultipartBody
 import retrofit2.http.*
 
 
@@ -70,6 +72,10 @@ interface RequestService {
 
     @POST(ApiEndpoint.ARTICLE_CREATE)
     fun createArticle(@Body article: ArticleRequest): Completable
+
+    @Multipart
+    @POST(ApiEndpoint.ARTICLE_CREATE_IMAGE)
+    fun createArticleImage(@Part file: MultipartBody.Part): Single<ImageResponse>
 
     @POST(ApiEndpoint.ARTICLE_EDIT)
     fun editArticle(@Query("id") id: Int, @Body article: ArticleRequest): Completable

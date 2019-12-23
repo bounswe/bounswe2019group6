@@ -28,6 +28,7 @@ object ApiEndpoint {
     const val ARTICLE: String = "$ARTICLE_URI/byId/{id}"
     const val ARTICLES: String = "$ARTICLE_URI/all"
     const val ARTICLE_CREATE: String = "$ARTICLE_URI/write"
+    const val ARTICLE_CREATE_IMAGE: String = "$API_URI/image/upload"
     const val ARTICLE_USER_ARTICLES: String = "$ARTICLE_URI/byUsername/{username}"
     const val ARTICLE_EDIT: String = "$ARTICLE_URI/edit"
     const val ARTICLE_DELETE: String = "$ARTICLE_URI/delete"
