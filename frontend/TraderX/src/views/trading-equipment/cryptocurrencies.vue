@@ -1,5 +1,5 @@
 <template>
- 
+
   <div>
     <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
       <el-card class='raddar-chart-container'>
@@ -19,7 +19,7 @@
       </el-card>
     </el-row>
 
-    <el-row :gutter="20" style="padding:16px 16px 0;margin-bottom:32px;">
+    <el-row style="padding:16px 16px 0;margin-bottom:32px;">
       <el-card>
         <el-tabs v-model="activeTab">
           <el-tab-pane class='te-tab-pane' v-for="ed in equipmentData" :key="ed.key" :label="ed.label" :name="ed.key" :type="ed.key">
@@ -36,9 +36,79 @@
 
                 <el-button class='change-base-button' @click="changeBaseofEquipment(ed.label)"><svg-icon style="margin-right:10px" icon-class="chart" />Change the Base</el-button>
                 <el-button class='buy-button' @click="showDialog=true"><svg-icon style="margin-right:10px" icon-class="shopping" />Buy Equipment</el-button>
-              
+
                 <el-card class='container-in-tab'>
-                  <p> alerts comes here </p>
+                  <el-row gutter="50">
+                    <el-col :span="7">
+                      <el-card style="height: 400px;">
+                        <el-form ref="alertForm">
+                          <h3>Set order for: {{activeTab}}</h3>
+                          <el-form-item label="When:">
+                            <el-radio-group v-model="alertForm.alertType" size="medium">
+                              <el-radio border label="above">Above</el-radio>
+                              <el-radio border label="below">Below</el-radio>
+                            </el-radio-group>
+                          </el-form-item>
+                          <el-form-item label="Threshold Value:">
+                            <el-input-number v-model="alertForm.limit"></el-input-number>
+                          </el-form-item>
+                          <el-form-item label="Transaction Type:">
+                            <el-radio-group v-model="alertForm.orderType" size="medium">
+                              <el-radio border label="buy">Buy</el-radio>
+                              <el-radio border label="sell">Sell</el-radio>
+                            </el-radio-group>
+                          </el-form-item>
+                          <el-form-item label="Amount:">
+                            <el-input-number v-model="alertForm.amount"></el-input-number>
+                          </el-form-item>
+                          <el-form-item>
+                            <el-button type="primary" @click="setAlert">Set</el-button>
+                          </el-form-item>
+                        </el-form>
+                      </el-card>
+                    </el-col>
+                    <el-col :span="17">
+                      <el-card>
+                        <el-table
+                          :data="alerts"
+                          height="360px"
+                          style="width: 100%">
+                          <el-table-column
+                            prop="code"
+                            label="Code">
+                          </el-table-column>
+                          <el-table-column
+                            prop="alertType"
+                            label="Alert Type">
+                          </el-table-column>
+                          <el-table-column
+                            prop="limitValue"
+                            label="Limit">
+                          </el-table-column>
+                          <el-table-column
+                            prop="orderType"
+                            label="Transaction Type">
+                          </el-table-column>
+                          <el-table-column
+                            prop="amount"
+                            label="Amount">
+                          </el-table-column>
+                          <el-table-column
+                            label="Action">
+                            <template slot-scope="scope">
+                              <el-button
+                                size="mini"
+                                @click="openEditAlertDialog(scope.row, scope.$index)">Edit</el-button>
+                              <el-button
+                                size="mini"
+                                type="danger"
+                                @click="deleteAlert(scope.row, scope.$index)">Delete</el-button>
+                            </template>
+                          </el-table-column>
+                        </el-table>
+                      </el-card>
+                    </el-col>
+                  </el-row>
                 </el-card>
 
                 <el-card class='container-in-tab'>
@@ -92,8 +162,8 @@
                 <el-card class='container-in-tab'>
                   <p> comments comes here </p>
                 </el-card>
-              
-              
+
+
               </div>
           </el-tab-pane>
         </el-tabs>
@@ -108,11 +178,33 @@
           </div>
         </el-select>
         <el-button slot="append" @click="buyEquipment()">Buy</el-button>
-      </el-input>  
+      </el-input>
+    </el-dialog>
+
+    <el-dialog :show-close=false title="Edit Order" :visible.sync="showEditAlertDialog">
+      <el-form ref="alertEditForm">
+        <h3>Trading Equipment: {{currentAlert.code}}</h3>
+        <el-form-item label="When:">
+          <el-input disabled v-model="currentAlert.alertType"></el-input>
+        </el-form-item>
+        <el-form-item label="New Threshold Value:">
+          <el-input-number v-model="editAlertForm.newLimit"></el-input-number>
+        </el-form-item>
+        <el-form-item label="Transaction Type:">
+          <el-input disabled v-model="currentAlert.orderType"></el-input>
+        </el-form-item>
+        <el-form-item label="New Amount:">
+          <el-input-number v-model="editAlertForm.newAmount"></el-input-number>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" style="margin-right: 10px" @click="editAlert">Set</el-button>
+          <el-button type="danger" @click="showEditAlertDialog=false">Cancel</el-button>
+        </el-form-item>
+      </el-form>
     </el-dialog>
 
   </div>
-   
+
 </template>
 
 <script>
@@ -120,7 +212,7 @@ import LineChart from './components/LineChart'
 import LineChartDetailed from './components/LineChartDetailed'
 import LineChartComparison from './components/LineChartComparison'
 import RaddarChart from './components/RaddarChart'
-import { buyEquipment } from '@/api/equipment'
+import { setAlert, getAlert, editAlert, deleteAlert } from "../../api/equipment";
 
 // The usual sorting in javascript sorts alphabetically which causes mistake in our code
 const numberSort = function (a,b) {
@@ -135,13 +227,32 @@ export default {
     LineChart,
     RaddarChart,
   },
+  watch: {
+    activeTab: function (currentTab) {
+      this.alertForm = {}
+      this.alertForm.code = currentTab
+      this.getAlerts()
+    }
+  },
   data() {
     return {
+      alertForm: {
+        code: "",
+        alertType: "",
+        orderType: "",
+        limit: "",
+        amount: ""
+      },
+      alerts: [],
       chartData: {},
       equipmentData: [],
       comparisonData: {equipmentData: []},
       activeTab: 'JPY',
       showDialog: false,
+      showEditAlertDialog: false,
+      editAlertForm: {},
+      currentAlert: {},
+      currentIndex: 0,
       buyamountinput: '',
       select: '',
       articleList: null
@@ -154,11 +265,13 @@ export default {
     equipmentList.forEach(function(equipmentKey) {
       this.equipmentData.push({key: equipmentKey.code})
     }, this)
-    var equipmentValues = await this.getEquipmentValues(equipmentList) 
+    var equipmentValues = await this.getEquipmentValues(equipmentList)
     this.createRadarChartData(equipmentValues)
     this.equipmentData = equipmentValues
-    
+
     this.comparisonData.equipmentData = this.equipmentData
+
+    this.getAlerts()
   },
   methods: {
     // For now it returns mock data
@@ -212,7 +325,7 @@ export default {
       ]
     },
 
-    // Promise for getting equipments list 
+    // Promise for getting equipments list
     async getEquipmentList() {
       try {
         await this.$store.dispatch('equipment/getAllCryptoCurrencies')
@@ -221,12 +334,12 @@ export default {
       } catch (error) {
         console.log(error)
         return error
-      }  
+      }
     },
 
     async getEquipmentValues(equipmentList) {
       var equipmentValues = []
-      
+
       equipmentList.forEach(async function(e) {
         try {
           await this.$store.dispatch('equipment/getEquipment', e.code.toLowerCase())
@@ -306,7 +419,7 @@ export default {
           indicatorData: indicatorData
         }
       }
-     
+
     },
 
     buyEquipment() {
@@ -331,6 +444,92 @@ export default {
           }
         }
       }, this)
+    },
+
+    getAlerts() {
+      var that = this
+      getAlert().then(response => {
+        console.log(response)
+        that.alerts = response.data
+        for (var i=0; i<that.alerts.length; i++){
+          var alertType = that.alerts[i].alertType.toLowerCase()
+          var orderType = that.alerts[i].orderType.toLowerCase()
+
+          console.log(alertType)
+
+          that.alerts[i].alertType = alertType.charAt(0).toUpperCase() + alertType.substr(1)
+          that.alerts[i].orderType = orderType.charAt(0).toUpperCase() + orderType.substr(1)
+        }
+      }).catch(error => {
+        console.log(error)
+      })
+    },
+
+    setAlert() {
+      var that = this
+
+      setAlert(this.alertForm).then(response => {
+        console.log(response)
+        that.getAlerts()
+      }).catch(error => {
+        console.log(error)
+      })
+      this.alertForm = {}
+      this.alertForm.code = this.activeTab
+    },
+
+
+    openEditAlertDialog(row, index) {
+      if (row.id == null) {
+        this.$notify({
+          title: "Error",
+          message: "Cannot find order, please refresh the page and try again",
+          type: 'error',
+          duration: 2000
+        })
+      } else {
+        this.currentAlert = row
+        this.currentIndex = index
+        this.editAlertForm = {
+          'alertId': row.id,
+          'newAmount': row.amount,
+          'newLimit': row.limitValue
+        }
+        this.showEditAlertDialog = true
+      }
+    },
+
+    editAlert() {
+      var that = this
+
+      editAlert(this.editAlertForm).then(response => {
+        console.log(response)
+        that.alerts[that.currentIndex].limitValue = that.editAlertForm.newLimit
+        that.alerts[that.currentIndex].amount = that.editAlertForm.newAmount
+      }).catch(error => {
+        console.log(error)
+      })
+      this.showEditAlertDialog = false
+    },
+
+    deleteAlert(row, index) {
+      if (row.id == null) {
+        this.$notify({
+          title: "Error",
+          message: "Cannot find order, please refresh the page and try again",
+          type: 'error',
+          duration: 2000
+        })
+      } else {
+        var that = this
+
+        deleteAlert({ 'id' : row.id }).then(response => {
+          console.log(response)
+          that.alerts.splice(index, 1)
+        }).catch(error => {
+          console.log(error)
+        })
+      }
     }
   }
 }
@@ -339,7 +538,7 @@ export default {
 <style lang="scss" scoped>
 
 .raddar-chart-container {
-    margin-top: 10;
+    margin-top: 10px;
 }
 
 .container-in-tab {
