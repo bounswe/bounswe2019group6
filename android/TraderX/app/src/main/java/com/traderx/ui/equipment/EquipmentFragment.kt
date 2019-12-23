@@ -1,6 +1,7 @@
 package com.traderx.ui.equipment
 
 import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,14 +13,12 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.traderx.R
 import com.traderx.api.ErrorHandler
 import com.traderx.api.response.CommentResponse
 import com.traderx.api.response.EquipmentResponse
 import com.traderx.type.PredictionType
-import com.traderx.type.VoteType
 import com.traderx.ui.comment.CommentFragment
 import com.traderx.util.FragmentTitleEmitters
 import com.traderx.util.Helper
@@ -169,7 +168,8 @@ class EquipmentFragment : Fragment(), FragmentTitleEmitters {
     }
 
     private fun updateChart(chart: LineChartView, history: List<EquipmentResponse.History>) {
-        val points = ArrayList<PointValue>()
+        val pointOpens = ArrayList<PointValue>()
+        val pointCloses = ArrayList<PointValue>()
         val lines = ArrayList<Line>()
         val data = LineChartData()
 
@@ -178,20 +178,29 @@ class EquipmentFragment : Fragment(), FragmentTitleEmitters {
         var min = if (size > 0) history[0].open.toFloat() else 0f
         // Take last 30 points
         for (i in Math.max(0, size - 30) until size) {
-            points.add(PointValue(i.toFloat(), history[i].open.toFloat()))
+            pointOpens.add(PointValue(i.toFloat(), history[i].open.toFloat()))
+            pointCloses.add(PointValue(i.toFloat(), history[i].close.toFloat()))
             max = Math.max(max, history[i].open.toFloat())
             min = Math.min(min, history[i].open.toFloat())
         }
 
-        val line = Line(points).setColor(0xdd0000).setFilled(true)
-        lines.add(line)
+//        val lineOpen = Line(pointOpens).setColor(0xdd0000)
+//        lineOpen.pointRadius = 2
+//        lineOpen.strokeWidth = 2
+//        lineOpen.pointColor = Color.argb(150, 20, 220, 20)
+//
+        val lineClose = Line(pointCloses).setColor(0xdd0000).setFilled(true)
+        lineClose.pointRadius = 2
+        lineClose.pointColor = Color.argb(150, 220, 20, 20)
+//        lines.add(lineOpen)
+        lines.add(lineClose)
 
         data.setLines(lines).setBaseValue(0f).setAxisYLeft(Axis())
 
         chart.setLineChartData(data)
 
         val v = chart.maximumViewport
-        v.set(v.left, max * (1.05f), v.right, min / (1.1f))
+        v.set(v.left, max * (1.01f), v.right, min / (1.02f))
         chart.maximumViewport = v
         chart.currentViewport = v
     }
@@ -207,7 +216,7 @@ class EquipmentFragment : Fragment(), FragmentTitleEmitters {
                         Snackbar.LENGTH_SHORT
                     ).show()
                 }, {
-                    if(it is HttpException && it.code() == 406) {
+                    if (it is HttpException && it.code() == 406) {
                         Snackbar.make(
                             requireView(),
                             getString(R.string.make_prediction_already_error),
