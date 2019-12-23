@@ -20,11 +20,10 @@ import com.traderx.R
 import com.traderx.api.ErrorHandler
 import com.traderx.api.response.CommentResponse
 import com.traderx.type.VoteType
-import com.traderx.ui.search.UserSearchSkeletonRecyclerViewAdapter
+import com.traderx.ui.search.SearchSkeletonRecyclerViewAdapter
 import com.traderx.util.Helper
 import com.traderx.util.Injection
 import com.traderx.viewmodel.AuthUserViewModel
-import com.traderx.viewmodel.CommentableViewModel
 import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
@@ -71,7 +70,7 @@ class CommentFragment(
         val viewManager = LinearLayoutManager(context)
         recyclerView = view.findViewById<RecyclerView>(R.id.comment_list).apply {
             layoutManager = viewManager
-            adapter = UserSearchSkeletonRecyclerViewAdapter(3)
+            adapter = SearchSkeletonRecyclerViewAdapter(3)
         }
 
         refreshComments()

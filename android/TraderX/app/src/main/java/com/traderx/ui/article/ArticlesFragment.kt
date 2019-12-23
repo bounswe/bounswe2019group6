@@ -14,14 +14,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.traderx.R
 import com.traderx.api.ErrorHandler
-import com.traderx.ui.search.UserSearchSkeletonRecyclerViewAdapter
+import com.traderx.ui.search.SearchSkeletonRecyclerViewAdapter
 import com.traderx.util.FragmentTitleEmitters
 import com.traderx.util.Helper
 import com.traderx.util.Injection
 import com.traderx.viewmodel.ArticleViewModel
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 
 class ArticlesFragment : Fragment(), FragmentTitleEmitters {
     private lateinit var articleViewModel: ArticleViewModel
@@ -51,7 +49,7 @@ class ArticlesFragment : Fragment(), FragmentTitleEmitters {
         viewManager = LinearLayoutManager(context)
         recyclerView = root.findViewById<RecyclerView>(R.id.article_list).apply {
             layoutManager = viewManager
-            adapter = UserSearchSkeletonRecyclerViewAdapter(5)
+            adapter = SearchSkeletonRecyclerViewAdapter(5)
         }
 
         root.findViewById<FloatingActionButton>(R.id.article_create_action)?.let {

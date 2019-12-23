@@ -3,7 +3,6 @@ package com.traderx.api
 import com.traderx.api.request.*
 import com.traderx.api.response.*
 import com.traderx.db.Article
-import com.traderx.db.Equipment
 import com.traderx.db.User
 import io.reactivex.Completable
 import io.reactivex.Single
@@ -199,4 +198,13 @@ interface RequestService {
 
     @GET(ApiEndpoint.PREDICTION_USER_ALL)
     fun getPredictions(@Path("username") username: String): Single<PredictionResponse>
+
+    @GET(ApiEndpoint.SEARCH_USERS)
+    fun searchUsers(@Query("name") name: String): Single<List<User>>
+
+    @GET(ApiEndpoint.SEARCH_EQUIPMENTS)
+    fun searchEquipments(@Query("name") name: String): Single<List<EquipmentSearchResponse>>
+
+    @GET(ApiEndpoint.SEARCH_ARTICLES)
+    fun searchArticles(@Query("header") name: String): Single<List<ArticleSearchResponse>>
 }
