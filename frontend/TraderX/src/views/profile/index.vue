@@ -22,6 +22,12 @@
                 <my-investments/>
               </el-tab-pane>
               <el-tab-pane
+                label="My Predictions"
+                name="mypredictions"
+              >
+                <predictions/>
+              </el-tab-pane>
+              <el-tab-pane
                 label="My Transactions"
                 name="mytransactions"
               >
@@ -60,12 +66,13 @@ import Portfolio from './components/Portfolio'
 import Articles from './components/Articles'
 import Editprofile from './components/Editprofile'
 import PrivateAccount from './components/PrivateAccount'
+import Predictions from './components/Predictions'
 import MyInvestments from '@/components/MyInvestments'
 import MyTransactions from '@/components/MyTransactions'
 
 export default {
   name: 'Profile',
-  components: { UserCard, Portfolio, Articles, Editprofile, PrivateAccount, MyInvestments, MyTransactions },
+  components: { UserCard, Portfolio, Articles, Editprofile, PrivateAccount, MyInvestments, MyTransactions, Predictions },
   data() {
     return {
       user: {},
