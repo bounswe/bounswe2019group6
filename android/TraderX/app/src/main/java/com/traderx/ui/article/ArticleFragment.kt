@@ -2,12 +2,16 @@ package com.traderx.ui.article
 
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.os.AsyncTask
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.FrameLayout
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -23,6 +27,7 @@ import com.traderx.viewmodel.ArticleViewModel
 import com.traderx.viewmodel.AuthUserViewModel
 import io.reactivex.disposables.CompositeDisposable
 
+
 class ArticleFragment : Fragment() {
     companion object {
         private const val ARTICLE_ID = "id"
@@ -33,6 +38,7 @@ class ArticleFragment : Fragment() {
 
     private var articleId: Int = 0
     private lateinit var authUsername: String
+    private lateinit var image: ImageView
     private lateinit var article: Article
     private lateinit var header: TextView
     private lateinit var body: TextView
@@ -81,6 +87,7 @@ class ArticleFragment : Fragment() {
         body = root.findViewById(R.id.body)
         tags = root.findViewById(R.id.tags)
         username = root.findViewById(R.id.username)
+        image = root.findViewById(R.id.image)
         createdAt = root.findViewById(R.id.created_at)
 
         editButton = root.findViewById<Button>(R.id.article_edit_action).also {
@@ -133,8 +140,9 @@ class ArticleFragment : Fragment() {
     }
 
     private fun checkEditable() {
-        if(::authUsername.isInitialized && ::article.isInitialized) {
-            editButton.visibility = if(authUsername == article.username) View.VISIBLE else View.GONE
+        if (::authUsername.isInitialized && ::article.isInitialized) {
+            editButton.visibility =
+                if (authUsername == article.username) View.VISIBLE else View.GONE
         }
     }
 
@@ -145,5 +153,29 @@ class ArticleFragment : Fragment() {
         username.text = article.username
         tags.text = article.tags.joinToString { it }
         username.text = article.username
+        DownloadImageTask(image).execute(article.imageUrl)
+    }
+
+    private class DownloadImageTask(private var bmImage: ImageView) :
+        AsyncTask<String, Void, Bitmap>() {
+
+        override fun doInBackground(vararg urls: String): Bitmap? {
+            val urldisplay = urls[0]
+            var mIcon11: Bitmap? = null
+            try {
+                val `in` = java.net.URL(urldisplay).openStream()
+                mIcon11 = BitmapFactory.decodeStream(`in`)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+
+            return mIcon11
+        }
+
+        override fun onPostExecute(result: Bitmap) {
+            bmImage.setImageBitmap(result)
+        }
     }
 }
+
+

@@ -36,7 +36,7 @@ class ArticleRecyclerViewAdapter(
         with(holder.view) {
             setOnClickListener {
                 findNavController().navigate(
-                    navigate(articles[position].id)
+                    navigate(articles[holder.adapterPosition].id)
                 )
             }
 
