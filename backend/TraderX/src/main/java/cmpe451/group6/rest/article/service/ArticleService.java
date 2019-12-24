@@ -155,13 +155,13 @@ public class ArticleService {
 
         User user = userRepository.findByUsername(requesterName);
 
-        Article temp = new Article();
-        temp.setHeader(header);
-        temp.setBody(body);
-        temp.setTags(tags);
-        temp.setUser(user);
-        temp.setImageUrl(imageUrl);
-        articleRepository.save(temp);
+        article.setHeader(header);
+        article.setBody(body);
+        article.setTags(tags);
+        article.setUser(user);
+        article.setImageUrl(imageUrl);
+        article.setDate(new Date());
+        articleRepository.save(article);
         return true;
     }
 }
