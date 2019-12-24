@@ -22,7 +22,7 @@
 
                 <el-card class='container-in-tab'>
                   <el-row gutter="50">
-                    <el-col :span="7">
+                    <el-col :span="8">
                       <el-card style="height: 400px;">
                         <el-form ref="alertForm">
                           <h3>Set order for: {{activeTab}}</h3>
@@ -37,12 +37,12 @@
                           </el-form-item>
                           <el-form-item label="Order Type:">
                             <el-radio-group v-model="alertForm.orderType" size="medium">
-                              <el-radio border label="buy">Buy</el-radio>
-                              <el-radio border label="sell">Sell</el-radio>
+                              <el-radio v-if="isTrader" border label="buy">Buy</el-radio>
+                              <el-radio v-if="isTrader" border label="sell">Sell</el-radio>
                               <el-radio border label="notify">Notify</el-radio>
                             </el-radio-group>
                           </el-form-item>
-                          <el-form-item label="Amount:" v-if="alertForm.orderType!='notify'">
+                          <el-form-item label="Amount:" v-if="isTrader && alertForm.orderType!='notify'">
                             <el-input-number v-model="alertForm.amount"></el-input-number>
                           </el-form-item>
                           <el-form-item>
@@ -51,13 +51,14 @@
                         </el-form>
                       </el-card>
                     </el-col>
-                    <el-col :span="17">
+                    <el-col :span="16">
                       <el-card>
                         <el-table
                           :data="alerts"
                           height="360px"
                           style="width: 100%">
                           <el-table-column
+                            width="100px"
                             prop="code"
                             label="Code">
                           </el-table-column>
@@ -66,6 +67,7 @@
                             label="Alert Type">
                           </el-table-column>
                           <el-table-column
+                            width="100px"
                             prop="limitValue"
                             label="Limit">
                           </el-table-column>
@@ -168,7 +170,7 @@
         <el-form-item label="Order Type:">
           <el-input disabled v-model="currentAlert.orderType"></el-input>
         </el-form-item>
-        <el-form-item label="New Amount:">
+        <el-form-item v-if="isTrader && currentAlert.orderType!='Notify'" label="New Amount:">
           <el-input-number v-model="editAlertForm.newAmount"></el-input-number>
         </el-form-item>
         <el-form-item>
@@ -215,6 +217,7 @@ export default {
         limit: "",
         amount: ""
       },
+      isTrader: false,
       alerts: [],
       chartData: {},
       showBuyEquipmentDialog: false,
@@ -256,6 +259,7 @@ export default {
     this.getAlerts()
   },
   mounted() {
+    this.isTrader = (this.$store.getters.userInfo.roles[0] === "ROLE_TRADER")
     this.activeTab = this.equipmentData[0].key
     this.alertForm.code = this.activeTab
   },
