@@ -86,7 +86,7 @@ export default {
       title : "",
       author: "",
       body : "",
-      articleImageUrl : "",
+      articleImageUrl : "https://www.fx-exchange.com/currencyimages/usd-jpy-90-day-exchange-rates-history-graph.png",
       imageWidth: "",
       imageHeight: "",
       articleCommentList: [],
@@ -134,7 +134,7 @@ export default {
         this.author = this.$store.getters.oneArticle.username
         this.title = this.$store.getters.oneArticle.header
         this.body = this.$store.getters.oneArticle.body
-        this.articleImageUrl = this.$store.getters.oneArticle.imageUrl
+        // this.articleImageUrl = this.$store.getters.oneArticle.imageUrl
       }).catch(err => {
         console.log(err)
       })
