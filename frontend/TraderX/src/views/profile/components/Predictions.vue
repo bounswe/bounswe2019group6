@@ -48,7 +48,6 @@ export default {
       var type = this.selectPredType
       var pred = this.currentElem
       this.$store.dispatch('user/editPrediction', { id : pred.id, type: type.toLowerCase() }).then(() => {
-        this.$message.success('Editttt Yeeeeaaayhh!')
       }).catch(err => {
         console.log(err)
       })
