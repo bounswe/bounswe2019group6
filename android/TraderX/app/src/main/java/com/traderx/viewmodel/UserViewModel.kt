@@ -3,6 +3,7 @@ package com.traderx.viewmodel
 import androidx.lifecycle.ViewModel
 import com.traderx.api.RequestService
 import com.traderx.api.response.ArticleSearchResponse
+import com.traderx.api.response.AssetsResponse
 import com.traderx.api.response.EquipmentSearchResponse
 import com.traderx.api.response.FollowerResponse
 import com.traderx.db.User
