@@ -96,7 +96,7 @@
 
                 <el-card class='container-in-tab'>
                   <h4> Comments about {{ ed.label }} </h4>
-                  <el-button class='create-comment' style="margin-top:20px;margin-bottom:20px;" @click="showCreateCommentDialog=true">
+                  <el-button class='create-comment' style="margin-top:20px;margin-bottom:20px;" @click="showCreateEquipmentCommentDialog=true">
                     <svg-icon style="margin-right:10px" icon-class="edit" /> Write Comment </el-button>
 
                   <el-row class='row' v-for="c in ed.comments" :key="c.id" :gutter="20" style="padding:16px 16px 0;margin-bottom:20px;">
@@ -112,13 +112,13 @@
                         <a :class="{liked: c.status === 'LIKED'}" @click="likeComment(ed.key, c.id)"><i class="el-icon-arrow-up"/> Like </a>
                         <a :class="{disliked: c.status === 'DISLIKED'}" @click="dislikeComment(ed.key, c.id)"><i class="el-icon-arrow-down"/> Dislike </a> |
                         <a @click="revokeComment(ed.key, c.id)"> Revoke Vote </a> |
-                        <a class="delete-text" @click="deleteComment(ed.key, c.id)"><i class="el-icon-delete"/> Delete Comment </a> |
-                        <a class="delete-text" @click="showEditCommentDialog=true;editCommentContent=c.comment"><i class="el-icon-edit"/> Edit Comment </a>
+                        <a class="delete-text" @click="deleteEquipmentComment(ed.key, c.id)"><i class="el-icon-delete"/> Delete Comment </a> |
+                        <a class="delete-text" @click="showEditEquipmentCommentDialog=true;editEquipmentCommentContent=c.comment"><i class="el-icon-edit"/> Edit Comment </a>
 
-                        <el-dialog title="Edit Comment" :visible.sync="showEditCommentDialog">
-                          <textarea class="comment-textarea" column="100" rows="10" v-model="editCommentContent"></textarea>
+                        <el-dialog title="Edit Comment" :visible.sync="showEditEquipmentCommentDialog">
+                          <textarea class="comment-textarea" column="100" rows="10" v-model="editEquipmentCommentContent"></textarea>
                           <div>
-                            <el-button style="margin-top:10px;" @click="editComment(ed.key, c.id)"><svg-icon icon-class="edit"/> Edit Comment </el-button>
+                            <el-button style="margin-top:10px;" @click="editEquipmentComment(ed.key, c.id)"><svg-icon icon-class="edit"/> Edit Comment </el-button>
                           </div>
                         </el-dialog>
 
@@ -126,10 +126,10 @@
                     </el-card>
                   </el-row>
 
-                  <el-dialog title="Create Comment" :visible.sync="showCreateCommentDialog">
-                    <textarea class="comment-textarea" placeholder="Write your comment here" column="100" rows="10" v-model="createCommentContent"></textarea>
+                  <el-dialog title="Create Comment" :visible.sync="showCreateEquipmentCommentDialog">
+                    <textarea class="comment-textarea" placeholder="Write your comment here" column="100" rows="10" v-model="createEquipmentCommentContent"></textarea>
                     <div>
-                      <el-button style="margin-top:10px;" @click="postComment(ed.key)"><svg-icon icon-class="edit"/> Publish Comment </el-button>
+                      <el-button style="margin-top:10px;" @click="postEquipmentComment(ed.key)"><svg-icon icon-class="edit"/> Publish Comment </el-button>
                     </div>
                   </el-dialog>
 
@@ -216,8 +216,8 @@ export default {
       alerts: [],
       chartData: {},
       showBuyEquipmentDialog: false,
-      showCreateCommentDialog: false,
-      showEditCommentDialog: false,
+      showCreateEquipmentCommentDialog: false,
+      showEditEquipmentCommentDialog: false,
       showDialog: false,
       showEditAlertDialog: false,
       editAlertForm: {},
@@ -225,22 +225,22 @@ export default {
       currentIndex: 0,
       buyamountinput: '',
       select: '',
-      createCommentContent: '',
-      editCommentContent: '',
+      createEquipmentCommentContent: '',
+      editEquipmentCommentContent: '',
       equipmentData: [],
       activeTab: 'JPY',
       commentList: {},
-      postCommentDict: {
+      postEquipmentCommentDict: {
         "comment": "",
       },
-      editCommentDict: {
+      editEquipmentCommentDict: {
         "comment": "",
       },
     }
   },
   async created() {
     var equipmentList = await this.getEquipmentList()
-    this.getCommentList(equipmentList)
+    this.getEquipmentCommentList(equipmentList)
     // Fill the equipmentData with equipment list
     equipmentList.forEach(function(equipmentKey) {
       this.equipmentData.push({key: equipmentKey.code})
@@ -255,11 +255,11 @@ export default {
   },
   methods: {
     // Comment List will be received for all of the equipment
-    async getCommentList(equipmentList) {
+    async getEquipmentCommentList(equipmentList) {
       var commentList = {}
       equipmentList.forEach(async function(e) {
         try {
-          await this.$store.dispatch('comment/getCommentList', e.code.toLowerCase())
+          await this.$store.dispatch('comment/getEquipmentCommentList', e.code.toLowerCase())
           var res = this.$store.getters.commentQueryResult
           commentList[e.code] = res
         } catch (error) {
@@ -435,12 +435,12 @@ export default {
       }
     },
 
-    postComment(equipmentCode) {
-      this.postCommentDict["comment"] =  this.createCommentContent
+    postEquipmentComment(equipmentCode) {
+      this.postEquipmentCommentDict["comment"] =  this.createEquipmentCommentContent
       // Posting to backend
-      this.$store.dispatch('comment/postComment', {"code": equipmentCode, "commentDict": this.postCommentDict}).then(() => {
-        this.showCreateCommentDialog = false
-        this.createCommentContent = ''
+      this.$store.dispatch('comment/postEquipmentComment', {"code": equipmentCode, "commentDict": this.postEquipmentCommentDict}).then(() => {
+        this.showCreateEquipmentCommentDialog = false
+        this.createEquipmentCommentContent = ''
         this.$message.success('Comment is posted successfully!')
 
         var res = this.$store.getters.commentQueryResult
@@ -455,33 +455,33 @@ export default {
       })
     },
 
-    editComment(equipmentCode, commentId) {
+    editEquipmentComment(equipmentCode, commentId) {
       // Posting to backend
-      this.editCommentDict["comment"] = this.editCommentContent
-      this.$store.dispatch('comment/editComment', {"commentId": commentId, "commentDict": this.editCommentDict}).then(() => {
+      this.editEquipmentCommentDict["comment"] = this.editEquipmentCommentContent
+      this.$store.dispatch('comment/editEquipmentComment', {"commentId": commentId, "commentDict": this.editEquipmentCommentDict}).then(() => {
 
         var that = this
         this.equipmentData.forEach(function(e) {
           if (e.key == equipmentCode) {
             e.comments.forEach(function(c) {
               if (c.id == commentId) {
-                c.comment = that.editCommentContent
+                c.comment = that.editEquipmentCommentContent
               }
             })
           }
         })
 
-        this.showEditCommentDialog = false
-        this.editCommentContent = ''
+        this.showEditEquipmentCommentDialog = false
+        this.editEquipmentCommentContent = ''
         this.$message.success('Comment is edited successfully!')
       }).catch(err => {
         console.log(err)
       })
     },
 
-    async deleteComment(equipmentCode, commentId) {
+    async deleteEquipmentComment(equipmentCode, commentId) {
       var that = this
-      this.$store.dispatch('comment/deleteComment', commentId).then(async function() {
+      this.$store.dispatch('comment/deleteEquipmentComment', commentId).then(async function() {
         that.$message.success('Comment deleted!')
         that.equipmentData.forEach(function(e) {
           if (e.key == equipmentCode) {
@@ -499,7 +499,7 @@ export default {
     },
 
     likeComment(equipmentCode, commentId) {
-      this.$store.dispatch('comment/voteComment', {"commentId": commentId, "voteType": "up"}).then(response => {
+      this.$store.dispatch('comment/voteEquipmentComment', {"commentId": commentId, "voteType": "up"}).then(response => {
         this.$message.success('Comment liked!')
         this.equipmentData.forEach(function(e) {
           if (e.key == equipmentCode) {
@@ -518,7 +518,7 @@ export default {
 
     dislikeComment(equipmentCode, commentId) {
       // Post to backend
-      this.$store.dispatch('comment/voteComment', {"commentId": commentId, "voteType": "down"}).then(response => {
+      this.$store.dispatch('comment/voteEquipmentComment', {"commentId": commentId, "voteType": "down"}).then(response => {
         this.$message.success('Comment disliked!')
         this.equipmentData.forEach(function(e) {
           if (e.key == equipmentCode) {
@@ -547,7 +547,7 @@ export default {
         }
       }, this)
       console.log('lastStatus is revokeComment : ' + lastStatus)
-      this.$store.dispatch('comment/revokeVote', commentId).then(response => {
+      this.$store.dispatch('comment/revokeEquipmentVote', commentId).then(response => {
         this.$message.success('Last vote revoked!')
         this.equipmentData.forEach(function(e) {
           if (e.key == equipmentCode) {

@@ -1,4 +1,5 @@
-import { getCommentList, deleteComment, editComment, postComment, revokeVote, voteComment } from '@/api/comment'
+import { getEquipmentCommentList, deleteEquipmentComment, editEquipmentComment, postEquipmentComment, revokeEquipmentVote, voteEquipmentComment,
+        getArticleCommentList, deleteArticleComment, editArticleComment, postArticleComment, revokeArticleVote, voteArticleComment } from '@/api/comment'
 import equipment from './equipment'
 
 const state = {
@@ -14,9 +15,9 @@ const mutations = {
 }
 
 const actions = {
-    getCommentList({ commit }, equipmentCode) {
+    getEquipmentCommentList({ commit }, equipmentCode) {
         return new Promise((resolve, reject) => {
-            getCommentList(equipmentCode).then(response => {
+            getEquipmentCommentList(equipmentCode).then(response => {
                 const { data } = response
                 commit('SET_QUERY_RESULT', data)
                 resolve()
@@ -26,9 +27,9 @@ const actions = {
         })
     },
 
-    deleteComment({ commit }, commentId) {
+    deleteEquipmentComment({ commit }, commentId) {
         return new Promise((resolve, reject) => {
-            deleteComment(commentId).then(response => {
+            deleteEquipmentComment(commentId).then(response => {
                 const { data } = response
                 commit('SET_QUERY_RESULT', data)
                 resolve()
@@ -38,9 +39,9 @@ const actions = {
         })
     },
 
-    editComment({ commit }, {commentId, commentDict}) {
+    editEquipmentComment({ commit }, {commentId, commentDict}) {
         return new Promise((resolve, reject) => {
-            editComment(commentId, commentDict).then(response => {
+            editEquipmentComment(commentId, commentDict).then(response => {
                 const { data } = response
                 commit('SET_QUERY_RESULT', data)
                 resolve()
@@ -50,13 +51,9 @@ const actions = {
         })
     },
 
-    postComment( { commit }, {code, commentDict}) {
-        // console.log('equipmentCode in modules is: ')
-        // console.log(code)
-        // console.log('commentDict in modules is: ')
-        // console.log(comment)
+    postEquipmentComment( { commit }, {code, commentDict}) {
         return new Promise((resolve, reject) => {
-            postComment(code, commentDict).then(response => {
+            postEquipmentComment(code, commentDict).then(response => {
                 const { data } = response
                 commit('SET_QUERY_RESULT', data)
                 resolve()
@@ -67,9 +64,9 @@ const actions = {
     },
 
 
-    revokeVote({ commit }, commentId) {
+    revokeEquipmentVote({ commit }, commentId) {
         return new Promise((resolve, reject) => {
-            revokeVote(commentId).then(response => {
+            revokeEquipmentVote(commentId).then(response => {
                 const { data } = response
                 commit('SET_QUERY_RESULT', data)
                 resolve()
@@ -79,9 +76,82 @@ const actions = {
         })
     },
 
-    voteComment({ commit }, {commentId, voteType}) {
+    voteEquipmentComment({ commit }, {commentId, voteType}) {
         return new Promise((resolve, reject) => {
-            voteComment(commentId, voteType).then(response => {
+            voteEquipmentComment(commentId, voteType).then(response => {
+                const { data } = response
+                commit('SET_QUERY_RESULT', data)
+                resolve()
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+
+    getArticleCommentList({ commit }, articleId) {
+        return new Promise((resolve, reject) => {
+            getArticleCommentList(articleId).then(response => {
+                const { data } = response
+                commit('SET_QUERY_RESULT', data)
+                resolve()
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+
+    deleteArticleComment({ commit }, commentId) {
+        return new Promise((resolve, reject) => {
+            deleteArticleComment(commentId).then(response => {
+                const { data } = response
+                commit('SET_QUERY_RESULT', data)
+                resolve()
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+
+    editArticleComment({ commit }, {commentId, data}) {
+        return new Promise((resolve, reject) => {
+            editArticleComment(commentId, data).then(response => {
+                const { data } = response
+                commit('SET_QUERY_RESULT', data)
+                resolve()
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+
+    postArticleComment( { commit }, {articleId, data}) {
+        return new Promise((resolve, reject) => {
+            postArticleComment(articleId, data).then(response => {
+                const { data } = response
+                commit('SET_QUERY_RESULT', data)
+                resolve()
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+
+
+    revokeArticleVote({ commit }, commentId) {
+        return new Promise((resolve, reject) => {
+            revokeArticleVote(commentId).then(response => {
+                const { data } = response
+                commit('SET_QUERY_RESULT', data)
+                resolve()
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+
+    voteArticleComment({ commit }, {commentId, voteType}) {
+        return new Promise((resolve, reject) => {
+            voteArticleComment(commentId, voteType).then(response => {
                 const { data } = response
                 commit('SET_QUERY_RESULT', data)
                 resolve()
