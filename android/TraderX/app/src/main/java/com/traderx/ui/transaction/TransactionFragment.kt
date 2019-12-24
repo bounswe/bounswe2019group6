@@ -33,6 +33,7 @@ import com.traderx.viewmodel.TransactionViewModel
 import io.reactivex.disposables.CompositeDisposable
 import retrofit2.HttpException
 import java.lang.Double.parseDouble
+import java.lang.NumberFormatException
 
 class TransactionFragment : Fragment(), FragmentTitleEmitters {
 
@@ -210,7 +211,14 @@ class TransactionFragment : Fragment(), FragmentTitleEmitters {
     }
 
     private fun applyRatio(input: EditText, output: EditText, ratio: Double) {
-        val amount = if (input.text.isEmpty()) 0.0 else parseDouble(input.text.toString())
+        var amount = 0.0
+
+        try {
+             amount = if (input.text.isEmpty()) 0.0 else parseDouble(input.text.toString())
+        } catch (e: NumberFormatException) {
+            input.setText("")
+            amount = 0.0
+        }
 
         output.setText((amount * ratio).toString())
     }

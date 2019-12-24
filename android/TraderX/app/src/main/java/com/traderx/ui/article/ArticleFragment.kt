@@ -347,8 +347,8 @@ class ArticleFragment : Fragment(), FragmentTitleEmitters {
             return mIcon11
         }
 
-        override fun onPostExecute(result: Bitmap) {
-            bmImage.setImageBitmap(result)
+        override fun onPostExecute(result: Bitmap?) {
+            result?.let {bmImage.setImageBitmap(it)}
         }
     }
 }
