@@ -131,7 +131,7 @@ public class UserController {
   @ResponseStatus(HttpStatus.OK)
   @ApiOperation(value = "Returns all user profiles (token is required).")
   public List<Object> getAll(HttpServletRequest req) {
-    int limit = 10; // TODO : Make this optional on reques
+    int limit = 100; // TODO : Make this optional on reques
     return userService.getAll(util.unwrapUsername(req),limit);
   }
 }
