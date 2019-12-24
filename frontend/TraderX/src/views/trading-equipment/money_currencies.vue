@@ -1,5 +1,5 @@
 <template>
- 
+
   <div>
     <el-row style="padding:16px 16px 0;margin-bottom:32px;">
       <el-card>
@@ -18,9 +18,80 @@
 
                 <el-button class='change-base-button' @click="changeBaseofEquipment(ed.label)"><svg-icon style="margin-right:10px" icon-class="chart" />Change the Base</el-button>
                 <el-button class='buy-button' @click="showBuyEquipmentDialog=true"><svg-icon style="margin-right:10px" icon-class="shopping" />Buy Equipment</el-button>
-                
+
                 <el-card class='container-in-tab'>
-                  <p> alerts comes here </p>
+                  <el-row gutter="50">
+                    <el-col :span="7">
+                      <el-card style="height: 400px;">
+                        <el-form ref="alertForm">
+                          <h3>Set order for: {{activeTab}}</h3>
+                          <el-form-item label="When:">
+                            <el-radio-group v-model="alertForm.alertType" size="medium">
+                              <el-radio border label="above">Above</el-radio>
+                              <el-radio border label="below">Below</el-radio>
+                            </el-radio-group>
+                          </el-form-item>
+                          <el-form-item label="Threshold Value:">
+                            <el-input-number v-model="alertForm.limit"></el-input-number>
+                          </el-form-item>
+                          <el-form-item label="Transaction Type:">
+                            <el-radio-group v-model="alertForm.orderType" size="medium">
+                              <el-radio border label="buy">Buy</el-radio>
+                              <el-radio border label="sell">Sell</el-radio>
+                              <el-radio border label="notify">Notify</el-radio>
+                            </el-radio-group>
+                          </el-form-item>
+                          <el-form-item label="Amount:" v-if="alertForm.orderType!='notify'">
+                            <el-input-number v-model="alertForm.amount"></el-input-number>
+                          </el-form-item>
+                          <el-form-item>
+                            <el-button type="primary" @click="setAlert">Set</el-button>
+                          </el-form-item>
+                        </el-form>
+                      </el-card>
+                    </el-col>
+                    <el-col :span="17">
+                      <el-card>
+                        <el-table
+                          :data="alerts"
+                          height="360px"
+                          style="width: 100%">
+                          <el-table-column
+                            prop="code"
+                            label="Code">
+                          </el-table-column>
+                          <el-table-column
+                            prop="alertType"
+                            label="Alert Type">
+                          </el-table-column>
+                          <el-table-column
+                            prop="limitValue"
+                            label="Limit">
+                          </el-table-column>
+                          <el-table-column
+                            prop="orderType"
+                            label="Transaction Type">
+                          </el-table-column>
+                          <el-table-column
+                            prop="amount"
+                            label="Amount">
+                          </el-table-column>
+                          <el-table-column
+                            label="Action">
+                            <template slot-scope="scope">
+                            <el-button
+                              size="mini"
+                              @click="openEditAlertDialog(scope.row, scope.$index)">Edit</el-button>
+                            <el-button
+                              size="mini"
+                              type="danger"
+                              @click="deleteAlert(scope.row, scope.$index)">Delete</el-button>
+                          </template>
+                          </el-table-column>
+                        </el-table>
+                      </el-card>
+                    </el-col>
+                  </el-row>
                 </el-card>
 
                 <el-card class='container-in-tab'>
@@ -68,7 +139,7 @@
                       </template>
                     </el-table-column>
                   </el-table>
-                  
+
                   <el-button class='read-article' style="margin-top:20px;" @click="readArticle(ed.label)"><svg-icon style="margin-right:10px" icon-class="shopping" /> Read More Articles about {{ ed.label }} </el-button>
                 </el-card>
 
@@ -76,7 +147,7 @@
                   <h4> Comments about {{ ed.label }} </h4>
                   <el-button class='create-comment' style="margin-top:20px;margin-bottom:20px;" @click="showCreateCommentDialog=true">
                     <svg-icon style="margin-right:10px" icon-class="edit" /> Write Comment </el-button>
-                  
+
                   <el-row class='row' v-for="c in ed.comments" :key="c.id" :gutter="20" style="padding:16px 16px 0;margin-bottom:20px;">
                     <el-card class='comment-container'>
                       <p>
@@ -87,7 +158,7 @@
                       </p>
                       <p class="comment-text"> {{ c.comment }} </p>
                       <p class="comment-options">
-                        <a :class="{liked: c.status === 'LIKED'}" @click="likeComment(ed.key, c.id)"><i class="el-icon-arrow-up"/> Like </a> 
+                        <a :class="{liked: c.status === 'LIKED'}" @click="likeComment(ed.key, c.id)"><i class="el-icon-arrow-up"/> Like </a>
                         <a :class="{disliked: c.status === 'DISLIKED'}" @click="dislikeComment(ed.key, c.id)"><i class="el-icon-arrow-down"/> Dislike </a> |
                         <a @click="revokeComment(ed.key, c.id)"> Revoke Vote </a> |
                         <a class="delete-text" @click="deleteComment(ed.key, c.id)"><i class="el-icon-delete"/> Delete Comment </a> |
@@ -111,8 +182,8 @@
                     </div>
                   </el-dialog>
 
-                  
-                
+
+
                 </el-card>
 
               </div>
@@ -129,20 +200,40 @@
           </div>
         </el-select>
         <el-button slot="append" @click="buyEquipment()">Buy</el-button>
-      </el-input>  
+      </el-input>
     </el-dialog>
 
-
+    <el-dialog :show-close=false title="Edit Order" :visible.sync="showEditAlertDialog">
+      <el-form ref="alertEditForm">
+        <h3>Trading Equipment: {{currentAlert.code}}</h3>
+        <el-form-item label="When:">
+          <el-input disabled v-model="currentAlert.alertType"></el-input>
+        </el-form-item>
+        <el-form-item label="New Threshold Value:">
+          <el-input-number v-model="editAlertForm.newLimit"></el-input-number>
+        </el-form-item>
+        <el-form-item label="Transaction Type:">
+          <el-input disabled v-model="currentAlert.orderType"></el-input>
+        </el-form-item>
+        <el-form-item label="New Amount:">
+          <el-input-number v-model="editAlertForm.newAmount"></el-input-number>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" style="margin-right: 10px" @click="editAlert">Set</el-button>
+          <el-button type="danger" @click="showEditAlertDialog=false">Cancel</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
 
   </div>
-   
+
 </template>
 
 <script>
 import LineChart from './components/LineChart'
 import LineChartDetailed from './components/LineChartDetailed'
-
 import { buyEquipment } from '@/api/equipment'
+import { setAlert, getAlert, editAlert, deleteAlert } from "../../api/equipment";
 
 // The usual sorting in javascript sorts alphabetically which causes mistake in our code
 const numberSort = function (a,b) {
@@ -155,18 +246,37 @@ export default {
     LineChartDetailed,
     LineChart,
   },
+  watch: {
+    activeTab: function (currentTab) {
+      this.alertForm = {}
+      this.alertForm.code = currentTab
+      this.getAlerts()
+    }
+  },
   data() {
     return {
+      alertForm: {
+          code: "",
+          alertType: "",
+          orderType: "",
+          limit: "",
+          amount: ""
+      },
+      alerts: [],
       chartData: {},
       showBuyEquipmentDialog: false,
       showCreateCommentDialog: false,
       showEditCommentDialog: false,
       showDialog: false,
+      showEditAlertDialog: false,
+      editAlertForm: {},
+      currentAlert: {},
+      currentIndex: 0,
       buyamountinput: '',
       select: '',
       createCommentContent: '',
       editCommentContent: '',
-      // equipmentData is expected to be: 
+      // equipmentData is expected to be:
       // [
       //   {
       //     label: Euro,
@@ -176,9 +286,9 @@ export default {
       //       close: [...],
       //       high: [...],
       //       low: [...],
-      //       current: [...] 
+      //       current: [...]
       //     }
-      //   }, 
+      //   },
       //   {
       //     label: Japanese Yen,
       //     key: JPY
@@ -198,16 +308,19 @@ export default {
   },
   async created() {
     this.returnArticleList()
-    
     var equipmentList = await this.getEquipmentList()
     this.getCommentList(equipmentList)
     // Fill the equipmentData with equipment list
     equipmentList.forEach(function(equipmentKey) {
       this.equipmentData.push({key: equipmentKey.code})
     }, this)
-    var equipmentValues = await this.getEquipmentValues(equipmentList) 
+    var equipmentValues = await this.getEquipmentValues(equipmentList)
     this.equipmentData = equipmentValues
+    this.getAlerts()
+  },
+  mounted() {
     this.activeTab = this.equipmentData[0].key
+    this.editAlertForm.code = this.activeTab
   },
   methods: {
 
@@ -277,7 +390,7 @@ export default {
       this.commentList = commentList
     },
 
-    // Promise for getting equipments list 
+    // Promise for getting equipments list
     async getEquipmentList(equipmentList) {
       try {
         await this.$store.dispatch('equipment/getAllCurrencies')
@@ -286,14 +399,14 @@ export default {
       } catch (error) {
         console.log(error)
         return error
-      }  
+      }
     },
 
     // equipment = ['JPY', 'TRY', ...]
     async getEquipmentValues(equipmentList) {
       // equipmentValues = [{label="Turkish Lira", key="TRY", data={open=[5.6, 4.34, 7.54,...], close=[..], high=[..], low=[..]}}, {label="Japanese Yen", key="JPY", data={actualData=[12.2312, 11.234545, 10.23234, ...]}} ...]
       var equipmentValues = []
-      
+
       equipmentList.forEach(async function(e) {
         try {
           await this.$store.dispatch('equipment/getEquipment', e.code.toLowerCase())
@@ -357,6 +470,92 @@ export default {
       })
     },
 
+    getAlerts() {
+      var that = this
+      getAlert().then(response => {
+        console.log(response)
+        that.alerts = response.data
+        for (var i=0; i<that.alerts.length; i++){
+          var alertType = that.alerts[i].alertType.toLowerCase()
+          var orderType = that.alerts[i].orderType.toLowerCase()
+
+          console.log(alertType)
+
+          that.alerts[i].alertType = alertType.charAt(0).toUpperCase() + alertType.substr(1)
+          that.alerts[i].orderType = orderType.charAt(0).toUpperCase() + orderType.substr(1)
+        }
+      }).catch(error => {
+        console.log(error)
+      })
+    },
+
+    setAlert() {
+      var that = this
+
+      setAlert(this.alertForm).then(response => {
+        console.log(response)
+        that.getAlerts()
+      }).catch(error => {
+        console.log(error)
+      })
+      this.alertForm = {}
+      this.alertForm.code = this.activeTab
+    },
+
+
+    openEditAlertDialog(row, index) {
+      if (row.id == null) {
+        this.$notify({
+          title: "Error",
+          message: "Cannot find order, please refresh the page and try again",
+          type: 'error',
+          duration: 2000
+        })
+      } else {
+        this.currentAlert = row
+        this.currentIndex = index
+        this.editAlertForm = {
+          'alertId': row.id,
+          'newAmount': row.amount,
+          'newLimit': row.limitValue
+        }
+        this.showEditAlertDialog = true
+      }
+    },
+
+    editAlert() {
+      var that = this
+
+      editAlert(this.editAlertForm).then(response => {
+        console.log(response)
+        that.alerts[that.currentIndex].limitValue = that.editAlertForm.newLimit
+        that.alerts[that.currentIndex].amount = that.editAlertForm.newAmount
+      }).catch(error => {
+        console.log(error)
+      })
+      this.showEditAlertDialog = false
+    },
+
+    deleteAlert(row, index) {
+      if (row.id == null) {
+        this.$notify({
+          title: "Error",
+          message: "Cannot find order, please refresh the page and try again",
+          type: 'error',
+          duration: 2000
+        })
+      } else {
+        var that = this
+
+        deleteAlert({ 'id' : row.id }).then(response => {
+          console.log(response)
+          that.alerts.splice(index, 1)
+        }).catch(error => {
+          console.log(error)
+        })
+      }
+    },
+
     postComment(equipmentCode) {
       this.postCommentDict["comment"] =  this.createCommentContent
       // Posting to backend
@@ -364,7 +563,7 @@ export default {
         this.showCreateCommentDialog = false
         this.createCommentContent = ''
         this.$message.success('Comment is posted successfully!')
-        
+
         var res = this.$store.getters.commentQueryResult
         this.equipmentData.forEach(function(e) {
           if (e.key == equipmentCode) {
@@ -381,7 +580,7 @@ export default {
       // Posting to backend
       this.editCommentDict["comment"] = this.editCommentContent
       this.$store.dispatch('comment/editComment', {"commentId": commentId, "commentDict": this.editCommentDict}).then(() => {
-        
+
         var that = this
         this.equipmentData.forEach(function(e) {
           if (e.key == equipmentCode) {
@@ -417,8 +616,8 @@ export default {
       }).catch(err => {
         console.log(err)
       })
-        
-    }, 
+
+    },
 
     likeComment(equipmentCode, commentId) {
       this.$store.dispatch('comment/voteComment', {"commentId": commentId, "voteType": "up"}).then(response => {
@@ -479,7 +678,7 @@ export default {
                   comment.likes -= 1
                 } else if (lastStatus == "DISLIKED") {
                   comment.dislikes -= 1
-                } 
+                }
                 comment.status = "NOT_COMMENTED"
               }
             })

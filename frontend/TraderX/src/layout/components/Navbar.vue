@@ -34,7 +34,7 @@
           <router-link to="/">
             <el-dropdown-item>Dashboard</el-dropdown-item>
           </router-link>
-          
+
           <el-dropdown-item divided>
             <span
               style="display:block;"
@@ -84,7 +84,7 @@ export default {
         }
       }).catch(error => {
         console.log(error)
-      }) 
+      })
     },
     redirectToNotification(){
       this.isThereNew = false
