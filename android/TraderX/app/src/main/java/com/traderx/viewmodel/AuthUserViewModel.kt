@@ -5,6 +5,7 @@ import android.util.Log
 import com.traderx.api.ErrorHandler
 import com.traderx.api.RequestService
 import com.traderx.api.response.AssetResponse
+import com.traderx.api.response.AssetsResponse
 import com.traderx.api.response.FollowerResponse
 import com.traderx.api.response.SuccessResponse
 import com.traderx.db.User
@@ -113,5 +114,12 @@ class AuthUserViewModel(
         refreshUser()
 
         return dataSource.insertUser(user)
+    }
+    fun getAssets(): Single<ArrayList<AssetsResponse>> {
+        return networkSource.getAssets()
+    }
+
+    fun sellAsset(code : String, amount : Double): Completable {
+        return networkSource.postTransactionSell(code, amount)
     }
 }

@@ -79,4 +79,8 @@ object ApiEndpoint {
     const val SEARCH_USERS: String = "$SEARCH_URI/user/byName"
     const val SEARCH_ARTICLES: String = "$SEARCH_URI/article/byHeader"
     const val SEARCH_EQUIPMENTS: String = "$SEARCH_URI/equipment/byName"
+
+    const val GET_ASSETS: String = "$API_URI/asset/all"
+    const val TRANSACTION_SELL: String = "$TRANSACTION_URI/sell"
+
 }

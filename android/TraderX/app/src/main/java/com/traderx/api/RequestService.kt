@@ -207,4 +207,12 @@ interface RequestService {
 
     @GET(ApiEndpoint.SEARCH_ARTICLES)
     fun searchArticles(@Query("header") name: String): Single<List<ArticleSearchResponse>>
+
+    @GET(ApiEndpoint.GET_ASSETS)
+    fun getAssets(): Single<ArrayList<AssetsResponse>>
+
+    @POST(ApiEndpoint.TRANSACTION_SELL)
+    fun postTransactionSell(@Query("code") code: String, @Query("amount") amount: Double): Completable
+
+
 }

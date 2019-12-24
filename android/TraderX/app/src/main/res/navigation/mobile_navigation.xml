@@ -275,6 +275,9 @@
         <action
             android:id="@+id/action_navigation_auth_user_to_navigation_prediction"
             app:destination="@id/navigation_prediction" />
+        <action
+            android:id="@+id/action_navigation_auth_user_to_navigation_assets"
+            app:destination="@id/navigation_assets" />
     </fragment>
 
     <fragment
@@ -293,6 +296,7 @@
         <action
             android:id="@+id/action_navigation_user_to_navigation_followers"
             app:destination="@id/navigation_followers" />
+
     </fragment>
 
     <fragment
@@ -325,6 +329,17 @@
             app:destination="@id/navigation_equipment" />
 
 
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/navigation_assets"
+        android:name="com.traderx.ui.profile.AssetsFragment"
+        android:label="Assets"
+        tools:layout="@layout/fragment_assets">
+        <action
+            android:id="@+id/action_navigation_assets_to_details"
+            app:destination="@id/navigation_equipment" />
     </fragment>
 
 </navigation>
