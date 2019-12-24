@@ -65,19 +65,16 @@ public class FollowService {
         temp.setFollowee(userToFollow);
 
         String message;
-        NotificationType notificationType;
         if (userToFollow.getIsPrivate()) {
             message = "Request has been sent to ";
             temp.setFollowStatus(FollowStatus.PENDING);
-            notificationType = NotificationType.FOLLOW_REQUESTED;
+            notificationService.createNotification(userToFollow, NotificationType.FOLLOW_REQUESTED,new String[]{requesterUsername});
         } else {
             message = "User followed: ";
             temp.setFollowStatus(FollowStatus.APPROVED);
-            notificationType = NotificationType.FOLLOWED;
         }
 
         followRepository.save(temp);
-        notificationService.createNotification(userToFollow, notificationType,new String[]{requesterUsername});
         return (message + userToFollow.getUsername());
         
     }

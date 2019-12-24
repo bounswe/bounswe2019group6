@@ -50,7 +50,14 @@ email:
   frontend_verification_path : register/confirm # decided on frontend side
 
 amazonProperties:
-  endpointUrl: ${ENDPOINT_URL}
-  accessKey: ${ACCESS_KEY}
-  secretKey: ${SECRET_KEY}
-  bucketName: ${BUCKET_NAME}
+  endpointUrl: ""
+  accessKey: ""
+  secretKey: ""
+  bucketName: ""
+
+mock:
+  initialize: false
+  password: "12345"
+  demo-user1: "demouser1"
+  demo-user2: "demouser2"
+  demo-user3: "demouser3"
