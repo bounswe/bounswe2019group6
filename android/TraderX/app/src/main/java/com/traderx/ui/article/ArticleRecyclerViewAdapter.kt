@@ -1,9 +1,11 @@
 package com.traderx.ui.article
 
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.FragmentManager
 import androidx.navigation.NavDirections
 import androidx.navigation.findNavController
@@ -11,7 +13,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.traderx.R
 import com.traderx.db.Article
 import kotlinx.android.synthetic.main.item_article.view.*
-import kotlinx.android.synthetic.main.modal_delete.view.*
+import java.text.SimpleDateFormat
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.util.*
+
 
 class ArticleRecyclerViewAdapter(
     private val articles: ArrayList<Article>,
@@ -26,12 +33,18 @@ class ArticleRecyclerViewAdapter(
 
         return ViewHolder(view)
     }
+    val formatter = SimpleDateFormat("E, dd MMM yyyy HH:mm:ss", Locale.US)
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.header.text = articles[position].header
         holder.body.text = articles[position].body
         holder.username.text = articles[position].username
-        holder.createdAt.text = articles[position].createdAt
+        holder.createdAt.text = formatter.format(Date.from( Instant.from(
+            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.0")
+                .withZone(ZoneId.of("UTC"))
+                .parse(articles[position].createdAt)
+        )))
 
         with(holder.view) {
             setOnClickListener {

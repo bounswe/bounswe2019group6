@@ -6,6 +6,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.AsyncTask
+import android.os.Build
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
@@ -19,6 +20,7 @@ import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
@@ -38,6 +40,12 @@ import com.traderx.util.Injection
 import com.traderx.viewmodel.ArticleViewModel
 import com.traderx.viewmodel.AuthUserViewModel
 import io.reactivex.disposables.CompositeDisposable
+import java.text.SimpleDateFormat
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class ArticleFragment : Fragment(), FragmentTitleEmitters {
@@ -46,6 +54,7 @@ class ArticleFragment : Fragment(), FragmentTitleEmitters {
         private const val DEFAULT_SELECTION_LEN = 5
 
     }
+    val formatter = SimpleDateFormat("E, dd MMM yyyy HH:mm:ss", Locale.US)
 
     private lateinit var articleViewModel: ArticleViewModel
     private lateinit var authUserViewModel: AuthUserViewModel
@@ -320,10 +329,15 @@ class ArticleFragment : Fragment(), FragmentTitleEmitters {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun updateView() {
         header.text = article.header
         body.text = article.body
-        createdAt.text = article.createdAt
+        createdAt.text = formatter.format(Date.from( Instant.from(
+            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.0")
+                .withZone(ZoneId.of("UTC"))
+                .parse(article.createdAt)
+        )))
         username.text = article.username
         tags.text = article.tags.joinToString { it }
         username.text = article.username

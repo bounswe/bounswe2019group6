@@ -9,11 +9,17 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.traderx.R
 import com.traderx.api.response.CommentResponse
 import com.traderx.type.VoteType
 import kotlinx.android.synthetic.main.item_comment.view.*
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.util.*
+import kotlin.collections.ArrayList
 
 @TargetApi(Build.VERSION_CODES.N)
 class CommentRecyclerViewAdapter(
@@ -24,7 +30,7 @@ class CommentRecyclerViewAdapter(
     private val onVote: (comment: CommentResponse, vote: VoteType, doOnVote: () -> Unit) -> Unit
 ) : RecyclerView.Adapter<CommentRecyclerViewAdapter.ViewHolder>() {
 
-    private var dateFormatter = SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
+    val formatter = java.text.SimpleDateFormat("E, dd MMM yyyy HH:mm:ss", Locale.US)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -33,6 +39,7 @@ class CommentRecyclerViewAdapter(
         return ViewHolder(view)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         with(holder) {
             val com = comments[position]
@@ -41,7 +48,7 @@ class CommentRecyclerViewAdapter(
             comment.text = com.comment
             likes.text = com.likes.toString()
             dislikes.text = com.dislikes.toString()
-            lastModifiedTime.text = dateFormatter.format(com.lastModifiedTime)
+            lastModifiedTime.text = formatter.format(Date.from( Instant.ofEpochMilli(com.lastModifiedTime)))
 
             if (username != com.author) {
                 deleteAction.visibility = View.GONE

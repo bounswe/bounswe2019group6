@@ -1,5 +1,7 @@
 package com.traderx.ui.article
 
+import android.annotation.TargetApi
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +11,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.traderx.R
 import com.traderx.api.response.AnnotationResponse
 import kotlinx.android.synthetic.main.item_annotation.view.*
+import java.text.SimpleDateFormat
+import java.time.*
+import java.util.*
 import java.util.regex.Pattern
+import kotlin.collections.ArrayList
 
 class AnnotationRecyclerViewAdapter(
     private val authUsername: String,
@@ -23,18 +29,19 @@ class AnnotationRecyclerViewAdapter(
 
         return ViewHolder(view)
     }
+    val formatter = SimpleDateFormat("E, dd MMM yyyy HH:mm:ss", Locale.US)
 
+    @TargetApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val annotationItem = annotations[position]
         with(holder) {
             val username = extractUsername(annotationItem.creator)
             annotation.text = annotationItem.body.value
             author.text = username
-            date.text = annotationItem.created
+            date.text = formatter.format(Date.from( Instant.parse(annotationItem.created)))
 
             if (authUsername != username) {
                 deleteAction.visibility = View.GONE
-//                editAction.visibility = View.GONE
             } else {
                 deleteAction.setOnClickListener {
                     onDelete(annotations[adapterPosition].id) {
@@ -43,11 +50,6 @@ class AnnotationRecyclerViewAdapter(
                     }
                 }
 
-//                editAction.setOnClickListener {
-//                    onEdit(comments[adapterPosition].id, comments[adapterPosition].comment) { id, message ->
-//                        updateItem(id, message)
-//                    }
-//                }
             }
         }
     }
@@ -65,6 +67,5 @@ class AnnotationRecyclerViewAdapter(
         val author: TextView = view.author
         val deleteAction: ImageView = view.delete_action
         val date: TextView = view.time
-//        val editAction: ImageView = view.edit_action
     }
 }
