@@ -13,8 +13,8 @@ data class AnnotationResponse(
     val creator: String
 ) {
     data class Target(
-        val selector: Selector,
-        val id: Int,
+        val selector: Selector?,
+        val id: String,
         val type: String
     ) {
         data class Selector(

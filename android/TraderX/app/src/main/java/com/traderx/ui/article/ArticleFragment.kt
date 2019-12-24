@@ -168,15 +168,19 @@ class ArticleFragment : Fragment(), FragmentTitleEmitters {
 
             for (i in 0..(annotations.size - 1)) {
                 val annotation = annotations[i]
+                val selector = annotation.target.selector
 
-                if (annotation.target.selector.start >= annotation.target.selector.end || annotation.target.selector.end >= article.body.length) {
+                if (selector == null ||
+                    selector.start >= selector.end ||
+                    selector.end >= article.body.length
+                ) {
                     continue
                 }
 
                 spannableString.setSpan(
                     BackgroundColorSpan(Color.argb(120, 50, 50, 220)),
-                    annotation.target.selector.start,
-                    annotation.target.selector.start + 1,
+                    selector.start,
+                    selector.start + 1,
                     Spannable.SPAN_EXCLUSIVE_INCLUSIVE
                 )
                 spannableString.setSpan(
@@ -185,10 +189,11 @@ class ArticleFragment : Fragment(), FragmentTitleEmitters {
                             showAnnotationsListModal(i)
                         }
                     },
-                    annotation.target.selector.start,
-                    annotation.target.selector.end,
+                    selector.start,
+                    selector.end,
                     Spannable.SPAN_EXCLUSIVE_INCLUSIVE
                 )
+
             }
 
             body.setText(spannableString)
@@ -196,9 +201,8 @@ class ArticleFragment : Fragment(), FragmentTitleEmitters {
         }
     }
 
-    override fun onDetach() {
-        super.onDetach()
-
+    override fun onStop() {
+        super.onStop()
         body.hideCursor()
     }
 
@@ -261,8 +265,8 @@ class ArticleFragment : Fragment(), FragmentTitleEmitters {
 
     private fun showAnnotationsListModal(index: Int) {
         val annotationList = ArrayList<AnnotationResponse>()
-        val currentAnnotationStart = annotations[index].target.selector.start
-        val currentAnnotationEnd = annotations[index].target.selector.end
+        val currentAnnotationStart = annotations[index].target.selector?.start ?: 0
+        val currentAnnotationEnd = annotations[index].target.selector?.end ?: 0
 
         annotationList.add(annotations[index])
         for (i in 0..(annotations.size - 1)) {
@@ -271,11 +275,12 @@ class ArticleFragment : Fragment(), FragmentTitleEmitters {
             }
 
             val annotation = annotations[i]
-
-            if ((annotation.target.selector.start >= currentAnnotationStart - 2 &&
+            val selector = annotation.target.selector
+            if (selector != null &&
+                ((annotation.target.selector.start >= currentAnnotationStart - 2 &&
                         annotation.target.selector.start <= currentAnnotationEnd + 2) ||
-                (annotation.target.selector.end >= currentAnnotationStart - 2 &&
-                        annotation.target.selector.end <= currentAnnotationEnd + 2)
+                        (annotation.target.selector.end >= currentAnnotationStart - 2 &&
+                                annotation.target.selector.end <= currentAnnotationEnd + 2))
             ) {
                 annotationList.add(annotation)
             }
