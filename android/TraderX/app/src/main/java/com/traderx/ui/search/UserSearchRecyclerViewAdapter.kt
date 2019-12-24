@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.navigation.NavDirections
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.traderx.R
@@ -27,12 +28,7 @@ class UserSearchRecyclerViewAdapter(
 
         with(holder.mView) {
             setOnClickListener {
-
-                val action =
-                    UserSearchFragmentDirections.actionNavigationUserSearchToNavigationUser(item.username)
-
-                findNavController().navigate(action)
-
+                findNavController().navigate(SearchFragmentDirections.actionNavigationUserSearchToNavigationUser(item.username))
             }
         }
     }

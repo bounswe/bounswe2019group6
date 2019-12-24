@@ -21,7 +21,7 @@ import com.traderx.api.ApiService
 import com.traderx.api.ErrorHandler
 import com.traderx.api.RequestService
 import com.traderx.db.User
-import com.traderx.enum.Role
+import com.traderx.type.Role
 import com.traderx.ui.auth.signup.SignUpValidator
 import com.traderx.util.Helper
 import com.traderx.util.Injection
@@ -41,6 +41,7 @@ class AuthUserFragment : Fragment() {
     private lateinit var role: TextView
     private lateinit var followerCount: TextView
     private lateinit var followingCount: TextView
+    private lateinit var predictionSuccessRate: TextView
     private lateinit var profilePrivate: TextView
     private lateinit var becomeTraderLayout: LinearLayout
     private lateinit var requestService: RequestService
@@ -59,6 +60,7 @@ class AuthUserFragment : Fragment() {
         profilePrivate = root.findViewById(R.id.profile_private)
         followerCount = root.findViewById(R.id.profile_follower)
         followingCount = root.findViewById(R.id.profile_following)
+        predictionSuccessRate = root.findViewById(R.id.prediction_success_rate)
         becomeTraderLayout = root.findViewById(R.id.become_trader_action)
         becomeTraderLayout.setOnClickListener {
             becomeTrader(inflater)
@@ -96,6 +98,12 @@ class AuthUserFragment : Fragment() {
             }
         }
 
+        root.findViewById<LinearLayout>(R.id.my_assets_action)?.let {
+            it.setOnClickListener {
+                findNavController().navigate(AuthUserFragmentDirections.actionNavigationAuthUserToNavigationAssets())
+            }
+        }
+
         root.findViewById<LinearLayout>(R.id.my_transactions_action)?.let {
             it.setOnClickListener {
                 findNavController().navigate(AuthUserFragmentDirections.actionNavigationAuthUserToNavigationTransactions())
@@ -114,6 +122,29 @@ class AuthUserFragment : Fragment() {
             }
         }
 
+        root.findViewById<LinearLayout>(R.id.my_articles_action)?.let {
+            it.setOnClickListener {
+                if (::user.isInitialized) {
+                    findNavController().navigate(
+                        AuthUserFragmentDirections.actionNavigationAuthUserToNavigationMyArticles(
+                            user.username
+                        )
+                    )
+                }
+            }
+        }
+
+        root.findViewById<LinearLayout>(R.id.my_predictions_action)?.let {
+            it.setOnClickListener {
+                if (::user.isInitialized) {
+                    findNavController().navigate(
+                        AuthUserFragmentDirections.actionNavigationAuthUserToNavigationPrediction(
+                            user.username
+                        )
+                    )
+                }
+            }
+        }
 
         root.findViewById<ImageView>(R.id.action_menu)?.let { imageView ->
             imageView.setOnClickListener {
@@ -149,6 +180,7 @@ class AuthUserFragment : Fragment() {
                     profilePrivate.text = it.localizedIsPrivate(context)
                     followerCount.text = it.followersCount.toString()
                     followingCount.text = it.followingsCount.toString()
+                    predictionSuccessRate.text = it.predictionStats?.successPercentage.toString()
 
                     if (user.role == Role.ROLE_BASIC.value) {
                         becomeTraderLayout.visibility = View.VISIBLE

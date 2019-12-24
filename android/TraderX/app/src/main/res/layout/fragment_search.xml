@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_margin="16dp"
     android:orientation="vertical">
 
     <com.google.android.material.textfield.TextInputLayout
@@ -26,7 +29,7 @@
                 android:paddingTop="10dp"
                 android:textColor="@color/black"
                 android:textCursorDrawable="@drawable/color_cursor"
-                android:textSize="14sp"/>
+                android:textSize="14sp" />
 
             <ImageButton
                 android:id="@+id/search_button"
@@ -40,17 +43,49 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:checkedButton="@id/user_search"
+        android:orientation="horizontal">
 
-    <androidx.recyclerview.widget.RecyclerView xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+        <RadioButton
+            android:id="@+id/user_search"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_weight="1"
+            android:text="@string/username" />
+
+        <RadioButton
+            android:id="@+id/equipment_search"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_weight="1"
+            android:text="@string/equipment" />
+
+        <RadioButton
+            android:id="@+id/article_search"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_weight="1"
+            android:text="@string/article" />
+    </RadioGroup>
+
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/user_list"
         android:name="com.traderx.ui.search.UserSearchFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
         app:layoutManager="LinearLayoutManager"
-        tools:context=".ui.search.UserSearchFragment"
+        tools:context=".ui.search.SearchFragment"
         tools:listitem="@layout/item_user" />
 
 </LinearLayout>

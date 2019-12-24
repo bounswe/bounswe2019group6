@@ -10,8 +10,11 @@ import androidx.room.PrimaryKey
 data class Article(
     @PrimaryKey
     @ColumnInfo(name = "id") val id: Int,
-    @ColumnInfo(name = "title") val title: String,
-    @ColumnInfo(name = "keywords") val keywords: List<String>,
-    @ColumnInfo(name = "body") val body: String
+    @ColumnInfo(name = "username") val username: String,
+    @ColumnInfo(name = "header") val header: String,
+    @ColumnInfo(name = "body") val body: String,
+    @ColumnInfo(name = "tags") val tags: List<String>,
+    @ColumnInfo(name = "imageUrl") val imageUrl: String?,
+    @ColumnInfo(name = "createdAt") val createdAt: String
 )
 

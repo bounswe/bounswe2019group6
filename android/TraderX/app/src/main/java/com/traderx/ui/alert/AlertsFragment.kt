@@ -1,20 +1,20 @@
 package com.traderx.ui.alert
 
 import android.content.Context
-import android.net.Uri
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-
+import com.google.android.material.snackbar.Snackbar
 import com.traderx.R
 import com.traderx.api.ErrorHandler
 import com.traderx.api.response.AlertResponse
-import com.traderx.ui.search.UserSearchSkeletonRecyclerViewAdapter
+import com.traderx.ui.search.SearchSkeletonRecyclerViewAdapter
 import com.traderx.util.FragmentTitleEmitters
 import com.traderx.util.Helper
 import com.traderx.util.Injection
@@ -29,6 +29,8 @@ class AlertsFragment : Fragment(), FragmentTitleEmitters {
 
     private val disposable = CompositeDisposable()
 
+    private var isOnProgress = false
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -37,20 +39,30 @@ class AlertsFragment : Fragment(), FragmentTitleEmitters {
 
         setFragmentTitle(context, getString(R.string.my_alerts))
 
-        equipmentViewModel = ViewModelProvider(this, Injection.provideEquipmentViewModelFactory(context)).get(EquipmentViewModel::class.java)
+        equipmentViewModel =
+            ViewModelProvider(this, Injection.provideEquipmentViewModelFactory(context)).get(
+                EquipmentViewModel::class.java
+            )
 
         val root = inflater.inflate(R.layout.fragment_alerts, container, false)
 
         recyclerView = root.findViewById<RecyclerView>(R.id.alert_list).apply {
             layoutManager = LinearLayoutManager(context)
-            adapter = UserSearchSkeletonRecyclerViewAdapter(5)
+            adapter = SearchSkeletonRecyclerViewAdapter(5)
         }
 
         disposable.add(
             equipmentViewModel.getAlerts()
                 .compose(Helper.applySingleSchedulers<ArrayList<AlertResponse>>())
                 .subscribe({
-                    recyclerView.adapter = AlertRecyclerViewAdapter(it, context)
+                    recyclerView.adapter =
+                        AlertRecyclerViewAdapter(
+                            it,
+                            context,
+                            fragmentManager as FragmentManager
+                        ) { id, doOnSuccess ->
+                            deleteAlert(id, doOnSuccess)
+                        }
                 }, {
                     ErrorHandler.handleError(it, context)
                 })
@@ -59,4 +71,26 @@ class AlertsFragment : Fragment(), FragmentTitleEmitters {
         return root
     }
 
+    private fun deleteAlert(id: Int, doOnSuccess: () -> Unit) {
+        if (!isOnProgress) {
+
+            isOnProgress = true
+
+            disposable.add(
+                equipmentViewModel.deleteAlert(id)
+                    .compose(Helper.applyCompletableSchedulers())
+                    .doOnComplete {
+                        isOnProgress = false
+                    }
+                    .subscribe {
+                        doOnSuccess()
+                        Snackbar.make(
+                            requireView(),
+                            getString(R.string.alert_delete_success),
+                            Snackbar.LENGTH_SHORT
+                        ).show()
+                    }
+            )
+        }
+    }
 }

@@ -31,7 +31,7 @@ class FollowRecyclerViewAdapter(
 
         with(holder.view) {
             setOnClickListener {
-                findNavController().navigate(actionNavDirection(followers[position].username))
+                findNavController().navigate(actionNavDirection(followers[holder.adapterPosition].username))
             }
         }
 
@@ -39,9 +39,9 @@ class FollowRecyclerViewAdapter(
             holder.unfollowAction.visibility = View.GONE
         } else {
             holder.unfollowAction.setOnClickListener {
-                unfollowAction(followers[position].username) {
-                    followers.removeAt(position)
-                    notifyItemRemoved(position)
+                unfollowAction(followers[holder.adapterPosition].username) {
+                    followers.removeAt(holder.adapterPosition)
+                    notifyItemRemoved(holder.adapterPosition)
                 }
             }
         }

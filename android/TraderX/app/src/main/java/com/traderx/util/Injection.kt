@@ -21,7 +21,7 @@ object Injection {
         return ViewModelFactory(dataSource, networkSource)
     }
 
-    fun provideArticleUserViewModelFactory(context: Context): ViewModelFactory {
+    fun provideArticleViewModelFactory(context: Context): ViewModelFactory {
         val dataSource = provideArticleDao(context)
         val networkSource = ApiService.getInstance(context)
 
@@ -40,6 +40,12 @@ object Injection {
         val networkSource = ApiService.getInstance(context)
 
         return ViewModelFactory(dataSource, networkSource)
+    }
+
+    fun provideEventViewModelFactory(context: Context): ViewModelFactory {
+        val networkSource = ApiService.getInstance(context)
+
+        return ViewModelFactory(null, networkSource)
     }
 
     private fun provideUserDao(context: Context): UserDao {

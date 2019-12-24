@@ -1,17 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:name="com.traderx.ui.portfolio.PortfoliosFragment"
-    tools:context=".ui.portfolio.PortfoliosFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:name="com.traderx.ui.portfolio.PortfolioDFragment"
+    tools:context=".ui.portfolio.PortfolioFragment">
 
-    <androidx.recyclerview.widget.RecyclerView xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/portfolio_list"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/portfolio_equipment_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         app:layoutManager="LinearLayoutManager"
-        tools:listitem="@layout/item_portfolio" />
-</FrameLayout>
+        tools:listitem="@layout/item_portfolio_equipment" />
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/portfolio_equipment_add"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:src="@drawable/ic_plus"
+        android:tint="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

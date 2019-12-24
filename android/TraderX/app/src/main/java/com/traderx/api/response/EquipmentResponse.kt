@@ -2,7 +2,7 @@ package com.traderx.api.response
 
 import android.content.Context
 import com.traderx.R
-import com.traderx.enum.EquipmentType
+import com.traderx.type.EquipmentType
 
 data class EquipmentResponse(
     val equipment: Equipment,
@@ -32,6 +32,7 @@ data class EquipmentResponse(
         val close: Double,
         val high: Double,
         val low: Double,
-        val open: Double
+        val open: Double,
+        val timestamp: Long
     )
 }

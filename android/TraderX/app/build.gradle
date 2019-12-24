@@ -37,6 +37,7 @@ android {
         targetCompatibility = 1.8
         sourceCompatibility = 1.8
     }
+    buildToolsVersion = '28.0.3'
 
     kotlinOptions {
         jvmTarget = "1.8"
@@ -67,6 +68,8 @@ dependencies {
 
     //Room
     implementation deps.room.runtime
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.0.0'
     kapt deps.room.compiler
     implementation deps.room.rxjava2
 

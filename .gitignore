@@ -3,10 +3,9 @@
 .env
 django-tut*
 db.sqlite3
+**.DS_Store
+**group6.iml
 .DS_Store
-
 .idea/
-
 annotator/TraderX/group6.iml
-
 backend/TraderX/group6.iml

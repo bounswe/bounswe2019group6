@@ -216,6 +216,64 @@
                             android:textSize="14.3sp" />
                     </LinearLayout>
                 </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal"
+                    android:padding="19.2dp">
+
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/make_prediction"
+                            android:textColor="@color/txt_color"
+                            android:textSize="14.3sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <ImageView
+                            android:id="@+id/decrease_prediction_action"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="7dp"
+                            android:layout_marginRight="8dp"
+                            android:src="@drawable/ic_thumb_down_24px"
+                            android:tint="@color/light_gray" />
+
+                        <ImageView
+                            android:id="@+id/stable_prediction_action"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="7dp"
+                            android:layout_marginRight="12dp"
+                            android:src="@drawable/ic_remove_24px"
+                            android:tint="#4CAF50" />
+
+                        <ImageView
+                            android:id="@+id/increase_prediction_action"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="7dp"
+                            android:layout_marginRight="12dp"
+                            android:src="@drawable/ic_thumb_up_24px"
+                            android:tint="@color/light_gray" />
+
+                    </LinearLayout>
+                </LinearLayout>
             </LinearLayout>
 
             <LinearLayout
@@ -223,7 +281,8 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="19.3dp"
                 android:background="@color/white"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="5dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -243,8 +302,12 @@
 
                 <lecho.lib.hellocharts.view.LineChartView
                     android:id="@+id/chart"
-                    android:layout_width="match_parent"
-                    android:layout_height="100dp" />
+                    android:layout_width="wrap_content"
+                    android:layout_height="200dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp" />
             </LinearLayout>
 
 
@@ -254,6 +317,14 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="19.3dp"
                 android:text="@string/buy"
+                android:textColor="#fbfbfb" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/alert_action"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="19.3dp"
+                android:text="@string/create_alert"
                 android:textColor="#fbfbfb" />
 
 
@@ -281,23 +352,13 @@
 
                 </LinearLayout>
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/comment_list"
+                <FrameLayout
+                    android:id="@+id/comments"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"/>
+
             </LinearLayout>
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/alert_action"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:src="@drawable/ic_add_alert_24px"
-        android:tint="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

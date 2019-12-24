@@ -22,7 +22,7 @@ import com.traderx.R
 import com.traderx.api.ErrorHandler
 import com.traderx.api.response.AssetResponse
 import com.traderx.api.response.EquipmentResponse
-import com.traderx.enum.EquipmentType
+import com.traderx.type.EquipmentType
 import com.traderx.util.FragmentTitleEmitters
 import com.traderx.util.FragmentTitleListeners
 import com.traderx.util.Helper
@@ -33,6 +33,7 @@ import com.traderx.viewmodel.TransactionViewModel
 import io.reactivex.disposables.CompositeDisposable
 import retrofit2.HttpException
 import java.lang.Double.parseDouble
+import java.lang.NumberFormatException
 
 class TransactionFragment : Fragment(), FragmentTitleEmitters {
 
@@ -110,10 +111,6 @@ class TransactionFragment : Fragment(), FragmentTitleEmitters {
                     code.text = it.equipment.code
 
                     var toUsd = it.equipment.currentValue
-
-                    if (it.equipment.equipmentType == EquipmentType.CURRENCY) {
-                        toUsd = 1 / toUsd
-                    }
 
                     amountInUsd.setOnKeyListener { _, _, event ->
                         if (event.action == KeyEvent.ACTION_UP) {
@@ -214,7 +211,14 @@ class TransactionFragment : Fragment(), FragmentTitleEmitters {
     }
 
     private fun applyRatio(input: EditText, output: EditText, ratio: Double) {
-        val amount = if (input.text.isEmpty()) 0.0 else parseDouble(input.text.toString())
+        var amount = 0.0
+
+        try {
+             amount = if (input.text.isEmpty()) 0.0 else parseDouble(input.text.toString())
+        } catch (e: NumberFormatException) {
+            input.setText("")
+            amount = 0.0
+        }
 
         output.setText((amount * ratio).toString())
     }

@@ -6,9 +6,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.traderx.R
 
-class UserSearchSkeletonRecyclerViewAdapter(
+class SearchSkeletonRecyclerViewAdapter(
     private val numSkeleton: Int
-): RecyclerView.Adapter<UserSearchSkeletonRecyclerViewAdapter.ViewHolder>(){
+): RecyclerView.Adapter<SearchSkeletonRecyclerViewAdapter.ViewHolder>(){
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_user_skeleton, parent, false)

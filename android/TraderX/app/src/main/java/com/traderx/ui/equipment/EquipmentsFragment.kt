@@ -12,8 +12,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.traderx.R
 import com.traderx.api.ErrorHandler
 import com.traderx.api.response.EquipmentsResponse
-import com.traderx.enum.EquipmentType
-import com.traderx.ui.search.UserSearchSkeletonRecyclerViewAdapter
+import com.traderx.type.EquipmentType
+import com.traderx.ui.search.SearchSkeletonRecyclerViewAdapter
 import com.traderx.util.FragmentTitleEmitters
 import com.traderx.util.FragmentTitleListeners
 import com.traderx.util.Helper
@@ -55,7 +55,7 @@ class EquipmentsFragment : Fragment(), FragmentTitleEmitters {
 
         recyclerView = root.findViewById<RecyclerView>(R.id.equipment_list).apply {
             layoutManager = viewManager
-            adapter = UserSearchSkeletonRecyclerViewAdapter(3)
+            adapter = SearchSkeletonRecyclerViewAdapter(3)
         }
 
         val source = when (equipmentType) {

@@ -10,17 +10,20 @@ import android.widget.LinearLayout
 import androidx.navigation.fragment.findNavController
 
 import com.traderx.R
-import com.traderx.enum.EquipmentType
+import com.traderx.type.EquipmentType
+import com.traderx.util.FragmentTitleEmitters
 
 /**
  * A simple [Fragment] subclass.
  */
-class EquipmentTypesFragment : Fragment() {
+class EquipmentTypesFragment : Fragment(), FragmentTitleEmitters {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        setFragmentTitle(context, getString(R.string.title_equipment_types))
+
         val root = inflater.inflate(R.layout.fragment_equipment_types, container, false)
 
         root.findViewById<LinearLayout>(R.id.equipment_types_crypto_currencies_action)?.let {

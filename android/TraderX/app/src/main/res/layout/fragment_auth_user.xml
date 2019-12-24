@@ -97,7 +97,7 @@
                     android:id="@+id/followers_list_action"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="45dp"
+                    android:layout_marginStart="30dp"
                     android:orientation="vertical"
                     android:paddingBottom="13dp">
 
@@ -122,7 +122,7 @@
                     android:id="@+id/followings_list_action"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="45dp"
+                    android:layout_marginStart="30dp"
                     android:orientation="vertical"
                     android:paddingBottom="13dp">
 
@@ -146,7 +146,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="45dp"
+                    android:layout_marginStart="30dp"
                     android:orientation="vertical"
                     android:paddingBottom="13dp">
 
@@ -167,6 +167,30 @@
                         android:textSize="12sp" />
                 </LinearLayout>
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="30dp"
+                    android:orientation="vertical"
+                    android:paddingBottom="13dp">
+
+                    <TextView
+                        android:id="@+id/prediction_success_rate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:paddingTop="13dp"
+                        android:textColor="#3b3b3b"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/title_predictions"
+                        android:textColor="#a9a9b0"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
             </LinearLayout>
 
             <LinearLayout
@@ -179,7 +203,7 @@
                 android:orientation="vertical">
 
                 <LinearLayout
-                    android:id="@+id/pending_follow_requests_action"
+                    android:id="@+id/my_assets_action"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:baselineAligned="false"
@@ -196,7 +220,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/pending_following_requests"
+                            android:text="My Assets"
                             android:textColor="@color/txt_color"
                             android:textSize="17.3sp" />
 
@@ -205,6 +229,9 @@
                 </LinearLayout>
             </LinearLayout>
 
+
+
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -215,7 +242,7 @@
                 android:orientation="vertical">
 
                 <LinearLayout
-                    android:id="@+id/my_alerts_action"
+                    android:id="@+id/my_predictions_action"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:baselineAligned="false"
@@ -232,7 +259,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/my_alerts"
+                            android:text="@string/title_my_predictions"
                             android:textColor="@color/txt_color"
                             android:textSize="17.3sp" />
 
@@ -313,6 +340,114 @@
 
                 </LinearLayout>
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="19.3dp"
+                android:layout_marginRight="19.3dp"
+                android:layout_marginBottom="19.3dp"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/my_articles_action"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal"
+                    android:padding="19.2dp">
+
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/title_my_articles"
+                            android:textColor="@color/txt_color"
+                            android:textSize="17.3sp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="19.3dp"
+                android:layout_marginRight="19.3dp"
+                android:layout_marginBottom="19.3dp"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/pending_follow_requests_action"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal"
+                    android:padding="19.2dp">
+
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/pending_following_requests"
+                            android:textColor="@color/txt_color"
+                            android:textSize="17.3sp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="19.3dp"
+                android:layout_marginRight="19.3dp"
+                android:layout_marginBottom="19.3dp"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/my_alerts_action"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal"
+                    android:padding="19.2dp">
+
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/my_alerts"
+                            android:textColor="@color/txt_color"
+                            android:textSize="17.3sp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+            </LinearLayout>
+
 
             <LinearLayout
                 android:id="@+id/become_trader_action"

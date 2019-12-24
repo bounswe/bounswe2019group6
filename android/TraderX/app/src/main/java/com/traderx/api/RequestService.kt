@@ -1,13 +1,12 @@
 package com.traderx.api
 
-import com.traderx.api.request.AlertRequest
-import com.traderx.api.request.LoginRequest
-import com.traderx.api.request.SignUpRequest
+import com.traderx.api.request.*
 import com.traderx.api.response.*
 import com.traderx.db.Article
 import com.traderx.db.User
 import io.reactivex.Completable
 import io.reactivex.Single
+import okhttp3.MultipartBody
 import retrofit2.http.*
 
 
@@ -64,16 +63,44 @@ interface RequestService {
     fun updateUser(@Path("status") status: String): Completable
 
     @GET(ApiEndpoint.ARTICLE)
-    fun getArticle(@Path("articleId") articleId: Int): Single<Article>
+    fun getArticle(@Path("id") articleId: Int): Single<Article>
 
     @GET(ApiEndpoint.ARTICLES)
-    fun getArticles(): Single<List<Article>>
+    fun getArticles(): Single<ArrayList<Article>>
 
-    @POST(ApiEndpoint.INSERT_ARTICLE)
-    fun insertArticle(@Body article: Article): Completable
+    @POST(ApiEndpoint.ARTICLE_CREATE)
+    fun createArticle(@Body article: ArticleRequest): Completable
 
-    @DELETE(ApiEndpoint.INSERT_ARTICLE)
-    fun deleteArticle(articleId: Int): Completable
+    @Multipart
+    @POST(ApiEndpoint.ARTICLE_CREATE_IMAGE)
+    fun createArticleImage(@Part file: MultipartBody.Part): Single<ImageResponse>
+
+    @POST(ApiEndpoint.ARTICLE_EDIT)
+    fun editArticle(@Query("id") id: Int, @Body article: ArticleRequest): Completable
+
+    @POST(ApiEndpoint.ARTICLE_DELETE)
+    fun deleteArticle(@Query("id") articleId: Int): Completable
+
+    @GET(ApiEndpoint.ARTICLE_USER_ARTICLES)
+    fun getUserArticles(@Path("username") username: String): Single<ArrayList<Article>>
+
+    @GET(ApiEndpoint.COMMENT_ARTICLE)
+    fun getArticleComments(@Path("id") id: Int): Single<ArrayList<CommentResponse>>
+
+    @POST(ApiEndpoint.COMMENT_ARTICLE_INSERT)
+    fun createCommentArticle(@Path("id") id: Int, @Body comment: CommentRequest): Single<CommentResponse>
+
+    @POST(ApiEndpoint.COMMENT_ARTICLE_EDIT)
+    fun editCommentArticle(@Path("id") id: Int, @Body comment: CommentRequest): Completable
+
+    @POST(ApiEndpoint.COMMENT_ARTICLE_VOTE)
+    fun voteCommentArticle(@Path("id") id: Int, @Path("type") vote: String): Completable
+
+    @DELETE(ApiEndpoint.COMMENT_ARTICLE_REVOKE)
+    fun revokeCommentArticle(@Path("id") id: Int): Completable
+
+    @DELETE(ApiEndpoint.COMMENT_ARTICLE_DELETE)
+    fun deleteCommentArticle(@Path("id") id: Int): Completable
 
     @GET(ApiEndpoint.EQUIPMENT)
     fun getEquipment(@Path("name") code: String): Single<EquipmentResponse>
@@ -88,10 +115,25 @@ interface RequestService {
     fun getStockEquipments(): Single<EquipmentsResponse>
 
     @GET(ApiEndpoint.COMMENT_EQUIPMENT)
-    fun getEquipmentComments(@Path("code") code: String): Single<List<CommentResponse>>
+    fun getEquipmentComments(@Path("code") code: String): Single<ArrayList<CommentResponse>>
+
+    @POST(ApiEndpoint.COMMENT_EQUIPMENT_POST)
+    fun createComment(@Path("code") code: String, @Body comment: CommentRequest): Single<CommentResponse>
+
+    @POST(ApiEndpoint.COMMENT_EDIT)
+    fun editComment(@Path("id") id: Int, @Body comment: CommentRequest): Completable
+
+    @POST(ApiEndpoint.COMMENT_VOTE)
+    fun voteComment(@Path("id") id: Int, @Path("vote") vote: String): Completable
+
+    @DELETE(ApiEndpoint.COMMENT_REVOKE)
+    fun revokeComment(@Path("id") id: Int): Completable
 
     @POST(ApiEndpoint.TRANSACTION_BUY)
     fun postTransactionBuy(@Query("code") code: String, @Query("amount") amount: Double): Completable
+
+    @DELETE(ApiEndpoint.COMMENT_DELETE)
+    fun deleteComment(@Path("id") id: Int): Completable
 
     @GET(ApiEndpoint.TRANSACTIONS)
     fun getTransactions(@Path("username") username: String): Single<List<TransactionsResponse>>
@@ -105,27 +147,72 @@ interface RequestService {
     @POST(ApiEndpoint.ALERT_CREATE)
     fun createAlert(@Body alert: AlertRequest): Completable
 
-    @POST(ApiEndpoint.ADD_PORTFOLIO)
-    fun createPortfolio(@Query("portfolioName")  portfolioName: String): Completable
+    @DELETE(ApiEndpoint.ALERT_DELETE)
+    fun deleteAlert(@Query("id") id: Int): Completable
 
+    @POST(ApiEndpoint.ADD_PORTFOLIO)
+    fun createPortfolio(@Query("portfolioName") portfolioName: String): Completable
 
     @GET(ApiEndpoint.GET_PORTFOLIO)
-    fun getPortfolio(@Query("portfolioName") portfolioName: String): Single<PortfolioResponse>
+    fun getPortfolio(@Query("portfolioName") portfolioName: String): Single<ArrayList<EquipmentResponse.Equipment>>
 
-    @POST(ApiEndpoint.ADD_TO_PORTFOLIO)
+    @POST(ApiEndpoint.ADD_MANY_TO_PORTFOLIO)
     fun addToPortfolio(
         @Query("portfolioName") portfolioName: String,
-        @Query("code") equipment: String
+        @Body codes : List<String>
     ): Completable
 
-    @POST(ApiEndpoint.DELETE_PORTFOLIO)
+    @GET(ApiEndpoint.GET_ALL_PORTFOLIO)
+    fun getPortfolios(): Single<ArrayList<PortfolioResponse>>
+
+
+    @DELETE(ApiEndpoint.DELETE_PORTFOLIO)
     fun delPortfolio(@Query("portfolioName") portfolioName: String): Completable
 
-    @POST(ApiEndpoint.DELETE_FROM_PORTFOLIO)
+    @DELETE(ApiEndpoint.DELETE_FROM_PORTFOLIO)
     fun delFromPortfolio(
         @Query("portfolioName") portfolioName: String,
         @Query("code") equipment: String
     ): Completable
+
+    @GET(ApiEndpoint.EVENTS)
+    fun getEvents(): Single<List<EventResponse>>
+
+    @GET(ApiEndpoint.ANNOTATION_ARTICLE_ALL)
+    fun getArticleAnnotations(@Path("id") id: Int): Single<ArrayList<AnnotationResponse>>
+
+    @GET(ApiEndpoint.ANNOTATION_ARTICLE)
+    fun getArticleAnnotation(@Path("id") id: Int): Single<AnnotationResponse>
+
+    @DELETE(ApiEndpoint.ANNOTATION_ARTICLE_DELETE)
+    fun deleteArticleAnnotation(@Query("id") id: Int): Completable
+
+    @POST(ApiEndpoint.ANNOTATION_ARTICLE_CREATE)
+    fun createArticleAnnotation(@Body annotation: AnnotationRequest): Completable
+
+    @POST(ApiEndpoint.ANNOTATION_ARTICLE_UPDATE)
+    fun updateArticleAnnotation(@Query("id") id: Int): Completable
+
+    @POST(ApiEndpoint.PREDICTION_CREATE)
+    fun createPrediction(@Query("code") code: String, @Query("type") type: String): Completable
+
+    @GET(ApiEndpoint.PREDICTION_USER_ALL)
+    fun getPredictions(@Path("username") username: String): Single<PredictionResponse>
+
+    @GET(ApiEndpoint.SEARCH_USERS)
+    fun searchUsers(@Query("name") name: String): Single<List<User>>
+
+    @GET(ApiEndpoint.SEARCH_EQUIPMENTS)
+    fun searchEquipments(@Query("name") name: String): Single<List<EquipmentSearchResponse>>
+
+    @GET(ApiEndpoint.SEARCH_ARTICLES)
+    fun searchArticles(@Query("header") name: String): Single<List<ArticleSearchResponse>>
+
+    @GET(ApiEndpoint.GET_ASSETS)
+    fun getAssets(): Single<ArrayList<AssetsResponse>>
+
+    @POST(ApiEndpoint.TRANSACTION_SELL)
+    fun postTransactionSell(@Query("code") code: String, @Query("amount") amount: Double): Completable
 
 
 }

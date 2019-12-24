@@ -12,10 +12,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.traderx.R
 import com.traderx.api.ErrorHandler
 import com.traderx.api.response.TransactionsResponse
-import com.traderx.ui.profile.PendingRequestRecyclerViewAdapter
-import com.traderx.ui.search.UserSearchSkeletonRecyclerViewAdapter
+import com.traderx.ui.search.SearchSkeletonRecyclerViewAdapter
 import com.traderx.util.FragmentTitleEmitters
-import com.traderx.util.FragmentTitleListeners
 import com.traderx.util.Helper
 import com.traderx.util.Injection
 import com.traderx.viewmodel.AuthUserViewModel
@@ -44,7 +42,7 @@ class TransactionsFragment : Fragment(), FragmentTitleEmitters {
 
         recyclerView = root.findViewById<RecyclerView>(R.id.transaction_list).apply {
             layoutManager = viewManager
-            adapter = UserSearchSkeletonRecyclerViewAdapter(3)
+            adapter = SearchSkeletonRecyclerViewAdapter(3)
         }
 
         transactionViewModel =

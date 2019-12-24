@@ -8,7 +8,7 @@ import com.traderx.db.EquipmentDao
 import com.traderx.db.TransactionDao
 import com.traderx.db.UserDao
 
-class ViewModelFactory(private val dataSource: Any, private val networkSource: RequestService) :
+class ViewModelFactory(private val dataSource: Any?, private val networkSource: RequestService) :
     ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         @Suppress("UNCHECKED_CAST")
@@ -18,7 +18,7 @@ class ViewModelFactory(private val dataSource: Any, private val networkSource: R
                 networkSource
             ) as T
             modelClass.isAssignableFrom(UserViewModel::class.java) -> UserViewModel(networkSource) as T
-            modelClass.isAssignableFrom(TraderEquipmentViewModel::class.java) && dataSource is ArticleDao -> TraderEquipmentViewModel(
+            modelClass.isAssignableFrom(ArticleViewModel::class.java) && dataSource is ArticleDao -> ArticleViewModel(
                 dataSource,
                 networkSource
             ) as T
@@ -28,6 +28,12 @@ class ViewModelFactory(private val dataSource: Any, private val networkSource: R
             ) as T
             modelClass.isAssignableFrom(TransactionViewModel::class.java) && dataSource is TransactionDao -> TransactionViewModel(
                 dataSource,
+                networkSource
+            ) as T
+            modelClass.isAssignableFrom(EventViewModel::class.java) -> EventViewModel(
+                networkSource
+            ) as T
+            modelClass.isAssignableFrom(PortfolioViewModel::class.java) -> PortfolioViewModel(
                 networkSource
             ) as T
             else -> throw IllegalArgumentException("Unknown ViewModel Class or dataSource")
