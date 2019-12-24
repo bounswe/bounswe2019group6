@@ -38,11 +38,11 @@
           <el-table-column prop="name" label="Equipment Name">
             <template slot-scope="scope">{{ scope.row.equipmentName }}</template>
           </el-table-column>
-          <el-table-column prop="value" label="Current Value">
-            <template slot-scope="scope">{{ scope.row.currentValue }}</template>
+          <el-table-column prop="value" label="Current Value ($)">
+            <template slot-scope="scope">{{ scope.row.currentValue }} $</template>
           </el-table-column>
           <el-table-column prop="stock" label="Current Stock">
-            <template slot-scope="scope">{{ scope.row.currentStock }}</template>
+            <template slot-scope="scope">{{ scope.row.currentStock }} available</template>
           </el-table-column>
           <el-table-column fixed="right" width="120">
             <template slot-scope="scope">
@@ -140,29 +140,7 @@ export default {
     }
   },
   created() {
-    var currentUserName = this.$store.state.user.name
-    this.$store.dispatch('search/getAllUsers').then(() => {
-      var res = this.$store.getters.userSearchResult
-      var temp = []
-      res.forEach(function (user) {
-        var followText = user.followingStatus == 'NOT_FOLLOWING' ? "Follow" : user.followingStatus == 'FOLLOWING' ? "Unfollow" : 'Requested'
-        var isFollowing = user.followingStatus == 'FOLLOWING' ? true : false
-        var isNotFollowing = user.followingStatus == 'NOT_FOLLOWING' ? true : false
-        var isPending = user.followingStatus == 'PENDING' ? true : false
-        if (currentUserName != user.username) {
-          temp.push({
-            name: user.username,
-            privacy : user.isPrivate ? "Private" : 'Public',
-            role : user.roles[0] == "ROLE_TRADER" ? "Trader" : "Basic",
-            followText : followText,
-            isFollowing : isFollowing,
-            isNotFollowing : isNotFollowing,
-            isPending : isPending,
-          })
-        }
-      });
-      this.searchResult = temp
-    })
+    this.getAllUsers()
     this.getAllEvents()
     this.getAllArticles()
     this.getCurrencyList()
@@ -170,14 +148,38 @@ export default {
     this.getStocksList()
   },
   methods: {
+    getAllUsers(){
+      var currentUserName = this.$store.state.user.name
+      this.$store.dispatch('search/getAllUsers').then(() => {
+        var res = this.$store.getters.userSearchResult
+        var temp = []
+        res.forEach(function (user) {
+          var followText = user.followingStatus == 'NOT_FOLLOWING' ? "Follow" : user.followingStatus == 'FOLLOWING' ? "Unfollow" : 'Requested'
+          var isFollowing = user.followingStatus == 'FOLLOWING' ? true : false
+          var isNotFollowing = user.followingStatus == 'NOT_FOLLOWING' ? true : false
+          var isPending = user.followingStatus == 'PENDING' ? true : false
+          if (currentUserName != user.username) {
+            temp.push({
+              name: user.username,
+              privacy : user.isPrivate ? "Private" : 'Public',
+              role : user.roles[0] == "ROLE_TRADER" ? "Trader" : "Basic",
+              followText : followText,
+              isFollowing : isFollowing,
+              isNotFollowing : isNotFollowing,
+              isPending : isPending,
+            })
+          }
+        });
+        this.searchResult = temp
+      })
+    },
     getAllEvents(){
       this.$store.dispatch('search/getEvents').then(() => {
         var res = this.$store.getters.allEvents
-        console.log(res)
         for(var i = 0; i < res.length; i++){
           this.searchEventResult.push({
             "event" : res[i].Event,
-            "date" : res[i].Date,
+            "date" : res[i].Date.replace("T", " "),
             "country" : res[i].Country,
             "prev" : res[i].Previous,
             "actual" : res[i].Actual,
@@ -185,7 +187,7 @@ export default {
           })
           this.searchEventResultToShow.push({
             "event" : res[i].Event,
-            "date" : res[i].Date,
+            "date" : res[i].Date.replace("T", " "),
             "country" : res[i].Country,
             "prev" : res[i].Previous,
             "actual" : res[i].Actual,
@@ -205,13 +207,13 @@ export default {
         for(var i = 0; i < this.$store.getters.articleSearchResult.length; i++){
           this.searchArticleResult.push({
             "author" : this.$store.getters.articleSearchResult[i].username,
-            "timestamp" : this.$store.getters.articleSearchResult[i].createdAt,
+            "timestamp" : this.$store.getters.articleSearchResult[i].createdAt.substring(0, this.$store.getters.articleSearchResult[i].createdAt.length - 2),
             "title" : this.$store.getters.articleSearchResult[i].header,
             "id" : this.$store.getters.articleSearchResult[i].id
           })
           this.searchArticleResultToShow.push({
             "author" : this.$store.getters.articleSearchResult[i].username,
-            "timestamp" : this.$store.getters.articleSearchResult[i].createdAt,
+            "timestamp" : this.$store.getters.articleSearchResult[i].createdAt.substring(0, this.$store.getters.articleSearchResult[i].createdAt.length - 2),
             "title" : this.$store.getters.articleSearchResult[i].header,
             "id" : this.$store.getters.articleSearchResult[i].id
           })
@@ -379,9 +381,9 @@ export default {
       } else if (this.selectedFilter == "equipment"){
         this.searchEquipmentResultToShow = this.searchEquipmentResult.filter(equipment => equipment.equipmentName.includes(this.searchText.toUpperCase()))
       } else if (this.selectedFilter == "article"){
-        this.searchArticleResultToShow = this.searchArticleResult.filter(article => article.title.toUpperCase().includes(this.searchText.toUpperCase()))
+        this.searchArticleResultToShow = this.searchArticleResult.filter(article => (article.title.toUpperCase().includes(this.searchText.toUpperCase())) || (article.author.toUpperCase().includes(this.searchText.toUpperCase())))
       } else if (this.selectedFilter == "event"){
-        this.searchEventResultToShow = this.searchEventResult.filter(event => event.event.toUpperCase().includes(this.searchText.toUpperCase()))
+        this.searchEventResultToShow = this.searchEventResult.filter(event => event.event.toUpperCase().includes(this.searchText.toUpperCase()) || event.country.toUpperCase().includes(this.searchText.toUpperCase()))
       }
     } 
   }  

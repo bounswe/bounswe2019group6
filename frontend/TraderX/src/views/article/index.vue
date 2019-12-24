@@ -63,7 +63,7 @@ export default {
         for(var i = 0; i < this.$store.getters.articleSearchResult.length; i++){
           this.tableData.push({
             "author" : this.$store.getters.articleSearchResult[i].username,
-            "timestamp" : this.$store.getters.articleSearchResult[i].createdAt,
+            "timestamp" : this.$store.getters.articleSearchResult[i].createdAt.substring(0, this.$store.getters.articleSearchResult[i].createdAt.length - 2),
             "title" : this.$store.getters.articleSearchResult[i].header,
             "id" : this.$store.getters.articleSearchResult[i].id
           })

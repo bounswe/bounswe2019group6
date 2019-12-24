@@ -1,5 +1,5 @@
-import { getEquipment, listEquipment, getAllCurrencies, getAllCryptoCurrencies, getAllStocks, depositMoney, 
-        buyEquipment, sellEquipment, getAssetInfo, getMyAllPortfolios, createPortfolio, deletePortfolio, 
+import { getEquipment, listEquipment, getAllCurrencies, getAllCryptoCurrencies, getAllStocks, depositMoney,
+        buyEquipment, sellEquipment, getAssetInfo, getMyAllPortfolios, createPortfolio, deletePortfolio,
         addEquipmentToPortfolio, deleteEquipmentFromPortfolio, getAllEquipmentOfPortfolio, getAllTransactions } from '@/api/equipment'
 
 const state = {

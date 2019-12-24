@@ -49,12 +49,12 @@ export default {
   computed: {
   },
   created() {
-    this.$store.dispatch('search/getArticleByUserName', this.$store.getters.userInfo.username).then(() => {
-      for(var i = 0; i < this.$store.getters.userArticle.length; i++){
+    this.$store.dispatch('search/getMyArticleByUserName', this.$store.getters.userInfo.username).then(() => {
+      for(var i = 0; i < this.$store.getters.myArticles.length; i++){
         this.tableData.push({
-          "timestamp" : this.$store.getters.userArticle[i].createdAt,
-          "title" : this.$store.getters.userArticle[i].header,
-          "id" : this.$store.getters.userArticle[i].id
+          "timestamp" : this.$store.getters.myArticles[i].createdAt,
+          "title" : this.$store.getters.myArticles[i].header,
+          "id" : this.$store.getters.myArticles[i].id
         })
         
       } 

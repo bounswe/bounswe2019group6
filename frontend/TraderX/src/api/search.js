@@ -21,6 +21,13 @@ export function getAllArticles() {
   })
 }
 
+export function getArticleByID(id) {
+  return request({
+    url: '/article/byId/'+id,
+    method: 'get'
+  })
+}
+
 export function writeArticle(data) {
   return request({
     url: '/article/write',
@@ -30,6 +37,13 @@ export function writeArticle(data) {
 }
 
 export function getArticleByUserName(username) {
+  return request({
+    url: '/article/byUsername/'+username,
+    method: 'get',
+  })
+}
+
+export function getMyArticleByUserName(username) {
   return request({
     url: '/article/byUsername/'+username,
     method: 'get',

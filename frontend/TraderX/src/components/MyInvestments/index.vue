@@ -50,11 +50,12 @@ export default {
       })
     },
     async getAllEquipments(){
-      await this.$store.dispatch('equipment/getAssetInfo').then(response => {
+      await this.$store.dispatch('equipment/getAssetInfo').then(() => {
         for(var i = 0; i < this.$store.getters.equipmentQueryResult.length; i++) {
+          console.log(Number.parseFloat(this.$store.getters.equipmentQueryResult[i].amount).toFixed(4))
           this.tableData.push({
             'code': this.$store.getters.equipmentQueryResult[i].code,
-            'amount': this.$store.getters.equipmentQueryResult[i].amount
+            'amount': Number.parseFloat(this.$store.getters.equipmentQueryResult[i].amount).toFixed(4)
           })
         }
       }).catch(err => {

@@ -112,6 +112,38 @@ export function deleteEquipmentFromPortfolio(query) {
   })
 }
 
+export function setAlert(data) {
+  return request({
+    url: '/alert/set',
+    method: 'post',
+    data
+  })
+}
+
+export function getAlert() {
+  return request({
+    url: '/alert/get',
+    method: 'get',
+  })
+}
+
+export function editAlert(data) {
+  return request({
+    url: '/alert/edit',
+    method: 'post',
+    data
+  })
+}
+
+export function deleteAlert(query) {
+  return request({
+    url: '/alert/remove',
+    method: 'delete',
+    params: query
+  })
+}
+
+
 export function getAllTransactions(user) {
   return request({
     url: '/transaction/user/'+user,
