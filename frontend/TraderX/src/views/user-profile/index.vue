@@ -123,7 +123,7 @@ export default {
           this.predictionData.push({
             "code": res[i].equipmentCode,
             "predType": res[i].predictionType,
-            "isSucceeded": res[i].isSucceeded ? 'Success' : (!res[i].isSucceeded) ? 'Fail' : '',
+            "isSucceeded": res[i].isSucceeded ? 'Success' : (res[i].isSucceeded == false) ? 'Fail' : '',
             "date": d,
           })
         }
