@@ -1,15 +1,17 @@
 package cmpe451.group6.authorization.model;
 
-import javax.persistence.*;
-import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 import java.util.List;
+
+import javax.persistence.*;
+import javax.validation.constraints.Pattern;
 
 @Entity
 @Table(name = "user")
 public class User implements Serializable {
 
   public static final transient String usernameRegex = "^\\w{3,20}$";
+  // TODO: reformat iban regex (limit only a few country ibans)
   public static final transient String IBANRegex = "^[A-Z]{2}[0-9]{18}$";
   public static final transient String locationRegex = "^(-?\\d{1,5}(\\.\\d{1,10})?)$";
   public static final transient String passwordRegex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=_.])(?=\\S+$).{6,}$";
@@ -53,16 +55,21 @@ public class User implements Serializable {
   @Pattern(regexp = passwordRegex, message ="Password must -include at least a digit, a lower case letter, an uppercase letter, a special char. and not include any whitespaces. Minimum password length: 8 characters ")
   private String password;
 
-  @ElementCollection(fetch = FetchType.EAGER)
-  List<Role> roles;
 
-  @Column(nullable = false)
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "user_roles",
+          joinColumns = @JoinColumn(name="user_id"))
+  private  List<Role> roles;
+
+  @Column(name = "registration_status",nullable = false)
   private RegistrationStatus registrationStatus;
 
-  @Column(nullable = false)
+
+  @Column(name = "is_private",  columnDefinition = "BIT", length = 1)
   private boolean isPrivate;
 
-  @Column
+
+  @Column(name = "google_token")
   private String googleToken;
 
   public String getGoogleToken() {
@@ -156,4 +163,6 @@ public class User implements Serializable {
   public void setRoles(List<Role> roles) {
     this.roles = roles;
   }
+
+
 }

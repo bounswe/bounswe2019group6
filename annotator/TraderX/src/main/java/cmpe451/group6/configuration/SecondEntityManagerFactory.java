@@ -51,7 +51,7 @@ public class SecondEntityManagerFactory {
         return new HashMap<String, String>() {
             {
                 put("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
-                put("hibernate.hbm2ddl.auto", "update");
+                put("hibernate.hbm2ddl.auto", "validate");
             }
         };
     }
