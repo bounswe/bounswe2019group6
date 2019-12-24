@@ -29,4 +29,8 @@ password: root
 mvn spring-boot:run
 ```
 
+### Project Structure
+
+ [![image](https://i.hizliresim.com/Z5mNdZ.png)](https://hizliresim.com/Z5mNdZ)
+
 
