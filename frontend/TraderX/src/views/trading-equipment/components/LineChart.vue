@@ -62,14 +62,22 @@ export default {
       this.setOptions(this.chartData)
     },
     setOptions({open, close, high, low, current} = {}) {
+      var datesArray = []
+      var today = new Date()
+      for(let i = 0; i < 100; i++) {
+        today.setDate(today.getDate() - 1)
+        var dateString = today.toDateString()
+        datesArray.unshift(dateString)
+      }
       this.chart.setOption({
         xAxis: {
           // Since the data we have shows the last 100 days
           // xAxis should be from day 1 to day 100
-          data: Array.from(Array(100).keys()),
+          data: datesArray,
           boundaryGap: false,
           axisTick: {
-            show: false
+            show: true,
+            interval: 7,
           }
         },
         grid: {

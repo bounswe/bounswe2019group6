@@ -1,0 +1,45 @@
+spring:
+  tomcat:
+    max-wait: 20000
+    max-active: 50
+    max-idle: 20
+    min-idle: 15
+
+server:
+  port: 8080 # Default application port
+  url: http://localhost
+
+security:
+  jwt:
+    token:
+      secret-key: secret-key
+      expire-length: 3600000 # 1 hour  duration by default (in miliseconds)
+  alpha-api-key1: "**"
+  alpha-api-key2: "***************"
+
+app.datasource:
+  main:
+    url: jdbc:mysql://main_db:3306/cmpe451?allowPublicKeyRetrieval=true&useSSH=false
+    # use this if the above raises error:
+    # jdbc:mysql://localhost:3306/cmpe451?useSSH=false
+
+    username: user
+    password: pass
+    connection-timeout: 50000
+    idle-timeout: 300000
+    minimum-idle: 8
+    max-lifetime: 900000
+    pool-name: PoolDS2
+    maximum-pool-size: 8
+
+  annotator:
+    url: jdbc:mysql://annotator_db_url:3306/cmpe451?allowPublicKeyRetrieval=true&useSSH=false
+    username: user
+    password: pass
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    connection-timeout: 50000
+    idle-timeout: 300000
+    minimum-idle: 8
+    max-lifetime: 900000
+    pool-name: PoolDS1
+    maximum-pool-size: 8

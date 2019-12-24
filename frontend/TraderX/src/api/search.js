@@ -13,3 +13,39 @@ export function getAllUsers() {
     method: 'get'
   })
 }
+
+export function getAllArticles() {
+  return request({
+    url: '/article/all',
+    method: 'get'
+  })
+}
+
+export function writeArticle(data) {
+  return request({
+    url: '/article/write',
+    method: 'post',
+    data,
+  })
+}
+
+export function getArticleByUserName(username) {
+  return request({
+    url: '/article/byUsername/'+username,
+    method: 'get',
+  })
+}
+
+export function getMyArticleByUserName(username) {
+  return request({
+    url: '/article/byUsername/'+username,
+    method: 'get',
+  })
+}
+
+export function getEvents() {
+  return request({
+    url: '/events',
+    method: 'get',
+  })
+}

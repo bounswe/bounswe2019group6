@@ -1,5 +1,8 @@
 import { login, getInfo, logout, register, confirm, resetPassword, renew, unfollowUser,
-   followUser, setProfilePublic, setProfilePrivate, changeIBAN, updatePassword, becomeBasic, becomeTrader } from '@/api/user'
+   followUser, setProfilePublic, setProfilePrivate, changeIBAN, updatePassword, 
+   becomeBasic, becomeTrader, getAllNotifications, getNewNotifications, acceptFollowRequest, declineFollowRequest,
+   readAllNotifications, createPrediction, getPredictionList, deletePrediction, editPrediction, getUserPredictionList,
+   getMyStats, readNotificationByID } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
 
@@ -35,6 +38,19 @@ const mutations = {
   SET_ROLES: (state, roles) => {
     state.roles = roles
   },
+  SET_NOTIFICATIONS: (state, notifications) => {
+    state.notifications = notifications
+  },
+  SET_PREDICTION_LIST: (state, predictionList) => {
+    state.predictionList = predictionList
+  },
+  SET_USER_PREDICTION_LIST: (state, userPredictionList) => {
+    state.userPredictionList = userPredictionList
+  },
+  SET_MY_STATS: (state, myStats) => {
+    state.myStats = myStats
+  },
+  
   // TODO these are deprecated but keep useful ones
   SET_INTRODUCTION: (state, introduction) => {
     state.introduction = introduction
@@ -42,6 +58,7 @@ const mutations = {
   SET_AVATAR: (state, avatar) => {
     state.avatar = avatar
   }
+
 }
 
 const actions = {
@@ -194,6 +211,26 @@ const actions = {
     })
   },
 
+  acceptFollowRequest({ commit }, username) {
+    return new Promise((resolve, reject) => {
+      acceptFollowRequest(username).then(response => {
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+
+  declineFollowRequest({ commit }, username) {
+    return new Promise((resolve, reject) => {
+      declineFollowRequest(username).then(response => {
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+
   setProfilePublic({ commit }, username) {
     return new Promise((resolve, reject) => {
       setProfilePublic().then(response => {
@@ -218,6 +255,48 @@ const actions = {
     return new Promise((resolve, reject) => {
       changeIBAN(iban).then(() => {
         commit('SET_IBAN', iban)
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+
+  getAllNotifications({ commit }) {
+    return new Promise((resolve, reject) => {
+      getAllNotifications().then(response => {
+        commit('SET_NOTIFICATIONS', response.data)
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+
+  getNewNotifications({ commit }) {
+    return new Promise((resolve, reject) => {
+      getNewNotifications().then(response => {
+        commit('SET_NOTIFICATIONS', response.data)
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+
+  readNotificationByID({ commit }, id) {
+    return new Promise((resolve, reject) => {
+      readNotificationByID(id).then(() => {
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  
+  readAllNotifications({ commit }) {
+    return new Promise((resolve, reject) => {
+      readAllNotifications().then(response => {
         resolve()
       }).catch(error => {
         reject(error)
@@ -254,6 +333,69 @@ const actions = {
       })
     })
   },
+
+  createPrediction({ commit }, code, type) {
+    return new Promise((resolve, reject) => {
+      createPrediction(code, type).then(() => {
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+
+  getPredictionList({ commit }, username) {
+    return new Promise((resolve, reject) => {
+      getPredictionList(username).then(response => {
+        commit('SET_PREDICTION_LIST', response.data)
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+
+  getMyStats({ commit }, username) {
+    return new Promise((resolve, reject) => {
+      getMyStats(username).then(response => {
+        commit('SET_MY_STATS', response.data)
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+
+  getUserPredictionList({ commit }, username) {
+    return new Promise((resolve, reject) => {
+      getUserPredictionList(username).then(response => {
+        commit('SET_USER_PREDICTION_LIST', response.data)
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+
+  deletePrediction({ commit }, id) {
+    return new Promise((resolve, reject) => {
+      deletePrediction(id).then(() => {
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },  
+
+  editPrediction({ commit }, id, type) {
+    return new Promise((resolve, reject) => {
+      editPrediction(id, type).then(() => {
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },  
 
   // TODO this is deprecated, will be removed
   // dynamically modify permissions

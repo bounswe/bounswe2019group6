@@ -90,12 +90,16 @@
 
 <script>
 
-import { getAllCurrencies, getAllCryptoCurrencies, getAllStocks } from '@/api/equipment'
+import { getAllCurrencies, getAllCryptoCurrencies, getAllStocks, addEquipmentToPortfolio, 
+        deleteEquipmentFromPortfolio, getAllEquipmentOfPortfolio } from '@/api/equipment'
 import equipment from '../../store/modules/equipment'
 
 export default {
   data() {
     return {
+      all_currency_codes: ['JPY','EUR','TRY','CZK','GBP','CNY'],
+      all_stock_codes: ['AMZN','BABA','MSFT','ORCL','SILK','ENSG'],
+      all_crypto_codes: ['BTC','ETC','VIB','ETH','BTG','ZEN'],
       currencyTableData: [],
       cryptoCurrencyTableData: [],
       stockTableData: [],
@@ -108,6 +112,7 @@ export default {
   },
   async created() {
     this.portfolioname = this.$route.path.split('/')[3].toUpperCase()
+    await this.getAllEquipmentsOfThisPortfolio()
     await this.getCurrency()
     await this.getCryptoCurrency()
     await this.getStock()
@@ -176,14 +181,38 @@ export default {
     handleSelectionChange(val) {
       this.multipleSelection = val;
     },
-    handleAddEquipmentPortfolio(){
+    async getAllEquipmentsOfThisPortfolio(){
+      const portfolioName = this.$route.path.split('/')[3]
+      await this.$store.dispatch('equipment/getAllEquipmentOfPortfolio', portfolioName ).then(() => {
+        for(var i = 0; i < this.$store.getters.allEquipments.length; i++) {
+          var t_code = this.$store.getters.allEquipments[i].code
+          var t_currentVal = this.$store.getters.allEquipments[i].currentValue
+          var t_currentStock = this.$store.getters.allEquipments[i].currentStock
+          var t_type = this.all_currency_codes.includes(t_code) ? "Currency" : 
+                     this.all_crypto_codes.includes(t_code) ? "Crypto Currency" : "Stock"
+          this.alreadyAddedTableData.push({
+            "equipmentName": t_code,
+            "currentValue": t_currentVal,
+            "currentStock": t_currentStock,
+            "equipmentType": t_type
+          })
+        }
+      }).catch(error => {
+        console.log(error)
+      })
+    },
+    async handleAddEquipmentPortfolio(){
       var currencySelections = this.$refs.multipleCurrencyTable.selection
       var cryptoCurrencySelections = this.$refs.multipleCryptoCurrencyTable.selection
       var stockSelectinos = this.$refs.multipleStockTable.selection
       var selectedAll = currencySelections.concat(cryptoCurrencySelections).concat(stockSelectinos)
       for(var i = 0; i < selectedAll.length; i++) {
         if(!this.alreadyAddedTableData.includes(selectedAll[i])){
-          this.alreadyAddedTableData.push(selectedAll[i])
+          await this.$store.dispatch('equipment/addEquipmentToPortfolio', { portfolioName: this.portfolioname, code: selectedAll[i].equipmentName }).then(() => {
+            this.alreadyAddedTableData.push(selectedAll[i])
+          }).catch(error => {
+            console.log(error)
+          })
         }
       }
       this.showDialog = false
@@ -193,7 +222,11 @@ export default {
       this.activeNames = []
     },
     handleDeleteEquipmentPortfolio(elem) {
-      this.alreadyAddedTableData = this.alreadyAddedTableData.filter(item => item !== elem)
+      this.$store.dispatch('equipment/deleteEquipmentFromPortfolio', { portfolioName: this.portfolioname, code: elem.equipmentName }).then(() => {
+        this.alreadyAddedTableData = this.alreadyAddedTableData.filter(item => item !== elem)
+      }).catch(error => {
+        console.log(error)
+      })
     }
 
   }

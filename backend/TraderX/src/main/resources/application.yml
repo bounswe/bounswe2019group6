@@ -14,9 +14,10 @@ spring:
     min-idle: 15
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
+        current_session_context_class: thread
         dialect: org.hibernate.dialect.MySQLDialect
         format_sql: true
         id:
@@ -31,6 +32,10 @@ security:
     token:
       secret-key: secret-key
       expire-length: 1800000 # 30 minutes duration by default (in miliseconds)
+  alpha-api-key1: "***************"
+  alpha-api-key2: "***************"
+  admin-un: "admin"
+  admin-pw: "*******"
 
 email:
   sender_address: "bounswegroup6@gmail.com"
@@ -43,3 +48,9 @@ email:
   frontend_port: 3000 # TBD
   frontend_reset_path: renew_password # TBD, up to frontend team
   frontend_verification_path : register/confirm # decided on frontend side
+
+amazonProperties:
+  endpointUrl: ${ENDPOINT_URL}
+  accessKey: ${ACCESS_KEY}
+  secretKey: ${SECRET_KEY}
+  bucketName: ${BUCKET_NAME}
