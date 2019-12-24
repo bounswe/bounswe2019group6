@@ -47,8 +47,8 @@
           </div>
           <a :style=showIban><p :style=hidePrivateFields><b>IBAN:</b> {{ user.iban }}</p></a>
           
-          <p :style=hidePrivateFields><b>Latitude:</b> {{ user.latitude }}</p>
-          <p :style=hidePrivateFields><b>Longitude:</b> {{ user.longitude }}</p>
+          <!-- <p :style=hidePrivateFields><b>Latitude:</b> {{ user.latitude }}</p>
+          <p :style=hidePrivateFields><b>Longitude:</b> {{ user.longitude }}</p> -->
           <p><b>Current Status:</b> {{ user.isPrivate ? "Private" : !user.isPrivate ? 'Public': "" }}</p>
         </div>
       </div>
