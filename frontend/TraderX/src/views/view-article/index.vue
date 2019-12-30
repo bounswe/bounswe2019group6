@@ -86,7 +86,7 @@ export default {
       title : "",
       author: "",
       body : "",
-      articleImageUrl : "https://www.fx-exchange.com/currencyimages/usd-jpy-90-day-exchange-rates-history-graph.png",
+      articleImageUrl: "",
       imageWidth: "",
       imageHeight: "",
       articleCommentList: [],
@@ -107,38 +107,53 @@ export default {
     this.getArticleInfo()
   },
   mounted() {
-    var articleImage = document.getElementById('articleImage'); 
-    this.imageWidth = articleImage.clientWidth;
-    this.imageHeight = articleImage.clientHeight;
-
-    anno.makeAnnotatable(articleImage);
-    var that = this
-    anno.addHandler('onAnnotationCreated', function(annotation){
-      that.createAnnotationHandler(annotation)
-    })
-    anno.addHandler('onAnnotationUpdated', function(annotation) {
-      that.updateAnnotationHandler(annotation)
-    })
-    anno.addHandler('onAnnotationRemoved', function(annotation) {
-      that.deleteAnnotationHandler(annotation)
-    })
-    this.getAnnotationList()
+    this.waitForImageUrl()
   },
   methods: {
+    waitForImageUrl() {
+      if(this.articleImageUrl !== ""){
+        console.log('imageUrl in wait: ' + this.articleImageUrl)
+        this.setupAnnotation()
+      }
+      else{
+        console.log('imageUrl is undefined: ' + this.articleImageUrl)
+        setTimeout(this.waitForImageUrl, 250);
+      }
+    },
+
+    setupAnnotation() {
+      console.log('this.articleImageUrl: ' + this.articleImageUrl)
+      var articleImage = document.getElementById('articleImage'); 
+      this.imageWidth = articleImage.clientWidth;
+      this.imageHeight = articleImage.clientHeight;
+
+      anno.makeAnnotatable(articleImage);
+      var that = this
+      anno.addHandler('onAnnotationCreated', function(annotation){
+        that.createAnnotationHandler(annotation)
+      })
+      anno.addHandler('onAnnotationUpdated', function(annotation) {
+        that.updateAnnotationHandler(annotation)
+      })
+      anno.addHandler('onAnnotationRemoved', function(annotation) {
+        that.deleteAnnotationHandler(annotation)
+      })
+      this.getAnnotationList()
+    },
+
     getArticleInfo(){
       var id = this.$route.path.split('/')[2]
       this.$store.dispatch('search/getArticleByID', id ).then(() => {
-        console.log("innn")
-        console.log(this.$store.getters.oneArticle)
         this.date = this.$store.getters.oneArticle.createdAt
         this.author = this.$store.getters.oneArticle.username
         this.title = this.$store.getters.oneArticle.header
         this.body = this.$store.getters.oneArticle.body
-        // this.articleImageUrl = this.$store.getters.oneArticle.imageUrl
+        this.articleImageUrl = this.$store.getters.oneArticle.imageUrl
       }).catch(err => {
         console.log(err)
       })
     },
+
     redirectToUser() {
       this.$router.push({ path: `/user/${this.author}/profile` })
     },
