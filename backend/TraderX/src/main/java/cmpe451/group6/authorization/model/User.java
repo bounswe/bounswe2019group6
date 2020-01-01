@@ -85,7 +85,7 @@ public class User implements Serializable {
   @Column(nullable = false)
   private RegistrationStatus registrationStatus;
 
-  @Column(nullable = false)
+  @Column(nullable = false, columnDefinition = "boolean default false")
   private boolean isPrivate;
 
   @Column

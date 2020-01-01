@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.awt.*;
+
 @RestController
 @RequestMapping("/image")
 public class ImageUploadController {
@@ -12,7 +14,7 @@ public class ImageUploadController {
     private AmazonClient amazonClient;
 
     @PostMapping("/upload")
-    public String uploadFile(@RequestPart(value = "file") MultipartFile file) {
+    public ImageDTO uploadFile(@RequestPart(value = "file") MultipartFile file) {
         return this.amazonClient.uploadFile(file);
     }
 
