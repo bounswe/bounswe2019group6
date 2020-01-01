@@ -2,17 +2,20 @@
 
 __NOTE: SpringFramework v1.5.6 and MySQL8 is used in the system.__
 
+You can find the API documentation [here](https://api.traderx.company/swagger-ui.html).  
+Annotations are included in the above link but to see its documentation on annotation server, visit [here](https://annotator.traderx.company/swagger-ui.html).
+
 # To run the service:
 
 1) Create database named `cmpe451`
 
 2) You can run in Docker container or in JVM from jar file:
 
-###Running via jar file:
+### Running via jar file:
 
 java -jar group6backend-1.0.jar
 
-###Running in Docker container:
+### Running in Docker container:
 
 * Fill the necessary fields on `src/main/resources/application.yml` file (Database username, password, email password, etc.)
 * In the directory where `Dockerfile` exists, run the commands:
