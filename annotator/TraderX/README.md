@@ -18,11 +18,35 @@ create database cmpe451;
 
 #### Step2: Configure your app to connect database
 in application.yml under resources, edit the fields properly:
+
+You need to add the same jwt keys used in the main server application. 
 ```
-username: root
-password: root
+security:
+  jwt:
+    token:
+      secret-key: secret-key
+      expire-length: 3600000 # 1 hour  duration by default (in miliseconds)
+  alpha-api-key1: "**"
+  alpha-api-key2: "***************"
 ```
- 
+Main database url, user, password info which were used in backend application.  
+```
+app.datasource:
+  main:
+    url: jdbc:mysql://main_db:3306/cmpe451?allowPublicKeyRetrieval=true&useSSH=false
+    # use this if the above raises error:
+    # jdbc:mysql://localhost:3306/cmpe451?useSSH=false
+
+    username: user
+    password: pass
+```
+Annotator database url, user, password info
+```
+  annotator:
+    url: jdbc:mysql://annotator_db_url:3306/cmpe451?allowPublicKeyRetrieval=true&useSSH=false
+    username: user
+    password: pass
+```
 
 #### Step4: Run the application in the project directory (where pom.xml exists)
 ```
