@@ -2,8 +2,8 @@ package com.traderx
 
 class AppConfig {
     companion object {
-        const val API_HOST = "http://127.0.0.1:8080",
-        const val ANNOTATION_HOST = "http://127.0.0.1:5000",
+        const val API_HOST = "http://127.0.0.1:8080"
+        const val ANNOTATION_HOST = "http://127.0.0.1:5000"
         const val DB_FILE = "app.db"
     }
 }
