@@ -34,9 +34,6 @@ Main database url, user, password info which were used in backend application.
 app.datasource:
   main:
     url: jdbc:mysql://main_db:3306/cmpe451?allowPublicKeyRetrieval=true&useSSH=false
-    # use this if the above raises error:
-    # jdbc:mysql://localhost:3306/cmpe451?useSSH=false
-
     username: user
     password: pass
 ```
