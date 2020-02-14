@@ -22,9 +22,8 @@ To see current website, visit: https://traderx.company/
 
 ---
 
-[![Mustafa Alparslan](https://avatars1.githubusercontent.com/u/43815119?s=400&v=4)](https://github.com/bounswe/bounswe2019group6/wiki/Mustafa-Alparslan) |
 [![Burak Yüksel](https://avatars1.githubusercontent.com/u/21309693?s=400&v=4)](https://github.com/bounswe/bounswe2019group6/wiki/Burak-Y%C3%BCksel) | 
 [![Enes Turan Özcan](https://avatars3.githubusercontent.com/u/44522401?s=400&v=4)](https://github.com/bounswe/bounswe2019group6/wiki/Enes-Ozcan) | 
 [![Fatih Mustafa Kurt](https://avatars0.githubusercontent.com/u/16965054?s=400&v=4)](https://github.com/bounswe/bounswe2019group6/wiki/Fatih-Mustafa-Kurt)
----|---|---|---
-[Mustafa Alparslan](https://github.com/bounswe/bounswe2019group6/wiki/Mustafa-Alparslan) | [Burak Yüksel](https://github.com/bounswe/bounswe2019group6/wiki/Burak-Y%C3%BCksel) | [Enes Turan Özcan](https://github.com/bounswe/bounswe2019group6/wiki/Enes-Ozcan) | [Fatih Mustafa Kurt](https://github.com/bounswe/bounswe2019group6/wiki/Fatih-Mustafa-Kurt)
+---|---|---
+[Burak Yüksel](https://github.com/bounswe/bounswe2019group6/wiki/Burak-Y%C3%BCksel) | [Enes Turan Özcan](https://github.com/bounswe/bounswe2019group6/wiki/Enes-Ozcan) | [Fatih Mustafa Kurt](https://github.com/bounswe/bounswe2019group6/wiki/Fatih-Mustafa-Kurt)
